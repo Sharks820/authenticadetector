@@ -1965,23 +1965,28 @@ async function analyzeCLIP(imageUrl, model, processor) {
             "an AI generated image from stable diffusion",
             "an AI generated image from Midjourney",
             "a digitally rendered artificial image",
-            "an authentic natural photograph"
+            "an authentic natural photograph",
+            "a screenshot from a computer or phone",
+            "human-made digital art and illustration"
         ];
 
-        // This is a simplified version
-        // Full implementation would use CLIP embeddings and cosine similarity
-        // For now, use ViT features as proxy
-        const visionResults = await pipeline('zero-shot-image-classification', 'Xenova/clip-vit-base-patch32')(
-            imageUrl,
-            testPrompts
-        );
+        // Use CLIP zero-shot classification (state-of-the-art)
+        const clipPipeline = await pipeline('zero-shot-image-classification', 'Xenova/clip-vit-base-patch32');
+        const visionResults = await clipPipeline(imageUrl, testPrompts);
 
-        // Analyze which category scored highest
-        const realScore = visionResults[0].score + visionResults[4].score;
-        const aiScore = visionResults[1].score + visionResults[2].score + visionResults[3].score;
+        // Analyze category scores with enhanced logic
+        const realScores = visionResults[0].score + visionResults[4].score + visionResults[5].score + visionResults[6].score;
+        const aiScores = visionResults[1].score + visionResults[2].score + visionResults[3].score;
 
-        // Convert to 0-100 score
-        return ((aiScore / (realScore + aiScore)) * 100);
+        // Screenshots and human art are REAL
+        const screenshotBonus = visionResults[5].score > 0.3 ? -20 : 0;
+        const humanArtBonus = visionResults[6].score > 0.25 ? -15 : 0;
+
+        // Convert to 0-100 score with bonuses
+        let score = ((aiScores / (realScores + aiScores)) * 100);
+        score = score + screenshotBonus + humanArtBonus;
+
+        return clamp(score, 0, 100);
     } catch (e) {
         console.error('[CLIP] Analysis failed:', e);
         return 50;
