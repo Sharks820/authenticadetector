@@ -1,0 +1,45 @@
+<svg width="1080" height="1080" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0d14"/>
+      <stop offset="100%" stop-color="#12161f"/>
+    </linearGradient>
+    <linearGradient id="primary" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00d4aa"/>
+      <stop offset="100%" stop-color="#00ff88"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="50%" y1="50%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00d4aa" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#00d4aa" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1080" height="1080" fill="url(#bg)"/>
+  <circle cx="540" cy="540" r="500" fill="url(#glow)"/>
+  
+  <!-- Logo -->
+  <g transform="translate(390, 120)">
+    <rect width="300" height="300" rx="60" fill="url(#primary)"/>
+    <circle cx="150" cy="150" r="90" stroke="#000" stroke-width="8" fill="none" opacity="0.85"/>
+    <circle cx="150" cy="150" r="36" fill="#000" opacity="0.85"/>
+    <path d="M150 40V80M150 220V260M40 150H80M220 150H260" stroke="#000" stroke-width="8" stroke-linecap="round" opacity="0.6"/>
+  </g>
+  
+  <!-- Headline -->
+  <text x="540" y="520" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="800" text-anchor="middle">Is That Image</text>
+  <text x="540" y="610" fill="url(#primary)" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="800" text-anchor="middle">AI-Generated?</text>
+  
+  <!-- Stats -->
+  <text x="540" y="720" fill="#ff4757" font-family="Inter, Arial, sans-serif" font-size="48" font-weight="700" text-anchor="middle">🤖 34M fake images created daily</text>
+  <text x="540" y="790" fill="#ffa502" font-family="Inter, Arial, sans-serif" font-size="48" font-weight="700" text-anchor="middle">👁️ Humans detect only 48%</text>
+  
+  <!-- CTA -->
+  <g transform="translate(340, 880)">
+    <rect width="400" height="80" rx="40" fill="url(#primary)"/>
+    <text x="200" y="52" fill="#000" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="700" text-anchor="middle">Detect Now • Free</text>
+  </g>
+  
+  <!-- Brand -->
+  <text x="540" y="1040" fill="#6b7280" font-family="Inter, Arial, sans-serif" font-size="24" text-anchor="middle">AuthenticaDetector • 90%+ Accuracy</text>
+</svg>

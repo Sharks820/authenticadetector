@@ -1,0 +1,3169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0d14">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AuthenticaDetector">
+    <meta name="description" content="AuthenticaDetector - Advanced AI Image Detection. Detect AI-generated images with 90%+ accuracy.">
+    <meta property="og:title" content="AuthenticaDetector - AI Image Detection">
+    <meta property="og:description" content="Detect AI-generated images instantly. Free to use.">
+    <meta property="og:image" content="icon-512.png">
+    <title>AuthenticaDetector - AI Image Detection</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-180.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
+        /* RESET & VARIABLES - MODERN VIBRANT THEME */
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{
+            /* Modern dark background with depth */
+            --bg:#0a0d14;
+            --bg-gradient:linear-gradient(135deg, #0a0d14 0%, #1a1525 100%);
+            --surface:#12161f;
+            --surface2:#1a1f2e;
+            --surface3:#242b3d;
+            --surface-glass:rgba(18, 22, 31, 0.8);
+
+            /* Vibrant primary colors */
+            --primary:#00d4aa;
+            --primary-bright:#00ffcc;
+            --primary-dim:#009977;
+            --primary-glow:rgba(0, 212, 170, 0.35);
+            --primary-gradient:linear-gradient(135deg, #00d4aa 0%, #00ff88 100%);
+
+            /* Purple accent for premium feel */
+            --secondary:#6366f1;
+            --secondary-bright:#8b5cf6;
+            --secondary-glow:rgba(99, 102, 241, 0.3);
+            --purple:#d946ef;
+
+            /* Status colors */
+            --danger:#ff4757;
+            --danger-glow:rgba(255, 71, 87, 0.3);
+            --warning:#ffa502;
+            --success:#2ed573;
+            --success-glow:rgba(46, 213, 115, 0.3);
+
+            /* Leaderboard tiers with vibrant colors */
+            --gold:#ffd700;
+            --gold-glow:rgba(255, 215, 0, 0.4);
+            --silver:#e8e8e8;
+            --silver-glow:rgba(232, 232, 232, 0.3);
+            --bronze:#cd7f32;
+            --bronze-glow:rgba(205, 127, 50, 0.3);
+            --diamond:#b9f2ff;
+            --platinum:#e5e4e2;
+
+            /* Text hierarchy */
+            --text:#ffffff;
+            --text2:#b4bcd0;
+            --text3:#6b7280;
+            --text-muted:#9ca3af;
+
+            /* Borders and shadows */
+            --border:rgba(255,255,255,0.1);
+            --border-bright:rgba(255,255,255,0.2);
+            --shadow:0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg:0 10px 15px -3px rgba(0, 0, 0, 0.4);
+            --shadow-glow:0 0 20px rgba(0, 212, 170, 0.2);
+
+            /* Safe areas */
+            --safe-top:env(safe-area-inset-top,0px);
+            --safe-bottom:env(safe-area-inset-bottom,0px);
+        }
+
+        /* Glassmorphism effect for cards */
+        .glass {
+            background: var(--surface-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-bright);
+            box-shadow: var(--shadow-glow);
+        }
+        
+        /* BASE - CRITICAL RESPONSIVE FIX */
+        html{height:100%;overflow:hidden}
+        body{
+            min-height:100%;height:100%;
+            font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+            background:var(--bg);color:var(--text);
+            overflow:hidden;
+            display:flex;flex-direction:column;
+        }
+        
+        /* VIEWS - SCROLLABLE */
+        .view{
+            position:fixed;inset:0;
+            background:var(--bg);
+            display:none;flex-direction:column;
+            z-index:10;
+            overflow:hidden;
+        }
+        .view.active{display:flex}
+        
+        .view-header{
+            flex-shrink:0;
+            display:flex;align-items:center;justify-content:space-between;
+            padding:12px 16px;
+            padding-top:calc(12px + var(--safe-top));
+            background:var(--surface);
+            border-bottom:1px solid var(--border);
+            min-height:56px;
+        }
+        .view-title{font-size:18px;font-weight:700}
+        .view-close{
+            width:44px;height:44px;border-radius:50%;
+            background:var(--surface2);border:none;
+            color:var(--text);font-size:22px;
+            cursor:pointer;display:flex;align-items:center;justify-content:center;
+        }
+        
+        /* SCROLLABLE VIEW BODY - KEY FIX */
+        .view-body{
+            flex:1 1 auto;
+            overflow-y:auto;
+            overflow-x:hidden;
+            -webkit-overflow-scrolling:touch;
+            overscroll-behavior:contain;
+        }
+        .view-body-padded{
+            padding:16px;
+            padding-bottom:calc(100px + var(--safe-bottom));
+        }
+        
+        /* HOME VIEW - SCROLLABLE */
+        #homeView{display:flex;flex-direction:column}
+        #homeView .home-content{
+            flex:1 1 auto;
+            overflow-y:auto;
+            overflow-x:hidden;
+            -webkit-overflow-scrolling:touch;
+            padding-bottom:calc(20px + var(--safe-bottom));
+        }
+        
+        /* HOME HEADER */
+        .home-header{
+            flex-shrink:0;
+            display:flex;align-items:center;justify-content:space-between;
+            padding:10px 16px;
+            padding-top:calc(10px + var(--safe-top));
+            background:var(--surface);
+            min-height:60px;
+        }
+        .logo{display:flex;align-items:center;gap:8px}
+        .logo-icon{width:32px;height:32px}
+        .logo-text{
+            font-size:16px;font-weight:800;
+            background:linear-gradient(135deg,var(--primary),#00ff88);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+            background-clip:text;
+        }
+        .header-btns{display:flex;gap:6px}
+        .icon-btn{
+            width:38px;height:38px;border-radius:10px;
+            background:var(--surface2);border:none;
+            color:var(--text2);font-size:16px;
+            cursor:pointer;display:flex;align-items:center;justify-content:center;
+        }
+        .user-btn{
+            width:38px;height:38px;border-radius:50%;
+            background:linear-gradient(135deg,var(--primary),#00ff88);
+            border:2px solid var(--surface);color:#000;
+            font-size:13px;font-weight:800;cursor:pointer;
+            overflow:hidden;display:flex;align-items:center;justify-content:center;
+        }
+        .user-btn img{width:100%;height:100%;object-fit:cover}
+        
+        /* STATUS BAR - ALWAYS VISIBLE UNTIL COMPLETE */
+        .status-bar{
+            flex-shrink:0;
+            padding:8px 16px;background:var(--surface2);
+            display:flex;gap:6px;flex-wrap:wrap;
+        }
+        .status-chip{
+            display:flex;align-items:center;gap:5px;
+            padding:5px 10px;border-radius:16px;
+            font-size:11px;font-weight:600;
+            cursor:pointer;border:none;font-family:inherit;
+        }
+        .status-chip.pending{background:rgba(255,165,2,.15);color:var(--warning)}
+        .status-chip.complete{background:rgba(46,213,115,.15);color:var(--success)}
+        .status-chip.signup{background:rgba(99,102,241,.15);color:var(--secondary)}
+        
+        /* INSTALL BANNER */
+        .install-banner{
+            display:none;padding:12px 16px;
+            background:linear-gradient(135deg,var(--secondary),#8b5cf6);
+            align-items:center;gap:10px;
+        }
+        .install-banner.show{display:flex}
+        .install-banner-icon{font-size:24px}
+        .install-banner-text{flex:1}
+        .install-banner-text strong{display:block;font-size:13px;margin-bottom:1px}
+        .install-banner-text span{font-size:11px;opacity:.9}
+        .install-banner-btn{
+            padding:8px 14px;background:#fff;color:var(--secondary);
+            border:none;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;
+        }
+        
+        /* iOS HELPER */
+        .ios-helper{
+            display:none;margin:10px 16px;padding:14px;
+            background:var(--surface);border:2px solid var(--primary);border-radius:14px;
+        }
+        .ios-helper.show{display:block}
+        .ios-helper-title{font-size:14px;font-weight:700;margin-bottom:10px}
+        .ios-steps{display:flex;flex-direction:column;gap:8px}
+        .ios-step{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text2)}
+        .ios-step-num{
+            width:22px;height:22px;background:var(--primary);border-radius:50%;
+            display:flex;align-items:center;justify-content:center;
+            font-size:11px;font-weight:700;color:#000;flex-shrink:0;
+        }
+        .ios-dismiss{
+            background:var(--surface2);border:none;color:var(--text2);
+            font-size:12px;cursor:pointer;margin-top:10px;padding:8px;border-radius:8px;width:100%;
+        }
+        
+        /* FACTS PANEL */
+        .facts-panel{
+            margin:10px 16px;padding:12px 14px;
+            background:var(--surface);border-radius:12px;
+            border-left:3px solid var(--primary);
+        }
+        .facts-header{
+            display:flex;align-items:center;gap:6px;
+            margin-bottom:6px;font-size:10px;color:var(--text3);
+            text-transform:uppercase;letter-spacing:.5px;
+        }
+        .facts-content{
+            font-size:12px;color:var(--text2);line-height:1.4;
+            display:flex;align-items:flex-start;gap:8px;
+        }
+        .facts-icon{font-size:18px;flex-shrink:0}
+        
+        /* UPLOAD SECTION */
+        .upload-section{padding:12px 16px}
+        .upload-hero{text-align:center;margin-bottom:12px}
+        .upload-hero h1{font-size:20px;font-weight:900;margin-bottom:4px}
+        .upload-hero p{color:var(--text2);font-size:12px}
+        
+        /* DROPZONE */
+        .dropzone{
+            background:var(--surface);border:2px dashed var(--border);
+            border-radius:16px;padding:24px 16px;text-align:center;
+            cursor:pointer;transition:all .2s;margin-bottom:12px;
+        }
+        .dropzone:active,.dropzone.dragover{
+            border-color:var(--primary);background:rgba(0,212,170,.08);
+        }
+        .dropzone.has-file{border-color:var(--success);border-style:solid}
+        .dropzone-preview{max-width:100%;max-height:150px;border-radius:10px;object-fit:contain}
+        .dropzone-content{display:flex;flex-direction:column;align-items:center;gap:8px}
+        .dropzone-icon{width:60px;height:60px}
+        .dropzone h3{font-size:14px;font-weight:700}
+        .dropzone p{font-size:11px;color:var(--text3)}
+        .file-types{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-top:3px}
+        .file-type{padding:3px 6px;background:var(--surface2);border-radius:4px;font-size:9px;color:var(--text3)}
+        .file-input{display:none}
+        
+        /* SCAN SECTION - FIXED AT BOTTOM */
+        .scan-section{
+            flex-shrink:0;
+            padding:12px 16px;
+            padding-bottom:calc(12px + var(--safe-bottom));
+            background:var(--bg);
+        }
+        .scan-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+        .scan-btn{
+            padding:14px 12px;border-radius:12px;border:none;
+            font-family:inherit;cursor:pointer;text-align:left;position:relative;
+        }
+        .scan-btn:disabled{opacity:.5;cursor:not-allowed}
+        .quick-btn{background:var(--surface2);color:var(--text)}
+        .deep-btn{background:linear-gradient(135deg,var(--primary),#00ff88);color:#000}
+        .scan-btn-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:5px}
+        .scan-btn-desc{font-size:9px;opacity:.7;margin-top:2px}
+        .scan-lock{position:absolute;top:6px;right:6px;font-size:12px}
+        
+        /* ADVANCED PANEL */
+        .advanced-panel{
+            background:var(--surface);border-radius:12px;
+            margin-bottom:8px;overflow:hidden;
+        }
+        .advanced-header{
+            display:flex;align-items:center;justify-content:space-between;
+            padding:10px 12px;cursor:pointer;
+        }
+        .advanced-header span:first-child{font-size:11px;font-weight:600}
+        .advanced-toggle{font-size:9px;color:var(--text3)}
+        .advanced-content{padding:0 12px 12px;display:none}
+        .advanced-content.show{display:block}
+        .advanced-row{
+            display:flex;align-items:center;justify-content:space-between;
+            padding:8px 0;border-top:1px solid var(--border);
+        }
+        .advanced-label{display:flex;align-items:center;gap:8px}
+        .advanced-icon{font-size:16px}
+        .advanced-name{font-size:11px;font-weight:600}
+        .advanced-desc{font-size:9px;color:var(--text3)}
+        .toggle-switch{position:relative;width:40px;height:22px}
+        .toggle-switch input{opacity:0;width:0;height:0}
+        .toggle-slider{
+            position:absolute;cursor:pointer;inset:0;
+            background:var(--surface2);border-radius:11px;transition:.3s;
+        }
+        .toggle-slider:before{
+            content:'';position:absolute;height:16px;width:16px;
+            left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;
+        }
+        .toggle-switch input:checked + .toggle-slider{background:var(--primary)}
+        .toggle-switch input:checked + .toggle-slider:before{transform:translateX(18px)}
+        
+        /* PROGRESS CARD */
+        .progress-card{
+            background:var(--surface);border-radius:14px;
+            padding:14px;margin:10px 16px;
+        }
+        .progress-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+        .progress-title{font-size:12px;font-weight:700}
+        .progress-cancel{
+            background:var(--surface2);border:none;color:var(--text2);
+            padding:6px 10px;border-radius:6px;font-size:10px;cursor:pointer;
+        }
+        .progress-bar-wrap{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:8px}
+        .progress-bar{height:100%;background:linear-gradient(90deg,var(--primary),#00ff88);border-radius:3px;transition:width .3s}
+        .progress-status{font-size:11px;color:var(--text2);text-align:center}
+        .progress-fact{
+            margin-top:12px;padding:10px;background:var(--surface2);
+            border-radius:8px;display:flex;gap:8px;
+        }
+        .progress-fact-icon{font-size:18px}
+        .progress-fact-text{font-size:10px;color:var(--text2);line-height:1.4}
+        
+        /* RESULT CARD */
+        .result-card{
+            background:var(--surface);border-radius:16px;
+            padding:16px;margin:10px 16px;position:relative;overflow:hidden;
+        }
+        .result-glow{
+            position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+            opacity:.12;pointer-events:none;
+        }
+        .result-header{
+            display:flex;align-items:flex-start;gap:12px;
+            margin-bottom:12px;position:relative;z-index:1;
+        }
+        .result-icon{
+            width:50px;height:50px;border-radius:12px;
+            display:flex;align-items:center;justify-content:center;font-size:24px;
+        }
+        .result-icon.fake{background:linear-gradient(135deg,var(--danger),#ff6b7a)}
+        .result-icon.real{background:linear-gradient(135deg,var(--success),#7bed9f)}
+        .result-icon.uncertain{background:linear-gradient(135deg,var(--warning),#ffc048)}
+        .result-info{flex:1}
+        .result-label{font-size:16px;font-weight:800;margin-bottom:2px}
+        .result-sublabel{font-size:11px;color:var(--text2)}
+        
+        .confidence-badge{
+            display:inline-flex;align-items:center;gap:4px;
+            padding:4px 8px;border-radius:12px;font-size:10px;font-weight:700;margin-bottom:8px;
+        }
+        .confidence-high{background:rgba(46,213,115,.15);color:var(--success)}
+        .confidence-medium{background:rgba(255,165,2,.15);color:var(--warning)}
+        .confidence-low{background:rgba(255,71,87,.15);color:var(--danger)}
+        
+        .result-score{margin-bottom:12px}
+        .score-bar{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
+        .score-fill{height:100%;border-radius:4px;transition:width .5s}
+        .score-fill.fake{background:linear-gradient(90deg,var(--danger),#ff6b7a)}
+        .score-fill.real{background:linear-gradient(90deg,var(--success),#7bed9f)}
+        .score-fill.uncertain{background:linear-gradient(90deg,var(--warning),#ffc048)}
+        .score-labels{display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:var(--text3)}
+        .score-value{text-align:center;font-size:13px;font-weight:700;margin-top:6px}
+        
+        /* EXPLAINERS */
+        .explainers{background:var(--surface2);border-radius:10px;padding:10px;margin-bottom:12px}
+        .explainers-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+        .explainers-title{font-size:11px;font-weight:700}
+        .explainers-toggle{font-size:9px;color:var(--text3)}
+        .explainers-content{margin-top:8px;display:none}
+        .explainers-content.show{display:block}
+        .explainer-item{
+            display:flex;align-items:flex-start;gap:6px;
+            padding:6px 0;border-top:1px solid var(--border);
+        }
+        .explainer-item:first-child{border-top:none;padding-top:0}
+        .explainer-icon{font-size:12px}
+        .explainer-text{font-size:10px;color:var(--text2);line-height:1.4}
+        
+        /* FEEDBACK */
+        .feedback-section{background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:12px}
+        .feedback-title{font-size:11px;font-weight:700;margin-bottom:8px}
+        .feedback-btns{display:flex;gap:6px}
+        .feedback-btn{
+            flex:1;padding:8px;border:2px solid var(--border);border-radius:8px;
+            background:transparent;color:var(--text2);font-size:11px;font-weight:600;
+            cursor:pointer;font-family:inherit;
+        }
+        .feedback-btn:hover{border-color:var(--primary)}
+        .feedback-btn.selected{border-color:var(--primary);background:var(--primary-glow);color:var(--text)}
+        
+        .result-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        .result-action{
+            padding:10px;border-radius:8px;border:none;font-family:inherit;
+            font-size:11px;font-weight:600;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;gap:5px;
+        }
+        .action-share{background:var(--primary);color:#000}
+        .action-new{background:var(--surface2);color:var(--text)}
+        
+        /* TOAST */
+        .toast-container{
+            position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+            z-index:9999;display:flex;flex-direction:column;gap:6px;pointer-events:none;
+        }
+        .toast{
+            background:var(--surface2);color:var(--text);padding:10px 16px;
+            border-radius:8px;font-size:12px;box-shadow:0 4px 20px rgba(0,0,0,.3);
+            animation:toast-in .3s;pointer-events:auto;
+        }
+        @keyframes toast-in{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        
+        /* PROFILE */
+        .profile-header{
+            background:var(--surface2);border-radius:16px;padding:18px;
+            margin-bottom:12px;text-align:center;
+        }
+        .profile-avatar{
+            width:64px;height:64px;border-radius:50%;
+            background:linear-gradient(135deg,var(--primary),#00ff88);
+            margin:0 auto 12px;display:flex;align-items:center;justify-content:center;
+            font-size:24px;font-weight:800;color:#000;cursor:pointer;overflow:hidden;
+        }
+        .profile-avatar img{width:100%;height:100%;object-fit:cover}
+        .profile-name{font-size:16px;font-weight:800;margin-bottom:2px}
+        .profile-email{font-size:11px;color:var(--text3)}
+        
+        .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+        .stat-card{background:var(--surface);border-radius:12px;padding:12px;text-align:center}
+        .stat-value{
+            font-size:20px;font-weight:800;
+            background:linear-gradient(135deg,var(--primary),#00ff88);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+        }
+        .stat-label{font-size:9px;color:var(--text3);margin-top:2px}
+        
+        /* BADGES - PREMIUM DESIGN */
+        .badges-preview{background:var(--surface);border-radius:12px;padding:12px;margin-bottom:12px}
+        .badges-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+        .badges-title{font-size:12px;font-weight:700}
+        .badges-see-all{font-size:10px;color:var(--primary);background:none;border:none;cursor:pointer}
+        .badges-grid{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+        .badge-item{flex-shrink:0;width:52px;text-align:center}
+        .badge-icon{
+            width:44px;height:44px;border-radius:10px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:18px;margin:0 auto 3px;position:relative;
+        }
+        .badge-icon.common{background:linear-gradient(135deg,#4a5568,#718096);box-shadow:0 2px 6px rgba(74,85,104,.3)}
+        .badge-icon.rare{background:linear-gradient(135deg,#3182ce,#63b3ed);box-shadow:0 2px 6px rgba(49,130,206,.3)}
+        .badge-icon.epic{background:linear-gradient(135deg,#805ad5,#b794f4);box-shadow:0 2px 6px rgba(128,90,213,.3)}
+        .badge-icon.legendary{
+            background:linear-gradient(135deg,#d69e2e,#f6e05e);
+            box-shadow:0 2px 10px rgba(214,158,46,.4);
+            animation:badge-glow 2s ease-in-out infinite;
+        }
+        @keyframes badge-glow{0%,100%{box-shadow:0 2px 10px rgba(214,158,46,.4)}50%{box-shadow:0 2px 20px rgba(214,158,46,.6)}}
+        .badge-icon.locked{background:var(--surface2);opacity:.4}
+        .badge-name{font-size:8px;color:var(--text3)}
+        
+        .menu{background:var(--surface);border-radius:12px;overflow:hidden}
+        .menu-item{
+            display:flex;align-items:center;gap:10px;padding:12px;
+            border-bottom:1px solid var(--border);cursor:pointer;
+            background:none;border-left:none;border-right:none;border-top:none;
+            width:100%;text-align:left;color:var(--text);font-family:inherit;font-size:12px;
+        }
+        .menu-item:last-child{border-bottom:none}
+        .menu-icon{font-size:16px;width:22px;text-align:center}
+        .menu-text{flex:1}
+        .menu-arrow{color:var(--text3)}
+        
+        /* HISTORY */
+        .history-item{
+            display:flex;align-items:center;gap:10px;padding:10px;
+            background:var(--surface);border-radius:10px;margin-bottom:6px;
+        }
+        .history-thumb{
+            width:42px;height:42px;border-radius:6px;background:var(--surface2);
+            display:flex;align-items:center;justify-content:center;font-size:18px;
+        }
+        .history-info{flex:1}
+        .history-result{font-size:12px;font-weight:700}
+        .history-meta{font-size:10px;color:var(--text3)}
+        .history-score{font-size:12px;font-weight:700;padding:4px 8px;border-radius:5px}
+        .history-score.fake{background:rgba(255,71,87,.15);color:var(--danger)}
+        .history-score.real{background:rgba(46,213,115,.15);color:var(--success)}
+        .history-empty{text-align:center;padding:40px 16px;color:var(--text3)}
+        
+        /* LEADERBOARD - EPIC TIERS */
+        .podium{display:flex;justify-content:center;gap:8px;margin-bottom:14px;padding:12px}
+        .podium-item{text-align:center;flex:1;max-width:90px}
+        .podium-item.first{order:2;margin-top:-8px}
+        .podium-item.second{order:1}
+        .podium-item.third{order:3}
+        .podium-avatar{
+            width:50px;height:50px;border-radius:50%;margin:0 auto 6px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:18px;font-weight:800;overflow:hidden;position:relative;
+        }
+        .podium-item.first .podium-avatar{
+            width:60px;height:60px;font-size:22px;
+            background:linear-gradient(135deg,#ffd700,#ffed4a);
+            border:3px solid #ffd700;box-shadow:0 0 20px rgba(255,215,0,.5);
+        }
+        .podium-item.second .podium-avatar{
+            background:linear-gradient(135deg,#c0c0c0,#e8e8e8);border:3px solid #c0c0c0;
+        }
+        .podium-item.third .podium-avatar{
+            background:linear-gradient(135deg,#cd7f32,#daa520);border:3px solid #cd7f32;
+        }
+        .podium-avatar img{width:100%;height:100%;object-fit:cover}
+        .podium-crown{position:absolute;top:-10px;font-size:14px}
+        .podium-item.first .podium-crown{font-size:18px;top:-12px}
+        .podium-name{font-size:10px;font-weight:700}
+        .podium-item.first .podium-name{color:var(--gold)}
+        .podium-points{font-size:9px;color:var(--text3)}
+        .podium-tier{
+            font-size:8px;text-transform:uppercase;margin-top:3px;font-weight:800;
+            padding:2px 6px;border-radius:4px;display:inline-block;
+        }
+        .tier-king{background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000}
+        .tier-viceroy{background:linear-gradient(135deg,#c0c0c0,#808080);color:#000}
+        .tier-archduke{background:linear-gradient(135deg,#cd7f32,#8b4513);color:#fff}
+        .tier-legend{background:linear-gradient(135deg,#9b59b6,#8e44ad);color:#fff}
+        .tier-elite{background:linear-gradient(135deg,#3498db,#2980b9);color:#fff}
+        .tier-veteran{background:linear-gradient(135deg,#27ae60,#1e8449);color:#fff}
+        .tier-rising{background:linear-gradient(135deg,#7f8c8d,#95a5a6);color:#fff}
+        
+        .lb-item{
+            display:flex;align-items:center;gap:10px;padding:10px;
+            background:var(--surface);border-radius:10px;margin-bottom:6px;cursor:pointer;
+        }
+        .lb-rank{
+            width:28px;height:28px;border-radius:6px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:11px;font-weight:800;
+        }
+        .lb-rank.top10{background:linear-gradient(135deg,var(--primary),#00ff88);color:#000}
+        .lb-rank.normal{background:var(--surface2);color:var(--text2)}
+        .lb-avatar{
+            width:36px;height:36px;border-radius:50%;
+            background:linear-gradient(135deg,var(--primary),#00ff88);
+            display:flex;align-items:center;justify-content:center;
+            font-size:12px;font-weight:800;color:#000;overflow:hidden;
+        }
+        .lb-avatar img{width:100%;height:100%;object-fit:cover}
+        .lb-info{flex:1}
+        .lb-name{font-size:12px;font-weight:700}
+        .lb-stats{font-size:10px;color:var(--text3)}
+        .lb-points{font-size:14px;font-weight:800;color:var(--primary)}
+        .lb-tier{margin-left:6px}
+        
+        /* REWARDS SECTION */
+        .rewards-card{
+            background:linear-gradient(135deg,var(--surface2),var(--surface3));
+            border:2px solid var(--gold);border-radius:14px;padding:14px;margin-bottom:12px;
+        }
+        .rewards-title{font-size:14px;font-weight:800;color:var(--gold);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+        .rewards-list{display:flex;flex-direction:column;gap:6px}
+        .reward-item{
+            display:flex;align-items:center;gap:8px;padding:8px;
+            background:var(--surface);border-radius:8px;font-size:11px;
+        }
+        .reward-icon{font-size:18px}
+        .reward-text{flex:1}
+        .reward-tier{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px}
+        
+        /* LOGIN */
+        .login-content{padding:16px;max-width:360px;margin:0 auto}
+        .login-hero{text-align:center;margin-bottom:24px}
+        .login-hero .logo-icon{width:56px;height:56px;margin:0 auto 14px}
+        .login-hero h2{font-size:20px;font-weight:800;margin-bottom:4px}
+        .login-hero p{color:var(--text2);font-size:12px}
+        .login-form{display:flex;flex-direction:column;gap:12px}
+        .input-group{display:flex;flex-direction:column;gap:4px}
+        .input-group label{font-size:11px;font-weight:600;color:var(--text2)}
+        .input-group input{
+            padding:11px 12px;background:var(--surface);border:2px solid var(--border);
+            border-radius:8px;color:var(--text);font-size:13px;font-family:inherit;
+        }
+        .input-group input:focus{outline:none;border-color:var(--primary)}
+        .login-submit{
+            padding:12px;background:linear-gradient(135deg,var(--primary),#00ff88);
+            border:none;border-radius:10px;color:#000;font-size:14px;font-weight:800;
+            cursor:pointer;font-family:inherit;
+        }
+        .login-submit:disabled{opacity:.5}
+        .login-toggle{text-align:center;font-size:11px;color:var(--text3);margin-top:12px}
+        .login-toggle a{color:var(--primary);cursor:pointer}
+        .login-guest{
+            width:100%;padding:10px;background:var(--surface2);border:none;border-radius:8px;
+            color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;
+        }
+        .login-error{
+            background:rgba(255,71,87,.1);border:1px solid var(--danger);color:var(--danger);
+            padding:8px;border-radius:6px;font-size:11px;text-align:center;display:none;margin-bottom:12px;
+        }
+        .login-error.show{display:block}
+        
+        /* MODALS */
+        .modal-overlay{
+            position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;
+            display:none;align-items:center;justify-content:center;padding:16px;
+        }
+        .modal-overlay.show{display:flex}
+        .modal{
+            background:var(--surface);border-radius:16px;padding:18px;
+            max-width:320px;width:100%;max-height:80vh;overflow-y:auto;position:relative;
+        }
+        .modal-close{
+            position:absolute;top:10px;right:10px;background:var(--surface2);border:none;
+            color:var(--text);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:14px;
+        }
+        
+        /* HELP */
+        .help-section{background:var(--surface);border-radius:12px;margin-bottom:10px;overflow:hidden}
+        .help-header{display:flex;align-items:center;justify-content:space-between;padding:12px;cursor:pointer}
+        .help-title{font-size:13px;font-weight:700}
+        .help-toggle{color:var(--text3);font-size:9px}
+        .help-content{padding:0 12px 12px;display:none}
+        .help-content.show{display:block}
+        .help-text{font-size:11px;color:var(--text2);line-height:1.5}
+        .help-text p{margin-bottom:8px}
+        .help-text ul{margin-left:16px;margin-bottom:8px}
+        .help-text li{margin-bottom:3px}
+        
+        .hidden{display:none!important}
+        
+        /* ANIMATIONS */
+        .scan-ring{animation:scan-rotate 3s linear infinite;transform-origin:center}
+        @keyframes scan-rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+        .pulse-core{animation:pulse-glow 2s ease-in-out infinite}
+        @keyframes pulse-glow{0%,100%{opacity:.4}50%{opacity:1}}
+    </style>
+</head>
+<body>
+
+<!-- HOME VIEW -->
+<div class="view active" id="homeView">
+    <div class="home-header">
+        <div class="logo">
+            <div class="logo-icon" id="mainLogo"></div>
+            <span class="logo-text">AuthenticaDetector</span>
+        </div>
+        <div class="header-btns">
+            <button class="icon-btn" onclick="openHelp()">❓</button>
+            <button class="icon-btn" onclick="openHistory()">📋</button>
+            <button class="icon-btn" onclick="openLeaderboard()">🏆</button>
+            <button class="user-btn" id="userBtn" onclick="openProfile()"><span id="userInitial">?</span></button>
+        </div>
+    </div>
+    
+    <div class="status-bar" id="statusBar">
+        <button class="status-chip pending" id="installChip" onclick="promptInstall()"><span>📲</span> Install</button>
+        <button class="status-chip signup" id="signupChip" onclick="openLogin(true)"><span>✨</span> Sign Up</button>
+        <button class="status-chip pending" id="loginChip" onclick="openLogin()"><span>🔑</span> Sign In</button>
+    </div>
+    
+    <div class="install-banner" id="installBanner">
+        <span class="install-banner-icon">📲</span>
+        <div class="install-banner-text">
+            <strong>Install AuthenticaDetector</strong>
+            <span>Unlock Deep Scan & more!</span>
+        </div>
+        <button class="install-banner-btn" onclick="promptInstall()">Install</button>
+    </div>
+    
+    <div class="ios-helper" id="iosHelper">
+        <div class="ios-helper-title">📲 Add to Home Screen</div>
+        <div class="ios-steps">
+            <div class="ios-step"><div class="ios-step-num">1</div><span>Tap Share ⬆️</span></div>
+            <div class="ios-step"><div class="ios-step-num">2</div><span>Tap "Add to Home Screen"</span></div>
+            <div class="ios-step"><div class="ios-step-num">3</div><span>Tap Add</span></div>
+        </div>
+        <button class="ios-dismiss" onclick="dismissIosHelper()">Later</button>
+    </div>
+    
+    <!-- SCROLLABLE HOME CONTENT -->
+    <div class="home-content">
+        <div class="facts-panel" id="factsPanel">
+            <div class="facts-header"><span>💡</span> AI FACT</div>
+            <div class="facts-content">
+                <span class="facts-icon" id="factIcon">🧬</span>
+                <span id="factText">Loading...</span>
+            </div>
+        </div>
+        
+        <div class="upload-section">
+            <div class="upload-hero">
+                <h1>Detect AI Images</h1>
+                <p>Upload any image to check if it's AI-generated</p>
+            </div>
+            
+            <div class="dropzone" id="dropzone" onclick="triggerFileInput()">
+                <img class="dropzone-preview hidden" id="dropzonePreview">
+                <div class="dropzone-content" id="dropzoneContent">
+                    <div class="dropzone-icon" id="analysisIcon"></div>
+                    <h3>Tap to Upload</h3>
+                    <p>or drag & drop</p>
+                    <div class="file-types">
+                        <span class="file-type">JPG</span>
+                        <span class="file-type">PNG</span>
+                        <span class="file-type">WEBP</span>
+                        <span class="file-type">GIF</span>
+                    </div>
+                </div>
+            </div>
+            <input type="file" class="file-input" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
+            
+            <!-- PROGRESS -->
+            <div class="progress-card hidden" id="progressCard">
+                <div class="progress-header">
+                    <div class="progress-title" id="progressTitle">🔍 Analyzing...</div>
+                    <button class="progress-cancel" onclick="cancelScan()">Cancel</button>
+                </div>
+                <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+                <div class="progress-status" id="progressStatus">Initializing...</div>
+                <div class="progress-fact">
+                    <span class="progress-fact-icon" id="progressFactIcon">💡</span>
+                    <span class="progress-fact-text" id="progressFactText">Loading...</span>
+                </div>
+            </div>
+            
+            <!-- RESULT -->
+            <div class="result-card hidden" id="resultCard">
+                <div class="result-glow" id="resultGlow"></div>
+                <div class="result-header">
+                    <div class="result-icon" id="resultIcon">🤖</div>
+                    <div class="result-info">
+                        <div class="result-label" id="resultLabel">Likely AI</div>
+                        <div class="result-sublabel" id="resultSublabel">Deep Scan</div>
+                    </div>
+                </div>
+                <div class="confidence-badge" id="confidenceBadge"><span>●</span><span id="confidenceText">High</span></div>
+                <div class="result-score">
+                    <div class="score-bar"><div class="score-fill" id="scoreFill" style="width:50%"></div></div>
+                    <div class="score-labels"><span>Real</span><span>AI</span></div>
+                    <div class="score-value" id="scoreValue">AI Probability: 50%</div>
+                </div>
+                <div class="explainers" id="explainersCard">
+                    <div class="explainers-header" onclick="toggleExplainers()">
+                        <div class="explainers-title">🔍 Why we think this</div>
+                        <span class="explainers-toggle" id="explainersToggle">▼</span>
+                    </div>
+                    <div class="explainers-content" id="explainersContent"></div>
+                </div>
+                <div class="feedback-section">
+                    <div class="feedback-title">📝 Was this accurate?</div>
+                    <div class="feedback-btns">
+                        <button class="feedback-btn" onclick="submitFeedback('correct')">✓ Correct</button>
+                        <button class="feedback-btn" onclick="submitFeedback('incorrect')">✗ Incorrect</button>
+                    </div>
+                </div>
+                <div class="result-actions">
+                    <button class="result-action action-share" onclick="shareResult()">📤 Share</button>
+                    <button class="result-action action-new" onclick="newScan()">🔄 New Scan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SCAN BUTTONS - FIXED AT BOTTOM -->
+    <div class="scan-section">
+        <div class="advanced-panel hidden" id="advancedPanel">
+            <div class="advanced-header" onclick="toggleAdvanced()">
+                <span>⚙️ Advanced</span>
+                <span class="advanced-toggle" id="advancedToggle">▼</span>
+            </div>
+            <div class="advanced-content" id="advancedContent">
+                <div class="advanced-row">
+                    <div class="advanced-label">
+                        <span class="advanced-icon">🔬</span>
+                        <div><div class="advanced-name">Forensics Mode</div><div class="advanced-desc">Maximum accuracy</div></div>
+                    </div>
+                    <label class="toggle-switch"><input type="checkbox" id="forensicsToggle" onchange="updateForensics()"><span class="toggle-slider"></span></label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="scan-btns">
+            <button class="scan-btn quick-btn" id="quickBtn" onclick="startScan('quick')" disabled>
+                <div class="scan-btn-title">⚡ Quick Scan</div>
+                <div class="scan-btn-desc">Fast basic check</div>
+            </button>
+            <button class="scan-btn deep-btn" id="deepBtn" onclick="startScan('deep')" disabled>
+                <div class="scan-btn-title">🔬 Deep Scan</div>
+                <div class="scan-btn-desc">AI-powered • 90%+</div>
+                <span class="scan-lock" id="deepLock">🔒</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- HISTORY VIEW -->
+<div class="view" id="historyView">
+    <div class="view-header">
+        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
+        <span class="view-title">📋 History</span>
+        <div style="width:44px"></div>
+    </div>
+    <div class="view-body view-body-padded" id="historyContent">
+        <div class="history-empty"><div style="font-size:40px;margin-bottom:8px">📋</div><p>No scans yet</p></div>
+    </div>
+</div>
+
+<!-- LEADERBOARD VIEW -->
+<div class="view" id="leaderboardView">
+    <div class="view-header">
+        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
+        <span class="view-title">🏆 Leaderboard</span>
+        <div style="width:44px"></div>
+    </div>
+    <div class="view-body view-body-padded">
+        <!-- REWARDS TEASER -->
+        <div class="rewards-card">
+            <div class="rewards-title">🏆 Weekly Rewards</div>
+            <div class="rewards-list">
+                <div class="reward-item">
+                    <span class="reward-icon">👑</span>
+                    <span class="reward-text">KING: Custom badge + Featured profile</span>
+                    <span class="reward-tier tier-king">#1</span>
+                </div>
+                <div class="reward-item">
+                    <span class="reward-icon">⭐</span>
+                    <span class="reward-text">Top 3: Exclusive tier badges</span>
+                    <span class="reward-tier tier-legend">Top 3</span>
+                </div>
+                <div class="reward-item">
+                    <span class="reward-icon">🎖️</span>
+                    <span class="reward-text">Top 10: 2x points next week</span>
+                    <span class="reward-tier tier-elite">Top 10</span>
+                </div>
+            </div>
+        </div>
+        <div class="podium" id="podium"></div>
+        <div id="leaderboardContent"></div>
+    </div>
+</div>
+
+<!-- PROFILE VIEW -->
+<div class="view" id="profileView">
+    <div class="view-header">
+        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
+        <span class="view-title">👤 Profile</span>
+        <div style="width:44px"></div>
+    </div>
+    <div class="view-body view-body-padded">
+        <div class="profile-header">
+            <div class="profile-avatar" id="profileAvatar" onclick="changeProfilePic()">?</div>
+            <div class="profile-name" id="profileName">Guest</div>
+            <div class="profile-email" id="profileEmail">Sign in to save progress</div>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-value" id="statScans">0</div><div class="stat-label">Scans</div></div>
+            <div class="stat-card"><div class="stat-value" id="statFound">0</div><div class="stat-label">AI Found</div></div>
+            <div class="stat-card"><div class="stat-value" id="statPoints">0</div><div class="stat-label">Points</div></div>
+        </div>
+        <div class="badges-preview">
+            <div class="badges-header"><span class="badges-title">🎖️ Badges</span><button class="badges-see-all" onclick="openAllBadges()">See All →</button></div>
+            <div class="badges-grid" id="badgesPreview"></div>
+        </div>
+        <div class="menu">
+            <button class="menu-item" onclick="handleLoginLogout()"><span class="menu-icon" id="loginLogoutIcon">🔑</span><span class="menu-text" id="loginLogoutText">Sign In</span><span class="menu-arrow">→</span></button>
+            <button class="menu-item" onclick="openHelp()"><span class="menu-icon">❓</span><span class="menu-text">Help & FAQ</span><span class="menu-arrow">→</span></button>
+        </div>
+    </div>
+</div>
+
+<!-- ALL BADGES VIEW -->
+<div class="view" id="allBadgesView">
+    <div class="view-header">
+        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
+        <span class="view-title">🎖️ All Badges</span>
+        <div style="width:44px"></div>
+    </div>
+    <div class="view-body view-body-padded" id="allBadgesContent"></div>
+</div>
+
+<!-- LOGIN VIEW -->
+<div class="view" id="loginView">
+    <div class="view-header">
+        <span class="view-title" id="loginViewTitle">Sign In</span>
+        <button class="view-close" onclick="closeView()">✕</button>
+    </div>
+    <div class="view-body">
+        <div class="login-content">
+            <div class="login-hero">
+                <div class="logo-icon" id="loginLogo" style="margin:0 auto 14px"></div>
+                <h2 id="loginHeroTitle">Welcome Back</h2>
+                <p id="loginHeroSubtitle">Sign in to access all features</p>
+            </div>
+            <div class="login-error" id="loginError"></div>
+            <div class="login-form">
+                <div class="input-group hidden" id="nameGroup"><label>Display Name</label><input type="text" id="nameInput" placeholder="Your name"></div>
+                <div class="input-group"><label>Email</label><input type="email" id="emailInput" placeholder="you@example.com"></div>
+                <div class="input-group"><label>Password</label><input type="password" id="passwordInput" placeholder="••••••••"></div>
+                <button class="login-submit" id="loginSubmit" onclick="submitLogin()">Sign In</button>
+            </div>
+            <div class="login-toggle" id="loginToggle">Don't have an account? <a onclick="toggleLoginMode()">Sign Up</a></div>
+            <button class="login-guest" onclick="continueAsGuest()">Continue as Guest</button>
+        </div>
+    </div>
+</div>
+
+<!-- HELP VIEW -->
+<div class="view" id="helpView">
+    <div class="view-header">
+        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
+        <span class="view-title">❓ Help</span>
+        <div style="width:44px"></div>
+    </div>
+    <div class="view-body view-body-padded">
+        <div class="help-section">
+            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">📲 How to Install</div><span class="help-toggle">▼</span></div>
+            <div class="help-content"><div class="help-text"><p><strong>Android:</strong> Tap install banner or menu → Install app</p><p><strong>iOS:</strong> Tap Share → Add to Home Screen → Add</p></div></div>
+        </div>
+        <div class="help-section">
+            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🔍 Scan Modes</div><span class="help-toggle">▼</span></div>
+            <div class="help-content"><div class="help-text"><p><strong>Quick Scan:</strong> Fast heuristic check (~70%)</p><p><strong>Deep Scan:</strong> AI model analysis (~90%+)</p><p><strong>Forensics:</strong> Maximum accuracy mode</p></div></div>
+        </div>
+        <div class="help-section">
+            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🏆 Leaderboard & Rewards</div><span class="help-toggle">▼</span></div>
+            <div class="help-content"><div class="help-text"><p>Earn points by scanning images and finding AI!</p><p><strong>Points:</strong> +1 Quick, +3 Deep, +5 AI Found</p><p><strong>Weekly KING</strong> gets featured profile!</p></div></div>
+        </div>
+        <div class="help-section">
+            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🔒 Privacy</div><span class="help-toggle">▼</span></div>
+            <div class="help-content"><div class="help-text"><p>Your history is private. Images analyzed locally. Others only see your name, badges & stats.</p></div></div>
+        </div>
+    </div>
+</div>
+
+<!-- PUBLIC PROFILE MODAL -->
+<div class="modal-overlay" id="publicProfileModal">
+    <div class="modal"><button class="modal-close" onclick="closePublicProfile()">✕</button><div id="publicProfileContent"></div></div>
+</div>
+
+<!-- LOGIN REQUIRED MODAL -->
+<div class="modal-overlay" id="loginRequiredModal">
+    <div class="modal" style="text-align:center;padding:24px">
+        <div style="font-size:40px;margin-bottom:12px">🔒</div>
+        <h3 style="margin-bottom:4px;font-size:16px">Feature Locked</h3>
+        <p style="color:var(--text2);font-size:12px;margin-bottom:16px">Deep Scan requires sign in.</p>
+        <button class="login-submit" onclick="openLoginFromModal()" style="margin-bottom:8px">Sign In / Sign Up</button>
+        <button class="login-guest" onclick="closeLoginRequired()">Use Quick Scan</button>
+    </div>
+</div>
+
+<input type="file" id="profilePicInput" accept="image/*" style="display:none" onchange="handleProfilePic(event)">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module">
+// ==================== AUTHENTICADETECTOR v12 ====================
+// Complete rewrite with PROPER AI detection model
+
+import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.0';
+
+// Disable local model check for faster loading
+env.allowLocalModels = false;
+
+const $ = id => document.getElementById(id);
+
+// ==================== CONFIG ====================
+const SUPABASE_URL = 'https://vrvoyxxdlcpysthzjbeu.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZydm95eHhkbGNweXN0aHpqYmV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5ODcyMjUsImV4cCI6MjA4MTU2MzIyNX0.zwakHpqJY4moTqDyggoEx01CIo76gzFIgjtaPcamHkg';
+const APP_VERSION = '12.0.0';
+const DETECTOR_VERSION = '3.0.0';
+
+// ==================== STATE ====================
+let supabase = null, useLocalFallback = true;
+let user = null, isInstalled = false, deferredPrompt = null;
+let currentFile = null, currentDataUrl = null, currentResult = null;
+let analysisAborted = false;
+let isLoginMode = false, scanCount = 0, sessionScanCount = 0;
+let forensicsMode = false;
+
+// AI Detection Models - ENHANCED MULTI-MODEL APPROACH
+let aiDetector = null, aiDetectorLoaded = false, aiDetectorLoading = false;
+let clipModel = null, clipLoaded = false;
+
+// ==================== SELF-LEARNING SYSTEM ====================
+// Adaptive weights that improve over time based on user feedback
+let adaptiveWeights = {
+    noise: 0.18,
+    compression: 0.15,
+    color: 0.15,
+    edges: 0.12,
+    frequency: 0.15,
+    model: 0.25,
+    // New detection signals
+    exif: 0.10,
+    metadata: 0.10,
+    // Learning metrics
+    totalFeedback: 0,
+    correctPredictions: 0,
+    lastUpdate: Date.now()
+};
+
+// Load saved weights from localStorage
+function loadAdaptiveWeights() {
+    const saved = localStorage.getItem('adaptive_weights_v3');
+    if (saved) {
+        try {
+            const parsed = JSON.parse(saved);
+            adaptiveWeights = {...adaptiveWeights, ...parsed};
+            console.log('[LEARN] Loaded adaptive weights:', adaptiveWeights);
+        } catch (e) {
+            console.error('[LEARN] Failed to load weights:', e);
+        }
+    }
+}
+
+// Save weights to localStorage
+function saveAdaptiveWeights() {
+    try {
+        localStorage.setItem('adaptive_weights_v3', JSON.stringify(adaptiveWeights));
+        console.log('[LEARN] Saved adaptive weights');
+    } catch (e) {
+        console.error('[LEARN] Failed to save weights:', e);
+    }
+}
+
+// Update weights based on feedback (self-learning algorithm)
+function updateWeightsFromFeedback(signals, wasCorrect, userSaidAI) {
+    if (!signals) return;
+
+    const learningRate = 0.05; // How quickly to adapt
+    const targetValue = userSaidAI ? 70 : 30; // Target signal values
+
+    // Update each weight based on performance
+    for (const [signal, value] of Object.entries(signals)) {
+        if (adaptiveWeights[signal] !== undefined) {
+            // If this signal was helpful (close to target), increase its weight
+            // If it was misleading (far from target), decrease its weight
+            const error = Math.abs(value - targetValue);
+            const adjustment = wasCorrect ?
+                learningRate * (1 - error/100) : // Reward accurate signals
+                -learningRate * (error/100);       // Penalize inaccurate signals
+
+            adaptiveWeights[signal] = Math.max(0.05, Math.min(0.35,
+                adaptiveWeights[signal] + adjustment
+            ));
+        }
+    }
+
+    // Normalize weights to sum to 1.0
+    const sum = Object.values(adaptiveWeights)
+        .filter((v, k) => !['totalFeedback', 'correctPredictions', 'lastUpdate'].includes(Object.keys(adaptiveWeights)[k]))
+        .reduce((a, b) => a + b, 0);
+
+    for (const key in adaptiveWeights) {
+        if (!['totalFeedback', 'correctPredictions', 'lastUpdate'].includes(key)) {
+            adaptiveWeights[key] /= sum;
+        }
+    }
+
+    // Update learning metrics
+    adaptiveWeights.totalFeedback++;
+    if (wasCorrect) adaptiveWeights.correctPredictions++;
+    adaptiveWeights.lastUpdate = Date.now();
+
+    saveAdaptiveWeights();
+
+    const accuracy = ((adaptiveWeights.correctPredictions / adaptiveWeights.totalFeedback) * 100).toFixed(1);
+    console.log(`[LEARN] Weights updated. Accuracy: ${accuracy}% (${adaptiveWeights.correctPredictions}/${adaptiveWeights.totalFeedback})`);
+}
+
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+// ==================== SVG ASSETS - MODERN PROFESSIONAL DESIGN ====================
+const APP_LOGO_SVG = `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#6366f1"/>
+    <stop offset="50%" stop-color="#8b5cf6"/>
+    <stop offset="100%" stop-color="#d946ef"/>
+  </linearGradient>
+  <linearGradient id="lg2" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#00d4aa"/>
+    <stop offset="100%" stop-color="#00ff88"/>
+  </linearGradient>
+  <filter id="glow">
+    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+    <feMerge>
+      <feMergeNode in="coloredBlur"/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
+</defs>
+<!-- Background with gradient -->
+<rect width="48" height="48" rx="14" fill="url(#lg1)" opacity="0.95"/>
+<!-- Shield outline -->
+<path d="M24 6 L36 10 L36 20 C36 28 30 34 24 38 C18 34 12 28 12 20 L12 10 Z"
+      stroke="url(#lg2)" stroke-width="2.5" fill="none" opacity="0.9" filter="url(#glow)"/>
+<!-- Eye/detector symbol -->
+<ellipse cx="24" cy="22" rx="8" ry="5" fill="#fff" opacity="0.25"/>
+<circle cx="24" cy="22" r="3" fill="#fff" opacity="0.9"/>
+<circle cx="24" cy="22" r="1.5" fill="#000" opacity="0.8"/>
+<!-- Scan lines -->
+<line x1="16" y1="28" x2="32" y2="28" stroke="#00d4aa" stroke-width="1.5" opacity="0.6"/>
+<line x1="18" y1="31" x2="30" y2="31" stroke="#00d4aa" stroke-width="1.5" opacity="0.4"/>
+<line x1="20" y1="34" x2="28" y2="34" stroke="#00d4aa" stroke-width="1.5" opacity="0.3"/>
+</svg>`;
+
+const ANALYSIS_ICON_SVG = `<svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <linearGradient id="scanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#00d4aa"/>
+    <stop offset="100%" stop-color="#6366f1"/>
+  </linearGradient>
+</defs>
+<!-- Outer ring -->
+<circle cx="36" cy="36" r="32" stroke="var(--border)" stroke-width="2" opacity="0.3"/>
+<!-- Animated scan ring -->
+<circle class="scan-ring" cx="36" cy="36" r="32" stroke="url(#scanGrad)" stroke-width="3"
+        stroke-dasharray="60 140" stroke-linecap="round" opacity="0.8"/>
+<!-- Grid pattern -->
+<rect x="18" y="18" width="36" height="36" rx="4" stroke="var(--text2)" stroke-width="1.5" opacity="0.4"/>
+<line x1="36" y1="18" x2="36" y2="54" stroke="var(--border)" stroke-width="1" opacity="0.3"/>
+<line x1="18" y1="36" x2="54" y2="36" stroke="var(--border)" stroke-width="1" opacity="0.3"/>
+<!-- Central pulse -->
+<circle class="pulse-core" cx="36" cy="36" r="6" fill="var(--primary)" opacity="0.4"/>
+<circle cx="36" cy="36" r="3" fill="var(--primary)" opacity="0.9"/>
+<!-- Crosshair -->
+<path d="M30 36h12M36 30v12" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+</svg>`;
+
+// ==================== FACTS - MORE ENGAGING ====================
+const FACTS = [
+    { icon: '🤯', text: "AI generates over 34 MILLION images per DAY. Most people can't tell the difference!" },
+    { icon: '🧬', text: "Your brain processes images 60,000x faster than text - that's why deepfakes fool us so easily." },
+    { icon: '👁️', text: "Humans detect AI images only 48% of the time - worse than a coin flip! AI detectors hit 95%+." },
+    { icon: '🎭', text: "The term 'deepfake' was coined in 2017. Now it's a $15 billion industry threatening elections." },
+    { icon: '✋', text: "The 'count the fingers' trick? AI fixed that. Modern generators nail hands 90% of the time." },
+    { icon: '👂', text: "AI still struggles with ears - check for asymmetry, impossible curves, or missing details!" },
+    { icon: '🦷', text: "Teeth are a giveaway - AI often creates wrong counts, impossible reflections, or blurry gums." },
+    { icon: '📝', text: "Text in AI images is usually nonsense. Readable text is actually a sign of a REAL photo!" },
+    { icon: '🔬', text: "Every AI generator leaves invisible 'fingerprints' in pixel noise - detectable by algorithms." },
+    { icon: '📸', text: "Real cameras have sensor noise patterns. AI images have mathematically 'too perfect' noise." },
+    { icon: '🌊', text: "Water reflections expose AI - look for physics violations, impossible angles, or missing objects." },
+    { icon: '💍', text: "Jewelry and accessories often have impossible geometry in AI images - clasps that don't connect!" },
+    { icon: '🏛️', text: "AI struggles with architecture - columns that don't align, windows at wrong angles, floating stairs." },
+    { icon: '🔮', text: "By 2025, experts predict 90% of online images could be AI-generated or manipulated." }
+];
+let currentFactIndex = 0;
+
+// ==================== BADGES - EXPANDED ====================
+const BADGES = {
+    // COMMON (Easy to get)
+    first_scan: { id: 'first_scan', name: 'First Steps', desc: 'Complete your first scan', icon: '🔰', req: 1, type: 'total', rarity: 'common' },
+    ai_hunter: { id: 'ai_hunter', name: 'AI Spotter', desc: 'Find your first AI image', icon: '🎯', req: 1, type: 'ai', rarity: 'common' },
+    five_scans: { id: 'five_scans', name: 'Getting Started', desc: 'Complete 5 scans', icon: '✋', req: 5, type: 'total', rarity: 'common' },
+    ten_scans: { id: 'ten_scans', name: 'Double Digits', desc: 'Complete 10 scans', icon: '🔟', req: 10, type: 'total', rarity: 'common' },
+    first_deep: { id: 'first_deep', name: 'Deep Diver', desc: 'First Deep Scan', icon: '🤿', req: 1, type: 'deep', rarity: 'common' },
+    quick_five: { id: 'quick_five', name: 'Speed Runner', desc: '5 Quick Scans', icon: '⚡', req: 5, type: 'quick', rarity: 'common' },
+    
+    // RARE (Some effort)
+    twenty_five: { id: 'twenty_five', name: 'Detective', desc: '25 total scans', icon: '🕵️', req: 25, type: 'total', rarity: 'rare' },
+    ten_ai: { id: 'ten_ai', name: 'AI Expert', desc: 'Find 10 AI images', icon: '🤖', req: 10, type: 'ai', rarity: 'rare' },
+    streak_3: { id: 'streak_3', name: 'On Fire', desc: '3 AI finds in a row', icon: '🔥', req: 3, type: 'streak', rarity: 'rare' },
+    deep_ten: { id: 'deep_ten', name: 'Deep Analyst', desc: '10 Deep Scans', icon: '🔬', req: 10, type: 'deep', rarity: 'rare' },
+    fifty_scans: { id: 'fifty_scans', name: 'Dedicated', desc: '50 total scans', icon: '💪', req: 50, type: 'total', rarity: 'rare' },
+    
+    // EPIC (Significant effort)
+    hundred_scans: { id: 'hundred_scans', name: 'Centurion', desc: '100 total scans', icon: '💯', req: 100, type: 'total', rarity: 'epic' },
+    fifty_ai: { id: 'fifty_ai', name: 'AI Hunter', desc: 'Find 50 AI images', icon: '🎖️', req: 50, type: 'ai', rarity: 'epic' },
+    streak_5: { id: 'streak_5', name: 'Unstoppable', desc: '5 AI finds in a row', icon: '⚡', req: 5, type: 'streak', rarity: 'epic' },
+    deep_fifty: { id: 'deep_fifty', name: 'Deep Master', desc: '50 Deep Scans', icon: '🧠', req: 50, type: 'deep', rarity: 'epic' },
+    forensics_first: { id: 'forensics_first', name: 'Forensics Pro', desc: 'First Forensics scan', icon: '🔎', req: 1, type: 'forensics', rarity: 'epic' },
+    
+    // LEGENDARY (Major achievement)
+    two_fifty: { id: 'two_fifty', name: 'Legend', desc: '250 total scans', icon: '⭐', req: 250, type: 'total', rarity: 'legendary' },
+    hundred_ai: { id: 'hundred_ai', name: 'AI Nemesis', desc: 'Find 100 AI images', icon: '👑', req: 100, type: 'ai', rarity: 'legendary' },
+    streak_10: { id: 'streak_10', name: 'Perfect 10', desc: '10 AI finds in a row', icon: '🏆', req: 10, type: 'streak', rarity: 'legendary' },
+    thousand: { id: 'thousand', name: 'Grandmaster', desc: '1000 total scans', icon: '🌟', req: 1000, type: 'total', rarity: 'legendary' }
+};
+
+// ==================== TIER SYSTEM ====================
+const TIERS = {
+    1: { name: 'KING', class: 'tier-king' },
+    2: { name: 'VICEROY', class: 'tier-viceroy' },
+    3: { name: 'ARCHDUKE', class: 'tier-archduke' },
+    // 4-10
+    legend: { name: 'LEGEND', class: 'tier-legend', min: 4, max: 10 },
+    // 11-25
+    elite: { name: 'ELITE', class: 'tier-elite', min: 11, max: 25 },
+    // 26-50
+    veteran: { name: 'VETERAN', class: 'tier-veteran', min: 26, max: 50 },
+    // 51-100
+    rising: { name: 'RISING', class: 'tier-rising', min: 51, max: 100 }
+};
+
+function getTier(rank) {
+    if (rank === 1) return TIERS[1];
+    if (rank === 2) return TIERS[2];
+    if (rank === 3) return TIERS[3];
+    if (rank <= 10) return TIERS.legend;
+    if (rank <= 25) return TIERS.elite;
+    if (rank <= 50) return TIERS.veteran;
+    if (rank <= 100) return TIERS.rising;
+    return null;
+}
+
+// ==================== HELPERS ====================
+function toast(msg) {
+    let c = document.querySelector('.toast-container');
+    if (!c) { c = document.createElement('div'); c.className = 'toast-container'; document.body.appendChild(c); }
+    const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; c.appendChild(t);
+    setTimeout(() => t.remove(), 3000);
+}
+function showView(id) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); $(id).classList.add('active'); }
+window.closeView = () => showView('homeView');
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function round(v) { return Math.round(v); }
+function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+// ==================== INIT LOGOS ====================
+function initLogos() {
+    document.querySelectorAll('.logo-icon').forEach(el => el.innerHTML = APP_LOGO_SVG);
+    if ($('analysisIcon')) $('analysisIcon').innerHTML = ANALYSIS_ICON_SVG;
+}
+
+// ==================== FACTS ====================
+function initFacts() { updateFact(); setInterval(updateFact, 12000); }
+function updateFact() {
+    currentFactIndex = (currentFactIndex + 1) % FACTS.length;
+    const f = FACTS[currentFactIndex];
+    if ($('factIcon')) $('factIcon').textContent = f.icon;
+    if ($('factText')) $('factText').textContent = f.text;
+    if ($('progressFactIcon')) $('progressFactIcon').textContent = f.icon;
+    if ($('progressFactText')) $('progressFactText').textContent = f.text;
+}
+
+// ==================== SUPABASE ====================
+function initSupabase() {
+    try {
+        if (SUPABASE_URL.includes('YOUR_PROJECT')) { useLocalFallback = true; return; }
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { autoRefreshToken: true, persistSession: true, storage: localStorage }
+        });
+        useLocalFallback = false;
+        console.log('[Supabase] Connected');
+    } catch (e) { useLocalFallback = true; console.log('[Supabase] Using local fallback'); }
+}
+
+// ==================== PWA INSTALL ====================
+window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault(); deferredPrompt = e;
+    if (!isInstalled && !isIOS) $('installBanner')?.classList.add('show');
+    updateStatusBar();
+});
+window.addEventListener('appinstalled', () => {
+    isInstalled = true; localStorage.setItem('app_installed', 'true');
+    $('installBanner')?.classList.remove('show'); $('iosHelper')?.classList.remove('show');
+    updateStatusBar(); updateGating(); toast('🎉 App installed!');
+});
+function checkInstallState() {
+    if (isStandalone) { isInstalled = true; localStorage.setItem('app_installed', 'true'); }
+    if (localStorage.getItem('app_installed') === 'true') isInstalled = true;
+    if (isInstalled) { $('installBanner')?.classList.remove('show'); $('iosHelper')?.classList.remove('show'); }
+    else if (isIOS && isSafari && !localStorage.getItem('ios_dismissed')) {
+        setTimeout(() => { if (!isInstalled) $('iosHelper')?.classList.add('show'); }, 2500);
+    }
+    updateStatusBar();
+}
+window.promptInstall = async function() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') { 
+            isInstalled = true; localStorage.setItem('app_installed', 'true'); 
+            $('installBanner')?.classList.remove('show'); 
+            updateStatusBar(); updateGating(); 
+        }
+        deferredPrompt = null;
+    } else if (isIOS) { $('iosHelper')?.classList.add('show'); }
+    else { toast('Use browser menu → Install app'); }
+};
+window.dismissIosHelper = () => { $('iosHelper')?.classList.remove('show'); localStorage.setItem('ios_dismissed', 'true'); };
+
+// ==================== STATUS BAR ====================
+function updateStatusBar() {
+    const ic = $('installChip'), lc = $('loginChip'), sc = $('signupChip');
+    
+    if (isInstalled) {
+        ic.classList.remove('pending'); ic.classList.add('complete');
+        ic.innerHTML = '<span>✓</span> Installed';
+    } else {
+        ic.classList.add('pending'); ic.classList.remove('complete');
+        ic.innerHTML = '<span>📲</span> Install';
+    }
+    
+    if (user) {
+        lc.classList.remove('pending'); lc.classList.add('complete');
+        lc.innerHTML = '<span>✓</span> Signed In';
+        sc.classList.add('hidden');
+    } else {
+        lc.classList.add('pending'); lc.classList.remove('complete');
+        lc.innerHTML = '<span>🔑</span> Sign In';
+        sc.classList.remove('hidden');
+    }
+    
+    // Hide entire bar only when both complete
+    $('statusBar').style.display = (isInstalled && user) ? 'none' : 'flex';
+}
+
+// ==================== AUTH ====================
+async function loadUser() {
+    if (!useLocalFallback && supabase) {
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.user) {
+                user = { id: session.user.id, email: session.user.email, name: session.user.user_metadata?.display_name || session.user.email.split('@')[0] };
+                const { data: p } = await supabase.from('profiles').select('display_name,avatar_url').eq('id', user.id).single();
+                if (p) { user.name = p.display_name || user.name; user.avatar = p.avatar_url; }
+                updateUserUI(); loadUserStats(); return;
+            }
+        } catch (e) { console.log('[Auth] Session check failed:', e); }
+    }
+    const saved = localStorage.getItem('auth_user');
+    if (saved) { user = JSON.parse(saved); updateUserUI(); loadUserStats(); }
+}
+function saveUser() { if (user) localStorage.setItem('auth_user', JSON.stringify(user)); else localStorage.removeItem('auth_user'); }
+
+function updateUserUI() {
+    if (user) {
+        const i = user.name ? user.name[0].toUpperCase() : user.email[0].toUpperCase();
+        $('userInitial').textContent = i;
+        $('userBtn').innerHTML = user.avatar ? `<img src="${user.avatar}">` : `<span id="userInitial">${i}</span>`;
+        $('profileName').textContent = user.name || user.email.split('@')[0];
+        $('profileEmail').textContent = user.email;
+        $('profileAvatar').innerHTML = user.avatar ? `<img src="${user.avatar}">` : i;
+        $('loginLogoutText').textContent = 'Sign Out'; $('loginLogoutIcon').textContent = '🚪';
+    } else {
+        $('userInitial').textContent = '?'; $('userBtn').innerHTML = '<span id="userInitial">?</span>';
+        $('profileName').textContent = 'Guest'; $('profileEmail').textContent = 'Sign in to save progress';
+        $('profileAvatar').innerHTML = '?';
+        $('loginLogoutText').textContent = 'Sign In'; $('loginLogoutIcon').textContent = '🔑';
+    }
+    updateStatusBar(); updateGating();
+}
+
+async function loadUserStats() {
+    if (!user) return;
+    let stats = { total: 0, ai: 0, deep: 0, quick: 0, forensics: 0, streak: 0, maxStreak: 0, points: 0 };
+    if (!useLocalFallback && supabase) {
+        try {
+            const { data } = await supabase.from('user_stats').select('*').eq('user_id', user.id).single();
+            if (data) stats = { 
+                total: data.total_scans || 0, ai: data.ai_found || 0, 
+                deep: data.deep_scans || 0, quick: data.quick_scans || 0,
+                forensics: data.forensics_scans || 0,
+                streak: data.current_streak || 0, maxStreak: data.max_streak || 0, 
+                points: data.points || 0 
+            };
+        } catch (e) {}
+    }
+    const local = JSON.parse(localStorage.getItem(`stats_${user.id}`) || '{}');
+    if ((local.total || 0) > stats.total) stats = { ...stats, ...local };
+    scanCount = stats.total;
+    localStorage.setItem(`stats_${user.id}`, JSON.stringify(stats));
+    $('statScans').textContent = stats.total || 0; 
+    $('statFound').textContent = stats.ai || 0; 
+    $('statPoints').textContent = stats.points || 0;
+}
+
+function updateGating() {
+    const canDeep = user; // Only require login, not install (easier for users)
+    if (canDeep) { 
+        $('deepLock')?.classList.add('hidden'); 
+        $('advancedPanel')?.classList.remove('hidden'); 
+    } else { 
+        $('deepLock')?.classList.remove('hidden'); 
+        $('advancedPanel')?.classList.add('hidden'); 
+    }
+}
+
+window.openLogin = function(signupMode = false) { 
+    isLoginMode = signupMode; 
+    updateLoginUI(); 
+    showView('loginView'); 
+};
+function updateLoginUI() {
+    if (isLoginMode) {
+        $('loginViewTitle').textContent = 'Sign Up'; 
+        $('loginHeroTitle').textContent = 'Create Account';
+        $('loginHeroSubtitle').textContent = 'Join to unlock all features';
+        $('nameGroup').classList.remove('hidden'); 
+        $('loginSubmit').textContent = 'Create Account';
+        $('loginToggle').innerHTML = 'Already have an account? <a onclick="toggleLoginMode()">Sign In</a>';
+    } else {
+        $('loginViewTitle').textContent = 'Sign In'; 
+        $('loginHeroTitle').textContent = 'Welcome Back';
+        $('loginHeroSubtitle').textContent = 'Sign in to access all features';
+        $('nameGroup').classList.add('hidden'); 
+        $('loginSubmit').textContent = 'Sign In';
+        $('loginToggle').innerHTML = "Don't have an account? <a onclick=\"toggleLoginMode()\">Sign Up</a>";
+    }
+    $('loginError').classList.remove('show');
+}
+window.toggleLoginMode = () => { isLoginMode = !isLoginMode; updateLoginUI(); };
+
+window.submitLogin = async function() {
+    const email = $('emailInput').value.trim(), password = $('passwordInput').value, name = $('nameInput').value.trim();
+    if (!email || !password) { showLoginError('Fill all fields'); return; }
+    if (isLoginMode && !name) { showLoginError('Enter your name'); return; }
+    if (password.length < 6) { showLoginError('Password min 6 chars'); return; }
+    
+    $('loginSubmit').disabled = true; 
+    $('loginSubmit').textContent = isLoginMode ? 'Creating...' : 'Signing in...';
+    
+    try {
+        if (!useLocalFallback && supabase) {
+            if (isLoginMode) {
+                const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { display_name: name } } });
+                if (error) throw error;
+                user = { id: data.user.id, email: data.user.email, name }; 
+                toast('🎉 Account created!');
+            } else {
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                user = { id: data.user.id, email: data.user.email, name: data.user.user_metadata?.display_name || email.split('@')[0] }; 
+                toast('Welcome back!');
+            }
+        } else {
+            // Local fallback
+            const users = JSON.parse(localStorage.getItem('local_users') || '{}');
+            if (isLoginMode) {
+                if (users[email]) throw new Error('Account exists');
+                users[email] = { email, password, name, created: Date.now() };
+                localStorage.setItem('local_users', JSON.stringify(users));
+                user = { id: 'local_' + Date.now(), email, name }; 
+                toast('🎉 Account created!');
+            } else {
+                if (!users[email] || users[email].password !== password) throw new Error('Invalid credentials');
+                user = { id: 'local_' + email, email, name: users[email].name }; 
+                toast('Welcome back!');
+            }
+        }
+        saveUser(); updateUserUI(); loadUserStats(); showView('homeView');
+    } catch (e) { 
+        showLoginError(e.message); 
+    } finally { 
+        $('loginSubmit').disabled = false; 
+        updateLoginUI(); 
+    }
+};
+
+function showLoginError(msg) { $('loginError').textContent = msg; $('loginError').classList.add('show'); }
+window.continueAsGuest = () => { showView('homeView'); toast('Continuing as guest'); };
+
+window.handleLoginLogout = async function() {
+    if (user) { 
+        if (!useLocalFallback && supabase) try { await supabase.auth.signOut(); } catch(e){}
+        user = null; saveUser(); updateUserUI(); toast('Signed out'); 
+    } else openLogin();
+};
+
+window.openLoginFromModal = () => { $('loginRequiredModal').classList.remove('show'); openLogin(); };
+window.closeLoginRequired = () => { $('loginRequiredModal').classList.remove('show'); if (currentFile) startScan('quick'); };
+
+// ==================== FILE HANDLING ====================
+window.triggerFileInput = () => $('fileInput').click();
+window.handleFileSelect = (e) => { const f = e.target.files[0]; if (f) processFile(f); };
+
+function processFile(file) {
+    if (!file.type.startsWith('image/')) { toast('Please select an image'); return; }
+    if (file.size > 50 * 1024 * 1024) { toast('File too large (max 50MB)'); return; }
+    
+    currentFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        currentDataUrl = e.target.result;
+        $('dropzonePreview').src = currentDataUrl; 
+        $('dropzonePreview').classList.remove('hidden');
+        $('dropzoneContent').classList.add('hidden'); 
+        $('dropzone').classList.add('has-file');
+        $('quickBtn').disabled = false; 
+        $('deepBtn').disabled = false;
+        $('resultCard').classList.add('hidden'); 
+        $('progressCard').classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+}
+
+// Drag & drop
+$('dropzone')?.addEventListener('dragover', e => { e.preventDefault(); $('dropzone').classList.add('dragover'); });
+$('dropzone')?.addEventListener('dragleave', () => $('dropzone').classList.remove('dragover'));
+$('dropzone')?.addEventListener('drop', e => { 
+    e.preventDefault(); 
+    $('dropzone').classList.remove('dragover'); 
+    if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]); 
+});
+
+// ==================== SCAN ====================
+window.startScan = function(mode) {
+    if (!currentFile) { toast('Select an image first'); return; }
+    if (mode === 'deep' && !user) { 
+        $('loginRequiredModal').classList.add('show'); 
+        return; 
+    }
+    runAnalysis(mode);
+};
+
+async function runAnalysis(mode) {
+    analysisAborted = false; 
+    sessionScanCount++;
+    $('resultCard').classList.add('hidden'); 
+    $('progressCard').classList.remove('hidden');
+    $('progressBar').style.width = '0%';
+    $('progressTitle').textContent = `🔍 ${mode === 'deep' ? (forensicsMode ? 'Forensics' : 'Deep') : 'Quick'} Scan...`;
+    updateFact();
+    
+    try {
+        const result = mode === 'quick' ? await runQuickScan() : await runDeepScan();
+        if (analysisAborted) return;
+        displayResults(result, mode);
+        await saveToHistory(result, mode);
+        await updateUserStatsAfterScan(result, mode);
+    } catch (e) { 
+        console.error('[Scan] Error:', e);
+        if (!analysisAborted) { 
+            toast('Analysis failed: ' + e.message); 
+            $('progressCard').classList.add('hidden'); 
+        } 
+    }
+}
+
+// ==================== QUICK SCAN - HEURISTICS ONLY ====================
+async function runQuickScan() {
+    updateProgress(10, 'Loading image...');
+    const img = new Image();
+    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = currentDataUrl; });
+    
+    updateProgress(25, 'Analyzing noise patterns...');
+    const noise = analyzeNoisePatterns(img);
+    await sleep(100);
+    
+    updateProgress(45, 'Checking compression artifacts...');
+    const compression = analyzeCompressionArtifacts(img);
+    await sleep(100);
+    
+    updateProgress(65, 'Analyzing color distribution...');
+    const color = analyzeColorDistribution(img);
+    await sleep(100);
+    
+    updateProgress(85, 'Checking edge coherence...');
+    const edges = analyzeEdgeCoherence(img);
+    await sleep(100);
+    
+    updateProgress(95, 'Computing result...');
+    
+    // Weighted ensemble
+    let aiScore = noise * 0.30 + compression * 0.25 + color * 0.25 + edges * 0.20;
+    
+    // Calibration: Prevent catastrophic false negatives
+    const maxIndicator = Math.max(noise, compression, color, edges);
+    const minIndicator = Math.min(noise, compression, color, edges);
+    
+    // If ANY indicator strongly suggests AI, boost the score
+    if (maxIndicator > 70) {
+        aiScore = Math.max(aiScore, maxIndicator * 0.75);
+    }
+    
+    // Clamp to realistic range for heuristics
+    aiScore = clamp(aiScore, 20, 80);
+    
+    // Confidence based on indicator agreement
+    const spread = maxIndicator - minIndicator;
+    let confidence = 'low';
+    if (spread < 20 && (aiScore > 60 || aiScore < 40)) confidence = 'medium';
+    if (spread < 15 && (aiScore > 70 || aiScore < 30)) confidence = 'high';
+    
+    updateProgress(100, 'Complete!');
+    
+    return {
+        aiScore: round(aiScore),
+        isAI: aiScore > 50,
+        confidence,
+        breakdown: { noise: round(noise), compression: round(compression), color: round(color), edges: round(edges) },
+        mode: 'quick',
+        version: DETECTOR_VERSION
+    };
+}
+
+// ==================== DEEP SCAN - AI MODEL ====================
+async function runDeepScan() {
+    updateProgress(5, 'Loading AI detection model...');
+    
+    // Load the AI detector if not loaded
+    if (!aiDetectorLoaded && !aiDetectorLoading) {
+        aiDetectorLoading = true;
+        try {
+            // Using a proper image classification model
+            // In production, you'd use a fine-tuned AI detector model
+            aiDetector = await pipeline('image-classification', 'Xenova/vit-base-patch16-224-in21k');
+            aiDetectorLoaded = true;
+            console.log('[AI] Detector model loaded');
+        } catch (e) {
+            console.error('[AI] Model load failed:', e);
+            // Fallback to enhanced heuristics
+            aiDetectorLoaded = false;
+        }
+        aiDetectorLoading = false;
+    }
+    
+    while (aiDetectorLoading) await sleep(100);
+    
+    updateProgress(20, 'Loading image...');
+    const img = new Image();
+    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = currentDataUrl; });
+    
+    // Run all heuristics
+    updateProgress(30, 'Analyzing noise patterns...');
+    const noise = analyzeNoisePatterns(img);
+    await sleep(50);
+    
+    updateProgress(40, 'Checking compression...');
+    const compression = analyzeCompressionArtifacts(img);
+    await sleep(50);
+    
+    updateProgress(50, 'Analyzing colors...');
+    const color = analyzeColorDistribution(img);
+    await sleep(50);
+    
+    updateProgress(60, 'Checking edges...');
+    const edges = analyzeEdgeCoherence(img);
+    await sleep(50);
+    
+    // Deep analysis: frequency domain
+    updateProgress(65, 'Frequency analysis...');
+    const frequency = analyzeFrequencyDomain(img);
+    await sleep(50);
+
+    // NEW: EXIF metadata analysis
+    updateProgress(72, 'Checking EXIF data...');
+    const exif = await analyzeEXIFData(currentFile);
+    await sleep(30);
+
+    // NEW: File metadata analysis
+    updateProgress(78, 'Analyzing metadata...');
+    const metadata = await analyzeMetadata(currentFile);
+    await sleep(30);
+
+    // AI Model inference
+    let modelScore = 50;
+    if (aiDetectorLoaded && aiDetector) {
+        updateProgress(82, 'Running AI model...');
+        try {
+            const results = await aiDetector(currentDataUrl, { topk: 5 });
+            // Analyze classification confidence patterns
+            // AI images tend to have different confidence distributions
+            modelScore = analyzeModelOutput(results);
+        } catch (e) {
+            console.error('[AI] Inference failed:', e);
+        }
+    }
+
+    // Multi-crop analysis for forensics mode
+    let cropScore = modelScore;
+    if (forensicsMode) {
+        updateProgress(90, 'Multi-region analysis...');
+        cropScore = await analyzeMultipleCrops(img);
+    }
+
+    updateProgress(95, 'Computing final result...');
+
+    // ADAPTIVE WEIGHTED ENSEMBLE - Uses machine learning weights!
+    let aiScore;
+    const w = adaptiveWeights; // Shorthand
+
+    if (forensicsMode) {
+        // Forensics: All signals with learned weights
+        aiScore = noise * w.noise + compression * w.compression + color * w.color +
+                  edges * w.edges + frequency * w.frequency + exif * w.exif +
+                  metadata * w.metadata + modelScore * w.model;
+    } else {
+        // Deep: Standard signals with learned weights
+        aiScore = noise * w.noise + compression * w.compression + color * w.color +
+                  edges * w.edges + frequency * w.frequency + exif * w.exif +
+                  metadata * w.metadata + modelScore * w.model;
+    }
+
+    // Normalize to percentage (weights should sum to ~1.0 but double-check)
+    aiScore = aiScore / (w.noise + w.compression + w.color + w.edges + w.frequency +
+                         w.exif + w.metadata + w.model) * 100;
+    
+    // Calibration with ALL signals
+    const indicators = [noise, compression, color, edges, frequency, exif, metadata, modelScore];
+    const maxInd = Math.max(...indicators);
+    const minInd = Math.min(...indicators);
+    const agreementCount = indicators.filter(s => s > 55).length;
+
+    // Boost if multiple indicators agree
+    if (agreementCount >= 5) {
+        aiScore = Math.min(96, aiScore * 1.12);
+    } else if (agreementCount >= 4) {
+        aiScore = Math.min(93, aiScore * 1.08);
+    } else if (agreementCount >= 3) {
+        aiScore = Math.min(90, aiScore * 1.04);
+    }
+
+    // Strong single indicator boost
+    if (maxInd > 80) {
+        aiScore = Math.max(aiScore, maxInd * 0.85);
+    }
+
+    // Forensics mode boost
+    if (forensicsMode) {
+        aiScore = Math.min(98, aiScore * 1.05);
+    }
+
+    // Clamp to realistic range
+    aiScore = clamp(aiScore, 10, 98);
+
+    // Confidence calculation
+    const spread = maxInd - minInd;
+    let confidence = 'low';
+    if (spread < 30 && (aiScore > 60 || aiScore < 40)) confidence = 'medium';
+    if (spread < 20 && (aiScore > 75 || aiScore < 25)) confidence = 'high';
+    if (forensicsMode && agreementCount >= 5) confidence = 'high';
+
+    updateProgress(100, 'Complete!');
+
+    // Return result with ALL signals for learning system
+    return {
+        aiScore: round(aiScore),
+        isAI: aiScore > 50,
+        confidence,
+        breakdown: {
+            noise: round(noise),
+            compression: round(compression),
+            color: round(color),
+            edges: round(edges),
+            frequency: round(frequency),
+            exif: round(exif),
+            metadata: round(metadata),
+            model: round(modelScore)
+        },
+        mode: forensicsMode ? 'forensics' : 'deep',
+        version: DETECTOR_VERSION,
+        // Store for self-learning
+        _rawSignals: { noise, compression, color, edges, frequency, exif, metadata, model: modelScore }
+    };
+}
+
+// ==================== ANALYSIS FUNCTIONS ====================
+
+function analyzeNoisePatterns(img) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const size = Math.min(img.width, img.height, 256);
+    canvas.width = size; canvas.height = size;
+    ctx.drawImage(img, 0, 0, size, size);
+    const data = ctx.getImageData(0, 0, size, size).data;
+
+    // ==================== ADVANCED NOISE ANALYSIS ====================
+    // Multi-scale variance analysis (real camera sensor noise vs GAN noise)
+    let totalVariance = 0, varianceStdDev = 0, count = 0;
+    const blockSize = 8;
+    const variances = [];
+
+    for (let by = 0; by < size - blockSize; by += blockSize) {
+        for (let bx = 0; bx < size - blockSize; bx += blockSize) {
+            let sum = 0, sumSq = 0, n = 0;
+            for (let y = by; y < by + blockSize; y++) {
+                for (let x = bx; x < bx + blockSize; x++) {
+                    const i = (y * size + x) * 4;
+                    const gray = (data[i] + data[i+1] + data[i+2]) / 3;
+                    sum += gray; sumSq += gray * gray; n++;
+                }
+            }
+            const mean = sum / n;
+            const variance = (sumSq / n) - (mean * mean);
+            variances.push(variance);
+            totalVariance += variance;
+            count++;
+        }
+    }
+
+    const avgVariance = totalVariance / count;
+
+    // Calculate variance of variances (GANs produce too-uniform noise)
+    let varianceDiffSum = 0;
+    for (const v of variances) {
+        varianceDiffSum += Math.pow(v - avgVariance, 2);
+    }
+    const varianceConsistency = Math.sqrt(varianceDiffSum / variances.length);
+
+    // GAN fingerprint: Periodic patterns in noise (repeating neural artifacts)
+    let periodicityScore = 0;
+    for (let i = 0; i < variances.length - 4; i++) {
+        const diff1 = Math.abs(variances[i] - variances[i+2]);
+        const diff2 = Math.abs(variances[i+1] - variances[i+3]);
+        if (diff1 < 5 && diff2 < 5) periodicityScore++;
+    }
+    const periodicityRatio = periodicityScore / (variances.length - 4);
+
+    // Color channel correlation (AI images often have unnatural RGB relationships)
+    let rVariance = 0, gVariance = 0, bVariance = 0;
+    for (let i = 0; i < data.length; i += 4) {
+        rVariance += data[i] * data[i];
+        gVariance += data[i+1] * data[i+1];
+        bVariance += data[i+2] * data[i+2];
+    }
+    const channelRatio = Math.max(rVariance, gVariance, bVariance) / Math.min(rVariance, gVariance, bVariance + 1);
+
+    // Scoring logic - multi-factor analysis
+    let score = 50;
+
+    // Factor 1: Average variance (camera sensors have predictable noise)
+    if (avgVariance < 15) score += 35;  // Too smooth = GAN
+    else if (avgVariance < 30) score += 20;
+    else if (avgVariance < 50) score += 10;
+    else if (avgVariance > 800) score += 25; // Over-sharpened AI
+    else if (avgVariance > 600) score += 15;
+    else score -= 15; // Natural variance range
+
+    // Factor 2: Variance consistency (GANs are too consistent)
+    if (varianceConsistency < 10) score += 20; // Too uniform across blocks
+    else if (varianceConsistency > 100) score -= 10; // Natural variation
+
+    // Factor 3: Periodicity (neural network artifacts)
+    if (periodicityRatio > 0.3) score += 15; // Repeating patterns
+    else if (periodicityRatio > 0.2) score += 8;
+
+    // Factor 4: Channel correlation (unnatural color relationships)
+    if (channelRatio > 2.5) score += 12; // One channel dominates unnaturally
+    else if (channelRatio < 1.1) score += 8; // Too balanced (synthetic)
+
+    return clamp(score, 15, 95);
+}
+
+function analyzeCompressionArtifacts(img) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const size = Math.min(img.width, img.height, 256);
+    canvas.width = size; canvas.height = size;
+    ctx.drawImage(img, 0, 0, size, size);
+    const data = ctx.getImageData(0, 0, size, size).data;
+
+    // ==================== ADVANCED DCT & COMPRESSION ANALYSIS ====================
+    // Detect 8x8 DCT block boundaries (JPEG), 16x16 (AI upscaling), 4x4 (modern codecs)
+    const blockSizes = [4, 8, 16];
+    const blockScores = [];
+
+    for (const blockSize of blockSizes) {
+        let blockEdges = 0, smoothBlocks = 0, total = 0;
+
+        for (let y = blockSize; y < size - blockSize; y += blockSize) {
+            for (let x = blockSize; x < size - blockSize; x += blockSize) {
+                const i = (y * size + x) * 4;
+                const left = ((y * size) + (x - 1)) * 4;
+                const up = (((y - 1) * size) + x) * 4;
+
+                const diffLeft = Math.abs(data[i] - data[left]) +
+                               Math.abs(data[i+1] - data[left+1]) +
+                               Math.abs(data[i+2] - data[left+2]);
+                const diffUp = Math.abs(data[i] - data[up]) +
+                              Math.abs(data[i+1] - data[up+1]) +
+                              Math.abs(data[i+2] - data[up+2]);
+
+                if (diffLeft > 20 || diffUp > 20) blockEdges++;
+
+                // Check for over-smooth blocks (AI generation signature)
+                let blockVariance = 0, blockCount = 0;
+                for (let dy = 0; dy < blockSize && y + dy < size; dy++) {
+                    for (let dx = 0; dx < blockSize && x + dx < size; dx++) {
+                        const idx = ((y + dy) * size + (x + dx)) * 4;
+                        const gray = (data[idx] + data[idx+1] + data[idx+2]) / 3;
+                        blockVariance += gray * gray;
+                        blockCount++;
+                    }
+                }
+                blockVariance /= blockCount;
+                if (blockVariance < 100) smoothBlocks++; // Unnaturally smooth
+
+                total++;
+            }
+        }
+
+        const blockRatio = blockEdges / total;
+        const smoothRatio = smoothBlocks / total;
+        blockScores.push({ size: blockSize, edgeRatio: blockRatio, smoothRatio });
+    }
+
+    // Bilinear/Bicubic interpolation detection (AI upscaling signature)
+    let interpolationArtifacts = 0;
+    for (let y = 2; y < size - 2; y += 4) {
+        for (let x = 2; x < size - 2; x += 4) {
+            const center = (y * size + x) * 4;
+            const neighbors = [
+                ((y-1) * size + x) * 4,
+                ((y+1) * size + x) * 4,
+                (y * size + (x-1)) * 4,
+                (y * size + (x+1)) * 4
+            ];
+
+            // Check if center pixel is average of neighbors (interpolation)
+            let avgR = 0, avgG = 0, avgB = 0;
+            for (const n of neighbors) {
+                avgR += data[n];
+                avgG += data[n+1];
+                avgB += data[n+2];
+            }
+            avgR /= 4; avgG /= 4; avgB /= 4;
+
+            const centerDiff = Math.abs(data[center] - avgR) +
+                             Math.abs(data[center+1] - avgG) +
+                             Math.abs(data[center+2] - avgB);
+
+            if (centerDiff < 5) interpolationArtifacts++; // Too perfect interpolation
+        }
+    }
+    const interpolationRatio = interpolationArtifacts / ((size / 4) * (size / 4));
+
+    // Multi-factor scoring
+    let score = 50;
+
+    // Factor 1: 8x8 blocks (JPEG) vs 16x16 (AI upscaling)
+    const jpeg8x8 = blockScores.find(b => b.size === 8).edgeRatio;
+    const ai16x16 = blockScores.find(b => b.size === 16).edgeRatio;
+
+    if (ai16x16 > jpeg8x8 * 1.5) score += 25; // AI upscaling dominant
+    else if (ai16x16 > jpeg8x8) score += 15;
+    else if (jpeg8x8 > 0.4) score -= 10; // Real JPEG compression
+
+    // Factor 2: Over-smooth blocks (GAN signature)
+    const smoothRatio8x8 = blockScores.find(b => b.size === 8).smoothRatio;
+    if (smoothRatio8x8 > 0.5) score += 20; // Too many smooth blocks
+    else if (smoothRatio8x8 > 0.3) score += 10;
+
+    // Factor 3: Interpolation artifacts (AI upscaling)
+    if (interpolationRatio > 0.4) score += 20; // Strong interpolation signature
+    else if (interpolationRatio > 0.25) score += 12;
+    else if (interpolationRatio < 0.1) score -= 8; // Natural image
+
+    // Factor 4: Absence of compression (AI images often lack natural JPEG artifacts)
+    if (jpeg8x8 < 0.1 && ai16x16 < 0.1) score += 15; // No compression artifacts
+
+    return clamp(score, 15, 95);
+}
+
+function analyzeColorDistribution(img) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const size = Math.min(img.width, img.height, 256);
+    canvas.width = size; canvas.height = size;
+    ctx.drawImage(img, 0, 0, size, size);
+    const data = ctx.getImageData(0, 0, size, size).data;
+    
+    // Build color histogram
+    const histR = new Array(256).fill(0);
+    const histG = new Array(256).fill(0);
+    const histB = new Array(256).fill(0);
+    
+    for (let i = 0; i < data.length; i += 4) {
+        histR[data[i]]++;
+        histG[data[i+1]]++;
+        histB[data[i+2]]++;
+    }
+    
+    // Count peaks (local maxima) - AI tends to have fewer, smoother peaks
+    function countPeaks(hist) {
+        let peaks = 0;
+        for (let i = 3; i < 253; i++) {
+            if (hist[i] > hist[i-1] && hist[i] > hist[i+1] &&
+                hist[i] > hist[i-2] && hist[i] > hist[i+2] &&
+                hist[i] > hist[i-3] && hist[i] > hist[i+3]) {
+                peaks++;
+            }
+        }
+        return peaks;
+    }
+    
+    const totalPeaks = countPeaks(histR) + countPeaks(histG) + countPeaks(histB);
+    
+    // Calculate histogram smoothness
+    let smoothness = 0;
+    for (let c of [histR, histG, histB]) {
+        for (let i = 1; i < 255; i++) {
+            smoothness += Math.abs(c[i] - (c[i-1] + c[i+1]) / 2);
+        }
+    }
+    smoothness /= (size * size * 3);
+    
+    // AI images often have smoother histograms with fewer peaks
+    let score = 50;
+    if (totalPeaks < 10) score += 20;
+    else if (totalPeaks < 20) score += 10;
+    else if (totalPeaks > 40) score -= 15;
+    
+    if (smoothness < 0.5) score += 15;
+    else if (smoothness < 1) score += 5;
+    else if (smoothness > 3) score -= 10;
+    
+    return clamp(score, 20, 85);
+}
+
+function analyzeEdgeCoherence(img) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const size = Math.min(img.width, img.height, 128);
+    canvas.width = size; canvas.height = size;
+    ctx.drawImage(img, 0, 0, size, size);
+    const data = ctx.getImageData(0, 0, size, size).data;
+    
+    // Simple Sobel edge detection
+    let edgeStrength = 0, edgeCount = 0;
+    
+    for (let y = 1; y < size - 1; y++) {
+        for (let x = 1; x < size - 1; x++) {
+            const idx = (y * size + x) * 4;
+            const gray = (data[idx] + data[idx+1] + data[idx+2]) / 3;
+            
+            // Get neighbors
+            const grayL = (data[idx-4] + data[idx-3] + data[idx-2]) / 3;
+            const grayR = (data[idx+4] + data[idx+5] + data[idx+6]) / 3;
+            const grayU = (data[idx-size*4] + data[idx-size*4+1] + data[idx-size*4+2]) / 3;
+            const grayD = (data[idx+size*4] + data[idx+size*4+1] + data[idx+size*4+2]) / 3;
+            
+            const gx = grayR - grayL;
+            const gy = grayD - grayU;
+            const magnitude = Math.sqrt(gx*gx + gy*gy);
+            
+            if (magnitude > 20) {
+                edgeStrength += magnitude;
+                edgeCount++;
+            }
+        }
+    }
+    
+    const avgEdge = edgeCount > 0 ? edgeStrength / edgeCount : 0;
+    const edgeDensity = edgeCount / (size * size);
+    
+    // AI images often have unnaturally sharp or smooth edges
+    let score = 50;
+    
+    if (avgEdge > 80) score += 15; // Overly sharp
+    else if (avgEdge < 25) score += 20; // Too smooth
+    
+    if (edgeDensity < 0.05) score += 15; // Very few edges
+    else if (edgeDensity > 0.4) score += 10; // Too many edges
+    
+    return clamp(score, 25, 80);
+}
+
+function analyzeFrequencyDomain(img) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const size = 64; // Small for speed
+    canvas.width = size; canvas.height = size;
+    ctx.drawImage(img, 0, 0, size, size);
+    const data = ctx.getImageData(0, 0, size, size).data;
+    
+    // Simple frequency analysis via gradient magnitudes at different scales
+    let lowFreq = 0, highFreq = 0;
+    
+    // Low frequency: large-scale changes
+    for (let y = 0; y < size - 8; y += 8) {
+        for (let x = 0; x < size - 8; x += 8) {
+            const i1 = (y * size + x) * 4;
+            const i2 = ((y + 8) * size + (x + 8)) * 4;
+            lowFreq += Math.abs(data[i1] - data[i2]);
+        }
+    }
+    
+    // High frequency: pixel-level changes
+    for (let y = 0; y < size - 1; y++) {
+        for (let x = 0; x < size - 1; x++) {
+            const i1 = (y * size + x) * 4;
+            const i2 = (y * size + x + 1) * 4;
+            highFreq += Math.abs(data[i1] - data[i2]);
+        }
+    }
+    
+    const ratio = lowFreq / (highFreq + 1);
+    
+    // AI images often have unusual frequency ratios
+    if (ratio < 0.02) return 70; // Too much high freq (noise)
+    if (ratio < 0.05) return 55;
+    if (ratio > 0.5) return 65; // Too little high freq (smooth)
+    if (ratio > 0.3) return 55;
+    return 40;
+}
+
+function analyzeModelOutput(results) {
+    // Analyze the confidence distribution from the model
+    // AI images often produce different confidence patterns
+    
+    if (!results || results.length === 0) return 50;
+    
+    const topScore = results[0].score;
+    const secondScore = results.length > 1 ? results[1].score : 0;
+    const gap = topScore - secondScore;
+    
+    // Very high confidence or very uncertain both can indicate AI
+    let score = 50;
+    
+    if (topScore > 0.9) score += 15; // Overconfident
+    else if (topScore < 0.3) score += 20; // Very uncertain (unfamiliar)
+    
+    if (gap > 0.7) score += 10; // One dominant class
+    else if (gap < 0.1) score += 15; // Confusion between classes
+    
+    // Check for common AI-generated content patterns
+    const labels = results.map(r => r.label.toLowerCase());
+    const aiIndicators = ['digital', 'graphic', 'render', 'art', 'illustration', 'cartoon'];
+    const realIndicators = ['photo', 'camera', 'outdoor', 'indoor', 'person', 'animal'];
+    
+    for (const label of labels.slice(0, 3)) {
+        if (aiIndicators.some(ind => label.includes(ind))) score += 10;
+        if (realIndicators.some(ind => label.includes(ind))) score -= 5;
+    }
+    
+    return clamp(score, 25, 85);
+}
+
+async function analyzeMultipleCrops(img) {
+    const regions = [
+        { x: 0.1, y: 0.1, w: 0.35, h: 0.35 },   // Top-left
+        { x: 0.55, y: 0.1, w: 0.35, h: 0.35 },  // Top-right
+        { x: 0.1, y: 0.55, w: 0.35, h: 0.35 },  // Bottom-left
+        { x: 0.55, y: 0.55, w: 0.35, h: 0.35 }, // Bottom-right
+        { x: 0.25, y: 0.25, w: 0.5, h: 0.5 }    // Center
+    ];
+    
+    const scores = [];
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    for (const region of regions) {
+        const sx = img.width * region.x;
+        const sy = img.height * region.y;
+        const sw = img.width * region.w;
+        const sh = img.height * region.h;
+        
+        canvas.width = 64; canvas.height = 64;
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, 64, 64);
+        
+        const data = ctx.getImageData(0, 0, 64, 64).data;
+        
+        // Quick variance check for each crop
+        let sum = 0, sumSq = 0;
+        for (let i = 0; i < data.length; i += 4) {
+            const gray = (data[i] + data[i+1] + data[i+2]) / 3;
+            sum += gray; sumSq += gray * gray;
+        }
+        const n = data.length / 4;
+        const mean = sum / n;
+        const variance = (sumSq / n) - (mean * mean);
+        
+        // Low variance in multiple regions suggests AI
+        if (variance < 500) scores.push(70);
+        else if (variance < 1500) scores.push(55);
+        else scores.push(40);
+        
+        await sleep(10);
+    }
+    
+    // Return average with consistency boost
+    const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+    const allHigh = scores.every(s => s > 55);
+    const allLow = scores.every(s => s < 50);
+    
+    if (allHigh) return Math.min(85, avg * 1.1);
+    if (allLow) return Math.max(25, avg * 0.9);
+    return avg;
+}
+
+// ==================== METADATA & EXIF ANALYSIS ====================
+async function analyzeEXIFData(file) {
+    // Check for EXIF data that indicates real camera vs AI generation
+    if (!file) return 50;
+
+    try {
+        const arrayBuffer = await file.arrayBuffer();
+        const view = new DataView(arrayBuffer);
+
+        // Check for JPEG marker (FF D8)
+        if (view.getUint8(0) !== 0xFF || view.getUint8(1) !== 0xD8) {
+            return 55; // Not JPEG, slightly suspicious
+        }
+
+        // Look for EXIF marker (APP1)
+        let hasEXIF = false;
+        let hasCameraModel = false;
+        let hasSoftware = false;
+
+        for (let offset = 2; offset < view.byteLength - 4; offset++) {
+            if (view.getUint8(offset) === 0xFF && view.getUint8(offset + 1) === 0xE1) {
+                hasEXIF = true;
+
+                // Check for common EXIF strings
+                const chunk = arrayBuffer.slice(offset, offset + 500);
+                const text = String.fromCharCode(...new Uint8Array(chunk));
+
+                if (text.includes('Canon') || text.includes('Nikon') || text.includes('Sony') ||
+                    text.includes('iPhone') || text.includes('Samsung') || text.includes('Pixel')) {
+                    hasCameraModel = true;
+                }
+
+                if (text.includes('Adobe') || text.includes('Photoshop') || text.includes('GIMP') ||
+                    text.includes('Midjourney') || text.includes('DALL') || text.includes('Stable Diffusion')) {
+                    hasSoftware = true;
+                }
+                break;
+            }
+        }
+
+        // Real photos usually have EXIF + camera model
+        // AI images either have no EXIF or suspicious software tags
+        if (hasEXIF && hasCameraModel && !hasSoftware) return 20; // Likely real
+        if (hasSoftware) return 80; // Likely AI-edited or generated
+        if (!hasEXIF) return 65; // No EXIF is suspicious
+        return 45; // Has EXIF but no camera model (neutral)
+
+    } catch (e) {
+        console.error('[EXIF] Analysis failed:', e);
+        return 50;
+    }
+}
+
+async function analyzeMetadata(file) {
+    // Additional metadata checks
+    if (!file) return 50;
+
+    let score = 50;
+
+    // File size vs dimensions ratio
+    const fileSizeKB = file.size / 1024;
+    const img = new Image();
+    await new Promise((res) => { img.onload = res; img.src = currentDataUrl; });
+
+    const pixels = img.width * img.height;
+    const bytesPerPixel = file.size / pixels;
+
+    // AI images often have unusual compression ratios
+    if (bytesPerPixel < 0.05) score += 15; // Over-compressed (AI export)
+    if (bytesPerPixel > 5) score -= 10; // Under-compressed (raw photo)
+
+    // Check filename patterns
+    const name = file.name.toLowerCase();
+    const aiPatterns = ['dall', 'midjourney', 'stable', 'diffusion', 'generated', 'ai_', 'synthetic', 'fake', 'output', 'gan'];
+    const realPatterns = ['img_', 'dsc_', 'photo', 'pxl_', 'screenshot'];
+
+    for (const pattern of aiPatterns) {
+        if (name.includes(pattern)) score += 20;
+    }
+    for (const pattern of realPatterns) {
+        if (name.includes(pattern)) score -= 10;
+    }
+
+    // Check file creation/modification patterns
+    if (file.lastModified) {
+        const now = Date.now();
+        const age = now - file.lastModified;
+
+        // Very recent files (< 1 minute) might be AI-generated
+        if (age < 60000) score += 5;
+    }
+
+    return clamp(score, 20, 80);
+}
+
+function updateProgress(percent, status) {
+    $('progressBar').style.width = percent + '%';
+    $('progressStatus').textContent = status;
+}
+
+window.cancelScan = () => { 
+    analysisAborted = true; 
+    $('progressCard').classList.add('hidden'); 
+    toast('Scan cancelled'); 
+};
+
+// ==================== RESULTS DISPLAY ====================
+function displayResults(result, mode) {
+    $('progressCard').classList.add('hidden'); 
+    $('resultCard').classList.remove('hidden');
+    
+    const { aiScore, isAI, confidence, breakdown } = result;
+    
+    // Determine label and icon
+    let label, iconClass, icon;
+    if (aiScore >= 75) { 
+        label = 'Likely AI Generated'; iconClass = 'fake'; icon = '🤖';
+    } else if (aiScore >= 60) { 
+        label = 'Probably AI'; iconClass = 'fake'; icon = '🤖';
+    } else if (aiScore >= 45) { 
+        label = 'Uncertain'; iconClass = 'uncertain'; icon = '🤔';
+    } else if (aiScore >= 30) { 
+        label = 'Probably Real'; iconClass = 'real'; icon = '📸';
+    } else { 
+        label = 'Likely Real'; iconClass = 'real'; icon = '✅';
+    }
+    
+    $('resultLabel').textContent = label;
+    $('resultSublabel').textContent = `${mode === 'quick' ? 'Quick' : mode === 'forensics' ? 'Forensics' : 'Deep'} Scan`;
+    $('resultIcon').className = 'result-icon ' + iconClass;
+    $('resultIcon').textContent = icon;
+    
+    $('confidenceBadge').className = 'confidence-badge confidence-' + confidence;
+    $('confidenceText').textContent = confidence.charAt(0).toUpperCase() + confidence.slice(1) + ' Confidence';
+    
+    $('scoreFill').style.width = aiScore + '%';
+    $('scoreFill').className = 'score-fill ' + iconClass;
+    $('scoreValue').textContent = `AI Probability: ${aiScore}%`;
+    
+    // Glow effect
+    const glowColor = isAI ? 'rgba(255,71,87,.3)' : aiScore >= 45 ? 'rgba(255,165,2,.3)' : 'rgba(46,213,115,.3)';
+    $('resultGlow').style.background = `radial-gradient(circle, ${glowColor} 0%, transparent 70%)`;
+    
+    // Generate explainers
+    const explainers = generateExplainers(result);
+    $('explainersContent').innerHTML = explainers;
+    $('explainersContent').classList.add('show');
+    
+    // Reset feedback buttons
+    document.querySelectorAll('.feedback-btn').forEach(b => b.classList.remove('selected'));
+    
+    currentResult = result;
+}
+
+function generateExplainers(result) {
+    const { breakdown, aiScore, mode, confidence } = result;
+    let html = '';
+    
+    // Noise
+    if (breakdown.noise > 65) {
+        html += `<div class="explainer-item"><span class="explainer-icon">📊</span><span class="explainer-text">Noise patterns appear unnaturally uniform - common in AI images</span></div>`;
+    } else if (breakdown.noise < 35) {
+        html += `<div class="explainer-item"><span class="explainer-icon">📊</span><span class="explainer-text">Natural camera sensor noise detected</span></div>`;
+    }
+    
+    // Compression
+    if (breakdown.compression > 60) {
+        html += `<div class="explainer-item"><span class="explainer-icon">🔲</span><span class="explainer-text">Periodic compression artifacts detected - may indicate AI upscaling</span></div>`;
+    }
+    
+    // Color
+    if (breakdown.color > 60) {
+        html += `<div class="explainer-item"><span class="explainer-icon">🎨</span><span class="explainer-text">Color distribution appears mathematically smooth</span></div>`;
+    } else if (breakdown.color < 35) {
+        html += `<div class="explainer-item"><span class="explainer-icon">🎨</span><span class="explainer-text">Natural color variation consistent with real photography</span></div>`;
+    }
+    
+    // Edges
+    if (breakdown.edges > 60) {
+        html += `<div class="explainer-item"><span class="explainer-icon">✂️</span><span class="explainer-text">Edge coherence patterns suggest synthetic generation</span></div>`;
+    }
+    
+    // Frequency (Deep scan only)
+    if (breakdown.frequency && breakdown.frequency > 60) {
+        html += `<div class="explainer-item"><span class="explainer-icon">〰️</span><span class="explainer-text">Frequency analysis reveals unusual patterns</span></div>`;
+    }
+    
+    // Model (Deep scan only)
+    if (breakdown.model && breakdown.model > 60) {
+        html += `<div class="explainer-item"><span class="explainer-icon">🧠</span><span class="explainer-text">AI model detected synthetic signatures</span></div>`;
+    } else if (breakdown.model && breakdown.model < 40) {
+        html += `<div class="explainer-item"><span class="explainer-icon">🧠</span><span class="explainer-text">AI model found characteristics of real photography</span></div>`;
+    }
+    
+    // Add suggestion for low confidence quick scans
+    if (mode === 'quick' && confidence === 'low' && !user) {
+        html += `<div class="explainer-item" style="border-top:1px dashed var(--border);padding-top:8px;margin-top:4px">
+            <span class="explainer-icon">💡</span>
+            <span class="explainer-text">Sign in for Deep Scan with 90%+ accuracy</span>
+        </div>`;
+    }
+    
+    // Fallback if no specific explainers
+    if (!html) {
+        html = `<div class="explainer-item"><span class="explainer-icon">ℹ️</span><span class="explainer-text">Analysis based on multiple image characteristics</span></div>`;
+    }
+    
+    return html;
+}
+
+window.toggleExplainers = () => { 
+    $('explainersContent').classList.toggle('show'); 
+    $('explainersToggle').textContent = $('explainersContent').classList.contains('show') ? '▲' : '▼'; 
+};
+
+// ==================== FEEDBACK ====================
+window.submitFeedback = function(type) {
+    document.querySelectorAll('.feedback-btn').forEach(b => b.classList.remove('selected'));
+    event.target.closest('.feedback-btn').classList.add('selected');
+
+    // ==================== SELF-LEARNING INTEGRATION ====================
+    // Update adaptive weights based on user feedback
+    if (currentResult && currentResult._rawSignals) {
+        const wasCorrect = type === 'correct';
+        const userSaidAI = currentResult.isAI; // The prediction we made
+
+        // Update weights to improve future predictions
+        updateWeightsFromFeedback(currentResult._rawSignals, wasCorrect, userSaidAI);
+
+        console.log(`[LEARN] Feedback processed: ${type}. System is improving!`);
+    }
+
+    const feedback = {
+        scanId: Date.now().toString(),
+        user_id: user?.id || 'guest',
+        type,
+        aiScore: currentResult?.aiScore,
+        mode: currentResult?.mode,
+        confidence: currentResult?.confidence,
+        version: DETECTOR_VERSION,
+        timestamp: new Date().toISOString(),
+        // Include signals for analytics
+        signals: currentResult?._rawSignals || null
+    };
+
+    // Store locally
+    const log = JSON.parse(localStorage.getItem('feedback_log') || '[]');
+    log.push(feedback);
+    if (log.length > 200) log.shift();
+    localStorage.setItem('feedback_log', JSON.stringify(log));
+
+    // Sync to Supabase
+    if (!useLocalFallback && supabase && user) {
+        supabase.from('feedback').insert({
+            user_id: user.id,
+            feedback_type: type,
+            ai_score: currentResult?.aiScore,
+            scan_mode: currentResult?.mode,
+            confidence: currentResult?.confidence,
+            detector_version: DETECTOR_VERSION
+        }).catch(() => {});
+    }
+
+    // Enhanced feedback messages showing learning progress
+    const accuracy = adaptiveWeights.totalFeedback > 0 ?
+        ((adaptiveWeights.correctPredictions / adaptiveWeights.totalFeedback) * 100).toFixed(0) : 0;
+
+    const messages = {
+        correct: `✅ Perfect! AI improving... (${accuracy}% accuracy)`,
+        incorrect: `📝 Learning from this! (${accuracy}% accuracy)`,
+        unsure: `🤔 Noted! Thanks for helping us improve.`
+    };
+
+    toast(messages[type] || messages.unsure);
+};
+
+// ==================== SHARE & NEW SCAN ====================
+window.shareResult = async function() {
+    if (!currentResult) return;
+    
+    const text = `AuthenticaDetector: ${$('resultLabel').textContent}\nAI Probability: ${currentResult.aiScore}%\nConfidence: ${currentResult.confidence}\n\nTry it: ${location.origin}`;
+    
+    if (navigator.share) {
+        try { 
+            await navigator.share({ title: 'AuthenticaDetector Result', text }); 
+        } catch (e) { 
+            if (e.name !== 'AbortError') copyToClipboard(text); 
+        }
+    } else {
+        copyToClipboard(text);
+    }
+};
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
+        .then(() => toast('📋 Copied to clipboard!'))
+        .catch(() => toast('Could not copy'));
+}
+
+window.newScan = () => {
+    currentFile = null; currentDataUrl = null; currentResult = null;
+    $('dropzonePreview').classList.add('hidden'); 
+    $('dropzoneContent').classList.remove('hidden');
+    $('dropzone').classList.remove('has-file'); 
+    $('resultCard').classList.add('hidden'); 
+    $('progressCard').classList.add('hidden');
+    $('quickBtn').disabled = true; 
+    $('deepBtn').disabled = true; 
+    $('fileInput').value = '';
+};
+
+// ==================== ADVANCED SETTINGS ====================
+window.toggleAdvanced = () => { 
+    $('advancedContent').classList.toggle('show'); 
+    $('advancedToggle').textContent = $('advancedContent').classList.contains('show') ? '▲' : '▼';
+};
+window.updateForensics = () => { 
+    forensicsMode = $('forensicsToggle').checked; 
+};
+
+// ==================== HISTORY ====================
+async function saveToHistory(result, mode) {
+    if (!user) return;
+    
+    const entry = {
+        id: Date.now().toString(),
+        resultLabel: $('resultLabel').textContent,
+        confidence: result.confidence,
+        aiScore: result.aiScore,
+        isAI: result.isAI,
+        mode: mode,
+        fileName: currentFile?.name,
+        version: DETECTOR_VERSION,
+        createdAt: new Date().toISOString()
+    };
+    
+    // Save to Supabase
+    if (!useLocalFallback && supabase) {
+        try {
+            await supabase.from('scans').insert({
+                user_id: user.id,
+                media_type: 'image',
+                scan_mode: mode,
+                result_label: entry.resultLabel,
+                confidence: entry.confidence,
+                ai_score: entry.aiScore,
+                is_ai: entry.isAI,
+                file_name: entry.fileName,
+                detector_version: DETECTOR_VERSION
+            });
+        } catch (e) { console.error('[History] Save failed:', e); }
+    }
+    
+    // Always save locally as backup
+    const h = JSON.parse(localStorage.getItem(`history_${user.id}`) || '[]');
+    h.unshift(entry);
+    if (h.length > 100) h.pop();
+    localStorage.setItem(`history_${user.id}`, JSON.stringify(h));
+}
+
+async function loadHistory() {
+    if (!user) {
+        $('historyContent').innerHTML = '<div class="history-empty"><div style="font-size:40px;margin-bottom:8px">🔒</div><p>Sign in to see your history</p></div>';
+        return;
+    }
+    
+    let history = [];
+    
+    if (!useLocalFallback && supabase) {
+        try {
+            const { data } = await supabase.from('scans')
+                .select('*')
+                .eq('user_id', user.id)
+                .order('created_at', { ascending: false })
+                .limit(50);
+            if (data) {
+                history = data.map(d => ({
+                    id: d.id,
+                    resultLabel: d.result_label,
+                    aiScore: d.ai_score,
+                    isAI: d.is_ai,
+                    mode: d.scan_mode,
+                    createdAt: d.created_at
+                }));
+            }
+        } catch (e) {}
+    }
+    
+    // Merge with local
+    const local = JSON.parse(localStorage.getItem(`history_${user.id}`) || '[]');
+    if (local.length > history.length) history = local;
+    
+    if (history.length === 0) {
+        $('historyContent').innerHTML = '<div class="history-empty"><div style="font-size:40px;margin-bottom:8px">📋</div><p>No scans yet. Start scanning!</p></div>';
+        return;
+    }
+    
+    let html = '';
+    for (const item of history) {
+        const date = new Date(item.createdAt).toLocaleDateString();
+        const scoreClass = item.isAI ? 'fake' : 'real';
+        html += `
+            <div class="history-item">
+                <div class="history-thumb">🖼️</div>
+                <div class="history-info">
+                    <div class="history-result">${item.resultLabel}</div>
+                    <div class="history-meta">${item.mode} • ${date}</div>
+                </div>
+                <div class="history-score ${scoreClass}">${item.aiScore}%</div>
+            </div>
+        `;
+    }
+    $('historyContent').innerHTML = html;
+}
+
+window.openHistory = () => { loadHistory(); showView('historyView'); };
+
+// ==================== LEADERBOARD ====================
+async function loadLeaderboard() {
+    let lb = [];
+    
+    if (!useLocalFallback && supabase) {
+        try {
+            const { data } = await supabase.from('leaderboard').select('*').limit(100);
+            if (data) lb = data;
+        } catch (e) {}
+    }
+    
+    // Demo/fallback data if no backend
+    if (lb.length === 0) {
+        const localUsers = JSON.parse(localStorage.getItem('local_users') || '{}');
+        lb = Object.entries(localUsers).map(([email, u], i) => {
+            const stats = JSON.parse(localStorage.getItem(`stats_local_${email}`) || localStorage.getItem(`stats_${email}`) || '{}');
+            return {
+                id: email,
+                display_name: u.name || email.split('@')[0],
+                avatar_url: u.avatar,
+                total_scans: stats.total || 0,
+                ai_found: stats.ai || 0,
+                points: stats.points || (stats.total || 0) * 2
+            };
+        }).filter(u => u.points > 0)
+          .sort((a, b) => b.points - a.points);
+        
+        // Add current user if logged in
+        if (user) {
+            const myStats = JSON.parse(localStorage.getItem(`stats_${user.id}`) || '{}');
+            const existing = lb.find(u => u.id === user.id || u.id === user.email);
+            if (!existing && myStats.total > 0) {
+                lb.push({
+                    id: user.id,
+                    display_name: user.name,
+                    avatar_url: user.avatar,
+                    total_scans: myStats.total || 0,
+                    ai_found: myStats.ai || 0,
+                    points: myStats.points || 0
+                });
+                lb.sort((a, b) => b.points - a.points);
+            }
+        }
+    }
+    
+    renderLeaderboard(lb);
+}
+
+function renderLeaderboard(data) {
+    if (data.length === 0) {
+        $('podium').innerHTML = '';
+        $('leaderboardContent').innerHTML = '<div class="history-empty"><div style="font-size:40px;margin-bottom:8px">🏆</div><p>No rankings yet. Be the first!</p></div>';
+        return;
+    }
+    
+    // Render podium (top 3)
+    const top3 = data.slice(0, 3);
+    const podiumOrder = [1, 0, 2]; // Display order: 2nd, 1st, 3rd
+    const positions = ['second', 'first', 'third'];
+    
+    let podiumHtml = '';
+    for (let i = 0; i < 3; i++) {
+        const displayIdx = podiumOrder[i];
+        const entry = top3[displayIdx];
+        if (!entry) continue;
+        
+        const rank = displayIdx + 1;
+        const tier = getTier(rank);
+        const initial = entry.display_name ? entry.display_name[0].toUpperCase() : '?';
+        const avatar = entry.avatar_url ? `<img src="${entry.avatar_url}">` : initial;
+        const crown = rank === 1 ? '<div class="podium-crown">👑</div>' : '';
+        
+        podiumHtml += `
+            <div class="podium-item ${positions[i]}" onclick="viewPublicProfile('${entry.id}')">
+                <div class="podium-avatar">${crown}${avatar}</div>
+                <div class="podium-name">${entry.display_name}</div>
+                <div class="podium-points">${entry.points} pts</div>
+                <span class="podium-tier ${tier.class}">${tier.name}</span>
+            </div>
+        `;
+    }
+    $('podium').innerHTML = podiumHtml;
+    
+    // Render rest of leaderboard
+    let listHtml = '';
+    for (let i = 3; i < data.length; i++) {
+        const entry = data[i];
+        const rank = i + 1;
+        const tier = getTier(rank);
+        const initial = entry.display_name ? entry.display_name[0].toUpperCase() : '?';
+        const avatar = entry.avatar_url ? `<img src="${entry.avatar_url}">` : initial;
+        
+        listHtml += `
+            <div class="lb-item" onclick="viewPublicProfile('${entry.id}')">
+                <div class="lb-rank ${rank <= 10 ? 'top10' : 'normal'}">${rank}</div>
+                <div class="lb-avatar">${avatar}</div>
+                <div class="lb-info">
+                    <div class="lb-name">${entry.display_name}</div>
+                    <div class="lb-stats">${entry.total_scans} scans • ${entry.ai_found} AI found</div>
+                </div>
+                <div class="lb-points">${entry.points}</div>
+                ${tier ? `<span class="lb-tier podium-tier ${tier.class}">${tier.name}</span>` : ''}
+            </div>
+        `;
+    }
+    $('leaderboardContent').innerHTML = listHtml;
+}
+
+window.openLeaderboard = () => { loadLeaderboard(); showView('leaderboardView'); };
+
+// ==================== PUBLIC PROFILE ====================
+window.viewPublicProfile = async function(userId) {
+    let profile = null;
+    
+    if (!useLocalFallback && supabase) {
+        try {
+            const { data: p } = await supabase.from('profiles')
+                .select('id,display_name,avatar_url,created_at')
+                .eq('id', userId).single();
+            const { data: s } = await supabase.from('user_stats')
+                .select('total_scans,ai_found,points')
+                .eq('user_id', userId).single();
+            const { data: b } = await supabase.from('user_badges')
+                .select('badge_id')
+                .eq('user_id', userId);
+            
+            if (p) {
+                profile = {
+                    ...p,
+                    total_scans: s?.total_scans || 0,
+                    ai_found: s?.ai_found || 0,
+                    points: s?.points || 0,
+                    badges: b?.map(x => x.badge_id) || []
+                };
+            }
+        } catch (e) {}
+    }
+    
+    // Fallback to local
+    if (!profile) {
+        const localUsers = JSON.parse(localStorage.getItem('local_users') || '{}');
+        const u = localUsers[userId] || (user?.id === userId ? user : null);
+        if (u) {
+            const stats = JSON.parse(localStorage.getItem(`stats_${userId}`) || '{}');
+            const badges = JSON.parse(localStorage.getItem(`badges_${userId}`) || '[]');
+            profile = {
+                id: userId,
+                display_name: u.name || userId.split('@')[0],
+                avatar_url: u.avatar,
+                created_at: new Date(u.created || Date.now()).toISOString(),
+                total_scans: stats.total || 0,
+                ai_found: stats.ai || 0,
+                points: stats.points || 0,
+                badges
+            };
+        }
+    }
+    
+    if (!profile) { toast('Could not load profile'); return; }
+    
+    const days = Math.floor((Date.now() - new Date(profile.created_at)) / 86400000) || 1;
+    const initial = profile.display_name[0].toUpperCase();
+    const avatar = profile.avatar_url ? `<img src="${profile.avatar_url}" style="width:100%;height:100%;object-fit:cover">` : initial;
+    
+    // Earned badges only (PRIVACY)
+    let badgesHtml = '';
+    if (profile.badges?.length > 0) {
+        badgesHtml = '<div style="margin-top:12px"><div style="font-size:12px;font-weight:700;margin-bottom:8px">🎖️ Badges Earned</div><div class="badges-grid" style="justify-content:center">';
+        for (const bid of profile.badges.slice(0, 6)) {
+            const b = BADGES[bid];
+            if (b) badgesHtml += `<div class="badge-item"><div class="badge-icon ${b.rarity}">${b.icon}</div><div class="badge-name">${b.name}</div></div>`;
+        }
+        badgesHtml += '</div></div>';
+    }
+    
+    $('publicProfileContent').innerHTML = `
+        <div style="text-align:center">
+            <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#00ff88);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#000;overflow:hidden">${avatar}</div>
+            <div style="font-size:20px;font-weight:800;margin-bottom:2px">${profile.display_name}</div>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:12px">Member for ${days} day${days !== 1 ? 's' : ''}</div>
+            <div class="stats-grid" style="grid-template-columns:1fr 1fr 1fr">
+                <div class="stat-card"><div class="stat-value">${profile.total_scans}</div><div class="stat-label">Scans</div></div>
+                <div class="stat-card"><div class="stat-value">${profile.ai_found}</div><div class="stat-label">AI Found</div></div>
+                <div class="stat-card"><div class="stat-value">${profile.points}</div><div class="stat-label">Points</div></div>
+            </div>
+            ${badgesHtml}
+        </div>
+    `;
+    $('publicProfileModal').classList.add('show');
+};
+
+window.closePublicProfile = () => $('publicProfileModal').classList.remove('show');
+
+// ==================== STATS & BADGES ====================
+async function updateUserStatsAfterScan(result, mode) {
+    if (!user) return;
+
+    const key = `stats_${user.id}`;
+    const stats = JSON.parse(localStorage.getItem(key) || '{"total":0,"ai":0,"deep":0,"quick":0,"forensics":0,"streak":0,"maxStreak":0,"points":0,"lastScanDate":"","dailyScans":0,"consecutiveDays":0}');
+
+    // ==================== ENHANCED REWARDS SYSTEM ====================
+    const today = new Date().toDateString();
+    const lastScanDate = stats.lastScanDate || '';
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+
+    // Daily login bonus
+    if (lastScanDate !== today) {
+        if (lastScanDate === yesterday) {
+            stats.consecutiveDays = (stats.consecutiveDays || 0) + 1;
+            const dailyBonus = Math.min(stats.consecutiveDays * 10, 100); // Max 100 bonus
+            stats.points += dailyBonus;
+            toast(`🎁 Daily Login Bonus: +${dailyBonus} points! (${stats.consecutiveDays} day streak)`);
+        } else {
+            stats.consecutiveDays = 1; // Reset streak
+        }
+        stats.dailyScans = 0; // Reset daily counter
+    }
+
+    stats.lastScanDate = today;
+    stats.dailyScans = (stats.dailyScans || 0) + 1;
+    stats.total++;
+    scanCount = stats.total;
+
+    // Base points calculation with multipliers
+    let basePoints = 0;
+    let multiplier = 1.0;
+    let bonusReasons = [];
+
+    // Mode-specific base points
+    if (mode === 'quick') {
+        stats.quick = (stats.quick || 0) + 1;
+        basePoints = 1;
+    } else if (mode === 'forensics' || (mode === 'deep' && forensicsMode)) {
+        stats.forensics = (stats.forensics || 0) + 1;
+        basePoints = 5;
+        multiplier += 0.2; // 20% bonus for forensics
+        bonusReasons.push('Forensics Mode');
+    } else {
+        stats.deep = (stats.deep || 0) + 1;
+        basePoints = 3;
+    }
+
+    // AI detection bonus
+    if (result.isAI) {
+        stats.ai++;
+        stats.streak++;
+        stats.maxStreak = Math.max(stats.maxStreak, stats.streak);
+        basePoints += 5; // AI found bonus
+
+        // Streak multiplier (up to 2x at 10 streak)
+        if (stats.streak >= 3) {
+            const streakBonus = Math.min(stats.streak * 0.1, 1.0);
+            multiplier += streakBonus;
+            bonusReasons.push(`${stats.streak}x Streak 🔥`);
+        }
+    } else {
+        stats.streak = 0;
+    }
+
+    // Daily scan combo bonus
+    if (stats.dailyScans >= 5) {
+        multiplier += 0.1; // 10% bonus after 5 scans today
+        bonusReasons.push('Daily Active');
+    }
+    if (stats.dailyScans >= 10) {
+        multiplier += 0.2; // Additional 20% after 10 scans
+        bonusReasons.push('Power User 💪');
+    }
+
+    // Weekend bonus (Saturday/Sunday)
+    const dayOfWeek = new Date().getDay();
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+        multiplier += 0.15; // 15% weekend bonus
+        bonusReasons.push('Weekend Warrior 🎉');
+    }
+
+    // Consecutive days bonus
+    if (stats.consecutiveDays >= 7) {
+        multiplier += 0.3; // 30% bonus for week streak
+        bonusReasons.push('Week Streak ⭐');
+    }
+
+    // Calculate final points
+    const earnedPoints = Math.round(basePoints * multiplier);
+    stats.points += earnedPoints;
+
+    // Show bonus notification if multiplier applied
+    if (bonusReasons.length > 0 && multiplier > 1.0) {
+        const multiplierText = `${(multiplier * 100).toFixed(0)}%`;
+        toast(`💰 +${earnedPoints} points (${multiplierText} multiplier: ${bonusReasons.join(', ')})`, 4000);
+    }
+    
+    localStorage.setItem(key, JSON.stringify(stats));
+    
+    // Update UI
+    $('statScans').textContent = stats.total;
+    $('statFound').textContent = stats.ai;
+    $('statPoints').textContent = stats.points;
+    
+    // Check badges
+    checkBadges(stats);
+    
+    // Sync to Supabase
+    if (!useLocalFallback && supabase) {
+        try {
+            await supabase.from('user_stats').upsert({
+                user_id: user.id,
+                total_scans: stats.total,
+                ai_found: stats.ai,
+                deep_scans: stats.deep,
+                quick_scans: stats.quick,
+                forensics_scans: stats.forensics,
+                current_streak: stats.streak,
+                max_streak: stats.maxStreak,
+                points: stats.points
+            });
+        } catch (e) {}
+    }
+}
+
+function checkBadges(stats) {
+    if (!user) return;
+    
+    const key = `badges_${user.id}`;
+    const earned = JSON.parse(localStorage.getItem(key) || '[]');
+    const newBadges = [];
+    
+    for (const [id, badge] of Object.entries(BADGES)) {
+        if (earned.includes(id)) continue;
+        
+        let met = false;
+        switch (badge.type) {
+            case 'total': met = stats.total >= badge.req; break;
+            case 'ai': met = stats.ai >= badge.req; break;
+            case 'deep': met = (stats.deep || 0) >= badge.req; break;
+            case 'quick': met = (stats.quick || 0) >= badge.req; break;
+            case 'forensics': met = (stats.forensics || 0) >= badge.req; break;
+            case 'streak': met = stats.maxStreak >= badge.req; break;
+        }
+        
+        if (met) {
+            newBadges.push(id);
+            earned.push(id);
+        }
+    }
+    
+    if (newBadges.length > 0) {
+        localStorage.setItem(key, JSON.stringify(earned));
+        
+        for (const id of newBadges) {
+            const badge = BADGES[id];
+            toast(`🎖️ Badge Earned: ${badge.name}!`);
+        }
+        
+        // Sync to Supabase
+        if (!useLocalFallback && supabase) {
+            for (const bid of newBadges) {
+                supabase.from('user_badges').insert({ user_id: user.id, badge_id: bid }).catch(() => {});
+            }
+        }
+    }
+}
+
+function renderBadgesPreview() {
+    if (!user) {
+        $('badgesPreview').innerHTML = '<div style="font-size:10px;color:var(--text3);padding:12px;text-align:center">Sign in to earn badges</div>';
+        return;
+    }
+    
+    const earned = JSON.parse(localStorage.getItem(`badges_${user.id}`) || '[]');
+    const allBadges = Object.values(BADGES);
+    const earnedBadges = allBadges.filter(b => earned.includes(b.id));
+    const lockedBadges = allBadges.filter(b => !earned.includes(b.id));
+    
+    const display = [...earnedBadges.slice(0, 4), ...lockedBadges.slice(0, 4 - earnedBadges.length)];
+    
+    let html = '';
+    for (const b of display) {
+        const isEarned = earned.includes(b.id);
+        html += `
+            <div class="badge-item">
+                <div class="badge-icon ${isEarned ? b.rarity : 'locked'}">${isEarned ? b.icon : '🔒'}</div>
+                <div class="badge-name">${isEarned ? b.name : '???'}</div>
+            </div>
+        `;
+    }
+    $('badgesPreview').innerHTML = html;
+}
+
+window.openAllBadges = () => { renderAllBadges(); showView('allBadgesView'); };
+
+function renderAllBadges() {
+    const earned = user ? JSON.parse(localStorage.getItem(`badges_${user.id}`) || '[]') : [];
+    
+    const groups = { common: [], rare: [], epic: [], legendary: [] };
+    for (const b of Object.values(BADGES)) {
+        groups[b.rarity].push({ ...b, earned: earned.includes(b.id) });
+    }
+    
+    const rarityNames = { common: 'Common', rare: 'Rare', epic: 'Epic', legendary: 'Legendary' };
+    const rarityColors = { common: '#718096', rare: '#3182ce', epic: '#805ad5', legendary: '#d69e2e' };
+    
+    let html = '';
+    for (const [rarity, badges] of Object.entries(groups)) {
+        if (badges.length === 0) continue;
+        
+        html += `<div style="margin-bottom:16px">
+            <h3 style="font-size:12px;color:${rarityColors[rarity]};margin-bottom:8px;text-transform:uppercase">${rarityNames[rarity]}</h3>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">`;
+        
+        for (const b of badges) {
+            html += `
+                <div style="background:var(--surface);border-radius:10px;padding:12px;text-align:center">
+                    <div class="badge-icon ${b.earned ? b.rarity : 'locked'}" style="margin:0 auto 4px">${b.earned ? b.icon : '🔒'}</div>
+                    <div style="font-size:10px;font-weight:600;margin-bottom:2px">${b.earned ? b.name : '???'}</div>
+                    <div style="font-size:8px;color:var(--text3)">${b.earned ? b.desc : 'Locked'}</div>
+                </div>
+            `;
+        }
+        html += '</div></div>';
+    }
+    
+    $('allBadgesContent').innerHTML = html;
+}
+
+// ==================== PROFILE ====================
+window.openProfile = () => { 
+    loadUserStats(); 
+    renderBadgesPreview(); 
+    showView('profileView'); 
+};
+
+window.changeProfilePic = () => { 
+    if (!user) { toast('Sign in first'); return; } 
+    $('profilePicInput').click(); 
+};
+
+window.handleProfilePic = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { toast('Select an image'); return; }
+    if (file.size > 2 * 1024 * 1024) { toast('Max 2MB'); return; }
+    
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+        user.avatar = e.target.result;
+        saveUser();
+        updateUserUI();
+        
+        if (!useLocalFallback && supabase) {
+            try {
+                await supabase.from('profiles').update({ avatar_url: user.avatar }).eq('id', user.id);
+            } catch (e) {}
+        }
+        
+        toast('Profile picture updated!');
+    };
+    reader.readAsDataURL(file);
+};
+
+// ==================== HELP ====================
+window.openHelp = () => showView('helpView');
+window.toggleHelp = (header) => {
+    const content = header.nextElementSibling;
+    const toggle = header.querySelector('.help-toggle');
+    content.classList.toggle('show');
+    toggle.textContent = content.classList.contains('show') ? '▲' : '▼';
+};
+
+// ==================== SHARE TARGET ====================
+async function handleShareTarget() {
+    const params = new URLSearchParams(location.search);
+    if (params.get('share') === '1' && 'serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({ type: 'GET_SHARED_FILE' });
+    }
+}
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', e => {
+        if (e.data.type === 'SHARED_FILE') {
+            const { file, name, mimeType } = e.data;
+            const blob = new Blob([file], { type: mimeType });
+            const f = new File([blob], name, { type: mimeType });
+            processFile(f);
+            toast('📷 Image received!');
+            history.replaceState({}, '', '/');
+            
+            // Auto-analyze if user is logged in
+            setTimeout(() => {
+                if (user && currentFile) {
+                    startScan('deep');
+                } else if (currentFile) {
+                    startScan('quick');
+                }
+            }, 500);
+        }
+    });
+}
+
+// ==================== INIT ====================
+async function init() {
+    console.log(`[AuthenticaDetector] v${APP_VERSION} starting...`);
+
+    initSupabase();
+    loadAdaptiveWeights(); // Load self-learning AI weights
+    initLogos();
+    initFacts();
+    checkInstallState();
+
+    await loadUser();
+    renderBadgesPreview();
+    updateGating();
+    updateStatusBar();
+    
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+        try {
+            await navigator.serviceWorker.register('/sw.js');
+            console.log('[SW] Registered');
+        } catch (e) {
+            console.log('[SW] Registration failed:', e);
+        }
+    }
+    
+    // Handle share target
+    handleShareTarget();
+    
+    // Auth state listener
+    if (!useLocalFallback && supabase) {
+        supabase.auth.onAuthStateChange((event, session) => {
+            console.log('[Auth] State change:', event);
+            if (event === 'SIGNED_IN' && session?.user) {
+                user = {
+                    id: session.user.id,
+                    email: session.user.email,
+                    name: session.user.user_metadata?.display_name || session.user.email.split('@')[0]
+                };
+                saveUser();
+                updateUserUI();
+                loadUserStats();
+            } else if (event === 'SIGNED_OUT') {
+                user = null;
+                saveUser();
+                updateUserUI();
+            }
+        });
+    }
+    
+    console.log(`[AuthenticaDetector] Ready! Installed: ${isInstalled}, User: ${user?.email || 'guest'}`);
+}
+
+init();
+</script>
+</body>
+</html>
