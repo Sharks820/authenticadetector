@@ -651,7 +651,50 @@
         .help-text li{margin-bottom:3px}
         
         .hidden{display:none!important}
-        
+
+        /* ==================== SHOP & GAME MECHANICS ==================== */
+        .shop-categories{display:flex;gap:8px;padding:12px;overflow-x:auto;border-bottom:1px solid var(--border)}
+        .shop-cat-btn{padding:8px 16px;border:none;background:var(--surface2);color:var(--text2);border-radius:20px;cursor:pointer;white-space:nowrap;font-size:13px;font-weight:600;transition:all .2s}
+        .shop-cat-btn.active{background:var(--primary-gradient);color:#fff}
+        .shop-cat-btn:hover{transform:scale(1.05)}
+        .shop-grid,.inventory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;padding:12px}
+        .shop-item{background:var(--surface2);border-radius:12px;padding:12px;cursor:pointer;transition:all .2s;border:2px solid transparent;position:relative}
+        .shop-item:hover{transform:translateY(-4px);border-color:var(--primary);box-shadow:var(--shadow-glow)}
+        .shop-item.owned{opacity:0.6;border-color:var(--success)}
+        .shop-item-icon{font-size:32px;text-align:center;margin-bottom:8px}
+        .shop-item-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+        .shop-item-desc{font-size:10px;color:var(--text3);margin-bottom:8px;line-height:1.3}
+        .shop-item-price{display:flex;align-items:center;justify-content:center;gap:4px;padding:6px;background:var(--surface3);border-radius:6px;font-weight:700;color:var(--primary)}
+        .shop-item-owned{position:absolute;top:8px;right:8px;background:var(--success);color:#fff;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700}
+        .user-points-badge{background:var(--primary-gradient);color:#fff;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700}
+        .section-title{font-size:14px;font-weight:700;color:var(--text);padding:12px;border-bottom:1px solid var(--border)}
+        .quest-btn{position:relative}
+        .quest-badge{position:absolute;top:-4px;right:-4px;background:var(--danger);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:10px;min-width:16px;text-align:center}
+        .quest-timer{font-size:12px;font-weight:600;color:var(--primary);background:var(--surface3);padding:6px 12px;border-radius:20px}
+        .quest-streak-card{background:linear-gradient(135deg,var(--surface2),var(--surface3));border-radius:16px;padding:20px;display:flex;align-items:center;gap:16px;border:2px solid var(--border-bright)}
+        .quest-streak-icon{font-size:48px;filter:drop-shadow(0 0 10px rgba(255,150,0,0.5))}
+        .quest-streak-info{flex:1}
+        .quest-streak-title{font-size:12px;color:var(--text3);margin-bottom:4px}
+        .quest-streak-count{font-size:24px;font-weight:800;color:var(--text)}
+        .quest-streak-bonus{font-size:16px;font-weight:700;color:var(--warning)}
+        .quests-list{display:flex;flex-direction:column;gap:12px}
+        .quest-card{background:var(--surface2);border-radius:12px;padding:16px;border-left:4px solid var(--primary);position:relative}
+        .quest-card.completed{border-left-color:var(--success);opacity:0.7}
+        .quest-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+        .quest-title{font-size:14px;font-weight:600;color:var(--text)}
+        .quest-reward{background:var(--primary-gradient);color:#fff;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700}
+        .quest-desc{font-size:11px;color:var(--text3);margin-bottom:12px}
+        .quest-progress{background:var(--surface3);border-radius:20px;height:8px;overflow:hidden;margin-bottom:4px}
+        .quest-progress-bar{background:var(--primary-gradient);height:100%;transition:width .3s;border-radius:20px}
+        .quest-progress-text{font-size:10px;color:var(--text2);text-align:right}
+        .quest-complete-badge{position:absolute;top:16px;right:16px;font-size:24px}
+        .inventory-item{background:var(--surface2);border-radius:12px;padding:12px;text-align:center;border:2px solid var(--border);position:relative}
+        .inventory-item-icon{font-size:32px;margin-bottom:4px}
+        .inventory-item-name{font-size:11px;font-weight:600;color:var(--text)}
+        .inventory-item-count{position:absolute;top:4px;right:4px;background:var(--primary);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px}
+        .inventory-item.active{border-color:var(--success);box-shadow:0 0 15px var(--success-glow)}
+        .inventory-empty{text-align:center;padding:40px;color:var(--text3);font-size:13px}
+
         /* ANIMATIONS */
         .scan-ring{animation:scan-rotate 3s linear infinite;transform-origin:center}
         @keyframes scan-rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
@@ -670,6 +713,11 @@
         </div>
         <div class="header-btns">
             <button class="icon-btn" onclick="openHelp()">❓</button>
+            <button class="icon-btn quest-btn" onclick="openQuests()" title="Daily Quests">
+                <span>🎯</span>
+                <span class="quest-badge" id="questBadge" style="display:none">0</span>
+            </button>
+            <button class="icon-btn" onclick="openShop()" title="Item Shop">🛒</button>
             <button class="icon-btn" onclick="openHistory()">📋</button>
             <button class="icon-btn" onclick="openLeaderboard()">🏆</button>
             <button class="user-btn" id="userBtn" onclick="openProfile()"><span id="userInitial">?</span></button>
@@ -952,6 +1000,51 @@
             <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🔒 Privacy</div><span class="help-toggle">▼</span></div>
             <div class="help-content"><div class="help-text"><p>Your history is private. Images analyzed locally. Others only see your name, badges & stats.</p></div></div>
         </div>
+    </div>
+</div>
+
+<!-- SHOP VIEW -->
+<div class="view" id="shopView">
+    <div class="view-header">
+        <button class="view-close" onclick="closeView()">←</button>
+        <span class="view-title">🛒 Item Shop</span>
+        <div class="user-points-badge" id="shopPoints">0 pts</div>
+    </div>
+    <div class="view-body">
+        <div class="shop-categories">
+            <button class="shop-cat-btn active" onclick="filterShop('all')">All</button>
+            <button class="shop-cat-btn" onclick="filterShop('powerups')">Power-ups</button>
+            <button class="shop-cat-btn" onclick="filterShop('cosmetics')">Cosmetics</button>
+            <button class="shop-cat-btn" onclick="filterShop('boosters')">Boosters</button>
+        </div>
+        <div id="shopItems" class="shop-grid"></div>
+        <div id="inventorySection" style="margin-top:20px">
+            <div class="section-title">📦 Your Inventory</div>
+            <div id="inventoryItems" class="inventory-grid"></div>
+        </div>
+    </div>
+</div>
+
+<!-- DAILY QUESTS VIEW -->
+<div class="view" id="questsView">
+    <div class="view-header">
+        <button class="view-close" onclick="closeView()">←</button>
+        <span class="view-title">🎯 Daily Quests</span>
+        <div class="quest-timer" id="questTimer">00:00:00</div>
+    </div>
+    <div class="view-body view-body-padded">
+        <div class="quest-streak-card" id="questStreakCard">
+            <div class="quest-streak-icon">🔥</div>
+            <div class="quest-streak-info">
+                <div class="quest-streak-title">Daily Streak</div>
+                <div class="quest-streak-count" id="questStreakCount">0 days</div>
+            </div>
+            <div class="quest-streak-bonus">+<span id="streakBonusPercent">0</span>% Bonus</div>
+        </div>
+        <div class="section-title" style="margin-top:20px">Today's Quests</div>
+        <div id="dailyQuests" class="quests-list"></div>
+        <div class="section-title" style="margin-top:20px">Weekly Challenges</div>
+        <div id="weeklyQuests" class="quests-list"></div>
     </div>
 </div>
 
@@ -3332,7 +3425,480 @@ async function init() {
     }
     
     console.log(`[AuthenticaDetector] Ready! Installed: ${isInstalled}, User: ${user?.email || 'guest'}`);
+
+    // Initialize game mechanics
+    initGameMechanics();
 }
+
+// ==================== GAME MECHANICS ====================
+
+// Shop Items Database
+const SHOP_ITEMS = [
+    // Power-ups
+    { id: 'accuracy_boost', name: '🎯 Accuracy Boost', desc: '+10% detection accuracy for 24h', price: 150, category: 'powerups', duration: 86400000 },
+    { id: 'double_points', name: '⚡ Double Points', desc: '2x points for next 10 scans', price: 100, category: 'powerups', uses: 10 },
+    { id: 'auto_forensics', name: '🔬 Auto Forensics', desc: 'Automatic forensics mode for 24h', price: 200, category: 'powerups', duration: 86400000 },
+    { id: 'streak_shield', name: '🛡️ Streak Shield', desc: 'Protects your streak for 1 day', price: 50, category: 'powerups', uses: 1 },
+    { id: 'instant_scan', name: '⚡ Instant Scan', desc: 'Skip loading time (x5 uses)', price: 80, category: 'powerups', uses: 5 },
+
+    // Cosmetics
+    { id: 'rainbow_theme', name: '🌈 Rainbow Theme', desc: 'Colorful animated background', price: 300, category: 'cosmetics', permanent: true },
+    { id: 'gold_badge', name: '👑 Gold Badge Frame', desc: 'Golden border for your badges', price: 250, category: 'cosmetics', permanent: true },
+    { id: 'custom_avatar', name: '🎨 Custom Avatar', desc: 'Upload any profile picture', price: 200, category: 'cosmetics', permanent: true },
+    { id: 'particle_effects', name: '✨ Particle Effects', desc: 'Sparkles on successful scans', price: 150, category: 'cosmetics', permanent: true },
+
+    // Boosters
+    { id: 'quest_doubler', name: '🎯 Quest Doubler', desc: 'Double quest rewards for 24h', price: 180, category: 'boosters', duration: 86400000 },
+    { id: 'badge_hunter', name: '🏆 Badge Hunter', desc: '+50% progress to badges for 24h', price: 220, category: 'boosters', duration: 86400000 },
+    { id: 'exp_boost', name: '🚀 EXP Boost', desc: '3x experience for 12 hours', price: 120, category: 'boosters', duration: 43200000 },
+];
+
+// Daily Quests Templates
+const QUEST_TEMPLATES = {
+    daily: [
+        { id: 'daily_scan_5', title: 'Daily Scanner', desc: 'Complete 5 scans', type: 'scans', target: 5, reward: 50 },
+        { id: 'daily_ai_3', title: 'AI Hunter', desc: 'Find 3 AI images', type: 'ai_found', target: 3, reward: 75 },
+        { id: 'daily_deep_2', title: 'Deep Diver', desc: 'Use Deep Scan 2 times', type: 'deep_scans', target: 2, reward: 60 },
+        { id: 'daily_forensics', title: 'Forensic Expert', desc: 'Complete 1 Forensics scan', type: 'forensics_scans', target: 1, reward: 100 },
+        { id: 'daily_feedback', title: 'Helpful', desc: 'Submit 3 feedback', type: 'feedback', target: 3, reward: 40 },
+    ],
+    weekly: [
+        { id: 'weekly_scan_50', title: 'Scan Master', desc: 'Complete 50 scans this week', type: 'scans', target: 50, reward: 500 },
+        { id: 'weekly_ai_20', title: 'AI Nemesis', desc: 'Find 20 AI images', type: 'ai_found', target: 20, reward: 600 },
+        { id: 'weekly_streak_7', title: 'Dedicated', desc: 'Maintain 7-day streak', type: 'streak', target: 7, reward: 800 },
+        { id: 'weekly_leaderboard', title: 'Competitive', desc: 'Reach top 50 on leaderboard', type: 'rank', target: 50, reward: 1000 },
+    ]
+};
+
+// Game State
+let gameState = {
+    inventory: [],
+    activeItems: [],
+    dailyQuests: [],
+    weeklyQuests: [],
+    questsLastReset: null,
+    totalEarnings: 0
+};
+
+function initGameMechanics() {
+    loadGameState();
+    checkQuestReset();
+    updateQuestTimer();
+    setInterval(updateQuestTimer, 1000);
+}
+
+function loadGameState() {
+    const saved = localStorage.getItem('gameState');
+    if (saved) {
+        try {
+            gameState = { ...gameState, ...JSON.parse(saved) };
+        } catch (e) {
+            console.error('[Game] Load error:', e);
+        }
+    }
+}
+
+function saveGameState() {
+    localStorage.setItem('gameState', JSON.stringify(gameState));
+}
+
+function checkQuestReset() {
+    const now = Date.now();
+    const lastReset = gameState.questsLastReset || 0;
+    const daysSinceReset = (now - lastReset) / (1000 * 60 * 60 * 24);
+
+    if (daysSinceReset >= 1) {
+        // Reset daily quests
+        generateDailyQuests();
+        gameState.questsLastReset = now;
+        saveGameState();
+    }
+
+    if (!gameState.weeklyQuests.length) {
+        generateWeeklyQuests();
+    }
+}
+
+function generateDailyQuests() {
+    // Randomly select 3 daily quests
+    const selected = [];
+    const available = [...QUEST_TEMPLATES.daily];
+
+    for (let i = 0; i < 3; i++) {
+        if (available.length === 0) break;
+        const index = Math.floor(Math.random() * available.length);
+        selected.push({ ...available[index], progress: 0, completed: false });
+        available.splice(index, 1);
+    }
+
+    gameState.dailyQuests = selected;
+    saveGameState();
+}
+
+function generateWeeklyQuests() {
+    gameState.weeklyQuests = QUEST_TEMPLATES.weekly.map(q => ({ ...q, progress: 0, completed: false }));
+    saveGameState();
+}
+
+function updateQuestTimer() {
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+
+    const diff = tomorrow - now;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    const timer = $('questTimer');
+    if (timer) {
+        timer.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+}
+
+function updateQuestProgress(type, amount = 1) {
+    let anyCompleted = false;
+
+    // Update daily quests
+    gameState.dailyQuests.forEach(quest => {
+        if (!quest.completed && quest.type === type) {
+            quest.progress = Math.min(quest.progress + amount, quest.target);
+            if (quest.progress >= quest.target && !quest.completed) {
+                quest.completed = true;
+                anyCompleted = true;
+                awardQuestReward(quest.reward);
+                toast(`🎉 Quest Complete! +${quest.reward} points`);
+            }
+        }
+    });
+
+    // Update weekly quests
+    gameState.weeklyQuests.forEach(quest => {
+        if (!quest.completed && quest.type === type) {
+            quest.progress = Math.min(quest.progress + amount, quest.target);
+            if (quest.progress >= quest.target && !quest.completed) {
+                quest.completed = true;
+                anyCompleted = true;
+                awardQuestReward(quest.reward);
+                toast(`🏆 Weekly Quest Complete! +${quest.reward} points`);
+            }
+        }
+    });
+
+    if (anyCompleted) {
+        updateQuestBadge();
+    }
+
+    saveGameState();
+}
+
+function awardQuestReward(points) {
+    // Add points to user stats
+    if (user && !useLocalFallback) {
+        // Update Supabase
+        supabase.from('user_stats').update({
+            points: (user.stats?.points || 0) + points
+        }).eq('user_id', user.id).then(() => loadUserStats());
+    }
+
+    gameState.totalEarnings += points;
+    saveGameState();
+}
+
+function updateQuestBadge() {
+    const incomplete = [
+        ...gameState.dailyQuests.filter(q => !q.completed),
+        ...gameState.weeklyQuests.filter(q => !q.completed)
+    ].length;
+
+    const badge = $('questBadge');
+    if (badge) {
+        if (incomplete > 0) {
+            badge.textContent = incomplete;
+            badge.style.display = 'block';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+}
+
+// Shop Functions
+window.openShop = function() {
+    loadShop();
+    showView('shopView');
+};
+
+function loadShop() {
+    renderShopItems();
+    renderInventory();
+    updateShopPoints();
+}
+
+function renderShopItems() {
+    const container = $('shopItems');
+    if (!container) return;
+
+    container.innerHTML = SHOP_ITEMS.map(item => {
+        const owned = gameState.inventory.some(i => i.id === item.id);
+        return `
+            <div class="shop-item ${owned ? 'owned' : ''}" onclick="purchaseItem('${item.id}')">
+                ${owned ? '<div class="shop-item-owned">OWNED</div>' : ''}
+                <div class="shop-item-icon">${item.name.split(' ')[0]}</div>
+                <div class="shop-item-name">${item.name.substring(item.name.indexOf(' ') + 1)}</div>
+                <div class="shop-item-desc">${item.desc}</div>
+                <div class="shop-item-price">
+                    <span>💎</span>
+                    <span>${item.price}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function renderInventory() {
+    const container = $('inventoryItems');
+    if (!container) return;
+
+    if (gameState.inventory.length === 0) {
+        container.innerHTML = '<div class="inventory-empty">No items yet! Purchase from shop above.</div>';
+        return;
+    }
+
+    container.innerHTML = gameState.inventory.map(item => {
+        const active = gameState.activeItems.some(a => a.id === item.id);
+        return `
+            <div class="inventory-item ${active ? 'active' : ''}" onclick="useItem('${item.id}')">
+                ${item.quantity > 1 ? `<div class="inventory-item-count">${item.quantity}</div>` : ''}
+                <div class="inventory-item-icon">${item.icon}</div>
+                <div class="inventory-item-name">${item.name}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+function updateShopPoints() {
+    const pointsEl = $('shopPoints');
+    if (pointsEl) {
+        const points = user?.stats?.points || 0;
+        pointsEl.textContent = `${points} pts`;
+    }
+}
+
+window.filterShop = function(category) {
+    // Update active button
+    document.querySelectorAll('.shop-cat-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+
+    // Filter items
+    const items = document.querySelectorAll('.shop-item');
+    items.forEach(item => {
+        if (category === 'all') {
+            item.style.display = 'block';
+        } else {
+            const itemData = SHOP_ITEMS.find(i => item.onclick.toString().includes(i.id));
+            item.style.display = itemData && itemData.category === category ? 'block' : 'none';
+        }
+    });
+};
+
+window.purchaseItem = function(itemId) {
+    if (!user) {
+        toast('⚠️ Please log in to purchase items');
+        return;
+    }
+
+    const item = SHOP_ITEMS.find(i => i.id === itemId);
+    if (!item) return;
+
+    const userPoints = user.stats?.points || 0;
+
+    if (userPoints < item.price) {
+        toast('⚠️ Not enough points!');
+        return;
+    }
+
+    // Check if already owned (for permanent items)
+    if (item.permanent && gameState.inventory.some(i => i.id === itemId)) {
+        toast('You already own this item!');
+        return;
+    }
+
+    // Deduct points
+    const newPoints = userPoints - item.price;
+
+    if (!useLocalFallback && supabase) {
+        supabase.from('user_stats').update({
+            points: newPoints
+        }).eq('user_id', user.id).then(() => {
+            loadUserStats();
+            addToInventory(item);
+            toast(`✅ Purchased ${item.name}!`);
+            renderShopItems();
+            renderInventory();
+            updateShopPoints();
+        });
+    } else {
+        addToInventory(item);
+        toast(`✅ Purchased ${item.name}!`);
+        renderShopItems();
+        renderInventory();
+    }
+};
+
+function addToInventory(item) {
+    const existing = gameState.inventory.find(i => i.id === item.id);
+
+    if (existing) {
+        existing.quantity = (existing.quantity || 1) + 1;
+    } else {
+        gameState.inventory.push({
+            id: item.id,
+            name: item.name,
+            icon: item.name.split(' ')[0],
+            quantity: item.uses || 1,
+            permanent: item.permanent,
+            duration: item.duration
+        });
+    }
+
+    saveGameState();
+}
+
+window.useItem = function(itemId) {
+    const inventoryItem = gameState.inventory.find(i => i.id === itemId);
+    if (!inventoryItem) return;
+
+    const shopItem = SHOP_ITEMS.find(i => i.id === itemId);
+    if (!shopItem) return;
+
+    // Check if already active
+    if (gameState.activeItems.some(a => a.id === itemId)) {
+        toast('This item is already active!');
+        return;
+    }
+
+    // Activate item
+    if (shopItem.duration) {
+        gameState.activeItems.push({
+            id: itemId,
+            expiresAt: Date.now() + shopItem.duration
+        });
+        toast(`✅ Activated ${shopItem.name}!`);
+    } else if (shopItem.uses) {
+        inventoryItem.quantity--;
+        if (inventoryItem.quantity <= 0) {
+            gameState.inventory = gameState.inventory.filter(i => i.id !== itemId);
+        }
+        toast(`✅ Used ${shopItem.name}!`);
+    }
+
+    saveGameState();
+    renderInventory();
+    applyItemEffects();
+};
+
+function applyItemEffects() {
+    // Check for expired items
+    gameState.activeItems = gameState.activeItems.filter(item => item.expiresAt > Date.now());
+
+    // Apply active item effects
+    // These will be checked during scanning
+    saveGameState();
+}
+
+function hasActiveItem(itemId) {
+    return gameState.activeItems.some(a => a.id === itemId);
+}
+
+// Quests Functions
+window.openQuests = function() {
+    loadQuests();
+    showView('questsView');
+};
+
+function loadQuests() {
+    renderQuests();
+    updateQuestStreak();
+}
+
+function renderQuests() {
+    renderQuestList('dailyQuests', gameState.dailyQuests);
+    renderQuestList('weeklyQuests', gameState.weeklyQuests);
+}
+
+function renderQuestList(containerId, quests) {
+    const container = $(containerId);
+    if (!container) return;
+
+    if (quests.length === 0) {
+        container.innerHTML = '<div class="inventory-empty">No quests available</div>';
+        return;
+    }
+
+    container.innerHTML = quests.map(quest => {
+        const progress = Math.min(quest.progress, quest.target);
+        const percent = (progress / quest.target) * 100;
+
+        return `
+            <div class="quest-card ${quest.completed ? 'completed' : ''}">
+                ${quest.completed ? '<div class="quest-complete-badge">✅</div>' : ''}
+                <div class="quest-card-header">
+                    <div class="quest-title">${quest.title}</div>
+                    <div class="quest-reward">+${quest.reward} pts</div>
+                </div>
+                <div class="quest-desc">${quest.desc}</div>
+                <div class="quest-progress">
+                    <div class="quest-progress-bar" style="width: ${percent}%"></div>
+                </div>
+                <div class="quest-progress-text">${progress} / ${quest.target}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+function updateQuestStreak() {
+    const streakCount = user?.stats?.current_streak || 0;
+    const bonus = Math.min(streakCount * 5, 50); // Max 50% bonus
+
+    const countEl = $('questStreakCount');
+    const bonusEl = $('streakBonusPercent');
+
+    if (countEl) countEl.textContent = `${streakCount} days`;
+    if (bonusEl) bonusEl.textContent = bonus;
+}
+
+// Hook into existing scan completion
+const originalHandleScanComplete = window.handleScanComplete || function() {};
+window.handleScanComplete = function(...args) {
+    originalHandleScanComplete.apply(this, args);
+
+    // Update quest progress
+    if (currentResult) {
+        updateQuestProgress('scans');
+
+        if (currentResult.isAI) {
+            updateQuestProgress('ai_found');
+        }
+
+        if (forensicsMode) {
+            updateQuestProgress('forensics_scans');
+        } else if (user) {
+            updateQuestProgress('deep_scans');
+        } else {
+            // quick scan (no quest for it though)
+        }
+    }
+
+    // Apply active item effects
+    if (hasActiveItem('double_points')) {
+        // Double points already applied
+    }
+
+    applyItemEffects();
+};
 
 init();
 </script>

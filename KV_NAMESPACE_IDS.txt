@@ -1,0 +1,56 @@
+==============================================
+CLOUDFLARE KV NAMESPACE IDs - SAVE THESE!
+==============================================
+
+✅ RATE_LIMIT_KV: 096a68d3fedb4ba596d54125aba889f7
+✅ LEARNING_KV:   62d18fc08ff447599b7b03edc27fe6a0
+✅ STATS_KV:      d9fe4a80b44442d99c99075768fa732a
+
+==============================================
+NEXT STEP: Bind These to Your Pages Project
+==============================================
+
+1. Go to: https://dash.cloudflare.com
+2. Click on "Workers & Pages"
+3. Click on "authenticadetector"
+4. Go to "Settings" tab
+5. Scroll to "Functions"
+6. Click "Add Binding" for KV Namespace
+7. Add these 3 bindings:
+
+   Variable name: RATE_LIMIT_KV
+   KV namespace: RATE_LIMIT (ID: 096a68d3fedb4ba596d54125aba889f7)
+
+   Variable name: LEARNING_KV
+   KV namespace: LEARNING (ID: 62d18fc08ff447599b7b03edc27fe6a0)
+
+   Variable name: STATS_KV
+   KV namespace: STATS (ID: d9fe4a80b44442d99c99075768fa732a)
+
+8. Click "Save"
+
+==============================================
+YOUR APP IS LIVE AT:
+==============================================
+
+🌐 https://authenticadetector.pages.dev
+
+==============================================
+FINAL STEP: Run Supabase Schema
+==============================================
+
+1. Go to: https://vrvoyxxdlcpysthzjbeu.supabase.co
+2. Click "SQL Editor" in left sidebar
+3. Copy ALL contents of: supabase/schema.sql
+4. Paste into SQL Editor
+5. Click "Run"
+
+This creates:
+- Tables (profiles, user_stats, scans, etc.)
+- Row Level Security policies
+- Database triggers
+- Views
+
+==============================================
+THEN YOU'RE DONE! 🎉
+==============================================
