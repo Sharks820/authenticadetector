@@ -1832,30 +1832,76 @@ function analyzeNoisePatterns(img) {
     }
     const channelRatio = Math.max(rVariance, gVariance, bVariance) / Math.min(rVariance, gVariance, bVariance + 1);
 
-    // Scoring logic - multi-factor analysis
+    // ==================== WORLD-CLASS SCORING LOGIC ====================
     let score = 50;
 
-    // Factor 1: Average variance (camera sensors have predictable noise)
-    if (avgVariance < 15) score += 35;  // Too smooth = GAN
-    else if (avgVariance < 30) score += 20;
-    else if (avgVariance < 50) score += 10;
-    else if (avgVariance > 800) score += 25; // Over-sharpened AI
-    else if (avgVariance > 600) score += 15;
-    else score -= 15; // Natural variance range
+    // Factor 1: Average variance (camera sensors have predictable noise ranges)
+    // Real photos: 100-600, Screenshots: 10-100, AI: <50 or >700
+    if (avgVariance < 20) {
+        score += 40; // Extremely smooth = GAN or over-processed AI
+    } else if (avgVariance < 50) {
+        // Could be screenshot OR AI - check other factors
+        score += 15;
+    } else if (avgVariance >= 100 && avgVariance <= 600) {
+        score -= 25; // Strong indicator of real photo with natural noise
+    } else if (avgVariance > 700) {
+        score += 30; // Over-sharpened or artificial noise added
+    }
 
-    // Factor 2: Variance consistency (GANs are too consistent)
-    if (varianceConsistency < 10) score += 20; // Too uniform across blocks
-    else if (varianceConsistency > 100) score -= 10; // Natural variation
+    // Factor 2: Variance consistency (GANs produce unnaturally uniform noise)
+    // Real photos have varied noise across regions, AI is too consistent
+    if (varianceConsistency < 5) {
+        score += 25; // Suspiciously uniform = GAN signature
+    } else if (varianceConsistency < 15) {
+        score += 12;
+    } else if (varianceConsistency > 80) {
+        score -= 15; // Natural variation indicates real photo
+    }
 
-    // Factor 3: Periodicity (neural network artifacts)
-    if (periodicityRatio > 0.3) score += 15; // Repeating patterns
-    else if (periodicityRatio > 0.2) score += 8;
+    // Factor 3: Periodicity (neural network grid artifacts)
+    // GANs often create repeating patterns from convolutional layers
+    if (periodicityRatio > 0.35) {
+        score += 20; // Strong GAN fingerprint
+    } else if (periodicityRatio > 0.25) {
+        score += 12;
+    } else if (periodicityRatio < 0.1) {
+        score -= 10; // Low periodicity = likely real
+    }
 
-    // Factor 4: Channel correlation (unnatural color relationships)
-    if (channelRatio > 2.5) score += 12; // One channel dominates unnaturally
-    else if (channelRatio < 1.1) score += 8; // Too balanced (synthetic)
+    // Factor 4: Channel correlation (RGB relationships)
+    // Real photos have natural correlations, AI can be too perfect or too chaotic
+    if (channelRatio > 3.0) {
+        score += 18; // One channel dominates = AI error
+    } else if (channelRatio > 2.5) {
+        score += 10;
+    } else if (channelRatio < 1.05) {
+        score += 12; // Too perfectly balanced = synthetic
+    } else if (channelRatio >= 1.1 && channelRatio <= 2.0) {
+        score -= 10; // Natural correlation range
+    }
 
-    return clamp(score, 15, 95);
+    // Factor 5: Combined heuristic (multi-signal agreement)
+    // When multiple factors agree, boost confidence
+    let aiIndicators = 0;
+    let realIndicators = 0;
+
+    if (avgVariance < 50 || avgVariance > 700) aiIndicators++;
+    if (avgVariance >= 100 && avgVariance <= 600) realIndicators++;
+
+    if (varianceConsistency < 15) aiIndicators++;
+    if (varianceConsistency > 80) realIndicators++;
+
+    if (periodicityRatio > 0.25) aiIndicators++;
+    if (periodicityRatio < 0.1) realIndicators++;
+
+    if (channelRatio > 2.5 || channelRatio < 1.05) aiIndicators++;
+    if (channelRatio >= 1.1 && channelRatio <= 2.0) realIndicators++;
+
+    // Strong agreement boosts confidence
+    if (aiIndicators >= 3) score += 15;
+    if (realIndicators >= 3) score -= 20;
+
+    return clamp(score, 10, 95);
 }
 
 function analyzeCompressionArtifacts(img) {
@@ -1941,31 +1987,77 @@ function analyzeCompressionArtifacts(img) {
     }
     const interpolationRatio = interpolationArtifacts / ((size / 4) * (size / 4));
 
-    // Multi-factor scoring
+    // ==================== ADVANCED SCORING - SCREENSHOT VS AI VS REAL ====================
     let score = 50;
 
-    // Factor 1: 8x8 blocks (JPEG) vs 16x16 (AI upscaling)
     const jpeg8x8 = blockScores.find(b => b.size === 8).edgeRatio;
+    const block4x4 = blockScores.find(b => b.size === 4).edgeRatio;
     const ai16x16 = blockScores.find(b => b.size === 16).edgeRatio;
-
-    if (ai16x16 > jpeg8x8 * 1.5) score += 25; // AI upscaling dominant
-    else if (ai16x16 > jpeg8x8) score += 15;
-    else if (jpeg8x8 > 0.4) score -= 10; // Real JPEG compression
-
-    // Factor 2: Over-smooth blocks (GAN signature)
     const smoothRatio8x8 = blockScores.find(b => b.size === 8).smoothRatio;
-    if (smoothRatio8x8 > 0.5) score += 20; // Too many smooth blocks
-    else if (smoothRatio8x8 > 0.3) score += 10;
 
-    // Factor 3: Interpolation artifacts (AI upscaling)
-    if (interpolationRatio > 0.4) score += 20; // Strong interpolation signature
-    else if (interpolationRatio > 0.25) score += 12;
-    else if (interpolationRatio < 0.1) score -= 8; // Natural image
+    // Factor 1: Block pattern analysis
+    // Real photos: Strong 8x8 JPEG blocks
+    // Screenshots: Very low block edges (PNG/lossless compression)
+    // AI: 16x16 patterns from neural upscaling
 
-    // Factor 4: Absence of compression (AI images often lack natural JPEG artifacts)
-    if (jpeg8x8 < 0.1 && ai16x16 < 0.1) score += 15; // No compression artifacts
+    if (jpeg8x8 > 0.35) {
+        score -= 20; // Strong JPEG artifacts = likely real photo
+    } else if (jpeg8x8 < 0.1 && block4x4 < 0.1 && ai16x16 < 0.1) {
+        // Very few block artifacts = screenshot or PNG
+        score -= 15; // Likely screenshot (REAL)
+    }
 
-    return clamp(score, 15, 95);
+    if (ai16x16 > jpeg8x8 * 1.8) {
+        score += 30; // AI upscaling dominant
+    } else if (ai16x16 > jpeg8x8 * 1.2) {
+        score += 18;
+    }
+
+    // Factor 2: Over-smooth blocks (GAN/diffusion signature)
+    // Real photos and screenshots have detail, AI is often too smooth
+    if (smoothRatio8x8 > 0.6) {
+        score += 25; // Extremely smooth = GAN
+    } else if (smoothRatio8x8 > 0.45) {
+        score += 15;
+    } else if (smoothRatio8x8 > 0.3) {
+        score += 8;
+    } else if (smoothRatio8x8 < 0.15) {
+        score -= 12; // Lots of detail = likely real
+    }
+
+    // Factor 3: Interpolation artifacts (AI upscaling signature)
+    if (interpolationRatio > 0.45) {
+        score += 25; // Strong AI upscaling
+    } else if (interpolationRatio > 0.30) {
+        score += 15;
+    } else if (interpolationRatio > 0.20) {
+        score += 8;
+    } else if (interpolationRatio < 0.1) {
+        score -= 10; // Natural image (real or screenshot)
+    }
+
+    // Factor 4: PNG/Screenshot detection
+    // Screenshots typically have very uniform blocks and low compression
+    if (jpeg8x8 < 0.05 && smoothRatio8x8 < 0.2) {
+        score -= 20; // Likely screenshot - REAL
+    }
+
+    // Factor 5: Multi-signal agreement
+    let aiSignals = 0;
+    let realSignals = 0;
+
+    if (ai16x16 > jpeg8x8 * 1.5) aiSignals++;
+    if (smoothRatio8x8 > 0.45) aiSignals++;
+    if (interpolationRatio > 0.30) aiSignals++;
+
+    if (jpeg8x8 > 0.35) realSignals++;
+    if (smoothRatio8x8 < 0.2) realSignals++;
+    if (interpolationRatio < 0.1) realSignals++;
+
+    if (aiSignals >= 2) score += 12;
+    if (realSignals >= 2) score -= 15;
+
+    return clamp(score, 10, 95);
 }
 
 function analyzeColorDistribution(img) {
@@ -2235,12 +2327,29 @@ async function analyzeEXIFData(file) {
             }
         }
 
-        // Real photos usually have EXIF + camera model
-        // AI images either have no EXIF or suspicious software tags
-        if (hasEXIF && hasCameraModel && !hasSoftware) return 20; // Likely real
-        if (hasSoftware) return 80; // Likely AI-edited or generated
-        if (!hasEXIF) return 65; // No EXIF is suspicious
-        return 45; // Has EXIF but no camera model (neutral)
+        // ==================== IMPROVED EXIF SCORING ====================
+        // Real camera photos: EXIF + camera model, no AI software
+        // Screenshots: No EXIF (perfectly normal for screenshots!)
+        // AI images: No EXIF OR suspicious software tags
+
+        if (hasEXIF && hasCameraModel && !hasSoftware) {
+            return 15; // Strong indicator of real camera photo
+        }
+
+        if (hasSoftware) {
+            return 85; // AI generation or editing software detected
+        }
+
+        if (!hasEXIF) {
+            // No EXIF could mean:
+            // 1. Screenshot (REAL and common!)
+            // 2. Stripped metadata (privacy)
+            // 3. AI generated
+            // Don't penalize heavily - let other signals decide
+            return 50; // Neutral - check other factors
+        }
+
+        return 45; // Has EXIF but no camera model (edited photo?)
 
     } catch (e) {
         console.error('[EXIF] Analysis failed:', e);
@@ -2249,7 +2358,7 @@ async function analyzeEXIFData(file) {
 }
 
 async function analyzeMetadata(file) {
-    // Additional metadata checks
+    // ==================== ENHANCED METADATA ANALYSIS ====================
     if (!file) return 50;
 
     let score = 50;
@@ -2262,32 +2371,94 @@ async function analyzeMetadata(file) {
     const pixels = img.width * img.height;
     const bytesPerPixel = file.size / pixels;
 
-    // AI images often have unusual compression ratios
-    if (bytesPerPixel < 0.05) score += 15; // Over-compressed (AI export)
-    if (bytesPerPixel > 5) score -= 10; // Under-compressed (raw photo)
+    // Compression ratio analysis
+    // Real photos (JPEG): 0.1-1.0 bytes/pixel
+    // Screenshots (PNG): 0.5-3.0 bytes/pixel
+    // AI (optimized export): <0.08 or >4.0 bytes/pixel
+    if (bytesPerPixel < 0.08) {
+        score += 18; // Over-compressed = likely AI export
+    } else if (bytesPerPixel >= 0.1 && bytesPerPixel <= 1.0) {
+        score -= 15; // Normal JPEG = likely real photo
+    } else if (bytesPerPixel >= 0.5 && bytesPerPixel <= 3.0) {
+        score -= 18; // PNG range = likely screenshot (REAL)
+    } else if (bytesPerPixel > 4.0) {
+        score += 10; // Unusual compression
+    }
 
-    // Check filename patterns
+    // Filename pattern analysis
     const name = file.name.toLowerCase();
-    const aiPatterns = ['dall', 'midjourney', 'stable', 'diffusion', 'generated', 'ai_', 'synthetic', 'fake', 'output', 'gan'];
-    const realPatterns = ['img_', 'dsc_', 'photo', 'pxl_', 'screenshot'];
+
+    // AI generation patterns
+    const aiPatterns = ['dall', 'midjourney', 'stable', 'diffusion', 'generated', 'ai_', 'synthetic', 'fake', 'output', 'gan', 'openai', 'replicate'];
+
+    // Real image patterns (including screenshots!)
+    const realPatterns = ['img_', 'dsc_', 'photo', 'pxl_', 'screenshot', 'screen shot', 'capture', 'snap', 'camera', 'pic_'];
+
+    let aiPatternMatch = false;
+    let realPatternMatch = false;
 
     for (const pattern of aiPatterns) {
-        if (name.includes(pattern)) score += 20;
-    }
-    for (const pattern of realPatterns) {
-        if (name.includes(pattern)) score -= 10;
+        if (name.includes(pattern)) {
+            score += 25; // Strong AI indicator
+            aiPatternMatch = true;
+        }
     }
 
-    // Check file creation/modification patterns
+    for (const pattern of realPatterns) {
+        if (name.includes(pattern)) {
+            score -= 15; // Strong real/screenshot indicator
+            realPatternMatch = true;
+        }
+    }
+
+    // File extension check
+    const ext = name.split('.').pop();
+    if (ext === 'png') {
+        score -= 10; // PNG often used for screenshots (REAL)
+    } else if (ext === 'jpg' || ext === 'jpeg') {
+        score -= 5; // JPEG common for both real and AI
+    } else if (ext === 'webp') {
+        score += 8; // WebP sometimes used by AI generators
+    }
+
+    // Dimension analysis
+    // AI generators love certain sizes: 512x512, 1024x1024, 768x768
+    const w = img.width;
+    const h = img.height;
+
+    if ((w === 512 && h === 512) || (w === 1024 && h === 1024) ||
+        (w === 768 && h === 768) || (w === 2048 && h === 2048)) {
+        score += 20; // Common AI generation sizes
+    }
+
+    // Screenshots often have exact desktop resolutions
+    const commonScreenSizes = [
+        [1920, 1080], [2560, 1440], [3840, 2160], // Desktop
+        [1366, 768], [1280, 720], [1440, 900], // Laptop
+        [1170, 2532], [1284, 2778], [1125, 2436] // Mobile
+    ];
+
+    for (const [sw, sh] of commonScreenSizes) {
+        if ((w === sw && h === sh) || (w === sh && h === sw)) {
+            score -= 20; // Common screenshot size = REAL
+            break;
+        }
+    }
+
+    // File age check
     if (file.lastModified) {
         const now = Date.now();
         const age = now - file.lastModified;
 
-        // Very recent files (< 1 minute) might be AI-generated
-        if (age < 60000) score += 5;
+        // Very recent files might be just-generated AI
+        // But could also be fresh screenshot or photo
+        // Don't weight this heavily
+        if (age < 60000) {
+            score += 3; // Slight suspicion only
+        }
     }
 
-    return clamp(score, 20, 80);
+    return clamp(score, 15, 85);
 }
 
 function updateProgress(percent, status) {
