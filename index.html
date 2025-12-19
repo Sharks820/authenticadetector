@@ -2725,2591 +2725,10 @@ window.openLoginFromModal = () => {
     openLogin(); 
 };
 
-window.closeLoginRequired = () => { 
-    $('loginRequiredModal').classList.remove('show'); 
-    if (currentFile) startScan('quick'); 
+window.closeLoginRequired = () => {
+    $('loginRequiredModal').classList.remove('show');
+    if (currentFile) startScan('quick');
 };
-
-<script type="module">
-// ==================== AUTHENTICADETECTOR v12 ====================
-// Complete rewrite with PROPER AI detection model
-
-import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.0';
-
-// Disable local model check for faster loading
-env.allowLocalModels = false;
-
-const $ = id => document.getElementById(id);
-
-// ==================== CONFIG ====================
-const SUPABASE_URL = 'https://vrvoyxxdlcpysthzjbeu.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZydm95eHhkbGNweXN0aHpqYmV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5ODcyMjUsImV4cCI6MjA4MTU2MzIyNX0.zwakHpqJY4moTqDyggoEx01CIo76gzFIgjtaPcamHkg';
-const APP_VERSION = '12.0.0';
-const DETECTOR_VERSION = '6.0.0';
-
-// ==================== STATE ====================
-let supabase = null, useLocalFallback = true;
-let user = null, isInstalled = false, deferredPrompt = null;
-let currentFile = null, currentDataUrl = null, currentResult = null;
-let analysisAborted = false;
-let isLoginMode = false, scanCount = 0, sessionScanCount = 0;
-let forensicsMode = false;
-
-// AI Detection Models - THE KEY FIX
-let aiDetector = null, aiDetectorLoaded = false, aiDetectorLoading = false;
-
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-
-// ==================== SVG ASSETS ====================
-const APP_LOGO_SVG = `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-<defs><linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d4aa"/><stop offset="100%" stop-color="#00ff88"/></linearGradient></defs>
-<rect width="48" height="48" rx="12" fill="url(#lg1)"/>
-<circle cx="24" cy="24" r="14" stroke="#000" stroke-width="2.5" fill="none" opacity=".85"/>
-<circle cx="24" cy="24" r="6" fill="#000" opacity=".85"/>
-<path d="M24 6V12M24 36V42M6 24H12M36 24H42" stroke="#000" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
-<path d="M10 10L14 14M34 34L38 38M10 38L14 34M34 14L38 10" stroke="#000" stroke-width="2" stroke-linecap="round" opacity=".4"/>
-</svg>`;
-
-const ANALYSIS_ICON_SVG = `<svg viewBox="0 0 72 72" fill="none">
-<circle cx="36" cy="36" r="30" stroke="var(--border)" stroke-width="2"/>
-<circle class="scan-ring" cx="36" cy="36" r="30" stroke="var(--primary)" stroke-width="2.5" stroke-dasharray="47 141" stroke-linecap="round"/>
-<rect x="20" y="20" width="32" height="32" rx="6" stroke="var(--text2)" stroke-width="2"/>
-<circle class="pulse-core" cx="36" cy="36" r="8" fill="var(--primary)"/>
-<path d="M30 36h12M36 30v12" stroke="#000" stroke-width="2" stroke-linecap="round"/>
-</svg>`;
-
-// ==================== FACTS - MORE ENGAGING ====================
-const FACTS = [
-    { icon: '🤯', text: "AI generates over 34 MILLION images per DAY. Most people can't tell the difference!" },
-    { icon: '🧬', text: "Your brain processes images 60,000x faster than text - that's why deepfakes fool us so easily." },
-    { icon: '👁️', text: "Humans detect AI images only 48% of the time - worse than a coin flip! AI detectors hit 95%+." },
-    { icon: '🎭', text: "The term 'deepfake' was coined in 2017. Now it's a $15 billion industry threatening elections." },
-    { icon: '✋', text: "The 'count the fingers' trick? AI fixed that. Modern generators nail hands 90% of the time." },
-    { icon: '👂', text: "AI still struggles with ears - check for asymmetry, impossible curves, or missing details!" },
-    { icon: '🦷', text: "Teeth are a giveaway - AI often creates wrong counts, impossible reflections, or blurry gums." },
-    { icon: '📝', text: "Text in AI images is usually nonsense. Readable text is actually a sign of a REAL photo!" },
-    { icon: '🔬', text: "Every AI generator leaves invisible 'fingerprints' in pixel noise - detectable by algorithms." },
-    { icon: '📸', text: "Real cameras have sensor noise patterns. AI images have mathematically 'too perfect' noise." },
-    { icon: '🌊', text: "Water reflections expose AI - look for physics violations, impossible angles, or missing objects." },
-    { icon: '💍', text: "Jewelry and accessories often have impossible geometry in AI images - clasps that don't connect!" },
-    { icon: '🏛️', text: "AI struggles with architecture - columns that don't align, windows at wrong angles, floating stairs." },
-    { icon: '🔮', text: "By 2025, experts predict 90% of online images could be AI-generated or manipulated." }
-];
-let currentFactIndex = 0;
-
-// ==================== BADGES - EXPANDED ====================
-const BADGES = {
-    // COMMON (Easy to get)
-    first_scan: { id: 'first_scan', name: 'First Steps', desc: 'Complete your first scan', icon: '🔰', req: 1, type: 'total', rarity: 'common' },
-    ai_hunter: { id: 'ai_hunter', name: 'AI Spotter', desc: 'Find your first AI image', icon: '🎯', req: 1, type: 'ai', rarity: 'common' },
-    five_scans: { id: 'five_scans', name: 'Getting Started', desc: 'Complete 5 scans', icon: '✋', req: 5, type: 'total', rarity: 'common' },
-    ten_scans: { id: 'ten_scans', name: 'Double Digits', desc: 'Complete 10 scans', icon: '🔟', req: 10, type: 'total', rarity: 'common' },
-    first_deep: { id: 'first_deep', name: 'Deep Diver', desc: 'First Deep Scan', icon: '🤿', req: 1, type: 'deep', rarity: 'common' },
-    quick_five: { id: 'quick_five', name: 'Speed Runner', desc: '5 Quick Scans', icon: '⚡', req: 5, type: 'quick', rarity: 'common' },
-    
-    // RARE (Some effort)
-    twenty_five: { id: 'twenty_five', name: 'Detective', desc: '25 total scans', icon: '🕵️', req: 25, type: 'total', rarity: 'rare' },
-    ten_ai: { id: 'ten_ai', name: 'AI Expert', desc: 'Find 10 AI images', icon: '🤖', req: 10, type: 'ai', rarity: 'rare' },
-    streak_3: { id: 'streak_3', name: 'On Fire', desc: '3 AI finds in a row', icon: '🔥', req: 3, type: 'streak', rarity: 'rare' },
-    deep_ten: { id: 'deep_ten', name: 'Deep Analyst', desc: '10 Deep Scans', icon: '🔬', req: 10, type: 'deep', rarity: 'rare' },
-    fifty_scans: { id: 'fifty_scans', name: 'Dedicated', desc: '50 total scans', icon: '💪', req: 50, type: 'total', rarity: 'rare' },
-    
-    // EPIC (Significant effort)
-    hundred_scans: { id: 'hundred_scans', name: 'Centurion', desc: '100 total scans', icon: '💯', req: 100, type: 'total', rarity: 'epic' },
-    fifty_ai: { id: 'fifty_ai', name: 'AI Hunter', desc: 'Find 50 AI images', icon: '🎖️', req: 50, type: 'ai', rarity: 'epic' },
-    streak_5: { id: 'streak_5', name: 'Unstoppable', desc: '5 AI finds in a row', icon: '⚡', req: 5, type: 'streak', rarity: 'epic' },
-    deep_fifty: { id: 'deep_fifty', name: 'Deep Master', desc: '50 Deep Scans', icon: '🧠', req: 50, type: 'deep', rarity: 'epic' },
-    forensics_first: { id: 'forensics_first', name: 'Forensics Pro', desc: 'First Forensics scan', icon: '🔎', req: 1, type: 'forensics', rarity: 'epic' },
-    
-    // LEGENDARY (Major achievement)
-    two_fifty: { id: 'two_fifty', name: 'Legend', desc: '250 total scans', icon: '⭐', req: 250, type: 'total', rarity: 'legendary' },
-    hundred_ai: { id: 'hundred_ai', name: 'AI Nemesis', desc: 'Find 100 AI images', icon: '👑', req: 100, type: 'ai', rarity: 'legendary' },
-    streak_10: { id: 'streak_10', name: 'Perfect 10', desc: '10 AI finds in a row', icon: '🏆', req: 10, type: 'streak', rarity: 'legendary' },
-    thousand: { id: 'thousand', name: 'Grandmaster', desc: '1000 total scans', icon: '🌟', req: 1000, type: 'total', rarity: 'legendary' }
-};
-
-// ==================== TIER SYSTEM ====================
-const TIERS = {
-    1: { name: 'KING', class: 'tier-king' },
-    2: { name: 'VICEROY', class: 'tier-viceroy' },
-    3: { name: 'ARCHDUKE', class: 'tier-archduke' },
-    // 4-10
-    legend: { name: 'LEGEND', class: 'tier-legend', min: 4, max: 10 },
-    // 11-25
-    elite: { name: 'ELITE', class: 'tier-elite', min: 11, max: 25 },
-    // 26-50
-    veteran: { name: 'VETERAN', class: 'tier-veteran', min: 26, max: 50 },
-    // 51-100
-    rising: { name: 'RISING', class: 'tier-rising', min: 51, max: 100 }
-};
-
-function getTier(rank) {
-    if (rank === 1) return TIERS[1];
-    if (rank === 2) return TIERS[2];
-    if (rank === 3) return TIERS[3];
-    if (rank <= 10) return TIERS.legend;
-    if (rank <= 25) return TIERS.elite;
-    if (rank <= 50) return TIERS.veteran;
-    if (rank <= 100) return TIERS.rising;
-    return null;
-}
-
-// ==================== HELPERS ====================
-function toast(msg) {
-    let c = document.querySelector('.toast-container');
-    if (!c) { c = document.createElement('div'); c.className = 'toast-container'; document.body.appendChild(c); }
-    const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; c.appendChild(t);
-    setTimeout(() => t.remove(), 3000);
-}
-function showView(id) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); $(id).classList.add('active'); }
-window.closeView = () => showView('homeView');
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-function round(v) { return Math.round(v); }
-function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
-
-// ==================== INIT LOGOS ====================
-function initLogos() {
-    document.querySelectorAll('.logo-icon').forEach(el => el.innerHTML = APP_LOGO_SVG);
-    if ($('analysisIcon')) $('analysisIcon').innerHTML = ANALYSIS_ICON_SVG;
-}
-
-// ==================== FACTS ====================
-function initFacts() { updateFact(); setInterval(updateFact, 12000); }
-function updateFact() {
-    currentFactIndex = (currentFactIndex + 1) % FACTS.length;
-    const f = FACTS[currentFactIndex];
-    if ($('factIcon')) $('factIcon').textContent = f.icon;
-    if ($('factText')) $('factText').textContent = f.text;
-    if ($('progressFactIcon')) $('progressFactIcon').textContent = f.icon;
-    if ($('progressFactText')) $('progressFactText').textContent = f.text;
-}
-
-// ==================== SUPABASE ====================
-function initSupabase() {
-    try {
-        if (SUPABASE_URL.includes('YOUR_PROJECT')) { useLocalFallback = true; return; }
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-            auth: { autoRefreshToken: true, persistSession: true, storage: localStorage }
-        });
-        useLocalFallback = false;
-        console.log('[Supabase] Connected');
-    } catch (e) { useLocalFallback = true; console.log('[Supabase] Using local fallback'); }
-}
-
-// ==================== PWA INSTALL ====================
-window.addEventListener('beforeinstallprompt', e => {
-    e.preventDefault(); deferredPrompt = e;
-    if (!isInstalled && !isIOS) $('installBanner')?.classList.add('show');
-    updateStatusBar();
-});
-window.addEventListener('appinstalled', () => {
-    isInstalled = true; localStorage.setItem('app_installed', 'true');
-    $('installBanner')?.classList.remove('show'); $('iosHelper')?.classList.remove('show');
-    updateStatusBar(); updateGating(); toast('🎉 App installed!');
-});
-function checkInstallState() {
-    if (isStandalone) { isInstalled = true; localStorage.setItem('app_installed', 'true'); }
-    if (localStorage.getItem('app_installed') === 'true') isInstalled = true;
-    if (isInstalled) { $('installBanner')?.classList.remove('show'); $('iosHelper')?.classList.remove('show'); }
-    else if (isIOS && isSafari && !localStorage.getItem('ios_dismissed')) {
-        setTimeout(() => { if (!isInstalled) $('iosHelper')?.classList.add('show'); }, 2500);
-    }
-    updateStatusBar();
-}
-window.promptInstall = async function() {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') { 
-            isInstalled = true; localStorage.setItem('app_installed', 'true'); 
-            $('installBanner')?.classList.remove('show'); 
-            updateStatusBar(); updateGating(); 
-        }
-        deferredPrompt = null;
-    } else if (isIOS) { $('iosHelper')?.classList.add('show'); }
-    else { toast('Use browser menu → Install app'); }
-};
-window.dismissIosHelper = () => { $('iosHelper')?.classList.remove('show'); localStorage.setItem('ios_dismissed', 'true'); };
-
-// ==================== STATUS BAR ====================
-function updateStatusBar() {
-    const ic = $('installChip'), lc = $('loginChip'), sc = $('signupChip');
-    
-    if (isInstalled) {
-        ic.classList.remove('pending'); ic.classList.add('complete');
-        ic.innerHTML = '<span>✓</span> Installed';
-    } else {
-        ic.classList.add('pending'); ic.classList.remove('complete');
-        ic.innerHTML = '<span>📲</span> Install';
-    }
-    
-    if (user) {
-        lc.classList.remove('pending'); lc.classList.add('complete');
-        lc.innerHTML = '<span>✓</span> Signed In';
-        sc.classList.add('hidden');
-    } else {
-        lc.classList.add('pending'); lc.classList.remove('complete');
-        lc.innerHTML = '<span>🔑</span> Sign In';
-        sc.classList.remove('hidden');
-    }
-    
-    // Hide entire bar only when both complete
-    $('statusBar').style.display = (isInstalled && user) ? 'none' : 'flex';
-}
-
-// ==================== AUTH ====================
-async function loadUser() {
-    if (!useLocalFallback && supabase) {
-        try {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session?.user) {
-                user = { id: session.user.id, email: session.user.email, name: session.user.user_metadata?.display_name || session.user.email.split('@')[0] };
-                const { data: p } = await supabase.from('profiles').select('display_name,avatar_url').eq('id', user.id).single();
-                if (p) { user.name = p.display_name || user.name; user.avatar = p.avatar_url; }
-                updateUserUI(); loadUserStats(); return;
-            }
-        } catch (e) { console.log('[Auth] Session check failed:', e); }
-    }
-    const saved = localStorage.getItem('auth_user');
-    if (saved) { user = JSON.parse(saved); updateUserUI(); loadUserStats(); }
-}
-function saveUser() { if (user) localStorage.setItem('auth_user', JSON.stringify(user)); else localStorage.removeItem('auth_user'); }
-
-function updateUserUI() {
-    if (user) {
-        const i = user.name ? user.name[0].toUpperCase() : user.email[0].toUpperCase();
-        $('userInitial').textContent = i;
-        $('userBtn').innerHTML = user.avatar ? `<img src="${user.avatar}">` : `<span id="userInitial">${i}</span>`;
-        $('profileName').textContent = user.name || user.email.split('@')[0];
-        $('profileEmail').textContent = user.email;
-        $('profileAvatar').innerHTML = user.avatar ? `<img src="${user.avatar}">` : i;
-        $('loginLogoutText').textContent = 'Sign Out'; $('loginLogoutIcon').textContent = '🚪';
-    } else {
-        $('userInitial').textContent = '?'; $('userBtn').innerHTML = '<span id="userInitial">?</span>';
-        $('profileName').textContent = 'Guest'; $('profileEmail').textContent = 'Sign in to save progress';
-        $('profileAvatar').innerHTML = '?';
-        $('loginLogoutText').textContent = 'Sign In'; $('loginLogoutIcon').textContent = '🔑';
-    }
-    updateStatusBar(); updateGating();
-}
-
-async function loadUserStats() {
-    if (!user) return;
-    let stats = { total: 0, ai: 0, deep: 0, quick: 0, forensics: 0, streak: 0, maxStreak: 0, points: 0 };
-    if (!useLocalFallback && supabase) {
-        try {
-            const { data } = await supabase.from('user_stats').select('*').eq('user_id', user.id).single();
-            if (data) stats = { 
-                total: data.total_scans || 0, ai: data.ai_found || 0, 
-                deep: data.deep_scans || 0, quick: data.quick_scans || 0,
-                forensics: data.forensics_scans || 0,
-                streak: data.current_streak || 0, maxStreak: data.max_streak || 0, 
-                points: data.points || 0 
-            };
-        } catch (e) {}
-    }
-    const local = JSON.parse(localStorage.getItem(`stats_${user.id}`) || '{}');
-    if ((local.total || 0) > stats.total) stats = { ...stats, ...local };
-    scanCount = stats.total;
-    localStorage.setItem(`stats_${user.id}`, JSON.stringify(stats));
-    $('statScans').textContent = stats.total || 0; 
-    $('statFound').textContent = stats.ai || 0; 
-    $('statPoints').textContent = stats.points || 0;
-}
-
-function updateGating() {
-    const canDeep = user; // Only require login, not install (easier for users)
-    if (canDeep) { 
-        $('deepLock')?.classList.add('hidden'); 
-        $('advancedPanel')?.classList.remove('hidden'); 
-    } else { 
-        $('deepLock')?.classList.remove('hidden'); 
-        $('advancedPanel')?.classList.add('hidden'); 
-    }
-}
-
-window.openLogin = function(signupMode = false) { 
-    isLoginMode = signupMode; 
-    updateLoginUI(); 
-    showView('loginView'); 
-};
-function updateLoginUI() {
-    if (isLoginMode) {
-        $('loginViewTitle').textContent = 'Sign Up'; 
-        $('loginHeroTitle').textContent = 'Create Account';
-        $('loginHeroSubtitle').textContent = 'Join to unlock all features';
-        $('nameGroup').classList.remove('hidden'); 
-        $('loginSubmit').textContent = 'Create Account';
-        $('loginToggle').innerHTML = 'Already have an account? <a onclick="toggleLoginMode()">Sign In</a>';
-    } else {
-        $('loginViewTitle').textContent = 'Sign In'; 
-        $('loginHeroTitle').textContent = 'Welcome Back';
-        $('loginHeroSubtitle').textContent = 'Sign in to access all features';
-        $('nameGroup').classList.add('hidden'); 
-        $('loginSubmit').textContent = 'Sign In';
-        $('loginToggle').innerHTML = "Don't have an account? <a onclick=\"toggleLoginMode()\">Sign Up</a>";
-    }
-    $('loginError').classList.remove('show');
-}
-window.toggleLoginMode = () => { isLoginMode = !isLoginMode; updateLoginUI(); };
-
-window.submitLogin = async function() {
-    const email = $('emailInput').value.trim(), password = $('passwordInput').value, name = $('nameInput').value.trim();
-    if (!email || !password) { showLoginError('Fill all fields'); return; }
-    if (isLoginMode && !name) { showLoginError('Enter your name'); return; }
-    if (password.length < 6) { showLoginError('Password min 6 chars'); return; }
-    
-    $('loginSubmit').disabled = true; 
-    $('loginSubmit').textContent = isLoginMode ? 'Creating...' : 'Signing in...';
-    
-    try {
-        if (!useLocalFallback && supabase) {
-            if (isLoginMode) {
-                const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { display_name: name } } });
-                if (error) throw error;
-                user = { id: data.user.id, email: data.user.email, name }; 
-                toast('🎉 Account created!');
-            } else {
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) throw error;
-                user = { id: data.user.id, email: data.user.email, name: data.user.user_metadata?.display_name || email.split('@')[0] }; 
-                toast('Welcome back!');
-            }
-        } else {
-            // Local fallback
-            const users = JSON.parse(localStorage.getItem('local_users') || '{}');
-            if (isLoginMode) {
-                if (users[email]) throw new Error('Account exists');
-                users[email] = { email, password, name, created: Date.now() };
-                localStorage.setItem('local_users', JSON.stringify(users));
-                user = { id: 'local_' + Date.now(), email, name }; 
-                toast('🎉 Account created!');
-            } else {
-                if (!users[email] || users[email].password !== password) throw new Error('Invalid credentials');
-                user = { id: 'local_' + email, email, name: users[email].name }; 
-                toast('Welcome back!');
-            }
-        }
-        saveUser(); updateUserUI(); loadUserStats(); showView('homeView');
-    } catch (e) { 
-        showLoginError(e.message); 
-    } finally { 
-        $('loginSubmit').disabled = false; 
-        updateLoginUI(); 
-    }
-};
-
-function showLoginError(msg) { $('loginError').textContent = msg; $('loginError').classList.add('show'); }
-window.continueAsGuest = () => { showView('homeView'); toast('Continuing as guest'); };
-
-window.handleLoginLogout = async function() {
-    if (user) { 
-        if (!useLocalFallback && supabase) try { await supabase.auth.signOut(); } catch(e){}
-        user = null; saveUser(); updateUserUI(); toast('Signed out'); 
-    } else openLogin();
-};
-
-window.openLoginFromModal = () => { $('loginRequiredModal').classList.remove('show'); openLogin(); };
-window.closeLoginRequired = () => { $('loginRequiredModal').classList.remove('show'); if (currentFile) startScan('quick'); };
-
-// ==================== FILE HANDLING ====================
-window.triggerFileInput = () => $('fileInput').click();
-window.handleFileSelect = (e) => { const f = e.target.files[0]; if (f) processFile(f); };
-
-function processFile(file) {
-    if (!file.type.startsWith('image/')) { toast('Please select an image'); return; }
-    if (file.size > 50 * 1024 * 1024) { toast('File too large (max 50MB)'); return; }
-    
-    currentFile = file;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        currentDataUrl = e.target.result;
-        $('dropzonePreview').src = currentDataUrl; 
-        $('dropzonePreview').classList.remove('hidden');
-        $('dropzoneContent').classList.add('hidden'); 
-        $('dropzone').classList.add('has-file');
-        $('quickBtn').disabled = false; 
-        $('deepBtn').disabled = false;
-        $('resultCard').classList.add('hidden'); 
-        $('progressCard').classList.add('hidden');
-    };
-    reader.readAsDataURL(file);
-}
-
-// Drag & drop
-$('dropzone')?.addEventListener('dragover', e => { e.preventDefault(); $('dropzone').classList.add('dragover'); });
-$('dropzone')?.addEventListener('dragleave', () => $('dropzone').classList.remove('dragover'));
-$('dropzone')?.addEventListener('drop', e => { 
-    e.preventDefault(); 
-    $('dropzone').classList.remove('dragover'); 
-    if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]); 
-});
-
-// ==================== SCAN ====================
-window.startScan = function(mode) {
-    if (!currentFile) { toast('Select an image first'); return; }
-    if (mode === 'deep' && !user) { 
-        $('loginRequiredModal').classList.add('show'); 
-        return; 
-    }
-    runAnalysis(mode);
-};
-
-async function runAnalysis(mode) {
-    analysisAborted = false; 
-    sessionScanCount++;
-    $('resultCard').classList.add('hidden'); 
-    $('progressCard').classList.remove('hidden');
-    $('progressBar').style.width = '0%';
-    $('progressTitle').textContent = `🔍 ${mode === 'deep' ? (forensicsMode ? 'Forensics' : 'Deep') : 'Quick'} Scan...`;
-    updateFact();
-    
-    try {
-        const result = mode === 'quick' ? await runQuickScan() : await runDeepScan();
-        if (analysisAborted) return;
-        displayResults(result, mode);
-        await saveToHistory(result, mode);
-        await updateUserStatsAfterScan(result, mode);
-    } catch (e) { 
-        console.error('[Scan] Error:', e);
-        if (!analysisAborted) { 
-            toast('Analysis failed: ' + e.message); 
-            $('progressCard').classList.add('hidden'); 
-        } 
-    }
-}
-
-// ==================== QUICK SCAN - HEURISTICS ONLY ====================
-async function runQuickScan() {
-    updateProgress(10, 'Loading image...');
-    const img = new Image();
-    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = currentDataUrl; });
-    
-    updateProgress(25, 'Analyzing noise patterns...');
-    const noise = analyzeNoisePatterns(img);
-    await sleep(100);
-    
-    updateProgress(45, 'Checking compression artifacts...');
-    const compression = analyzeCompressionArtifacts(img);
-    await sleep(100);
-    
-    updateProgress(65, 'Analyzing color distribution...');
-    const color = analyzeColorDistribution(img);
-    await sleep(100);
-    
-    updateProgress(75, 'Checking edge coherence...');
-    const edges = analyzeEdgeCoherence(img);
-    await sleep(100);
-
-    updateProgress(85, 'Detecting GAN fingerprints...');
-    const ganScore = analyzeGANFingerprints(img);
-    await sleep(100);
-
-    updateProgress(95, 'Computing result...');
-
-    // FIXED: Weighted ensemble with model-specific detection prioritized
-    let aiScore = noise * 0.20 + compression * 0.15 + color * 0.15 + edges * 0.10 + ganScore * 0.40;
-
-    // Calibration: Trust strong AI indicators
-    const maxIndicator = Math.max(noise, compression, color, edges, ganScore);
-    const minIndicator = Math.min(noise, compression, color, edges, ganScore);
-    const agreementCount = [noise, compression, color, edges, ganScore].filter(s => s > 60).length;
-
-    // If multiple indicators agree on AI, trust them
-    if (agreementCount >= 4) {
-        aiScore = Math.min(95, aiScore * 1.25); // Strong consensus = boost
-    } else if (agreementCount >= 3) {
-        aiScore = Math.min(90, aiScore * 1.15); // Moderate consensus
-    }
-
-    // If GAN signature is very high, trust it (model-specific detection)
-    if (ganScore > 80) {
-        aiScore = Math.max(aiScore, ganScore * 0.95);
-    }
-
-    // If multiple indicators show REAL photo, trust that too
-    const realCount = [noise, compression, color, edges, ganScore].filter(s => s < 30).length;
-    if (realCount >= 4) {
-        aiScore = Math.max(15, aiScore * 0.7); // Strong real indicators
-    }
-
-    // Clamp to realistic range
-    aiScore = clamp(aiScore, 10, 95);
-
-    // Confidence based on agreement
-    const spread = maxIndicator - minIndicator;
-    let confidence = 'low';
-    if (agreementCount >= 3 && spread < 30) confidence = 'medium';
-    if (agreementCount >= 4 && spread < 20) confidence = 'high';
-    if (realCount >= 4) confidence = 'high'; // High confidence it's REAL
-
-    updateProgress(100, 'Complete!');
-
-    return {
-        aiScore: round(aiScore),
-        isAI: aiScore > 50,
-        confidence,
-        breakdown: {
-            noise: round(noise),
-            compression: round(compression),
-            color: round(color),
-            edges: round(edges),
-            ganFingerprints: round(ganScore)
-        },
-        mode: 'quick',
-        version: DETECTOR_VERSION
-    };
-}
-
-// ==================== DEEP SCAN - AI MODEL ====================
-async function runDeepScan() {
-    updateProgress(5, 'Loading AI detection model...');
-    
-    // Load the AI detector if not loaded
-    if (!aiDetectorLoaded && !aiDetectorLoading) {
-        aiDetectorLoading = true;
-        try {
-            // Using a proper image classification model
-            // In production, you'd use a fine-tuned AI detector model
-            aiDetector = await pipeline('image-classification', 'Xenova/vit-base-patch16-224-in21k');
-            aiDetectorLoaded = true;
-            console.log('[AI] Detector model loaded');
-        } catch (e) {
-            console.error('[AI] Model load failed:', e);
-            // Fallback to enhanced heuristics
-            aiDetectorLoaded = false;
-        }
-        aiDetectorLoading = false;
-    }
-    
-    while (aiDetectorLoading) await sleep(100);
-    
-    updateProgress(12, 'Loading image...');
-    const img = new Image();
-    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = currentDataUrl; });
-
-    // Industry-standard metadata analysis
-    updateProgress(18, 'Checking EXIF metadata...');
-    const exifScore = await analyzeEXIF(currentFile);
-    await sleep(30);
-
-    updateProgress(24, 'Checking C2PA authenticity...');
-    const c2paScore = await analyzeC2PA(currentFile);
-    await sleep(30);
-
-    updateProgress(30, 'Running Error Level Analysis...');
-    const elaScore = await analyzeErrorLevel(img);
-    await sleep(30);
-
-    // Run all heuristics
-    updateProgress(38, 'Analyzing noise patterns...');
-    const noise = analyzeNoisePatterns(img);
-    await sleep(40);
-
-    updateProgress(46, 'Checking compression...');
-    const compression = analyzeCompressionArtifacts(img);
-    await sleep(40);
-
-    updateProgress(54, 'Analyzing colors...');
-    const color = analyzeColorDistribution(img);
-    await sleep(40);
-
-    updateProgress(62, 'Checking edges...');
-    const edges = analyzeEdgeCoherence(img);
-    await sleep(40);
-
-    // Deep analysis: frequency domain
-    updateProgress(68, 'Frequency analysis...');
-    const frequency = analyzeFrequencyDomain(img);
-    await sleep(40);
-
-    updateProgress(74, 'Detecting GAN fingerprints...');
-    const ganScore = analyzeGANFingerprints(img);
-    await sleep(40);
-
-    // CUTTING-EDGE RESEARCH METHODS (97-98% accuracy)
-    updateProgress(78, 'Analyzing texture frequency signatures...');
-    const textureFreqScore = analyzeTextureFrequencySignatures(img);
-    await sleep(50);
-
-    updateProgress(82, 'Running FreqCross multi-modal analysis...');
-    const freqCrossScore = analyzeFreqCrossMultiModal(img);
-    await sleep(50);
-
-    updateProgress(86, 'Analyzing diffusion degradation patterns...');
-    const diffusionSnapScore = analyzeDiffusionSnapBack(img);
-    await sleep(50);
-
-    // AI Model inference (deprecated - keeping for compatibility)
-    let modelScore = 50;
-    if (aiDetectorLoaded && aiDetector) {
-        updateProgress(90, 'Running AI model...');
-        try {
-            const results = await aiDetector(currentDataUrl, { topk: 5 });
-            // Analyze classification confidence patterns
-            // AI images tend to have different confidence distributions
-            modelScore = analyzeModelOutput(results);
-        } catch (e) {
-            console.error('[AI] Inference failed:', e);
-        }
-    }
-
-    // Multi-crop analysis for forensics mode
-    let cropScore = modelScore;
-    if (forensicsMode) {
-        updateProgress(95, 'Multi-region analysis...');
-        cropScore = await analyzeMultipleCrops(img);
-    }
-
-    updateProgress(98, 'Computing final result...');
-
-    // Weighted ensemble for Deep Scan - INDUSTRY-LEADING FORMULA v6.0
-    // Integrates cutting-edge research methods (97-98% accuracy)
-    let aiScore;
-    if (forensicsMode) {
-        // Forensics: All signals including cutting-edge research methods
-        aiScore = exifScore * 0.08 + c2paScore * 0.05 + elaScore * 0.10 +
-                  noise * 0.06 + compression * 0.06 + color * 0.06 + edges * 0.05 +
-                  frequency * 0.06 + ganScore * 0.10 +
-                  textureFreqScore * 0.15 + freqCrossScore * 0.15 + diffusionSnapScore * 0.06 +
-                  modelScore * 0.01 + cropScore * 0.01;
-    } else {
-        // Deep: Prioritize research-backed methods (97-98% accuracy)
-        aiScore = exifScore * 0.09 + c2paScore * 0.05 + elaScore * 0.11 +
-                  noise * 0.08 + compression * 0.07 + color * 0.07 + edges * 0.06 +
-                  frequency * 0.07 + ganScore * 0.12 +
-                  textureFreqScore * 0.16 + freqCrossScore * 0.16 + diffusionSnapScore * 0.06;
-        // Note: 97-98% accuracy methods get combined 38% weight
-    }
-    
-    // Calibration with ALL signals including cutting-edge research methods
-    const allIndicators = [exifScore, c2paScore, elaScore, noise, compression, color, edges, frequency, ganScore,
-                           textureFreqScore, freqCrossScore, diffusionSnapScore, modelScore];
-    const maxInd = Math.max(...allIndicators);
-    const minInd = Math.min(...allIndicators);
-    const agreementCount = allIndicators.filter(s => s > 55).length;
-
-    // Boost if multiple indicators agree (strong consensus)
-    if (agreementCount >= 9) {
-        aiScore = Math.min(98, aiScore * 1.22);
-    } else if (agreementCount >= 7) {
-        aiScore = Math.min(96, aiScore * 1.15);
-    } else if (agreementCount >= 5) {
-        aiScore = Math.min(93, aiScore * 1.08);
-    }
-
-    // Strong single indicator boost (if any method is very confident)
-    // Research methods are trusted more (97-98% accuracy)
-    if (textureFreqScore > 85 || freqCrossScore > 85) {
-        aiScore = Math.max(aiScore, Math.max(textureFreqScore, freqCrossScore) * 0.95);
-    } else if (maxInd > 85) {
-        aiScore = Math.max(aiScore, maxInd * 0.88);
-    } else if (maxInd > 75) {
-        aiScore = Math.max(aiScore, maxInd * 0.78);
-    }
-
-    // EXIF/ELA/Research methods strongly indicate real photo - override other signals
-    const realIndicatorCount = [exifScore, elaScore, textureFreqScore, freqCrossScore].filter(s => s < 30).length;
-    if (realIndicatorCount >= 3) {
-        aiScore = Math.min(aiScore, 25); // Very strong evidence of real photo
-    } else if (exifScore < 30 && elaScore < 30) {
-        aiScore = Math.min(aiScore, 35); // Strong evidence of real photo
-    }
-
-    // Forensics mode boost
-    if (forensicsMode) {
-        aiScore = Math.min(98, aiScore * 1.05);
-    }
-
-    // Clamp to realistic range
-    aiScore = clamp(aiScore, 10, 98);
-
-    // Confidence calculation
-    const spread = maxInd - minInd;
-    let confidence = 'low';
-    if (spread < 25 && (aiScore > 65 || aiScore < 35) && agreementCount >= 4) confidence = 'medium';
-    if (spread < 18 && (aiScore > 80 || aiScore < 20) && agreementCount >= 6) confidence = 'high';
-    if (forensicsMode && agreementCount >= 7) confidence = 'high';
-    
-    updateProgress(100, 'Complete!');
-    
-    return {
-        aiScore: round(aiScore),
-        isAI: aiScore > 50,
-        confidence,
-        breakdown: {
-            // Industry-standard methods (like Hive, Winston AI, Foto Forensics)
-            exif: round(exifScore),
-            c2pa: round(c2paScore),
-            errorLevel: round(elaScore),
-            // Cutting-edge research methods (97-98% accuracy)
-            textureFrequency: round(textureFreqScore),
-            freqCross: round(freqCrossScore),
-            diffusionSnap: round(diffusionSnapScore),
-            // Heuristic signals
-            noise: round(noise),
-            compression: round(compression),
-            color: round(color),
-            edges: round(edges),
-            frequency: round(frequency),
-            ganFingerprints: round(ganScore),
-            model: round(modelScore)
-        },
-        mode: forensicsMode ? 'forensics' : 'deep',
-        version: DETECTOR_VERSION
-    };
-}
-
-// ==================== ANALYSIS FUNCTIONS ====================
-
-function analyzeNoisePatterns(img) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const size = Math.min(img.width, img.height, 256);
-    canvas.width = size; canvas.height = size;
-    ctx.drawImage(img, 0, 0, size, size);
-    const data = ctx.getImageData(0, 0, size, size).data;
-
-    // Calculate local variance (real photos have natural noise)
-    let totalVariance = 0, count = 0;
-    const blockSize = 8;
-
-    for (let by = 0; by < size - blockSize; by += blockSize) {
-        for (let bx = 0; bx < size - blockSize; bx += blockSize) {
-            let sum = 0, sumSq = 0, n = 0;
-            for (let y = by; y < by + blockSize; y++) {
-                for (let x = bx; x < bx + blockSize; x++) {
-                    const i = (y * size + x) * 4;
-                    const gray = (data[i] + data[i+1] + data[i+2]) / 3;
-                    sum += gray; sumSq += gray * gray; n++;
-                }
-            }
-            const mean = sum / n;
-            const variance = (sumSq / n) - (mean * mean);
-            totalVariance += variance;
-            count++;
-        }
-    }
-
-    const avgVariance = totalVariance / count;
-
-    // FIXED: Start assuming REAL photo (low score), increase only if AI patterns detected
-    // Real photos: variance typically 50-500
-    // AI images: often < 30 (too smooth) or > 800 (artificially noisy)
-    if (avgVariance < 15) return 90;  // Extremely smooth = AI
-    if (avgVariance < 25) return 80;  // Very smooth = likely AI
-    if (avgVariance < 40) return 70;  // Suspicious smoothness
-    if (avgVariance >= 50 && avgVariance <= 500) return 25;  // Normal variance = REAL photo
-    if (avgVariance > 800) return 75;  // Artificially noisy = AI
-    if (avgVariance > 600) return 60;  // High variance suspicious
-    return 40; // Edge cases
-}
-
-function analyzeCompressionArtifacts(img) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const size = Math.min(img.width, img.height, 256);
-    canvas.width = size; canvas.height = size;
-    ctx.drawImage(img, 0, 0, size, size);
-    const data = ctx.getImageData(0, 0, size, size).data;
-    
-    // Detect 8x8 DCT block boundaries (JPEG artifacts)
-    // AI upscalers often create periodic patterns
-    let blockEdges = 0, total = 0;
-    
-    for (let y = 8; y < size - 8; y += 8) {
-        for (let x = 8; x < size - 8; x += 8) {
-            const i = (y * size + x) * 4;
-            const left = ((y * size) + (x - 1)) * 4;
-            const up = (((y - 1) * size) + x) * 4;
-            
-            const diffLeft = Math.abs(data[i] - data[left]) + 
-                           Math.abs(data[i+1] - data[left+1]) + 
-                           Math.abs(data[i+2] - data[left+2]);
-            const diffUp = Math.abs(data[i] - data[up]) + 
-                          Math.abs(data[i+1] - data[up+1]) + 
-                          Math.abs(data[i+2] - data[up+2]);
-            
-            if (diffLeft > 25 || diffUp > 25) blockEdges++;
-            total++;
-        }
-    }
-    
-    const blockRatio = blockEdges / total;
-
-    // FIXED: Assume real photo, increase only if AI upscaling artifacts detected
-    if (blockRatio > 0.6) return 85;  // Very high = AI upscaling
-    if (blockRatio > 0.45) return 75;  // High = likely AI
-    if (blockRatio > 0.3) return 65;  // Suspicious
-    if (blockRatio < 0.15) return 20;  // Low = natural JPEG = REAL
-    return 45; // Moderate
-}
-
-function analyzeColorDistribution(img) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const size = Math.min(img.width, img.height, 256);
-    canvas.width = size; canvas.height = size;
-    ctx.drawImage(img, 0, 0, size, size);
-    const data = ctx.getImageData(0, 0, size, size).data;
-    
-    // Build color histogram
-    const histR = new Array(256).fill(0);
-    const histG = new Array(256).fill(0);
-    const histB = new Array(256).fill(0);
-    
-    for (let i = 0; i < data.length; i += 4) {
-        histR[data[i]]++;
-        histG[data[i+1]]++;
-        histB[data[i+2]]++;
-    }
-    
-    // Count peaks (local maxima) - AI tends to have fewer, smoother peaks
-    function countPeaks(hist) {
-        let peaks = 0;
-        for (let i = 3; i < 253; i++) {
-            if (hist[i] > hist[i-1] && hist[i] > hist[i+1] &&
-                hist[i] > hist[i-2] && hist[i] > hist[i+2] &&
-                hist[i] > hist[i-3] && hist[i] > hist[i+3]) {
-                peaks++;
-            }
-        }
-        return peaks;
-    }
-    
-    const totalPeaks = countPeaks(histR) + countPeaks(histG) + countPeaks(histB);
-    
-    // Calculate histogram smoothness
-    let smoothness = 0;
-    for (let c of [histR, histG, histB]) {
-        for (let i = 1; i < 255; i++) {
-            smoothness += Math.abs(c[i] - (c[i-1] + c[i+1]) / 2);
-        }
-    }
-    smoothness /= (size * size * 3);
-    
-    // FIXED: AI images have smoother histograms with fewer peaks
-    // Real photos have complex, jagged histograms with many peaks
-    let score = 25; // Start assuming REAL
-
-    if (totalPeaks < 10) score += 45;  // Very few peaks = AI
-    else if (totalPeaks < 20) score += 30;  // Few peaks = likely AI
-    else if (totalPeaks > 40) score -= 10;  // Many peaks = likely REAL
-
-    if (smoothness < 0.5) score += 25;  // Very smooth = AI
-    else if (smoothness < 1) score += 10;  // Smooth = suspicious
-    else if (smoothness > 3) score -= 15;  // Rough = REAL
-
-    return clamp(score, 15, 90);
-}
-
-function analyzeEdgeCoherence(img) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const size = Math.min(img.width, img.height, 128);
-    canvas.width = size; canvas.height = size;
-    ctx.drawImage(img, 0, 0, size, size);
-    const data = ctx.getImageData(0, 0, size, size).data;
-    
-    // Simple Sobel edge detection
-    let edgeStrength = 0, edgeCount = 0;
-    
-    for (let y = 1; y < size - 1; y++) {
-        for (let x = 1; x < size - 1; x++) {
-            const idx = (y * size + x) * 4;
-            const gray = (data[idx] + data[idx+1] + data[idx+2]) / 3;
-            
-            // Get neighbors
-            const grayL = (data[idx-4] + data[idx-3] + data[idx-2]) / 3;
-            const grayR = (data[idx+4] + data[idx+5] + data[idx+6]) / 3;
-            const grayU = (data[idx-size*4] + data[idx-size*4+1] + data[idx-size*4+2]) / 3;
-            const grayD = (data[idx+size*4] + data[idx+size*4+1] + data[idx+size*4+2]) / 3;
-            
-            const gx = grayR - grayL;
-            const gy = grayD - grayU;
-            const magnitude = Math.sqrt(gx*gx + gy*gy);
-            
-            if (magnitude > 20) {
-                edgeStrength += magnitude;
-                edgeCount++;
-            }
-        }
-    }
-    
-    const avgEdge = edgeCount > 0 ? edgeStrength / edgeCount : 0;
-    const edgeDensity = edgeCount / (size * size);
-
-    // FIXED: AI images have unnaturally sharp OR smooth edges, real photos have natural variation
-    let score = 30; // Start assuming REAL
-
-    if (avgEdge > 80) score += 35; // Overly sharp = AI
-    else if (avgEdge < 25) score += 40; // Too smooth = AI
-    else if (avgEdge >= 35 && avgEdge <= 70) score -= 10; // Natural range = REAL
-
-    if (edgeDensity < 0.05) score += 25; // Very few edges = AI
-    else if (edgeDensity > 0.4) score += 20; // Too many edges = AI
-    else if (edgeDensity >= 0.1 && edgeDensity <= 0.3) score -= 10; // Natural = REAL
-
-    return clamp(score, 15, 85);
-}
-
-function analyzeFrequencyDomain(img) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const size = 64; // Small for speed
-    canvas.width = size; canvas.height = size;
-    ctx.drawImage(img, 0, 0, size, size);
-    const data = ctx.getImageData(0, 0, size, size).data;
-    
-    // Simple frequency analysis via gradient magnitudes at different scales
-    let lowFreq = 0, highFreq = 0;
-    
-    // Low frequency: large-scale changes
-    for (let y = 0; y < size - 8; y += 8) {
-        for (let x = 0; x < size - 8; x += 8) {
-            const i1 = (y * size + x) * 4;
-            const i2 = ((y + 8) * size + (x + 8)) * 4;
-            lowFreq += Math.abs(data[i1] - data[i2]);
-        }
-    }
-    
-    // High frequency: pixel-level changes
-    for (let y = 0; y < size - 1; y++) {
-        for (let x = 0; x < size - 1; x++) {
-            const i1 = (y * size + x) * 4;
-            const i2 = (y * size + x + 1) * 4;
-            highFreq += Math.abs(data[i1] - data[i2]);
-        }
-    }
-    
-    const ratio = lowFreq / (highFreq + 1);
-
-    // FIXED: AI images have unusual frequency ratios, real photos have balanced frequencies
-    if (ratio < 0.02) return 80; // Too much high freq (noise) = AI
-    if (ratio < 0.05) return 65; // High freq dominant = suspicious
-    if (ratio > 0.5) return 75; // Too little high freq (smooth) = AI
-    if (ratio > 0.3) return 60; // Low high freq = suspicious
-    if (ratio >= 0.08 && ratio <= 0.25) return 25; // Balanced = REAL photo
-    return 45; // Edge cases
-}
-
-function analyzeModelOutput(results) {
-    // Analyze the confidence distribution from the model
-    // AI images often produce different confidence patterns
-    
-    if (!results || results.length === 0) return 50;
-    
-    const topScore = results[0].score;
-    const secondScore = results.length > 1 ? results[1].score : 0;
-    const gap = topScore - secondScore;
-    
-    // Very high confidence or very uncertain both can indicate AI
-    let score = 50;
-    
-    if (topScore > 0.9) score += 15; // Overconfident
-    else if (topScore < 0.3) score += 20; // Very uncertain (unfamiliar)
-    
-    if (gap > 0.7) score += 10; // One dominant class
-    else if (gap < 0.1) score += 15; // Confusion between classes
-    
-    // Check for common AI-generated content patterns
-    const labels = results.map(r => r.label.toLowerCase());
-    const aiIndicators = ['digital', 'graphic', 'render', 'art', 'illustration', 'cartoon'];
-    const realIndicators = ['photo', 'camera', 'outdoor', 'indoor', 'person', 'animal'];
-    
-    for (const label of labels.slice(0, 3)) {
-        if (aiIndicators.some(ind => label.includes(ind))) score += 10;
-        if (realIndicators.some(ind => label.includes(ind))) score -= 5;
-    }
-    
-    return clamp(score, 25, 85);
-}
-
-async function analyzeMultipleCrops(img) {
-    const regions = [
-        { x: 0.1, y: 0.1, w: 0.35, h: 0.35 },   // Top-left
-        { x: 0.55, y: 0.1, w: 0.35, h: 0.35 },  // Top-right
-        { x: 0.1, y: 0.55, w: 0.35, h: 0.35 },  // Bottom-left
-        { x: 0.55, y: 0.55, w: 0.35, h: 0.35 }, // Bottom-right
-        { x: 0.25, y: 0.25, w: 0.5, h: 0.5 }    // Center
-    ];
-    
-    const scores = [];
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    
-    for (const region of regions) {
-        const sx = img.width * region.x;
-        const sy = img.height * region.y;
-        const sw = img.width * region.w;
-        const sh = img.height * region.h;
-        
-        canvas.width = 64; canvas.height = 64;
-        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, 64, 64);
-        
-        const data = ctx.getImageData(0, 0, 64, 64).data;
-        
-        // Quick variance check for each crop
-        let sum = 0, sumSq = 0;
-        for (let i = 0; i < data.length; i += 4) {
-            const gray = (data[i] + data[i+1] + data[i+2]) / 3;
-            sum += gray; sumSq += gray * gray;
-        }
-        const n = data.length / 4;
-        const mean = sum / n;
-        const variance = (sumSq / n) - (mean * mean);
-        
-        // Low variance in multiple regions suggests AI
-        if (variance < 500) scores.push(70);
-        else if (variance < 1500) scores.push(55);
-        else scores.push(40);
-        
-        await sleep(10);
-    }
-    
-    // Return average with consistency boost
-    const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
-    const allHigh = scores.every(s => s > 55);
-    const allLow = scores.every(s => s < 50);
-    
-    if (allHigh) return Math.min(85, avg * 1.1);
-    if (allLow) return Math.max(25, avg * 0.9);
-    return avg;
-}
-
-// ==================== INDUSTRY-STANDARD DETECTION METHODS ====================
-
-// ==================== CUTTING-EDGE RESEARCH METHODS (2025) ====================
-// Based on state-of-the-art papers achieving 95-98% accuracy
-
-function analyzeTextureFrequencySignatures(img) {
-    // Method from "Detecting AI Generated Images Through Texture and Frequency Analysis of Patches"
-    // Achieves 97.5% validation accuracy, 80% on unseen generators
-    // Uses azimuthal integrals and positional encoding
-
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const size = Math.min(img.width, img.height, 256);
-    canvas.width = size; canvas.height = size;
-    ctx.drawImage(img, 0, 0, size, size);
-    const imgData = ctx.getImageData(0, 0, size, size);
-    const data = imgData.data;
-
-    // Convert to frequency domain using 2D DFT approximation
-    const patchSize = 16;
-    const patches = [];
-
-    for (let y = 0; y <= size - patchSize; y += patchSize) {
-        for (let x = 0; x <= size - patchSize; x += patchSize) {
-            const patch = [];
-            for (let py = 0; py < patchSize; py++) {
-                for (let px = 0; px < patchSize; px++) {
-                    const idx = ((y + py) * size + (x + px)) * 4;
-                    const gray = (data[idx] + data[idx+1] + data[idx+2]) / 3;
-                    patch.push(gray);
-                }
-            }
-            patches.push(patch);
-        }
-    }
-
-    // Calculate azimuthal integral (radial frequency signature)
-    let azimuthalSignature = 0;
-    let textureComplexity = 0;
-
-    for (const patch of patches) {
-        // Approximate frequency content via gradient analysis
-        let radialEnergy = 0;
-        let localVariance = 0;
-
-        for (let i = 0; i < patchSize; i++) {
-            for (let j = 0; j < patchSize; j++) {
-                const idx = i * patchSize + j;
-                const centerDist = Math.sqrt(Math.pow(i - patchSize/2, 2) + Math.pow(j - patchSize/2, 2));
-
-                // Radial energy calculation (approximates azimuthal integral)
-                if (j < patchSize - 1 && i < patchSize - 1) {
-                    const gradX = Math.abs(patch[idx + 1] - patch[idx]);
-                    const gradY = Math.abs(patch[idx + patchSize] - patch[idx]);
-                    const magnitude = Math.sqrt(gradX * gradX + gradY * gradY);
-                    radialEnergy += magnitude * centerDist;
-                }
-
-                localVariance += Math.pow(patch[idx] - 128, 2);
-            }
-        }
-
-        azimuthalSignature += radialEnergy;
-        textureComplexity += localVariance;
-    }
-
-    azimuthalSignature /= patches.length;
-    textureComplexity /= (patches.length * patchSize * patchSize);
-
-    // AI images have distinct radial energy distributions
-    // Real photos: high radial energy (sharp edges at all frequencies)
-    // AI images: lower radial energy (smoothed frequency response)
-    let score = 30; // Assume real
-
-    if (azimuthalSignature < 150) {
-        score += 50; // Very low radial energy = AI
-    } else if (azimuthalSignature < 300) {
-        score += 30; // Low radial energy = suspicious
-    } else if (azimuthalSignature > 800) {
-        score -= 10; // High radial energy = likely real
-    }
-
-    // Texture complexity check
-    if (textureComplexity < 800) {
-        score += 25; // Too smooth = AI
-    } else if (textureComplexity > 4000) {
-        score -= 10; // Complex texture = likely real
-    }
-
-    return clamp(score, 20, 95);
-}
-
-function analyzeFreqCrossMultiModal(img) {
-    // FreqCross method achieving 97.8% accuracy on SD 3.5
-    // Combines RGB spatial + 2D FFT magnitude + radial energy distribution
-
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const size = Math.min(img.width, img.height, 128); // Smaller for performance
-    canvas.width = size; canvas.height = size;
-    ctx.drawImage(img, 0, 0, size, size);
-    const data = ctx.getImageData(0, 0, size, size).data;
-
-    let indicators = 0;
-    let score = 25; // Assume real
-
-    // 1. Spatial RGB Feature Analysis
-    let spatialAnomalies = 0;
-    for (let y = 2; y < size - 2; y++) {
-        for (let x = 2; x < size - 2; x++) {
-            const idx = (y * size + x) * 4;
-
-            // Check for unnaturally smooth regions (diffusion artifact)
-            const neighbors = [
-                ((y-1)*size + x)*4, ((y+1)*size + x)*4,
-                (y*size + x-1)*4, (y*size + x+1)*4
-            ];
-
-            let maxDiff = 0;
-            for (const n of neighbors) {
-                const diff = Math.abs(data[idx] - data[n]) +
-                            Math.abs(data[idx+1] - data[n+1]) +
-                            Math.abs(data[idx+2] - data[n+2]);
-                maxDiff = Math.max(maxDiff, diff);
-            }
-
-            if (maxDiff < 10) spatialAnomalies++; // Too smooth
-        }
-    }
-
-    if (spatialAnomalies / (size * size) > 0.3) {
-        indicators++;
-        score += 20;
-    }
-
-    // 2. Approximated FFT Magnitude Analysis (frequency domain)
-    // Using DCT-like analysis for browser compatibility
-    let lowFreqEnergy = 0, highFreqEnergy = 0;
-
-    for (let y = 0; y < size; y += 8) {
-        for (let x = 0; x < size; x += 8) {
-            // Low frequency (smooth regions)
-            let blockAvg = 0, count = 0;
-            for (let by = 0; by < 8 && y + by < size; by++) {
-                for (let bx = 0; bx < 8 && x + bx < size; x++) {
-                    const idx = ((y+by) * size + (x+bx)) * 4;
-                    blockAvg += (data[idx] + data[idx+1] + data[idx+2]) / 3;
-                    count++;
-                }
-            }
-            lowFreqEnergy += Math.abs(blockAvg / count - 128);
-
-            // High frequency (edges within block)
-            let blockVariance = 0;
-            for (let by = 0; by < 7 && y + by < size; by++) {
-                for (let bx = 0; bx < 7 && x + bx < size; bx++) {
-                    const i1 = ((y+by) * size + (x+bx)) * 4;
-                    const i2 = ((y+by) * size + (x+bx+1)) * 4;
-                    blockVariance += Math.abs(data[i1] - data[i2]);
-                }
-            }
-            highFreqEnergy += blockVariance / 49;
-        }
-    }
-
-    const freqRatio = lowFreqEnergy / (highFreqEnergy + 1);
-
-    // AI images (especially SD 3.5) have characteristic frequency ratios
-    if (freqRatio > 0.6 || freqRatio < 0.1) {
-        indicators++;
-        score += 25; // Abnormal frequency distribution
-    }
-
-    // 3. Radial Energy Distribution (circular pattern analysis)
-    const centerX = size / 2, centerY = size / 2;
-    const radialBins = 10;
-    const radialEnergies = new Array(radialBins).fill(0);
-    const radialCounts = new Array(radialBins).fill(0);
-
-    for (let y = 0; y < size; y++) {
-        for (let x = 0; x < size; x++) {
-            const dist = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
-            const bin = Math.min(Math.floor(dist / (size / 2) * radialBins), radialBins - 1);
-
-            const idx = (y * size + x) * 4;
-            const intensity = (data[idx] + data[idx+1] + data[idx+2]) / 3;
-
-            radialEnergies[bin] += intensity;
-            radialCounts[bin]++;
-        }
-    }
-
-    // Calculate radial energy variance (AI has more uniform distribution)
-    const radialAvgs = radialEnergies.map((e, i) => e / radialCounts[i]);
-    const radialMean = radialAvgs.reduce((a, b) => a + b, 0) / radialAvgs.length;
-    const radialVariance = radialAvgs.reduce((sum, avg) => sum + Math.pow(avg - radialMean, 2), 0) / radialAvgs.length;
-
-    if (radialVariance < 200) {
-        indicators++;
-        score += 20; // Too uniform radial distribution = AI
-    }
-
-    return clamp(score, 15, 95);
-}
-
-function analyzeDiffusionSnapBack(img) {
-    // Diffusion Snap-Back method from 2025 research
-    // Real images degrade abruptly under noise, AI degrades smoothly
-
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const size = Math.min(img.width, img.height, 128);
-    canvas.width = size; canvas.height = size;
-    ctx.drawImage(img, 0, 0, size, size);
-    const original = ctx.getImageData(0, 0, size, size);
-
-    // Simulate adding noise at different strengths
-    const noiseStrengths = [10, 30, 50];
-    const degradationRates = [];
-
-    for (const noiseLevel of noiseStrengths) {
-        const noisy = ctx.createImageData(size, size);
-
-        // Add Gaussian-like noise
-        for (let i = 0; i < original.data.length; i += 4) {
-            const noise = (Math.random() - 0.5) * 2 * noiseLevel;
-            noisy.data[i] = clamp(original.data[i] + noise, 0, 255);
-            noisy.data[i+1] = clamp(original.data[i+1] + noise, 0, 255);
-            noisy.data[i+2] = clamp(original.data[i+2] + noise, 0, 255);
-            noisy.data[i+3] = 255;
-        }
-
-        // Measure degradation (approximate LPIPS with simple MSE)
-        let mse = 0;
-        for (let i = 0; i < original.data.length; i += 4) {
-            mse += Math.pow(original.data[i] - noisy.data[i], 2);
-            mse += Math.pow(original.data[i+1] - noisy.data[i+1], 2);
-            mse += Math.pow(original.data[i+2] - noisy.data[i+2], 2);
-        }
-        mse /= (size * size * 3);
-
-        degradationRates.push(mse);
-    }
-
-    // Calculate degradation smoothness
-    // Real: sharp increase in degradation (abrupt)
-    // AI: gradual increase (smooth, aligned with diffusion manifold)
-    const slope1 = degradationRates[1] - degradationRates[0];
-    const slope2 = degradationRates[2] - degradationRates[1];
-    const slopeDiff = Math.abs(slope2 - slope1);
-
-    let score = 30; // Assume real
-
-    // Smooth degradation (small slope difference) = AI
-    if (slopeDiff < 50) {
-        score += 40; // Very smooth degradation = AI
-    } else if (slopeDiff < 150) {
-        score += 20; // Somewhat smooth
-    } else if (slopeDiff > 400) {
-        score -= 10; // Abrupt degradation = likely real
-    }
-
-    return clamp(score, 20, 90);
-}
-
-async function analyzeEXIF(file) {
-    // EXIF metadata analysis - like industry leaders (Hive, Winston AI)
-    // AI-generated images typically lack camera metadata
-    try {
-        if (!file || !file.type || !file.type.startsWith('image/')) {
-            return 50; // No file to analyze
-        }
-
-        // Use exif-js library if available (loaded in HTML head)
-        if (typeof EXIF === 'undefined') {
-            console.log('[EXIF] Library not loaded, skipping EXIF analysis');
-            return 50; // Neutral if library not available
-        }
-
-        return new Promise((resolve) => {
-            EXIF.getData(file, function() {
-                const allData = EXIF.getAllTags(this);
-                let score = 50; // Start neutral
-
-                // Check for camera-specific metadata
-                const hasCameraMake = allData.Make && allData.Make.trim() !== '';
-                const hasCameraModel = allData.Model && allData.Model.trim() !== '';
-                const hasDateTimeOriginal = allData.DateTimeOriginal;
-                const hasExposureTime = allData.ExposureTime;
-                const hasFNumber = allData.FNumber;
-                const hasISO = allData.ISOSpeedRatings;
-                const hasFocalLength = allData.FocalLength;
-                const hasGPS = allData.GPSLatitude || allData.GPSLongitude;
-
-                // Real photos from cameras have rich EXIF data
-                const realPhotoIndicators = [
-                    hasCameraMake, hasCameraModel, hasDateTimeOriginal,
-                    hasExposureTime, hasFNumber, hasISO, hasFocalLength
-                ].filter(Boolean).length;
-
-                if (realPhotoIndicators >= 5) {
-                    // Likely real photo from camera
-                    score = 20;
-                } else if (realPhotoIndicators >= 3) {
-                    // Some camera data
-                    score = 35;
-                } else if (realPhotoIndicators === 0) {
-                    // No camera metadata - suspicious
-                    score = 75;
-                } else {
-                    // Minimal metadata
-                    score = 55;
-                }
-
-                // Check for AI generation software signatures
-                const software = allData.Software || '';
-                const aiSoftware = ['midjourney', 'dall-e', 'dalle', 'stable diffusion',
-                                   'stablediffusion', 'ai', 'generated', 'synthetic'];
-
-                for (const aiTool of aiSoftware) {
-                    if (software.toLowerCase().includes(aiTool)) {
-                        score = 95; // Explicit AI signature
-                        break;
-                    }
-                }
-
-                // Editing software that might indicate manipulation
-                const editingSoftware = ['photoshop', 'gimp', 'affinity', 'pixlr'];
-                for (const editor of editingSoftware) {
-                    if (software.toLowerCase().includes(editor)) {
-                        score = Math.min(85, score + 15); // Edited image
-                    }
-                }
-
-                resolve(clamp(score, 15, 95));
-            });
-        });
-    } catch (e) {
-        console.error('[EXIF] Analysis failed:', e);
-        return 50; // Neutral on error
-    }
-}
-
-function analyzeErrorLevel(img) {
-    // Error Level Analysis (ELA) - Foto Forensics' signature technique
-    // Detects regions with different compression levels
-    // AI-generated images often have uniform compression (never compressed before)
-    const canvas1 = document.createElement('canvas');
-    const ctx1 = canvas1.getContext('2d');
-    const size = Math.min(img.width, img.height, 512);
-    canvas1.width = size; canvas1.height = size;
-    ctx1.drawImage(img, 0, 0, size, size);
-
-    // Get original image data
-    const original = ctx1.getImageData(0, 0, size, size);
-
-    // Resave at 95% quality (simulates recompression)
-    const canvas2 = document.createElement('canvas');
-    canvas2.width = size; canvas2.height = size;
-    const ctx2 = canvas2.getContext('2d');
-    ctx2.drawImage(canvas1, 0, 0);
-
-    // Convert to JPEG at 95% and back
-    const jpegDataUrl = canvas2.toDataURL('image/jpeg', 0.95);
-
-    return new Promise((resolve) => {
-        const recompressed = new Image();
-        recompressed.onload = () => {
-            ctx2.clearRect(0, 0, size, size);
-            ctx2.drawImage(recompressed, 0, 0, size, size);
-            const recompData = ctx2.getImageData(0, 0, size, size);
-
-            // Calculate error level (difference between original and recompressed)
-            let totalDiff = 0;
-            let significantDiffs = 0;
-            const diffMap = [];
-
-            for (let i = 0; i < original.data.length; i += 4) {
-                const r1 = original.data[i], g1 = original.data[i+1], b1 = original.data[i+2];
-                const r2 = recompData.data[i], g2 = recompData.data[i+1], b2 = recompData.data[i+2];
-
-                const diff = Math.abs(r1 - r2) + Math.abs(g1 - g2) + Math.abs(b1 - b2);
-                totalDiff += diff;
-                diffMap.push(diff);
-
-                if (diff > 30) significantDiffs++;
-            }
-
-            const avgDiff = totalDiff / (original.data.length / 4);
-            const diffRatio = significantDiffs / (original.data.length / 4);
-
-            // Calculate variance in error levels across image
-            const mean = avgDiff;
-            let variance = 0;
-            for (const diff of diffMap) {
-                variance += Math.pow(diff - mean, 2);
-            }
-            variance /= diffMap.length;
-
-            let score = 50;
-
-            // Very low error level = already heavily compressed (real photo shared online)
-            // Very high, uniform error level = never compressed before (AI generated)
-            if (avgDiff < 5) {
-                score = 25; // Heavily compressed, likely real
-            } else if (avgDiff > 15 && variance < 20) {
-                score = 80; // High uniform error, likely AI
-            } else if (avgDiff > 20) {
-                score = 70; // Never compressed before
-            } else if (variance < 10) {
-                score = 65; // Too uniform
-            } else {
-                score = 40; // Normal variation
-            }
-
-            resolve(clamp(score, 20, 90));
-        };
-        recompressed.onerror = () => resolve(50);
-        recompressed.src = jpegDataUrl;
-    });
-}
-
-async function analyzeC2PA(file) {
-    // C2PA/IPTC metadata analysis - Winston AI uses this
-    // Content Authenticity Initiative standard
-    try {
-        if (!file) return 50;
-
-        // Read file as ArrayBuffer to check for C2PA manifest
-        const buffer = await file.arrayBuffer();
-        const bytes = new Uint8Array(buffer);
-
-        // Check for C2PA manifest markers
-        // C2PA data is stored in XMP or JUMBF boxes
-        let hasC2PA = false;
-        let hasIPTC = false;
-        let score = 50;
-
-        // Search for C2PA signature in file
-        const c2paSignatures = [
-            'c2pa', 'contentauthenticity', 'cai', 'adobe:contentauthenticity'
-        ];
-
-        // Convert bytes to string for searching (inefficient but works for detection)
-        const fileStr = String.fromCharCode.apply(null, bytes.slice(0, Math.min(10000, bytes.length)));
-        const fileStrLower = fileStr.toLowerCase();
-
-        for (const sig of c2paSignatures) {
-            if (fileStrLower.includes(sig)) {
-                hasC2PA = true;
-                break;
-            }
-        }
-
-        // Check for IPTC metadata
-        if (fileStrLower.includes('iptc') || fileStrLower.includes('photoshop')) {
-            hasIPTC = true;
-        }
-
-        if (hasC2PA) {
-            // C2PA manifest found - could be authenticated real photo OR
-            // AI generator that adds C2PA (like Adobe Firefly)
-            // Need to parse manifest to know for sure
-            // For now, slightly favor real
-            score = 40;
-        } else if (hasIPTC) {
-            // IPTC data suggests professional photo workflow
-            score = 35;
-        } else {
-            // No content authentication metadata
-            // Could be either (many real photos lack this)
-            score = 55;
-        }
-
-        return clamp(score, 30, 70);
-    } catch (e) {
-        console.error('[C2PA] Analysis failed:', e);
-        return 50;
-    }
-}
-
-// ==================== MODEL-SPECIFIC DETECTION (Like Hive Moderation) ====================
-
-function detectMidjourneySignature(img) {
-    // Midjourney-specific artifacts: oversaturated colors, perfect symmetry, fantasy aesthetics
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const size = Math.min(img.width, img.height, 256);
-    canvas.width = size; canvas.height = size;
-    ctx.drawImage(img, 0, 0, size, size);
-    const data = ctx.getImageData(0, 0, size, size).data;
-
-    let indicators = 0;
-
-    // 1. Oversaturation check (Midjourney loves vibrant colors)
-    let totalSat = 0;
-    let highSatPixels = 0;
-    for (let i = 0; i < data.length; i += 4) {
-        const r = data[i], g = data[i+1], b = data[i+2];
-        const max = Math.max(r, g, b);
-        const min = Math.min(r, g, b);
-        const sat = max === 0 ? 0 : (max - min) / max;
-        totalSat += sat;
-        if (sat > 0.7) highSatPixels++;
-    }
-    const avgSat = totalSat / (size * size);
-    if (avgSat > 0.5) indicators++;
-    if (highSatPixels / (size * size) > 0.4) indicators++;
-
-    // 2. Perfect gradient detection (AI creates too-smooth gradients)
-    let smoothGradients = 0;
-    for (let y = 10; y < size - 10; y += 10) {
-        for (let x = 10; x < size - 10; x += 10) {
-            let gradientSmooth = true;
-            for (let dy = 0; dy < 10; dy++) {
-                const i1 = ((y+dy) * size + x) * 4;
-                const i2 = ((y+dy) * size + x + 9) * 4;
-                const diff = Math.abs(data[i1] - data[i2]) + Math.abs(data[i1+1] - data[i2+1]) + Math.abs(data[i1+2] - data[i2+2]);
-                if (diff > 30) gradientSmooth = false;
-            }
-            if (gradientSmooth) smoothGradients++;
-        }
-    }
-    if (smoothGradients > 20) indicators++;
-
-    return indicators >= 2 ? 85 : indicators === 1 ? 60 : 30;
-}
-
-function detectDALLESignature(img) {
-    // DALL-E specific: painterly style, consistent lighting, geometric artifacts
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const size = Math.min(img.width, img.height, 256);
-    canvas.width = size; canvas.height = size;
-    ctx.drawImage(img, 0, 0, size, size);
-    const data = ctx.getImageData(0, 0, size, size).data;
-
-    let indicators = 0;
-
-    // 1. Painterly texture (DALL-E has characteristic brush-like patterns)
-    let textureness = 0;
-    for (let y = 2; y < size - 2; y++) {
-        for (let x = 2; x < size - 2; x++) {
-            const idx = (y * size + x) * 4;
-            const neighbors = [
-                ((y-1)*size + x)*4, ((y+1)*size + x)*4,
-                (y*size + x-1)*4, (y*size + x+1)*4
-            ];
-            let variance = 0;
-            for (const n of neighbors) {
-                variance += Math.abs(data[idx] - data[n]) + Math.abs(data[idx+1] - data[n+1]) + Math.abs(data[idx+2] - data[n+2]);
-            }
-            if (variance > 40 && variance < 120) textureness++; // Medium variance = painterly
-        }
-    }
-    if (textureness / (size * size) > 0.3) indicators++;
-
-    // 2. Consistent lighting (DALL-E excels at this, too consistent for real photos)
-    const regions = 16;
-    const regionSize = Math.floor(size / 4);
-    const brightnesses = [];
-    for (let ry = 0; ry < 4; ry++) {
-        for (let rx = 0; rx < 4; rx++) {
-            let sum = 0, count = 0;
-            for (let y = ry * regionSize; y < (ry + 1) * regionSize && y < size; y++) {
-                for (let x = rx * regionSize; x < (rx + 1) * regionSize && x < size; x++) {
-                    const i = (y * size + x) * 4;
-                    sum += (data[i] + data[i+1] + data[i+2]) / 3;
-                    count++;
-                }
-            }
-            brightnesses.push(sum / count);
-        }
-    }
-    const avgBright = brightnesses.reduce((a, b) => a + b, 0) / brightnesses.length;
-    const brightVariance = brightnesses.reduce((sum, b) => sum + Math.pow(b - avgBright, 2), 0) / brightnesses.length;
-    if (brightVariance < 400) indicators++; // Too consistent
-
-    return indicators >= 2 ? 80 : indicators === 1 ? 55 : 35;
-}
-
-function detectStableDiffusionSignature(img) {
-    // Stable Diffusion: high-frequency artifacts, specific noise patterns, geometric precision
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const size = Math.min(img.width, img.height, 256);
-    canvas.width = size; canvas.height = size;
-    ctx.drawImage(img, 0, 0, size, size);
-    const data = ctx.getImageData(0, 0, size, size).data;
-
-    let indicators = 0;
-
-    // 1. High-frequency noise (SD adds characteristic noise)
-    let hfNoise = 0;
-    for (let y = 1; y < size - 1; y++) {
-        for (let x = 1; x < size - 1; x++) {
-            const idx = (y * size + x) * 4;
-            const left = (y * size + x - 1) * 4;
-            const right = (y * size + x + 1) * 4;
-            const up = ((y - 1) * size + x) * 4;
-            const down = ((y + 1) * size + x) * 4;
-
-            const laplacian = Math.abs(4 * data[idx] - data[left] - data[right] - data[up] - data[down]);
-            hfNoise += laplacian;
-        }
-    }
-    hfNoise /= ((size - 2) * (size - 2));
-    if (hfNoise > 15 && hfNoise < 40) indicators++;
-
-    // 2. Geometric precision (SD creates unnaturally precise shapes)
-    let straightEdges = 0;
-    for (let y = 0; y < size - 20; y += 10) {
-        for (let x = 0; x < size - 20; x += 10) {
-            let isstraight = true;
-            for (let i = 0; i < 20; i++) {
-                const i1 = (y * size + x + i) * 4;
-                const i2 = ((y + 1) * size + x + i) * 4;
-                const diff = Math.abs(data[i1] - data[i2]);
-                if (diff > 5) isstraight = false;
-            }
-            if (isstraight) straightEdges++;
-        }
-    }
-    if (straightEdges > 15) indicators++;
-
-    return indicators >= 2 ? 82 : indicators === 1 ? 58 : 32;
-}
-
-function analyzeGANFingerprints(img) {
-    // Combined GAN fingerprint detection using model-specific signatures
-    const midjourneyScore = detectMidjourneySignature(img);
-    const dalleScore = detectDALLESignature(img);
-    const sdScore = detectStableDiffusionSignature(img);
-
-    // Take the maximum score (if ANY model matches, it's likely AI)
-    const maxScore = Math.max(midjourneyScore, dalleScore, sdScore);
-
-    // Also run generic GAN detection
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const size = Math.min(img.width, img.height, 256);
-    canvas.width = size; canvas.height = size;
-    ctx.drawImage(img, 0, 0, size, size);
-    const data = ctx.getImageData(0, 0, size, size).data;
-
-    let score = 30; // Start with REAL photo assumption
-    let indicators = 0;
-
-    // 1. Checkerboard artifacts (common in GANs/diffusion models)
-    let checkerboard = 0;
-    for (let y = 0; y < size - 2; y += 2) {
-        for (let x = 0; x < size - 2; x += 2) {
-            const i1 = (y * size + x) * 4;
-            const i2 = (y * size + (x + 1)) * 4;
-            const i3 = ((y + 1) * size + x) * 4;
-            const i4 = ((y + 1) * size + (x + 1)) * 4;
-
-            const g1 = (data[i1] + data[i1+1] + data[i1+2]) / 3;
-            const g2 = (data[i2] + data[i2+1] + data[i2+2]) / 3;
-            const g3 = (data[i3] + data[i3+1] + data[i3+2]) / 3;
-            const g4 = (data[i4] + data[i4+1] + data[i4+2]) / 3;
-
-            // Checkerboard pattern: alternating high/low values
-            if (Math.abs((g1 + g4) - (g2 + g3)) > 30) checkerboard++;
-        }
-    }
-    const checkerboardRatio = checkerboard / ((size / 2) * (size / 2));
-    if (checkerboardRatio > 0.15) {
-        indicators++;
-        score += 15;
-    }
-
-    // 2. Color channel correlation (AI often has abnormal RGB correlation)
-    let rSum = 0, gSum = 0, bSum = 0;
-    let rgCorr = 0, rbCorr = 0, gbCorr = 0;
-    const pixels = size * size;
-
-    for (let i = 0; i < data.length; i += 4) {
-        rSum += data[i];
-        gSum += data[i+1];
-        bSum += data[i+2];
-    }
-
-    const rMean = rSum / pixels;
-    const gMean = gSum / pixels;
-    const bMean = bSum / pixels;
-
-    for (let i = 0; i < data.length; i += 4) {
-        const r = data[i] - rMean;
-        const g = data[i+1] - gMean;
-        const b = data[i+2] - bMean;
-
-        rgCorr += r * g;
-        rbCorr += r * b;
-        gbCorr += g * b;
-    }
-
-    rgCorr /= pixels;
-    rbCorr /= pixels;
-    gbCorr /= pixels;
-
-    const avgCorr = (Math.abs(rgCorr) + Math.abs(rbCorr) + Math.abs(gbCorr)) / 3;
-
-    // AI images often have very high or very low channel correlation
-    if (avgCorr > 2000 || avgCorr < 50) {
-        indicators++;
-        score += 10;
-    }
-
-    // 3. High-frequency noise distribution (GANs add characteristic noise)
-    let hfNoise = 0;
-    for (let y = 1; y < size - 1; y++) {
-        for (let x = 1; x < size - 1; x++) {
-            const idx = (y * size + x) * 4;
-            const center = (data[idx] + data[idx+1] + data[idx+2]) / 3;
-
-            // Sample neighbors
-            const left = (data[idx-4] + data[idx-3] + data[idx-2]) / 3;
-            const right = (data[idx+4] + data[idx+5] + data[idx+6]) / 3;
-            const up = (data[idx-size*4] + data[idx-size*4+1] + data[idx-size*4+2]) / 3;
-            const down = (data[idx+size*4] + data[idx+size*4+1] + data[idx+size*4+2]) / 3;
-
-            const laplacian = Math.abs(4 * center - left - right - up - down);
-            hfNoise += laplacian;
-        }
-    }
-    hfNoise /= ((size - 2) * (size - 2));
-
-    // GAN-generated images often have specific noise levels
-    if (hfNoise < 5) {
-        indicators++;
-        score += 10; // Too smooth
-    } else if (hfNoise > 50) {
-        indicators++;
-        score += 8; // Too noisy
-    }
-
-    // 4. Saturation uniformity (AI often has unnatural saturation distribution)
-    let satSum = 0;
-    for (let i = 0; i < data.length; i += 4) {
-        const r = data[i], g = data[i+1], b = data[i+2];
-        const max = Math.max(r, g, b);
-        const min = Math.min(r, g, b);
-        const saturation = max === 0 ? 0 : (max - min) / max;
-        satSum += saturation;
-    }
-    const avgSat = satSum / pixels;
-
-    // Very high or very low average saturation can indicate AI
-    if (avgSat > 0.7 || avgSat < 0.15) {
-        indicators++;
-        score += 10;
-    }
-
-    // Combine model-specific detection with generic GAN detection
-    // If model-specific detection is high, trust it more
-    const finalScore = maxScore > 75 ? maxScore : Math.max(score, maxScore * 0.8);
-
-    return clamp(finalScore, 25, 95);
-}
-
-function updateProgress(percent, status) {
-    $('progressBar').style.width = percent + '%';
-    $('progressStatus').textContent = status;
-}
-
-window.cancelScan = () => { 
-    analysisAborted = true; 
-    $('progressCard').classList.add('hidden'); 
-    toast('Scan cancelled'); 
-};
-
-// ==================== RESULTS DISPLAY ====================
-function displayResults(result, mode) {
-    $('progressCard').classList.add('hidden'); 
-    $('resultCard').classList.remove('hidden');
-    
-    const { aiScore, isAI, confidence, breakdown } = result;
-    
-    // Determine label and icon
-    let label, iconClass, icon;
-    if (aiScore >= 75) { 
-        label = 'Likely AI Generated'; iconClass = 'fake'; icon = '🤖';
-    } else if (aiScore >= 60) { 
-        label = 'Probably AI'; iconClass = 'fake'; icon = '🤖';
-    } else if (aiScore >= 45) { 
-        label = 'Uncertain'; iconClass = 'uncertain'; icon = '🤔';
-    } else if (aiScore >= 30) { 
-        label = 'Probably Real'; iconClass = 'real'; icon = '📸';
-    } else { 
-        label = 'Likely Real'; iconClass = 'real'; icon = '✅';
-    }
-    
-    $('resultLabel').textContent = label;
-    $('resultSublabel').textContent = `${mode === 'quick' ? 'Quick' : mode === 'forensics' ? 'Forensics' : 'Deep'} Scan`;
-    $('resultIcon').className = 'result-icon ' + iconClass;
-    $('resultIcon').textContent = icon;
-    
-    $('confidenceBadge').className = 'confidence-badge confidence-' + confidence;
-    $('confidenceText').textContent = confidence.charAt(0).toUpperCase() + confidence.slice(1) + ' Confidence';
-    
-    $('scoreFill').style.width = aiScore + '%';
-    $('scoreFill').className = 'score-fill ' + iconClass;
-    $('scoreValue').textContent = `AI Probability: ${aiScore}%`;
-    
-    // Glow effect
-    const glowColor = isAI ? 'rgba(255,71,87,.3)' : aiScore >= 45 ? 'rgba(255,165,2,.3)' : 'rgba(46,213,115,.3)';
-    $('resultGlow').style.background = `radial-gradient(circle, ${glowColor} 0%, transparent 70%)`;
-    
-    // Generate explainers
-    const explainers = generateExplainers(result);
-    $('explainersContent').innerHTML = explainers;
-    $('explainersContent').classList.add('show');
-    
-    // Reset feedback buttons
-    document.querySelectorAll('.feedback-btn').forEach(b => b.classList.remove('selected'));
-    
-    currentResult = result;
-}
-
-function generateExplainers(result) {
-    const { breakdown, aiScore, mode, confidence } = result;
-    let html = '';
-    
-    // Noise
-    if (breakdown.noise > 65) {
-        html += `<div class="explainer-item"><span class="explainer-icon">📊</span><span class="explainer-text">Noise patterns appear unnaturally uniform - common in AI images</span></div>`;
-    } else if (breakdown.noise < 35) {
-        html += `<div class="explainer-item"><span class="explainer-icon">📊</span><span class="explainer-text">Natural camera sensor noise detected</span></div>`;
-    }
-    
-    // Compression
-    if (breakdown.compression > 60) {
-        html += `<div class="explainer-item"><span class="explainer-icon">🔲</span><span class="explainer-text">Periodic compression artifacts detected - may indicate AI upscaling</span></div>`;
-    }
-    
-    // Color
-    if (breakdown.color > 60) {
-        html += `<div class="explainer-item"><span class="explainer-icon">🎨</span><span class="explainer-text">Color distribution appears mathematically smooth</span></div>`;
-    } else if (breakdown.color < 35) {
-        html += `<div class="explainer-item"><span class="explainer-icon">🎨</span><span class="explainer-text">Natural color variation consistent with real photography</span></div>`;
-    }
-    
-    // Edges
-    if (breakdown.edges > 60) {
-        html += `<div class="explainer-item"><span class="explainer-icon">✂️</span><span class="explainer-text">Edge coherence patterns suggest synthetic generation</span></div>`;
-    }
-    
-    // Frequency (Deep scan only)
-    if (breakdown.frequency && breakdown.frequency > 60) {
-        html += `<div class="explainer-item"><span class="explainer-icon">〰️</span><span class="explainer-text">Frequency analysis reveals unusual patterns</span></div>`;
-    }
-    
-    // Model (Deep scan only)
-    if (breakdown.model && breakdown.model > 60) {
-        html += `<div class="explainer-item"><span class="explainer-icon">🧠</span><span class="explainer-text">AI model detected synthetic signatures</span></div>`;
-    } else if (breakdown.model && breakdown.model < 40) {
-        html += `<div class="explainer-item"><span class="explainer-icon">🧠</span><span class="explainer-text">AI model found characteristics of real photography</span></div>`;
-    }
-
-    // CUTTING-EDGE RESEARCH METHODS (Deep scan only)
-
-    // Texture Frequency Analysis (97.5% accuracy method)
-    if (breakdown.textureFrequency && breakdown.textureFrequency > 70) {
-        html += `<div class="explainer-item"><span class="explainer-icon">🔬</span><span class="explainer-text">Texture frequency analysis reveals AI-generated patterns (97.5% accuracy)</span></div>`;
-    } else if (breakdown.textureFrequency && breakdown.textureFrequency < 30) {
-        html += `<div class="explainer-item"><span class="explainer-icon">📸</span><span class="explainer-text">Texture frequency signatures consistent with real camera sensor</span></div>`;
-    }
-
-    // FreqCross Multi-Modal (97.8% accuracy method)
-    if (breakdown.freqCross && breakdown.freqCross > 70) {
-        html += `<div class="explainer-item"><span class="explainer-icon">🎯</span><span class="explainer-text">Multi-modal frequency analysis detected diffusion model artifacts (97.8% accuracy)</span></div>`;
-    } else if (breakdown.freqCross && breakdown.freqCross < 30) {
-        html += `<div class="explainer-item"><span class="explainer-icon">✅</span><span class="explainer-text">Spatial and frequency patterns match authentic photography</span></div>`;
-    }
-
-    // Diffusion Snap-Back
-    if (breakdown.diffusionSnap && breakdown.diffusionSnap > 65) {
-        html += `<div class="explainer-item"><span class="explainer-icon">⚡</span><span class="explainer-text">Noise degradation pattern indicates AI diffusion model generation</span></div>`;
-    } else if (breakdown.diffusionSnap && breakdown.diffusionSnap < 35) {
-        html += `<div class="explainer-item"><span class="explainer-icon">📷</span><span class="explainer-text">Degradation analysis confirms real photographic material</span></div>`;
-    }
-
-    // EXIF metadata (industry standard)
-    if (breakdown.exif && breakdown.exif < 25) {
-        html += `<div class="explainer-item"><span class="explainer-icon">📋</span><span class="explainer-text">Rich camera metadata detected (Make, Model, Settings) - strong evidence of real photo</span></div>`;
-    } else if (breakdown.exif && breakdown.exif > 70) {
-        html += `<div class="explainer-item"><span class="explainer-icon">⚠️</span><span class="explainer-text">Missing or suspicious camera metadata</span></div>`;
-    }
-
-    // Error Level Analysis (industry standard)
-    if (breakdown.errorLevel && breakdown.errorLevel > 70) {
-        html += `<div class="explainer-item"><span class="explainer-icon">🔍</span><span class="explainer-text">Error Level Analysis detected uniform compression (never edited before - likely AI)</span></div>`;
-    } else if (breakdown.errorLevel && breakdown.errorLevel < 30) {
-        html += `<div class="explainer-item"><span class="explainer-icon">✓</span><span class="explainer-text">Compression artifacts show editing history - consistent with real photos</span></div>`;
-    }
-
-    // GAN Fingerprints
-    if (breakdown.ganFingerprints && breakdown.ganFingerprints > 75) {
-        html += `<div class="explainer-item"><span class="explainer-icon">🤖</span><span class="explainer-text">GAN/diffusion model signature detected (Midjourney/DALL-E/Stable Diffusion)</span></div>`;
-    }
-
-    // Add suggestion for low confidence quick scans
-    if (mode === 'quick' && confidence === 'low' && !user) {
-        html += `<div class="explainer-item" style="border-top:1px dashed var(--border);padding-top:8px;margin-top:4px">
-            <span class="explainer-icon">💡</span>
-            <span class="explainer-text">Sign in for Deep Scan with 90%+ accuracy</span>
-        </div>`;
-    }
-    
-    // Fallback if no specific explainers
-    if (!html) {
-        html = `<div class="explainer-item"><span class="explainer-icon">ℹ️</span><span class="explainer-text">Analysis based on multiple image characteristics</span></div>`;
-    }
-    
-    return html;
-}
-
-window.toggleExplainers = () => { 
-    $('explainersContent').classList.toggle('show'); 
-    $('explainersToggle').textContent = $('explainersContent').classList.contains('show') ? '▲' : '▼'; 
-};
-
-// ==================== FEEDBACK ====================
-window.submitFeedback = function(type) {
-    document.querySelectorAll('.feedback-btn').forEach(b => b.classList.remove('selected'));
-    event.target.closest('.feedback-btn').classList.add('selected');
-    
-    const feedback = {
-        scanId: Date.now().toString(),
-        odeScanUserId: user?.id || 'guest',
-        type,
-        aiScore: currentResult?.aiScore,
-        mode: currentResult?.mode,
-        confidence: currentResult?.confidence,
-        version: DETECTOR_VERSION,
-        timestamp: new Date().toISOString()
-    };
-    
-    // Store locally
-    const log = JSON.parse(localStorage.getItem('feedback_log') || '[]');
-    log.push(feedback);
-    if (log.length > 200) log.shift();
-    localStorage.setItem('feedback_log', JSON.stringify(log));
-    
-    // Sync to Supabase
-    if (!useLocalFallback && supabase && user) {
-        supabase.from('feedback').insert({
-            user_id: user.id,
-            feedback_type: type,
-            ai_score: currentResult?.aiScore,
-            scan_mode: currentResult?.mode,
-            confidence: currentResult?.confidence,
-            detector_version: DETECTOR_VERSION
-        }).catch(() => {});
-    }
-    
-    toast(type === 'correct' ? '👍 Thanks! This helps improve detection.' : '📝 Thanks for the feedback!');
-};
-
-// ==================== SHARE & NEW SCAN ====================
-window.shareResult = async function() {
-    if (!currentResult) return;
-    
-    const text = `AuthenticaDetector: ${$('resultLabel').textContent}\nAI Probability: ${currentResult.aiScore}%\nConfidence: ${currentResult.confidence}\n\nTry it: ${location.origin}`;
-    
-    if (navigator.share) {
-        try { 
-            await navigator.share({ title: 'AuthenticaDetector Result', text }); 
-        } catch (e) { 
-            if (e.name !== 'AbortError') copyToClipboard(text); 
-        }
-    } else {
-        copyToClipboard(text);
-    }
-};
-
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text)
-        .then(() => toast('📋 Copied to clipboard!'))
-        .catch(() => toast('Could not copy'));
-}
-
-window.newScan = () => {
-    currentFile = null; currentDataUrl = null; currentResult = null;
-    $('dropzonePreview').classList.add('hidden'); 
-    $('dropzoneContent').classList.remove('hidden');
-    $('dropzone').classList.remove('has-file'); 
-    $('resultCard').classList.add('hidden'); 
-    $('progressCard').classList.add('hidden');
-    $('quickBtn').disabled = true; 
-    $('deepBtn').disabled = true; 
-    $('fileInput').value = '';
-};
-
-// ==================== ADVANCED SETTINGS ====================
-window.toggleAdvanced = () => { 
-    $('advancedContent').classList.toggle('show'); 
-    $('advancedToggle').textContent = $('advancedContent').classList.contains('show') ? '▲' : '▼';
-};
-window.updateForensics = () => { 
-    forensicsMode = $('forensicsToggle').checked; 
-};
-
-// ==================== HISTORY ====================
-async function saveToHistory(result, mode) {
-    if (!user) return;
-    
-    const entry = {
-        id: Date.now().toString(),
-        resultLabel: $('resultLabel').textContent,
-        confidence: result.confidence,
-        aiScore: result.aiScore,
-        isAI: result.isAI,
-        mode: mode,
-        fileName: currentFile?.name,
-        version: DETECTOR_VERSION,
-        createdAt: new Date().toISOString()
-    };
-    
-    // Save to Supabase
-    if (!useLocalFallback && supabase) {
-        try {
-            await supabase.from('scans').insert({
-                user_id: user.id,
-                media_type: 'image',
-                scan_mode: mode,
-                result_label: entry.resultLabel,
-                confidence: entry.confidence,
-                ai_score: entry.aiScore,
-                is_ai: entry.isAI,
-                file_name: entry.fileName,
-                detector_version: DETECTOR_VERSION
-            });
-        } catch (e) { console.error('[History] Save failed:', e); }
-    }
-    
-    // Always save locally as backup
-    const h = JSON.parse(localStorage.getItem(`history_${user.id}`) || '[]');
-    h.unshift(entry);
-    if (h.length > 100) h.pop();
-    localStorage.setItem(`history_${user.id}`, JSON.stringify(h));
-}
-
-async function loadHistory() {
-    if (!user) {
-        $('historyContent').innerHTML = '<div class="history-empty"><div style="font-size:40px;margin-bottom:8px">🔒</div><p>Sign in to see your history</p></div>';
-        return;
-    }
-    
-    let history = [];
-    
-    if (!useLocalFallback && supabase) {
-        try {
-            const { data } = await supabase.from('scans')
-                .select('*')
-                .eq('user_id', user.id)
-                .order('created_at', { ascending: false })
-                .limit(50);
-            if (data) {
-                history = data.map(d => ({
-                    id: d.id,
-                    resultLabel: d.result_label,
-                    aiScore: d.ai_score,
-                    isAI: d.is_ai,
-                    mode: d.scan_mode,
-                    createdAt: d.created_at
-                }));
-            }
-        } catch (e) {}
-    }
-    
-    // Merge with local
-    const local = JSON.parse(localStorage.getItem(`history_${user.id}`) || '[]');
-    if (local.length > history.length) history = local;
-    
-    if (history.length === 0) {
-        $('historyContent').innerHTML = '<div class="history-empty"><div style="font-size:40px;margin-bottom:8px">📋</div><p>No scans yet. Start scanning!</p></div>';
-        return;
-    }
-    
-    let html = '';
-    for (const item of history) {
-        const date = new Date(item.createdAt).toLocaleDateString();
-        const scoreClass = item.isAI ? 'fake' : 'real';
-        html += `
-            <div class="history-item">
-                <div class="history-thumb">🖼️</div>
-                <div class="history-info">
-                    <div class="history-result">${item.resultLabel}</div>
-                    <div class="history-meta">${item.mode} • ${date}</div>
-                </div>
-                <div class="history-score ${scoreClass}">${item.aiScore}%</div>
-            </div>
-        `;
-    }
-    $('historyContent').innerHTML = html;
-}
-
-window.openHistory = () => { loadHistory(); showView('historyView'); };
-
-// ==================== LEADERBOARD ====================
-async function loadLeaderboard() {
-    let lb = [];
-    
-    if (!useLocalFallback && supabase) {
-        try {
-            const { data } = await supabase.from('leaderboard').select('*').limit(100);
-            if (data) lb = data;
-        } catch (e) {}
-    }
-    
-    // Demo/fallback data if no backend
-    if (lb.length === 0) {
-        const localUsers = JSON.parse(localStorage.getItem('local_users') || '{}');
-        lb = Object.entries(localUsers).map(([email, u], i) => {
-            const stats = JSON.parse(localStorage.getItem(`stats_local_${email}`) || localStorage.getItem(`stats_${email}`) || '{}');
-            return {
-                id: email,
-                display_name: u.name || email.split('@')[0],
-                avatar_url: u.avatar,
-                total_scans: stats.total || 0,
-                ai_found: stats.ai || 0,
-                points: stats.points || (stats.total || 0) * 2
-            };
-        }).filter(u => u.points > 0)
-          .sort((a, b) => b.points - a.points);
-        
-        // Add current user if logged in
-        if (user) {
-            const myStats = JSON.parse(localStorage.getItem(`stats_${user.id}`) || '{}');
-            const existing = lb.find(u => u.id === user.id || u.id === user.email);
-            if (!existing && myStats.total > 0) {
-                lb.push({
-                    id: user.id,
-                    display_name: user.name,
-                    avatar_url: user.avatar,
-                    total_scans: myStats.total || 0,
-                    ai_found: myStats.ai || 0,
-                    points: myStats.points || 0
-                });
-                lb.sort((a, b) => b.points - a.points);
-            }
-        }
-    }
-    
-    renderLeaderboard(lb);
-}
-
-function renderLeaderboard(data) {
-    if (data.length === 0) {
-        $('podium').innerHTML = '';
-        $('leaderboardContent').innerHTML = '<div class="history-empty"><div style="font-size:40px;margin-bottom:8px">🏆</div><p>No rankings yet. Be the first!</p></div>';
-        return;
-    }
-    
-    // Render podium (top 3)
-    const top3 = data.slice(0, 3);
-    const podiumOrder = [1, 0, 2]; // Display order: 2nd, 1st, 3rd
-    const positions = ['second', 'first', 'third'];
-    
-    let podiumHtml = '';
-    for (let i = 0; i < 3; i++) {
-        const displayIdx = podiumOrder[i];
-        const entry = top3[displayIdx];
-        if (!entry) continue;
-        
-        const rank = displayIdx + 1;
-        const tier = getTier(rank);
-        const initial = entry.display_name ? entry.display_name[0].toUpperCase() : '?';
-        const avatar = entry.avatar_url ? `<img src="${entry.avatar_url}">` : initial;
-        const crown = rank === 1 ? '<div class="podium-crown">👑</div>' : '';
-        
-        podiumHtml += `
-            <div class="podium-item ${positions[i]}" onclick="viewPublicProfile('${entry.id}')">
-                <div class="podium-avatar">${crown}${avatar}</div>
-                <div class="podium-name">${entry.display_name}</div>
-                <div class="podium-points">${entry.points} pts</div>
-                <span class="podium-tier ${tier.class}">${tier.name}</span>
-            </div>
-        `;
-    }
-    $('podium').innerHTML = podiumHtml;
-    
-    // Render rest of leaderboard
-    let listHtml = '';
-    for (let i = 3; i < data.length; i++) {
-        const entry = data[i];
-        const rank = i + 1;
-        const tier = getTier(rank);
-        const initial = entry.display_name ? entry.display_name[0].toUpperCase() : '?';
-        const avatar = entry.avatar_url ? `<img src="${entry.avatar_url}">` : initial;
-        
-        listHtml += `
-            <div class="lb-item" onclick="viewPublicProfile('${entry.id}')">
-                <div class="lb-rank ${rank <= 10 ? 'top10' : 'normal'}">${rank}</div>
-                <div class="lb-avatar">${avatar}</div>
-                <div class="lb-info">
-                    <div class="lb-name">${entry.display_name}</div>
-                    <div class="lb-stats">${entry.total_scans} scans • ${entry.ai_found} AI found</div>
-                </div>
-                <div class="lb-points">${entry.points}</div>
-                ${tier ? `<span class="lb-tier podium-tier ${tier.class}">${tier.name}</span>` : ''}
-            </div>
-        `;
-    }
-    $('leaderboardContent').innerHTML = listHtml;
-}
-
-window.openLeaderboard = () => { loadLeaderboard(); showView('leaderboardView'); };
-
-// ==================== PUBLIC PROFILE ====================
-window.viewPublicProfile = async function(userId) {
-    let profile = null;
-    
-    if (!useLocalFallback && supabase) {
-        try {
-            const { data: p } = await supabase.from('profiles')
-                .select('id,display_name,avatar_url,created_at')
-                .eq('id', userId).single();
-            const { data: s } = await supabase.from('user_stats')
-                .select('total_scans,ai_found,points')
-                .eq('user_id', userId).single();
-            const { data: b } = await supabase.from('user_badges')
-                .select('badge_id')
-                .eq('user_id', userId);
-            
-            if (p) {
-                profile = {
-                    ...p,
-                    total_scans: s?.total_scans || 0,
-                    ai_found: s?.ai_found || 0,
-                    points: s?.points || 0,
-                    badges: b?.map(x => x.badge_id) || []
-                };
-            }
-        } catch (e) {}
-    }
-    
-    // Fallback to local
-    if (!profile) {
-        const localUsers = JSON.parse(localStorage.getItem('local_users') || '{}');
-        const u = localUsers[userId] || (user?.id === userId ? user : null);
-        if (u) {
-            const stats = JSON.parse(localStorage.getItem(`stats_${userId}`) || '{}');
-            const badges = JSON.parse(localStorage.getItem(`badges_${userId}`) || '[]');
-            profile = {
-                id: userId,
-                display_name: u.name || userId.split('@')[0],
-                avatar_url: u.avatar,
-                created_at: new Date(u.created || Date.now()).toISOString(),
-                total_scans: stats.total || 0,
-                ai_found: stats.ai || 0,
-                points: stats.points || 0,
-                badges
-            };
-        }
-    }
-    
-    if (!profile) { toast('Could not load profile'); return; }
-    
-    const days = Math.floor((Date.now() - new Date(profile.created_at)) / 86400000) || 1;
-    const initial = profile.display_name[0].toUpperCase();
-    const avatar = profile.avatar_url ? `<img src="${profile.avatar_url}" style="width:100%;height:100%;object-fit:cover">` : initial;
-    
-    // Earned badges only (PRIVACY)
-    let badgesHtml = '';
-    if (profile.badges?.length > 0) {
-        badgesHtml = '<div style="margin-top:12px"><div style="font-size:12px;font-weight:700;margin-bottom:8px">🎖️ Badges Earned</div><div class="badges-grid" style="justify-content:center">';
-        for (const bid of profile.badges.slice(0, 6)) {
-            const b = BADGES[bid];
-            if (b) badgesHtml += `<div class="badge-item"><div class="badge-icon ${b.rarity}">${b.icon}</div><div class="badge-name">${b.name}</div></div>`;
-        }
-        badgesHtml += '</div></div>';
-    }
-    
-    $('publicProfileContent').innerHTML = `
-        <div style="text-align:center">
-            <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#00ff88);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#000;overflow:hidden">${avatar}</div>
-            <div style="font-size:20px;font-weight:800;margin-bottom:2px">${profile.display_name}</div>
-            <div style="font-size:11px;color:var(--text3);margin-bottom:12px">Member for ${days} day${days !== 1 ? 's' : ''}</div>
-            <div class="stats-grid" style="grid-template-columns:1fr 1fr 1fr">
-                <div class="stat-card"><div class="stat-value">${profile.total_scans}</div><div class="stat-label">Scans</div></div>
-                <div class="stat-card"><div class="stat-value">${profile.ai_found}</div><div class="stat-label">AI Found</div></div>
-                <div class="stat-card"><div class="stat-value">${profile.points}</div><div class="stat-label">Points</div></div>
-            </div>
-            ${badgesHtml}
-        </div>
-    `;
-    $('publicProfileModal').classList.add('show');
-};
-
-window.closePublicProfile = () => $('publicProfileModal').classList.remove('show');
-
-// ==================== STATS & BADGES ====================
-async function updateUserStatsAfterScan(result, mode) {
-    if (!user) return;
-    
-    const key = `stats_${user.id}`;
-    const stats = JSON.parse(localStorage.getItem(key) || '{"total":0,"ai":0,"deep":0,"quick":0,"forensics":0,"streak":0,"maxStreak":0,"points":0}');
-    
-    stats.total++;
-    scanCount = stats.total;
-    
-    if (result.isAI) {
-        stats.ai++;
-        stats.streak++;
-        stats.maxStreak = Math.max(stats.maxStreak, stats.streak);
-        stats.points += 5; // AI found bonus
-    } else {
-        stats.streak = 0;
-    }
-    
-    // Mode-specific
-    if (mode === 'quick') {
-        stats.quick = (stats.quick || 0) + 1;
-        stats.points += 1;
-    } else if (mode === 'forensics' || (mode === 'deep' && forensicsMode)) {
-        stats.forensics = (stats.forensics || 0) + 1;
-        stats.points += 5;
-    } else {
-        stats.deep = (stats.deep || 0) + 1;
-        stats.points += 3;
-    }
-    
-    localStorage.setItem(key, JSON.stringify(stats));
-    
-    // Update UI
-    $('statScans').textContent = stats.total;
-    $('statFound').textContent = stats.ai;
-    $('statPoints').textContent = stats.points;
-    
-    // Check badges
-    checkBadges(stats);
-    
-    // Sync to Supabase
-    if (!useLocalFallback && supabase) {
-        try {
-            await supabase.from('user_stats').upsert({
-                user_id: user.id,
-                total_scans: stats.total,
-                ai_found: stats.ai,
-                deep_scans: stats.deep,
-                quick_scans: stats.quick,
-                forensics_scans: stats.forensics,
-                current_streak: stats.streak,
-                max_streak: stats.maxStreak,
-                points: stats.points
-            });
-        } catch (e) {}
-    }
-}
-
-function checkBadges(stats) {
-    if (!user) return;
-    
-    const key = `badges_${user.id}`;
-    const earned = JSON.parse(localStorage.getItem(key) || '[]');
-    const newBadges = [];
-    
-    for (const [id, badge] of Object.entries(BADGES)) {
-        if (earned.includes(id)) continue;
-        
-        let met = false;
-        switch (badge.type) {
-            case 'total': met = stats.total >= badge.req; break;
-            case 'ai': met = stats.ai >= badge.req; break;
-            case 'deep': met = (stats.deep || 0) >= badge.req; break;
-            case 'quick': met = (stats.quick || 0) >= badge.req; break;
-            case 'forensics': met = (stats.forensics || 0) >= badge.req; break;
-            case 'streak': met = stats.maxStreak >= badge.req; break;
-        }
-        
-        if (met) {
-            newBadges.push(id);
-            earned.push(id);
-        }
-    }
-    
-    if (newBadges.length > 0) {
-        localStorage.setItem(key, JSON.stringify(earned));
-        
-        for (const id of newBadges) {
-            const badge = BADGES[id];
-            toast(`🎖️ Badge Earned: ${badge.name}!`);
-        }
-        
-        // Sync to Supabase
-        if (!useLocalFallback && supabase) {
-            for (const bid of newBadges) {
-                supabase.from('user_badges').insert({ user_id: user.id, badge_id: bid }).catch(() => {});
-            }
-        }
-    }
-}
-
-function renderBadgesPreview() {
-    if (!user) {
-        $('badgesPreview').innerHTML = '<div style="font-size:10px;color:var(--text3);padding:12px;text-align:center">Sign in to earn badges</div>';
-        return;
-    }
-    
-    const earned = JSON.parse(localStorage.getItem(`badges_${user.id}`) || '[]');
-    const allBadges = Object.values(BADGES);
-    const earnedBadges = allBadges.filter(b => earned.includes(b.id));
-    const lockedBadges = allBadges.filter(b => !earned.includes(b.id));
-    
-    const display = [...earnedBadges.slice(0, 4), ...lockedBadges.slice(0, 4 - earnedBadges.length)];
-    
-    let html = '';
-    for (const b of display) {
-        const isEarned = earned.includes(b.id);
-        html += `
-            <div class="badge-item">
-                <div class="badge-icon ${isEarned ? b.rarity : 'locked'}">${isEarned ? b.icon : '🔒'}</div>
-                <div class="badge-name">${isEarned ? b.name : '???'}</div>
-            </div>
-        `;
-    }
-    $('badgesPreview').innerHTML = html;
-}
-
-window.openAllBadges = () => { renderAllBadges(); showView('allBadgesView'); };
-
-function renderAllBadges() {
-    const earned = user ? JSON.parse(localStorage.getItem(`badges_${user.id}`) || '[]') : [];
-    
-    const groups = { common: [], rare: [], epic: [], legendary: [] };
-    for (const b of Object.values(BADGES)) {
-        groups[b.rarity].push({ ...b, earned: earned.includes(b.id) });
-    }
-    
-    const rarityNames = { common: 'Common', rare: 'Rare', epic: 'Epic', legendary: 'Legendary' };
-    const rarityColors = { common: '#718096', rare: '#3182ce', epic: '#805ad5', legendary: '#d69e2e' };
-    
-    let html = '';
-    for (const [rarity, badges] of Object.entries(groups)) {
-        if (badges.length === 0) continue;
-        
-        html += `<div style="margin-bottom:16px">
-            <h3 style="font-size:12px;color:${rarityColors[rarity]};margin-bottom:8px;text-transform:uppercase">${rarityNames[rarity]}</h3>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">`;
-        
-        for (const b of badges) {
-            html += `
-                <div style="background:var(--surface);border-radius:10px;padding:12px;text-align:center">
-                    <div class="badge-icon ${b.earned ? b.rarity : 'locked'}" style="margin:0 auto 4px">${b.earned ? b.icon : '🔒'}</div>
-                    <div style="font-size:10px;font-weight:600;margin-bottom:2px">${b.earned ? b.name : '???'}</div>
-                    <div style="font-size:8px;color:var(--text3)">${b.earned ? b.desc : 'Locked'}</div>
-                </div>
-            `;
-        }
-        html += '</div></div>';
-    }
-    
-    $('allBadgesContent').innerHTML = html;
-}
-
-// ==================== PROFILE ====================
-window.openProfile = () => { 
-    loadUserStats(); 
-    renderBadgesPreview(); 
-    showView('profileView'); 
-};
-
-window.changeProfilePic = () => { 
-    if (!user) { toast('Sign in first'); return; } 
-    $('profilePicInput').click(); 
-};
-
-window.handleProfilePic = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (!file.type.startsWith('image/')) { toast('Select an image'); return; }
-    if (file.size > 2 * 1024 * 1024) { toast('Max 2MB'); return; }
-    
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-        user.avatar = e.target.result;
-        saveUser();
-        updateUserUI();
-        
-        if (!useLocalFallback && supabase) {
-            try {
-                await supabase.from('profiles').update({ avatar_url: user.avatar }).eq('id', user.id);
-            } catch (e) {}
-        }
-        
-        toast('Profile picture updated!');
-    };
-    reader.readAsDataURL(file);
-};
-
-// ==================== HELP ====================
-window.openHelp = () => showView('helpView');
-window.toggleHelp = (header) => {
-    const content = header.nextElementSibling;
-    const toggle = header.querySelector('.help-toggle');
-    content.classList.toggle('show');
-    toggle.textContent = content.classList.contains('show') ? '▲' : '▼';
-};
-
-// ==================== SHARE TARGET ====================
-async function handleShareTarget() {
-    const params = new URLSearchParams(location.search);
-    if (params.get('share') === '1' && 'serviceWorker' in navigator && navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage({ type: 'GET_SHARED_FILE' });
-    }
-}
-
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.addEventListener('message', e => {
-        if (e.data.type === 'SHARED_FILE') {
-            const { file, name, mimeType } = e.data;
-            const blob = new Blob([file], { type: mimeType });
-            const f = new File([blob], name, { type: mimeType });
-            processFile(f);
-            toast('📷 Image received!');
-            history.replaceState({}, '', '/');
-            
-            // Auto-analyze if user is logged in
-            setTimeout(() => {
-                if (user && currentFile) {
-                    startScan('deep');
-                } else if (currentFile) {
-                    startScan('quick');
-                }
-            }, 500);
-        }
-    });
-}
 
 // ==================== INIT ====================
 async function init() {
@@ -5324,7 +2743,10 @@ async function init() {
     renderBadgesPreview();
     updateGating();
     updateStatusBar();
-    
+
+    // Initialize Truth Hunters game
+    await initTruthHunters();
+
     // Register service worker
     if ('serviceWorker' in navigator) {
         try {
@@ -5360,6 +2782,892 @@ async function init() {
     }
     
     console.log(`[AuthenticaDetector] Ready! Installed: ${isInstalled}, User: ${user?.email || 'guest'}`);
+}
+
+// ============================================================
+// TRUTH HUNTERS GAME FUNCTIONS
+// ============================================================
+
+// ==================== GAME STATE ====================
+let currentView = null;
+let currentCardIndex = 0;
+let pendingSubmissions = [];
+let userProgression = null;
+let activeOutbreak = null;
+let userSquad = null;
+
+// ==================== VIEW MANAGEMENT ====================
+window.openView = function(viewId) {
+    console.log('[TruthHunters] Opening view:', viewId);
+
+    // Close main app views if open
+    const mainViews = ['scanView', 'profileView', 'leaderboardView', 'helpView'];
+    mainViews.forEach(id => {
+        const el = $(id);
+        if (el) el.classList.remove('active');
+    });
+
+    // Open the game view
+    const view = $(viewId);
+    if (view) {
+        view.classList.add('active');
+        currentView = viewId;
+
+        // Show game nav
+        const gameNav = $('gameNav');
+        if (gameNav) gameNav.style.display = 'flex';
+
+        // Update active nav button
+        document.querySelectorAll('.game-nav-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.view === viewId);
+        });
+
+        // Load data based on view
+        if (viewId === 'huntView') loadHuntView();
+        else if (viewId === 'verifyView') loadVerifyView();
+        else if (viewId === 'outbreaksView') loadOutbreaksView();
+        else if (viewId === 'squadsView') loadSquadsView();
+        else if (viewId === 'leaderboardView') loadLeaderboardView();
+    }
+};
+
+window.closeView = function() {
+    console.log('[View] Closing view');
+
+    // Game views
+    const gameViews = ['huntView', 'verifyView', 'outbreaksView', 'squadsView'];
+
+    if (currentView && gameViews.includes(currentView)) {
+        // Handle game view closing
+        const view = $(currentView);
+        if (view) view.classList.remove('active');
+
+        // Hide game nav
+        const gameNav = $('gameNav');
+        if (gameNav) gameNav.style.display = 'none';
+
+        currentView = null;
+        showView('homeView');
+    } else {
+        // Handle non-game view closing (original behavior)
+        showView('homeView');
+    }
+};
+
+// ==================== HUNT MODE ====================
+let huntImageUrl = null;
+let huntImageFile = null;
+let huntImageDataUrl = null;
+let huntUploadMethod = 'url'; // 'url' or 'upload'
+
+window.selectUploadMethod = function(method) {
+    huntUploadMethod = method;
+    $('urlMethod').classList.toggle('active', method === 'url');
+    $('uploadMethod').classList.toggle('active', method === 'upload');
+    $('huntUrlSection').style.display = method === 'url' ? 'block' : 'none';
+    $('huntUploadSection').style.display = method === 'upload' ? 'block' : 'none';
+
+    // Clear the other method
+    if (method === 'url') {
+        huntImageFile = null;
+        huntImageDataUrl = null;
+        const preview = $('huntUploadPreview');
+        if (preview) preview.innerHTML = '';
+    } else {
+        huntImageUrl = null;
+        const input = $('huntUrlInput');
+        if (input) input.value = '';
+        const preview = $('huntUrlPreview');
+        if (preview) preview.innerHTML = '';
+    }
+
+    updateHuntSubmitButton();
+};
+
+window.fetchImageFromUrl = async function() {
+    const input = $('huntUrlInput');
+    const preview = $('huntUrlPreview');
+    const button = $('fetchUrlBtn');
+
+    if (!input || !preview || !button) return;
+
+    const url = input.value.trim();
+    if (!url) return;
+
+    button.textContent = 'Loading...';
+    button.disabled = true;
+
+    try {
+        // Try to fetch the image
+        const response = await fetch(url, { mode: 'cors' });
+        if (!response.ok) throw new Error('Failed to fetch image');
+
+        const blob = await response.blob();
+        if (!blob.type.startsWith('image/')) throw new Error('URL is not an image');
+
+        // Create preview
+        huntImageUrl = url;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            huntImageDataUrl = e.target.result;
+            preview.innerHTML = `
+                <div class="hunt-preview-container">
+                    <img src="${e.target.result}" alt="Preview" style="max-width:100%;border-radius:12px">
+                    <button class="hunt-remove-btn" onclick="removeHuntImage()">✕</button>
+                </div>
+            `;
+            updateHuntSubmitButton();
+        };
+        reader.readAsDataURL(blob);
+
+        button.textContent = '✓ Loaded';
+        button.style.background = 'var(--success)';
+
+    } catch (err) {
+        console.error('[Hunt] Failed to fetch image:', err);
+        preview.innerHTML = `<div style="color:var(--danger);text-align:center;padding:16px">Failed to load image. Try uploading instead.</div>`;
+        button.textContent = 'Fetch Image';
+        button.disabled = false;
+    }
+};
+
+window.handleHuntFile = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+    }
+
+    huntImageFile = file;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        huntImageDataUrl = e.target.result;
+        const preview = $('huntUploadPreview');
+        if (preview) {
+            preview.innerHTML = `
+                <div class="hunt-preview-container">
+                    <img src="${e.target.result}" alt="Preview" style="max-width:100%;border-radius:12px">
+                    <button class="hunt-remove-btn" onclick="removeHuntImage()">✕</button>
+                </div>
+            `;
+        }
+        updateHuntSubmitButton();
+    };
+    reader.readAsDataURL(file);
+};
+
+window.removeHuntImage = function() {
+    huntImageUrl = null;
+    huntImageFile = null;
+    huntImageDataUrl = null;
+
+    const urlPreview = $('huntUrlPreview');
+    const uploadPreview = $('huntUploadPreview');
+    const urlInput = $('huntUrlInput');
+    const fetchBtn = $('fetchUrlBtn');
+
+    if (urlPreview) urlPreview.innerHTML = '';
+    if (uploadPreview) uploadPreview.innerHTML = '';
+    if (urlInput) urlInput.value = '';
+    if (fetchBtn) {
+        fetchBtn.textContent = 'Fetch Image';
+        fetchBtn.disabled = false;
+        fetchBtn.style.background = '';
+    }
+
+    updateHuntSubmitButton();
+};
+
+function updateHuntSubmitButton() {
+    const button = $('submitHuntBtn');
+    if (!button) return;
+
+    const hasImage = huntImageDataUrl !== null;
+    const sourceUrl = huntUploadMethod === 'url' ? $('huntUrlInput')?.value : null;
+    const context = $('huntContext')?.value || '';
+    const claimed = $('huntClaimed')?.value || '';
+
+    button.disabled = !hasImage || !context || !claimed;
+}
+
+window.submitHunt = async function() {
+    if (!user) {
+        alert('Please sign in to submit images');
+        return;
+    }
+
+    const sourceUrl = huntUploadMethod === 'url' ? $('huntUrlInput')?.value : null;
+    const sourcePlatform = $('huntPlatform')?.value || 'other';
+    const contextDesc = $('huntContext')?.value || '';
+    const claimedContext = $('huntClaimed')?.value || '';
+
+    if (!huntImageDataUrl || !contextDesc || !claimedContext) {
+        alert('Please fill in all required fields');
+        return;
+    }
+
+    const button = $('submitHuntBtn');
+    button.disabled = true;
+    button.innerHTML = '<span class="submit-icon">⏳</span>Submitting...';
+
+    try {
+        // TODO: Upload image to Supabase Storage
+        // For now, store data URL directly (not recommended for production)
+
+        // Insert submission
+        const { data, error } = await supabase
+            .from('submissions')
+            .insert({
+                submitter_id: user.id,
+                image_url: sourceUrl,
+                image_data: huntImageDataUrl, // Store base64 temporarily
+                source_url: sourceUrl,
+                source_platform: sourcePlatform,
+                context_description: contextDesc,
+                claimed_context: claimedContext,
+                status: 'voting',
+                featured: Math.random() < 0.3 // 30% chance to be featured
+            })
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        // Award coins for submission
+        await awardCoins(50, 'Submission');
+        await addXP(25);
+
+        // Show success
+        button.innerHTML = '<span class="submit-icon">✅</span>Submitted! +50 🪙';
+        button.style.background = 'var(--success)';
+
+        // Reset form after 2 seconds
+        setTimeout(() => {
+            removeHuntImage();
+            $('huntContext').value = '';
+            $('huntClaimed').value = '';
+            $('huntPlatform').value = 'twitter';
+            button.innerHTML = '<span class="submit-icon">🎯</span>Submit for Verification<span class="submit-reward">+50 🪙</span>';
+            button.style.background = '';
+            button.disabled = false;
+        }, 2000);
+
+    } catch (err) {
+        console.error('[Hunt] Submission failed:', err);
+        alert('Submission failed: ' + err.message);
+        button.innerHTML = '<span class="submit-icon">🎯</span>Submit for Verification<span class="submit-reward">+50 🪙</span>';
+        button.disabled = false;
+    }
+};
+
+async function loadHuntView() {
+    console.log('[Hunt] Loading Hunt view');
+
+    // Load active outbreak
+    await loadActiveOutbreak();
+
+    // Update coins display
+    updateCoinsDisplay();
+
+    // Add event listeners for input validation
+    const contextInput = $('huntContext');
+    const claimedInput = $('huntClaimed');
+    if (contextInput) contextInput.addEventListener('input', updateHuntSubmitButton);
+    if (claimedInput) claimedInput.addEventListener('input', updateHuntSubmitButton);
+}
+
+// ==================== VERIFY MODE ====================
+let currentSubmission = null;
+let swipeStartX = 0;
+let swipeCurrentX = 0;
+let isSwiping = false;
+
+window.vote = async function(choice) {
+    if (!user) {
+        alert('Please sign in to vote');
+        return;
+    }
+
+    if (!currentSubmission) {
+        console.warn('[Verify] No current submission');
+        return;
+    }
+
+    const voteControls = $('voteControls');
+    if (voteControls) voteControls.style.display = 'none';
+
+    try {
+        // Insert vote
+        const { data, error } = await supabase
+            .from('votes')
+            .insert({
+                submission_id: currentSubmission.id,
+                user_id: user.id,
+                vote: choice,
+                confidence: 3 // Default confidence
+            })
+            .select()
+            .single();
+
+        if (error) {
+            if (error.code === '23505') { // Unique constraint violation
+                alert('You already voted on this submission');
+                loadNextSubmission();
+                return;
+            }
+            throw error;
+        }
+
+        // Award coins for voting
+        const points = 10;
+        await awardCoins(points, 'Vote');
+        await addXP(5);
+
+        // Show feedback
+        await showVoteFeedback(choice, points);
+
+        // Load next submission
+        setTimeout(() => loadNextSubmission(), 1000);
+
+    } catch (err) {
+        console.error('[Verify] Vote failed:', err);
+        alert('Vote failed: ' + err.message);
+        if (voteControls) voteControls.style.display = 'flex';
+    }
+};
+
+async function showVoteFeedback(choice, points) {
+    return new Promise(resolve => {
+        const cardStack = $('cardStack');
+        if (!cardStack) return resolve();
+
+        const feedback = document.createElement('div');
+        feedback.className = 'vote-feedback';
+        feedback.innerHTML = `
+            <div>
+                <div class="feedback-icon">${choice === 'ai' ? '🤖' : '✅'}</div>
+                <div class="feedback-label">${choice === 'ai' ? 'AI DETECTED' : 'REAL IMAGE'}</div>
+                <div class="feedback-points">+${points} 🪙</div>
+            </div>
+        `;
+
+        cardStack.appendChild(feedback);
+
+        setTimeout(() => {
+            feedback.remove();
+            resolve();
+        }, 1500);
+    });
+}
+
+async function loadVerifyView() {
+    console.log('[Verify] Loading Verify view');
+
+    // Load user stats
+    await loadUserStats();
+    updateVerifyStats();
+
+    // Load submissions
+    await loadPendingSubmissions();
+
+    // Load first submission
+    loadNextSubmission();
+
+    // Update verify badge count
+    updateVerifyBadge();
+}
+
+async function loadPendingSubmissions() {
+    try {
+        const { data, error } = await supabase
+            .from('submissions')
+            .select('*')
+            .eq('status', 'voting')
+            .order('created_at', { ascending: false })
+            .limit(50);
+
+        if (error) throw error;
+
+        // Filter out submissions the user already voted on
+        const { data: userVotes, error: votesError } = await supabase
+            .from('votes')
+            .select('submission_id')
+            .eq('user_id', user?.id || '');
+
+        const votedIds = new Set((userVotes || []).map(v => v.submission_id));
+        pendingSubmissions = (data || []).filter(s => !votedIds.has(s.id));
+
+        console.log('[Verify] Loaded', pendingSubmissions.length, 'pending submissions');
+
+    } catch (err) {
+        console.error('[Verify] Failed to load submissions:', err);
+        pendingSubmissions = [];
+    }
+}
+
+function loadNextSubmission() {
+    if (pendingSubmissions.length === 0) {
+        showNoMoreSubmissions();
+        return;
+    }
+
+    currentSubmission = pendingSubmissions.shift();
+    renderSubmissionCard(currentSubmission);
+
+    const voteControls = $('voteControls');
+    if (voteControls) voteControls.style.display = 'flex';
+}
+
+function renderSubmissionCard(submission) {
+    const cardStack = $('cardStack');
+    if (!cardStack) return;
+
+    // Clear old cards
+    cardStack.innerHTML = '';
+
+    // Create card
+    const card = document.createElement('div');
+    card.className = 'verify-card';
+    card.innerHTML = `
+        <div class="card-image">
+            <img src="${submission.image_data || submission.image_url}" alt="Submission" style="width:100%;height:100%;object-fit:contain">
+        </div>
+        <div class="card-info">
+            <div class="card-context">
+                <div class="context-label">Context:</div>
+                <div class="context-text">${submission.context_description}</div>
+            </div>
+            <div class="card-claimed">
+                <div class="claimed-label">Claims to be:</div>
+                <div class="claimed-text">${submission.claimed_context}</div>
+            </div>
+            ${submission.source_url ? `
+                <div class="card-source">
+                    <div class="source-icon">${getPlatformIcon(submission.source_platform)}</div>
+                    <div class="source-label">${submission.source_platform || 'Unknown'}</div>
+                </div>
+            ` : ''}
+            <div class="card-votes">
+                <div class="vote-count">👥 ${submission.total_votes || 0} votes</div>
+            </div>
+        </div>
+    `;
+
+    cardStack.appendChild(card);
+
+    // Add swipe handlers
+    enableCardSwipe(card);
+}
+
+function enableCardSwipe(card) {
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+
+    card.addEventListener('touchstart', e => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+    });
+
+    card.addEventListener('touchmove', e => {
+        if (!isDragging) return;
+        currentX = e.touches[0].clientX;
+        const diff = currentX - startX;
+        card.style.transform = `translateX(${diff}px) rotate(${diff * 0.1}deg)`;
+
+        if (diff > 50) {
+            card.classList.add('swiping-right');
+            card.classList.remove('swiping-left');
+        } else if (diff < -50) {
+            card.classList.add('swiping-left');
+            card.classList.remove('swiping-right');
+        } else {
+            card.classList.remove('swiping-right', 'swiping-left');
+        }
+    });
+
+    card.addEventListener('touchend', e => {
+        if (!isDragging) return;
+        isDragging = false;
+
+        const diff = currentX - startX;
+
+        if (diff > 100) {
+            // Swiped right = REAL
+            card.style.transform = 'translateX(1000px) rotate(30deg)';
+            setTimeout(() => vote('real'), 300);
+        } else if (diff < -100) {
+            // Swiped left = AI
+            card.style.transform = 'translateX(-1000px) rotate(-30deg)';
+            setTimeout(() => vote('ai'), 300);
+        } else {
+            // Reset
+            card.style.transform = '';
+            card.classList.remove('swiping-right', 'swiping-left');
+        }
+
+        currentX = 0;
+        startX = 0;
+    });
+}
+
+function showNoMoreSubmissions() {
+    const cardStack = $('cardStack');
+    if (!cardStack) return;
+
+    cardStack.innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:32px">
+            <div style="font-size:48px;margin-bottom:16px">🎉</div>
+            <div style="font-size:18px;font-weight:700;margin-bottom:8px">All Caught Up!</div>
+            <div style="color:var(--text2);margin-bottom:24px">No more submissions to verify right now.</div>
+            <button class="cta-btn" onclick="openView('huntView')">
+                🎯 Submit Images
+            </button>
+        </div>
+    `;
+
+    const voteControls = $('voteControls');
+    if (voteControls) voteControls.style.display = 'none';
+}
+
+function updateVerifyStats() {
+    // Update accuracy display
+    const accuracy = userProgression?.accuracy_rate || 0;
+    const accuracyEl = $('verifyAccuracy');
+    if (accuracyEl) {
+        accuracyEl.textContent = `${(accuracy * 100).toFixed(0)}%`;
+    }
+}
+
+function updateVerifyBadge() {
+    const badge = $('verifyBadge');
+    if (badge) {
+        badge.textContent = pendingSubmissions.length;
+    }
+}
+
+function getPlatformIcon(platform) {
+    const icons = {
+        twitter: '𝕏',
+        instagram: '📷',
+        reddit: '🤖',
+        tiktok: '🎵',
+        facebook: '📘'
+    };
+    return icons[platform] || '🌐';
+}
+
+// ==================== PROGRESSION ====================
+async function loadUserProgression() {
+    if (!user) return;
+
+    try {
+        const { data, error } = await supabase
+            .from('user_progression')
+            .select('*')
+            .eq('user_id', user.id)
+            .single();
+
+        if (error && error.code !== 'PGRST116') throw error;
+
+        userProgression = data || {
+            user_id: user.id,
+            level: 1,
+            xp: 0,
+            xp_to_next_level: 100,
+            truth_coins: 0,
+            reputation_score: 100,
+            accuracy_rate: 0
+        };
+
+        updateProgressionUI();
+
+    } catch (err) {
+        console.error('[Progression] Failed to load:', err);
+    }
+}
+
+async function addXP(amount) {
+    if (!user || !userProgression) return;
+
+    userProgression.xp += amount;
+
+    // Check for level up
+    while (userProgression.xp >= userProgression.xp_to_next_level) {
+        userProgression.level += 1;
+        userProgression.xp -= userProgression.xp_to_next_level;
+        userProgression.xp_to_next_level = Math.floor(userProgression.xp_to_next_level * 1.5);
+
+        // Show level up notification
+        showLevelUpNotification(userProgression.level);
+    }
+
+    // Update in database
+    await saveUserProgression();
+    updateProgressionUI();
+}
+
+async function awardCoins(amount, reason) {
+    if (!user || !userProgression) return;
+
+    userProgression.truth_coins += amount;
+    userProgression.lifetime_coins_earned = (userProgression.lifetime_coins_earned || 0) + amount;
+
+    await saveUserProgression();
+    updateCoinsDisplay();
+
+    console.log(`[Progression] Awarded ${amount} coins for ${reason}`);
+}
+
+async function saveUserProgression() {
+    if (!user || !userProgression) return;
+
+    try {
+        const { error } = await supabase
+            .from('user_progression')
+            .upsert({
+                user_id: user.id,
+                level: userProgression.level,
+                xp: userProgression.xp,
+                xp_to_next_level: userProgression.xp_to_next_level,
+                truth_coins: userProgression.truth_coins,
+                lifetime_coins_earned: userProgression.lifetime_coins_earned,
+                reputation_score: userProgression.reputation_score,
+                accuracy_rate: userProgression.accuracy_rate,
+                updated_at: new Date().toISOString()
+            });
+
+        if (error) throw error;
+
+    } catch (err) {
+        console.error('[Progression] Failed to save:', err);
+    }
+}
+
+function updateProgressionUI() {
+    updateCoinsDisplay();
+    // Update other progression displays
+}
+
+function updateCoinsDisplay() {
+    const coins = userProgression?.truth_coins || 0;
+    const displays = ['coinsCount', 'headerCoins'];
+    displays.forEach(id => {
+        const el = $(id);
+        if (el) {
+            if (id === 'coinsCount') {
+                el.textContent = coins;
+            } else {
+                el.innerHTML = `<span style="font-size:16px">🪙</span><span>${coins}</span>`;
+            }
+        }
+    });
+}
+
+function showLevelUpNotification(level) {
+    // Create notification overlay
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.9);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        animation: fadeIn 0.3s;
+    `;
+
+    notification.innerHTML = `
+        <div style="text-align:center;animation:bounceIn 0.5s">
+            <div style="font-size:80px;margin-bottom:16px">🎉</div>
+            <div style="font-size:32px;font-weight:800;color:var(--gold);margin-bottom:8px">LEVEL UP!</div>
+            <div style="font-size:48px;font-weight:800;color:var(--primary)">Level ${level}</div>
+            <div style="margin-top:24px;color:var(--text2)">Tap to continue</div>
+        </div>
+    `;
+
+    document.body.appendChild(notification);
+
+    notification.addEventListener('click', () => {
+        notification.remove();
+    });
+
+    setTimeout(() => {
+        notification.remove();
+    }, 5000);
+}
+
+// ==================== OUTBREAKS ====================
+async function loadActiveOutbreak() {
+    try {
+        const { data, error } = await supabase
+            .from('outbreak_events')
+            .select('*')
+            .eq('status', 'active')
+            .single();
+
+        if (error && error.code !== 'PGRST116') throw error;
+
+        activeOutbreak = data;
+
+        if (activeOutbreak) {
+            showOutbreakBanner();
+            updateOutbreakTimer();
+        } else {
+            hideOutbreakBanner();
+        }
+
+    } catch (err) {
+        console.error('[Outbreak] Failed to load:', err);
+    }
+}
+
+function showOutbreakBanner() {
+    const banner = $('activeOutbreakBanner');
+    if (!banner || !activeOutbreak) return;
+
+    $('outbreakTitle').textContent = activeOutbreak.title;
+    banner.style.display = 'flex';
+
+    // Show pulse on nav
+    const pulse = $('outbreakPulse');
+    if (pulse) pulse.style.display = 'block';
+}
+
+function hideOutbreakBanner() {
+    const banner = $('activeOutbreakBanner');
+    if (banner) banner.style.display = 'none';
+
+    const pulse = $('outbreakPulse');
+    if (pulse) pulse.style.display = 'none';
+}
+
+function updateOutbreakTimer() {
+    if (!activeOutbreak) return;
+
+    const timer = $('outbreakTimer');
+    if (!timer) return;
+
+    const updateTime = () => {
+        const now = new Date();
+        const end = new Date(activeOutbreak.ends_at);
+        const diff = end - now;
+
+        if (diff <= 0) {
+            timer.textContent = 'Ended';
+            hideOutbreakBanner();
+            return;
+        }
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        timer.textContent = `Ends in ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    };
+
+    updateTime();
+    setInterval(updateTime, 1000);
+}
+
+async function loadOutbreaksView() {
+    console.log('[Outbreak] Loading Outbreaks view');
+    await loadActiveOutbreak();
+    // TODO: Load upcoming and past outbreaks
+}
+
+// ==================== SQUADS ====================
+async function loadSquadsView() {
+    console.log('[Squads] Loading Squads view');
+    await loadUserSquad();
+}
+
+async function loadUserSquad() {
+    if (!user) return;
+
+    try {
+        // Get user's squad membership
+        const { data: membership, error: memberError } = await supabase
+            .from('squad_members')
+            .select('squad_id, role')
+            .eq('user_id', user.id)
+            .single();
+
+        if (memberError && memberError.code !== 'PGRST116') throw memberError;
+
+        if (membership) {
+            // Load squad details
+            const { data: squad, error: squadError } = await supabase
+                .from('squads')
+                .select('*')
+                .eq('id', membership.squad_id)
+                .single();
+
+            if (squadError) throw squadError;
+
+            userSquad = squad;
+            renderUserSquad();
+        } else {
+            renderNoSquad();
+        }
+
+    } catch (err) {
+        console.error('[Squad] Failed to load:', err);
+    }
+}
+
+function renderUserSquad() {
+    // TODO: Render squad UI
+}
+
+function renderNoSquad() {
+    // TODO: Render "no squad" state
+}
+
+window.showCreateSquad = function() {
+    // TODO: Show create squad modal
+};
+
+window.showJoinSquad = function() {
+    // TODO: Show join squad modal
+};
+
+// ==================== LEADERBOARD ====================
+async function loadLeaderboardView() {
+    console.log('[Leaderboard] Loading leaderboard');
+
+    try {
+        const { data, error } = await supabase
+            .from('truth_hunters_leaderboard')
+            .select('*')
+            .limit(100);
+
+        if (error) throw error;
+
+        renderLeaderboard(data || []);
+
+    } catch (err) {
+        console.error('[Leaderboard] Failed to load:', err);
+    }
+}
+
+function renderLeaderboard(leaderboard) {
+    // TODO: Render leaderboard UI
+}
+
+// ==================== INIT TRUTH HUNTERS ====================
+async function initTruthHunters() {
+    console.log('[TruthHunters] Initializing game...');
+
+    if (user) {
+        await loadUserProgression();
+        await loadActiveOutbreak();
+    }
 }
 
 init();
