@@ -4494,45 +4494,89 @@ window.startScan = async function(mode) {
             updateFact();
         }
 
-        // Perform actual analysis with overall timeout protection
+        // Perform actual analysis with AGGRESSIVE timeout protection
         console.log(`[Scan] Starting ${mode} analysis...`);
         let result;
+        let analysisCompleted = false;
+
+        // EMERGENCY TIMEOUT: Force show result after 15 seconds (deep) or 8 seconds (quick)
+        // This ensures we ALWAYS show a result even if analysis hangs
+        const emergencyTimeout = setTimeout(() => {
+            if (!analysisCompleted) {
+                console.warn('[Scan] EMERGENCY TIMEOUT - Forcing result display');
+                result = {
+                    verdict: 'uncertain',
+                    aiScore: 50,
+                    confidence: 'low',
+                    explainers: [{
+                        icon: 'INFO',
+                        text: `Analysis took too long and was stopped. Image may be too complex. Try Quick Scan instead.`,
+                        type: 'summary'
+                    }],
+                    mode,
+                    timestamp: Date.now(),
+                    indicatorCounts: { ai: 0, real: 0 }
+                };
+                analysisCompleted = true;
+                displayResult(result, mode);
+            }
+        }, mode === 'deep' ? 15000 : 8000);
 
         try {
             // Wrap analysis in a timeout to prevent infinite hangs
             const analysisPromise = analyzeImage(currentDataUrl, mode);
             const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => reject(new Error('Analysis timeout')), mode === 'deep' ? 45000 : 15000);
+                setTimeout(() => reject(new Error('Analysis timeout')), mode === 'deep' ? 12000 : 6000);
             });
 
             result = await Promise.race([analysisPromise, timeoutPromise]);
+            analysisCompleted = true;
+            clearTimeout(emergencyTimeout);
             console.log('[Scan] Analysis completed successfully');
         } catch (analysisError) {
             console.error('[Scan] Analysis error:', analysisError);
+            clearTimeout(emergencyTimeout);
             // Create a fallback result so we always show something
-            result = {
-                verdict: 'uncertain',
-                aiScore: 50,
-                confidence: 'low',
-                explainers: [{
-                    icon: 'INFO',
-                    text: `Analysis encountered an issue: ${analysisError.message}. Results may be incomplete.`,
-                    type: 'summary'
-                }],
-                mode,
-                timestamp: Date.now(),
-                indicatorCounts: { ai: 0, real: 0 }
-            };
+            if (!analysisCompleted) {
+                result = {
+                    verdict: 'uncertain',
+                    aiScore: 50,
+                    confidence: 'low',
+                    explainers: [{
+                        icon: 'INFO',
+                        text: `Analysis encountered an issue: ${analysisError.message}. Results may be incomplete.`,
+                        type: 'summary'
+                    }],
+                    mode,
+                    timestamp: Date.now(),
+                    indicatorCounts: { ai: 0, real: 0 }
+                };
+                analysisCompleted = true;
+            }
         }
 
         if (analysisAborted) {
+            clearTimeout(emergencyTimeout);
             showUploadState();
             return;
         }
 
-        currentResult = result;
-        console.log('[Scan] Displaying result...');
-        displayResult(result, mode);
+        // Only display if we haven't already displayed via emergency timeout
+        if (result && !analysisCompleted) {
+            analysisCompleted = true;
+        }
+
+        if (result) {
+            clearTimeout(emergencyTimeout);
+            currentResult = result;
+            console.log('[Scan] Displaying result...');
+            // Check if emergency timeout already displayed
+            if ($('progressCard').classList.contains('hidden')) {
+                console.log('[Scan] Result already displayed by emergency timeout');
+            } else {
+                displayResult(result, mode);
+            }
+        }
 
         // Save to history and update stats
         try {
@@ -4723,10 +4767,11 @@ async function analyzeImage(dataUrl, mode) {
         img.src = dataUrl;
     });
 
-    // Create canvas for pixel analysis - use larger size for better accuracy
+    // Create canvas for pixel analysis - OPTIMIZED to prevent freeze
+    // Max 512x512 even for deep scan to keep FFT computation fast
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-    const analysisSize = mode === 'deep' ? 1024 : 512;
+    const analysisSize = mode === 'deep' ? 512 : 256;  // Reduced from 1024 to 512
     canvas.width = Math.min(img.width, analysisSize);
     canvas.height = Math.min(img.height, analysisSize);
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -4781,14 +4826,20 @@ async function analyzeImage(dataUrl, mode) {
     // =========================================
     // 3. FREQUENCY DOMAIN ANALYSIS (FFT)
     // Detects spectral anomalies in AI images
+    // OPTIMIZED: Skip FFT for very large images to prevent freeze
     // =========================================
     if (mode === 'deep') {
         console.log('[DeepScan] 3/12: FFT frequency analysis...');
-        const frequencyResult = await runDetectorSafe('FFT Analysis',
-            () => analyzeFrequencyDomain(pixels, width, height),
-            5000 // 5 second timeout for FFT
-        );
-        addResults(frequencyResult);
+        // Only run FFT on reasonably sized images (max 512x512)
+        if (width <= 512 && height <= 512) {
+            const frequencyResult = await runDetectorSafe('FFT Analysis',
+                () => analyzeFrequencyDomain(pixels, width, height),
+                3000 // 3 second timeout for FFT
+            );
+            addResults(frequencyResult);
+        } else {
+            console.log('[DeepScan] Image too large for FFT, skipping to prevent freeze');
+        }
         await yieldToMain();
     }
 
