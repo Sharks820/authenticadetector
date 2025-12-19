@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AuthenticaDetector - Auto Fix Database</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; background: #1a1a2e; color: #eee; }
+        h1 { color: #00d4aa; }
+        .status { padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .pending { background: #2d2d44; border-left: 4px solid #ffa500; }
+        .success { background: #1a3d1a; border-left: 4px solid #00ff00; }
+        .error { background: #3d1a1a; border-left: 4px solid #ff0000; }
+        .running { background: #1a2d3d; border-left: 4px solid #00aaff; }
+        button { background: #00d4aa; color: #000; border: none; padding: 15px 30px; font-size: 16px; border-radius: 8px; cursor: pointer; margin: 10px 5px; }
+        button:hover { background: #00ff88; }
+        button:disabled { background: #666; cursor: not-allowed; }
+        pre { background: #0d0d1a; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 12px; }
+        .sql-box { background: #0d0d1a; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .copy-btn { background: #6366f1; font-size: 12px; padding: 8px 15px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 AuthenticaDetector Database Auto-Fix</h1>
+
+    <div id="status-container">
+        <div class="status pending" id="status-badges">⏳ Fix 1: Badge definitions RLS policy - Pending</div>
+        <div class="status pending" id="status-leaderboard">⏳ Fix 2: Leaderboard view permissions - Pending</div>
+        <div class="status pending" id="status-columns">⏳ Fix 3: Submissions table columns - Pending</div>
+    </div>
+
+    <button id="runBtn" onclick="runAllFixes()">🚀 Run All Fixes Automatically</button>
+    <button onclick="testConnection()">🔍 Test Connection</button>
+    <button onclick="verifyFixes()">✅ Verify Fixes</button>
+
+    <div id="output"></div>
+
+    <hr style="margin: 40px 0; border-color: #333;">
+
+    <h2>📋 Manual SQL (Copy if auto-fix fails)</h2>
+    <p>If automatic fix doesn't work, copy this SQL and paste it into Supabase SQL Editor:</p>
+    <button class="copy-btn" onclick="copySQL()">📋 Copy SQL to Clipboard</button>
+    <button class="copy-btn" onclick="window.open('https://supabase.com/dashboard/project/vrvoyxxdlcpysthzjbeu/sql/new', '_blank')">🔗 Open Supabase SQL Editor</button>
+
+    <div class="sql-box">
+        <pre id="sql-code">-- =====================================================
+-- SUPABASE SQL FIXES - COPY AND PASTE INTO SQL EDITOR
+-- =====================================================
+
+-- Fix 1: Allow public read access to badge_definitions
+DROP POLICY IF EXISTS "Allow public read access to badges" ON badge_definitions;
+CREATE POLICY "Allow public read access to badges"
+    ON badge_definitions
+    FOR SELECT
+    USING (true);
+
+-- Fix 2: Grant SELECT on all leaderboard views to anonymous users
+GRANT SELECT ON public_leaderboard TO anon;
+GRANT SELECT ON truth_hunters_leaderboard TO anon;
+GRANT SELECT ON squad_leaderboard TO anon;
+GRANT SELECT ON leaderboard TO anon;
+
+-- Fix 3: Add missing columns to submissions table
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'submissions' AND column_name = 'media_type'
+    ) THEN
+        ALTER TABLE submissions ADD COLUMN media_type TEXT DEFAULT 'image';
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'submissions' AND column_name = 'thumbnail_url'
+    ) THEN
+        ALTER TABLE submissions ADD COLUMN thumbnail_url TEXT;
+    END IF;
+END $$;
+
+-- Verify: This should return badge count
+SELECT 'Badges accessible' as status, count(*) as count FROM badge_definitions;</pre>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://vrvoyxxdlcpysthzjbeu.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZydm95eHhkbGNweXN0aHpqYmV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5ODcyMjUsImV4cCI6MjA4MTU2MzIyNX0.zwakHpqJY4moTqDyggoEx01CIo76gzFIgjtaPcamHkg';
+        const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZydm95eHhkbGNweXN0aHpqYmV1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NTk4NzIyNSwiZXhwIjoyMDgxNTYzMjI1fQ.bix9YCLnQPFWxbfeAMjzubKfl6-LcRbtI8KdgRNhBYg';
+
+        const supabaseAnon = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseService = supabase.createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+        function log(msg, type = 'info') {
+            const output = document.getElementById('output');
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.innerHTML = msg;
+            output.appendChild(div);
+            console.log(msg);
+        }
+
+        function updateStatus(id, msg, type) {
+            const el = document.getElementById(id);
+            el.className = `status ${type}`;
+            el.innerHTML = msg;
+        }
+
+        async function testConnection() {
+            log('Testing Supabase connection...', 'running');
+
+            try {
+                // Test with service role (should work)
+                const { data: serviceData, error: serviceError } = await supabaseService
+                    .from('badge_definitions')
+                    .select('count')
+                    .limit(1);
+
+                if (serviceError) {
+                    log(`Service role error: ${serviceError.message}`, 'error');
+                } else {
+                    log(`✅ Service role connected! Can see badge_definitions.`, 'success');
+                }
+
+                // Test with anon (this is what we're trying to fix)
+                const { data: anonData, error: anonError } = await supabaseAnon
+                    .from('badge_definitions')
+                    .select('id, name')
+                    .limit(3);
+
+                if (anonError) {
+                    log(`❌ Anon access blocked (expected before fix): ${anonError.message}`, 'pending');
+                } else if (anonData && anonData.length > 0) {
+                    log(`✅ Anon access working! Found ${anonData.length} badges.`, 'success');
+                } else {
+                    log(`⚠️ Anon query returned empty - RLS may be blocking.`, 'pending');
+                }
+
+            } catch (e) {
+                log(`Connection error: ${e.message}`, 'error');
+            }
+        }
+
+        async function runAllFixes() {
+            const btn = document.getElementById('runBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Running fixes...';
+
+            log('<h3>🔧 Starting automatic fixes...</h3>', 'running');
+            log('<p><strong>Note:</strong> SQL DDL commands (CREATE POLICY, GRANT, ALTER TABLE) cannot be executed via the Supabase REST API. You must run these in the SQL Editor.</p>', 'pending');
+
+            // The REST API doesn't support DDL operations
+            // But we can verify current state and provide guidance
+
+            updateStatus('status-badges', '⚠️ Fix 1: Requires SQL Editor - RLS policies cannot be modified via API', 'pending');
+            updateStatus('status-leaderboard', '⚠️ Fix 2: Requires SQL Editor - GRANT cannot be executed via API', 'pending');
+            updateStatus('status-columns', '⚠️ Fix 3: Requires SQL Editor - ALTER TABLE cannot be executed via API', 'pending');
+
+            log(`
+                <h3>📋 Action Required</h3>
+                <p>The Supabase REST API does not support DDL (Data Definition Language) operations like:</p>
+                <ul>
+                    <li>CREATE/DROP POLICY</li>
+                    <li>GRANT/REVOKE</li>
+                    <li>ALTER TABLE</li>
+                </ul>
+                <p><strong>Please click the button below to open the SQL Editor and paste the SQL:</strong></p>
+                <button onclick="window.open('https://supabase.com/dashboard/project/vrvoyxxdlcpysthzjbeu/sql/new', '_blank')" style="background:#6366f1">
+                    🔗 Open Supabase SQL Editor
+                </button>
+                <button onclick="copySQL()" style="background:#00d4aa;margin-left:10px">
+                    📋 Copy SQL to Clipboard
+                </button>
+            `, 'pending');
+
+            btn.disabled = false;
+            btn.textContent = '🚀 Run All Fixes Automatically';
+        }
+
+        async function verifyFixes() {
+            log('<h3>✅ Verifying fixes...</h3>', 'running');
+
+            // Test badge_definitions with anon
+            const { data: badges, error: badgeErr } = await supabaseAnon
+                .from('badge_definitions')
+                .select('id, name')
+                .limit(5);
+
+            if (badgeErr) {
+                log(`❌ badge_definitions: ${badgeErr.message}`, 'error');
+                updateStatus('status-badges', '❌ Fix 1: NOT WORKING - ' + badgeErr.message, 'error');
+            } else if (badges && badges.length > 0) {
+                log(`✅ badge_definitions: Accessible! Found ${badges.length} badges.`, 'success');
+                updateStatus('status-badges', '✅ Fix 1: WORKING - Found ' + badges.length + ' badges', 'success');
+            } else {
+                log(`⚠️ badge_definitions: Empty result (may need data)`, 'pending');
+                updateStatus('status-badges', '⚠️ Fix 1: Query returned empty', 'pending');
+            }
+
+            // Test leaderboard views
+            const views = ['public_leaderboard', 'leaderboard', 'truth_hunters_leaderboard'];
+            for (const view of views) {
+                const { data, error } = await supabaseAnon.from(view).select('*').limit(1);
+                if (error) {
+                    log(`❌ ${view}: ${error.message}`, 'error');
+                } else {
+                    log(`✅ ${view}: Accessible!`, 'success');
+                }
+            }
+
+            // Test submissions columns
+            const { data: sub, error: subErr } = await supabaseService
+                .from('submissions')
+                .select('media_type, thumbnail_url')
+                .limit(1);
+
+            if (subErr && subErr.message.includes('column')) {
+                log(`❌ submissions columns: Missing - ${subErr.message}`, 'error');
+                updateStatus('status-columns', '❌ Fix 3: Columns missing', 'error');
+            } else {
+                log(`✅ submissions: media_type and thumbnail_url columns exist`, 'success');
+                updateStatus('status-columns', '✅ Fix 3: Columns exist', 'success');
+            }
+        }
+
+        function copySQL() {
+            const sql = document.getElementById('sql-code').textContent;
+            navigator.clipboard.writeText(sql).then(() => {
+                alert('SQL copied to clipboard! Now paste it in the Supabase SQL Editor.');
+            }).catch(err => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = sql;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('SQL copied to clipboard! Now paste it in the Supabase SQL Editor.');
+            });
+        }
+
+        // Auto-test on load
+        window.onload = () => {
+            log('🔍 Auto-testing connection on page load...', 'running');
+            setTimeout(testConnection, 500);
+        };
+    </script>
+</body>
+</html>

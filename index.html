@@ -283,6 +283,231 @@
             50% { transform: translateY(-10px); }
         }
 
+        /* ===== TRUTH CANNON GAME ===== */
+        .truth-cannon-game {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #0a0e1a 0%, #1a1f35 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-header {
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .game-close-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-stats-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .game-stat {
+            text-align: center;
+        }
+
+        .game-stat-label {
+            font-size: 10px;
+            color: var(--text3);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .game-stat-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 2px;
+        }
+
+        .credibility-bar-container {
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .credibility-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text2);
+            margin-bottom: 6px;
+        }
+
+        .credibility-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .credibility-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success) 0%, var(--primary) 100%);
+            transition: width 0.3s;
+        }
+
+        .credibility-fill[style*="width:100%"] {
+            background: linear-gradient(90deg, #00ff88 0%, var(--success) 100%);
+        }
+
+        .credibility-fill[style*="width:0%"],
+        .credibility-fill[style*="width:1"],
+        .credibility-fill[style*="width:2"],
+        .credibility-fill[style*="width:3"] {
+            background: linear-gradient(90deg, #ff0044 0%, var(--danger) 100%);
+        }
+
+        #gameCanvas {
+            flex: 1;
+            width: 100%;
+            display: block;
+            background: transparent;
+        }
+
+        .aim-overlay {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+        }
+
+        .aim-power-bar {
+            height: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 2px solid var(--primary);
+        }
+
+        .aim-power-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success) 0%, var(--warning) 50%, var(--danger) 100%);
+            transition: width 0.05s linear;
+        }
+
+        /* Game Over Screen */
+        .game-over-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .game-over-content {
+            text-align: center;
+            padding: 32px;
+            max-width: 400px;
+        }
+
+        .game-over-content h1 {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 24px;
+            color: var(--primary);
+            text-shadow: 0 0 20px rgba(26, 188, 156, 0.5);
+        }
+
+        .game-over-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .game-over-stat {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        .game-over-stat-label {
+            font-size: 11px;
+            color: var(--text3);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .game-over-stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .game-over-rewards {
+            background: linear-gradient(135deg, rgba(26, 188, 156, 0.1) 0%, rgba(142, 68, 173, 0.1) 100%);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            border: 2px solid var(--primary);
+        }
+
+        .reward-earned {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .game-over-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .game-retry-btn {
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(26, 188, 156, 0.4);
+        }
+
+        .game-quit-btn {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text2);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
         /* UPLOAD SECTION */
         .upload-section{padding:12px 16px}
         .upload-hero{text-align:center;margin-bottom:12px}
@@ -2260,7 +2485,10 @@
 
             <!-- CTA -->
             <div class="outbreak-ctas">
-                <button class="cta-btn" onclick="openView('huntView')">
+                <button class="cta-btn" onclick="startTruthCannon()" style="background:linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);color:#000;font-size:18px;font-weight:800;box-shadow:0 6px 20px rgba(26,188,156,0.4);animation:pulse 2s ease-in-out infinite">
+                    🎮 PLAY TRUTH CANNON
+                </button>
+                <button class="cta-btn-secondary" onclick="openView('huntView')">
                     🎯 Hunt Submissions
                 </button>
                 <button class="cta-btn-secondary" onclick="openView('verifyView')">
@@ -2280,6 +2508,84 @@
             <h3>📜 Past Outbreaks</h3>
         </div>
         <div id="pastOutbreaks"></div>
+    </div>
+</div>
+
+<!-- TRUTH CANNON GAME (Fullscreen Overlay) -->
+<div class="truth-cannon-game" id="truthCannonGame" style="display:none">
+    <!-- Game Header -->
+    <div class="game-header">
+        <button class="game-close-btn" onclick="closeTruthCannon()">✕</button>
+        <div class="game-stats-row">
+            <div class="game-stat">
+                <div class="game-stat-label">WAVE</div>
+                <div class="game-stat-value" id="gameWave">1</div>
+            </div>
+            <div class="game-stat">
+                <div class="game-stat-label">SCORE</div>
+                <div class="game-stat-value" id="gameScore">0</div>
+            </div>
+            <div class="game-stat">
+                <div class="game-stat-label">COMBO</div>
+                <div class="game-stat-value" id="gameCombo">x1</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Credibility Bar -->
+    <div class="credibility-bar-container">
+        <div class="credibility-label">
+            <span>CREDIBILITY</span>
+            <span id="credibilityPercent">100%</span>
+        </div>
+        <div class="credibility-bar">
+            <div class="credibility-fill" id="credibilityFill" style="width:100%"></div>
+        </div>
+    </div>
+
+    <!-- Game Canvas -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Touch Control Overlay (for aim trajectory) -->
+    <div class="aim-overlay" id="aimOverlay" style="display:none">
+        <div class="aim-power-bar">
+            <div class="aim-power-fill" id="aimPowerFill" style="width:0%"></div>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div class="game-over-screen" id="gameOverScreen" style="display:none">
+        <div class="game-over-content">
+            <h1>OUTBREAK CONTAINED</h1>
+            <div class="game-over-stats">
+                <div class="game-over-stat">
+                    <div class="game-over-stat-label">Final Wave</div>
+                    <div class="game-over-stat-value" id="finalWave">--</div>
+                </div>
+                <div class="game-over-stat">
+                    <div class="game-over-stat-label">Score</div>
+                    <div class="game-over-stat-value" id="finalScore">--</div>
+                </div>
+                <div class="game-over-stat">
+                    <div class="game-over-stat-label">Fakes Destroyed</div>
+                    <div class="game-over-stat-value" id="finalFakes">--</div>
+                </div>
+            </div>
+            <div class="game-over-rewards">
+                <div class="reward-earned">
+                    <span style="font-size:32px">🪙</span>
+                    <span id="coinsEarned" style="font-size:32px;font-weight:700">+0</span>
+                </div>
+            </div>
+            <div class="game-over-buttons">
+                <button class="game-retry-btn" onclick="retryTruthCannon()">
+                    🔄 PLAY AGAIN
+                </button>
+                <button class="game-quit-btn" onclick="closeTruthCannon()">
+                    ← Back to Outbreaks
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -8320,6 +8626,588 @@ async function initTruthHunters() {
         await loadUserProgression();
         await loadActiveOutbreak();
     }
+}
+
+// ============================================================
+// TRUTH CANNON - PHYSICS GAME ENGINE
+// ============================================================
+
+let gameState = {
+    running: false,
+    wave: 1,
+    score: 0,
+    combo: 1,
+    credibility: 100,
+    fakesDestroyed: 0,
+    cannonX: 0,
+    cannonY: 0,
+    isPulling: false,
+    pullX: 0,
+    pullY: 0,
+    truthBomb: null,
+    bubbles: [],
+    particles: [],
+    bubbleSpawnTimer: 0,
+    waveTimer: 0,
+    lastTime: 0
+};
+
+const GAME_CONFIG = {
+    GRAVITY: 0.3,
+    BOUNCE_DAMPENING: 0.7,
+    MAX_PULL: 120,
+    BUBBLE_RADIUS: 30,
+    BOMB_RADIUS: 12,
+    BUBBLE_SPEED_BASE: 0.5,
+    BUBBLE_SPAWN_INTERVAL: 2000,
+    CREDIBILITY_LOSS_REAL_HIT: 20,
+    CREDIBILITY_LOSS_FAKE_REACH_BOTTOM: 10,
+    POINTS_PER_FAKE: 100
+};
+
+class TruthBomb {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = 0;
+        this.vy = 0;
+        this.radius = GAME_CONFIG.BOMB_RADIUS;
+        this.active = true;
+    }
+
+    launch(power, angle) {
+        this.vx = Math.cos(angle) * power;
+        this.vy = Math.sin(angle) * power;
+    }
+
+    update(canvas) {
+        if (!this.active) return;
+
+        this.vy += GAME_CONFIG.GRAVITY;
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // Wall bounces
+        if (this.x < this.radius || this.x > canvas.width - this.radius) {
+            this.vx *= -GAME_CONFIG.BOUNCE_DAMPENING;
+            this.x = Math.max(this.radius, Math.min(canvas.width - this.radius, this.x));
+        }
+
+        // Deactivate if off screen
+        if (this.y > canvas.height + 50) {
+            this.active = false;
+        }
+    }
+
+    draw(ctx) {
+        if (!this.active) return;
+
+        // Glow effect
+        const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius * 2);
+        gradient.addColorStop(0, 'rgba(26, 188, 156, 0.8)');
+        gradient.addColorStop(1, 'rgba(26, 188, 156, 0)');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius * 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Core
+        ctx.fillStyle = '#1abc9c';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Highlight
+        ctx.fillStyle = '#6ef4d0';
+        ctx.beginPath();
+        ctx.arc(this.x - 4, this.y - 4, 4, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+class Bubble {
+    constructor(x, y, isFake) {
+        this.x = x;
+        this.y = y;
+        this.vy = GAME_CONFIG.BUBBLE_SPEED_BASE * (0.8 + Math.random() * 0.4);
+        this.radius = GAME_CONFIG.BUBBLE_RADIUS;
+        this.isFake = isFake;
+        this.active = true;
+        this.wobble = Math.random() * Math.PI * 2;
+        this.wobbleSpeed = 0.05 + Math.random() * 0.05;
+    }
+
+    update(canvas) {
+        if (!this.active) return;
+
+        this.y += this.vy * (1 + gameState.wave * 0.1); // Speed increases with wave
+        this.wobble += this.wobbleSpeed;
+        this.x += Math.sin(this.wobble) * 0.5;
+
+        // Reached bottom - game over if fake
+        if (this.y > canvas.height - this.radius) {
+            this.active = false;
+            if (this.isFake) {
+                loseCredibility(GAME_CONFIG.CREDIBILITY_LOSS_FAKE_REACH_BOTTOM);
+            }
+        }
+    }
+
+    draw(ctx) {
+        if (!this.active) return;
+
+        // Glow
+        const glowColor = this.isFake ? 'rgba(255, 68, 120, 0.3)' : 'rgba(68, 255, 120, 0.3)';
+        const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius * 1.5);
+        gradient.addColorStop(0, glowColor);
+        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius * 1.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Bubble body
+        ctx.fillStyle = this.isFake ? 'rgba(255, 68, 120, 0.6)' : 'rgba(68, 255, 120, 0.6)';
+        ctx.strokeStyle = this.isFake ? '#ff4478' : '#44ff78';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Icon
+        ctx.fillStyle = '#fff';
+        ctx.font = '24px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(this.isFake ? '🤖' : '📷', this.x, this.y);
+
+        // Glitchy effect for fakes
+        if (this.isFake && Math.random() > 0.9) {
+            ctx.fillStyle = 'rgba(255, 0, 100, 0.3)';
+            ctx.fillRect(this.x - this.radius, this.y - 2, this.radius * 2, 4);
+        }
+    }
+}
+
+class Particle {
+    constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 8;
+        this.vy = (Math.random() - 0.5) * 8 - 2;
+        this.life = 1.0;
+        this.color = color;
+        this.size = 3 + Math.random() * 5;
+    }
+
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += 0.2; // Gravity
+        this.life -= 0.02;
+    }
+
+    draw(ctx) {
+        ctx.globalAlpha = this.life;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+    }
+}
+
+window.startTruthCannon = function() {
+    console.log('[TruthCannon] Starting game...');
+
+    const gameContainer = $('truthCannonGame');
+    const canvas = $('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Setup canvas size
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight - 160; // Account for UI
+
+    // Reset game state
+    gameState = {
+        running: true,
+        wave: 1,
+        score: 0,
+        combo: 1,
+        credibility: 100,
+        fakesDestroyed: 0,
+        cannonX: canvas.width / 2,
+        cannonY: canvas.height - 40,
+        isPulling: false,
+        pullX: canvas.width / 2,
+        pullY: canvas.height - 40,
+        truthBomb: null,
+        bubbles: [],
+        particles: [],
+        bubbleSpawnTimer: 0,
+        waveTimer: 0,
+        lastTime: Date.now()
+    };
+
+    // Show game
+    gameContainer.style.display = 'flex';
+    $('gameOverScreen').style.display = 'none';
+    updateGameUI();
+
+    // Touch/Mouse controls
+    let touchId = null;
+
+    canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const touch = e.changedTouches[0];
+        touchId = touch.identifier;
+        startPull(touch.clientX, touch.clientY);
+    });
+
+    canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        const touch = Array.from(e.changedTouches).find(t => t.identifier === touchId);
+        if (touch) updatePull(touch.clientX, touch.clientY);
+    });
+
+    canvas.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        const touch = Array.from(e.changedTouches).find(t => t.identifier === touchId);
+        if (touch) {
+            releasePull();
+            touchId = null;
+        }
+    });
+
+    canvas.addEventListener('mousedown', (e) => {
+        startPull(e.clientX, e.clientY);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (gameState.isPulling) updatePull(e.clientX, e.clientY);
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        releasePull();
+    });
+
+    // Start game loop
+    requestAnimationFrame(gameLoop);
+};
+
+function startPull(clientX, clientY) {
+    if (!gameState.running || gameState.truthBomb) return;
+
+    const canvas = $('gameCanvas');
+    const rect = canvas.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    // Only start pull if near cannon
+    const dx = x - gameState.cannonX;
+    const dy = y - gameState.cannonY;
+    if (Math.sqrt(dx * dx + dy * dy) < 60) {
+        gameState.isPulling = true;
+        gameState.pullX = x;
+        gameState.pullY = y;
+    }
+}
+
+function updatePull(clientX, clientY) {
+    if (!gameState.isPulling) return;
+
+    const canvas = $('gameCanvas');
+    const rect = canvas.getBoundingClientRect();
+    let x = clientX - rect.left;
+    let y = clientY - rect.top;
+
+    // Constrain pull distance
+    const dx = gameState.cannonX - x;
+    const dy = gameState.cannonY - y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance > GAME_CONFIG.MAX_PULL) {
+        const ratio = GAME_CONFIG.MAX_PULL / distance;
+        x = gameState.cannonX - dx * ratio;
+        y = gameState.cannonY - dy * ratio;
+    }
+
+    gameState.pullX = x;
+    gameState.pullY = y;
+}
+
+function releasePull() {
+    if (!gameState.isPulling || gameState.truthBomb) return;
+
+    gameState.isPulling = false;
+
+    const dx = gameState.cannonX - gameState.pullX;
+    const dy = gameState.cannonY - gameState.pullY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance > 20) {
+        const power = Math.min(distance / 8, 15);
+        const angle = Math.atan2(dy, dx);
+
+        gameState.truthBomb = new TruthBomb(gameState.cannonX, gameState.cannonY);
+        gameState.truthBomb.launch(power, angle);
+
+        // Haptic feedback
+        if (navigator.vibrate) navigator.vibrate(50);
+    }
+}
+
+function gameLoop() {
+    if (!gameState.running) return;
+
+    const canvas = $('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const now = Date.now();
+    const deltaTime = now - gameState.lastTime;
+    gameState.lastTime = now;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Update game state
+    updateBubbles(canvas, deltaTime);
+    updateTruthBomb(canvas);
+    updateParticles();
+    checkCollisions();
+
+    // Draw everything
+    drawBubbles(ctx);
+    drawTruthBomb(ctx);
+    drawCannon(ctx);
+    drawTrajectory(ctx);
+    drawParticles(ctx);
+
+    requestAnimationFrame(gameLoop);
+}
+
+function updateBubbles(canvas, deltaTime) {
+    gameState.bubbleSpawnTimer += deltaTime;
+
+    // Spawn new bubbles
+    const spawnInterval = Math.max(1000, GAME_CONFIG.BUBBLE_SPAWN_INTERVAL - gameState.wave * 100);
+    if (gameState.bubbleSpawnTimer > spawnInterval) {
+        gameState.bubbleSpawnTimer = 0;
+
+        const x = GAME_CONFIG.BUBBLE_RADIUS + Math.random() * (canvas.width - GAME_CONFIG.BUBBLE_RADIUS * 2);
+        const isFake = Math.random() < (0.3 + gameState.wave * 0.05); // More fakes on higher waves
+
+        gameState.bubbles.push(new Bubble(x, -GAME_CONFIG.BUBBLE_RADIUS, isFake));
+    }
+
+    // Update all bubbles
+    gameState.bubbles.forEach(bubble => bubble.update(canvas));
+
+    // Remove inactive bubbles
+    gameState.bubbles = gameState.bubbles.filter(b => b.active);
+}
+
+function updateTruthBomb(canvas) {
+    if (gameState.truthBomb) {
+        gameState.truthBomb.update(canvas);
+        if (!gameState.truthBomb.active) {
+            gameState.truthBomb = null;
+        }
+    }
+}
+
+function updateParticles() {
+    gameState.particles.forEach(p => p.update());
+    gameState.particles = gameState.particles.filter(p => p.life > 0);
+}
+
+function checkCollisions() {
+    if (!gameState.truthBomb || !gameState.truthBomb.active) return;
+
+    const bomb = gameState.truthBomb;
+
+    for (let i = gameState.bubbles.length - 1; i >= 0; i--) {
+        const bubble = gameState.bubbles[i];
+        if (!bubble.active) continue;
+
+        const dx = bomb.x - bubble.x;
+        const dy = bomb.y - bubble.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < bomb.radius + bubble.radius) {
+            // HIT!
+            bubble.active = false;
+            bomb.active = false;
+
+            if (bubble.isFake) {
+                // Destroyed a fake - GOOD!
+                gameState.fakesDestroyed++;
+                gameState.score += GAME_CONFIG.POINTS_PER_FAKE * gameState.combo;
+                gameState.combo = Math.min(gameState.combo + 0.5, 5);
+                createExplosion(bubble.x, bubble.y, '#ff4478');
+
+                // Screen shake
+                if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+            } else {
+                // Hit a real image - BAD!
+                loseCredibility(GAME_CONFIG.CREDIBILITY_LOSS_REAL_HIT);
+                gameState.combo = 1;
+                createExplosion(bubble.x, bubble.y, '#44ff78');
+
+                // Sad vibration
+                if (navigator.vibrate) navigator.vibrate(100);
+            }
+
+            updateGameUI();
+            break;
+        }
+    }
+}
+
+function createExplosion(x, y, color) {
+    for (let i = 0; i < 20; i++) {
+        gameState.particles.push(new Particle(x, y, color));
+    }
+}
+
+function loseCredibility(amount) {
+    gameState.credibility = Math.max(0, gameState.credibility - amount);
+    updateGameUI();
+
+    if (gameState.credibility <= 0) {
+        gameOver();
+    }
+}
+
+function updateGameUI() {
+    $('gameWave').textContent = gameState.wave;
+    $('gameScore').textContent = gameState.score.toLocaleString();
+    $('gameCombo').textContent = `x${gameState.combo.toFixed(1)}`;
+    $('credibilityPercent').textContent = `${Math.round(gameState.credibility)}%`;
+    $('credibilityFill').style.width = `${gameState.credibility}%`;
+}
+
+function gameOver() {
+    gameState.running = false;
+
+    // Calculate coins earned
+    const coinsEarned = Math.floor(gameState.score / 100) + gameState.fakesDestroyed * 2;
+
+    // Award coins
+    if (user && userProgression) {
+        userProgression.truth_coins = (userProgression.truth_coins || 0) + coinsEarned;
+        saveUserProgression();
+        updateCoinsDisplay();
+    }
+
+    // Show game over screen
+    $('finalWave').textContent = gameState.wave;
+    $('finalScore').textContent = gameState.score.toLocaleString();
+    $('finalFakes').textContent = gameState.fakesDestroyed;
+    $('coinsEarned').textContent = `+${coinsEarned}`;
+    $('gameOverScreen').style.display = 'flex';
+}
+
+window.closeTruthCannon = function() {
+    gameState.running = false;
+    $('truthCannonGame').style.display = 'none';
+};
+
+window.retryTruthCannon = function() {
+    startTruthCannon();
+};
+
+function drawBubbles(ctx) {
+    gameState.bubbles.forEach(bubble => bubble.draw(ctx));
+}
+
+function drawTruthBomb(ctx) {
+    if (gameState.truthBomb) {
+        gameState.truthBomb.draw(ctx);
+    }
+}
+
+function drawCannon(ctx) {
+    const x = gameState.cannonX;
+    const y = gameState.cannonY;
+
+    // Cannon base
+    ctx.fillStyle = '#2c3e50';
+    ctx.beginPath();
+    ctx.arc(x, y, 20, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Cannon barrel
+    ctx.strokeStyle = '#34495e';
+    ctx.lineWidth = 12;
+    ctx.lineCap = 'round';
+
+    if (gameState.isPulling) {
+        const dx = gameState.pullX - x;
+        const dy = gameState.pullY - y;
+        const angle = Math.atan2(dy, dx);
+
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * 30, y + Math.sin(angle) * 30);
+        ctx.stroke();
+    } else {
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, y - 30);
+        ctx.stroke();
+    }
+
+    // Cannon glow
+    const gradient = ctx.createRadialGradient(x, y, 0, x, y, 30);
+    gradient.addColorStop(0, 'rgba(26, 188, 156, 0.3)');
+    gradient.addColorStop(1, 'rgba(26, 188, 156, 0)');
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(x, y, 30, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+function drawTrajectory(ctx) {
+    if (!gameState.isPulling) return;
+
+    const dx = gameState.cannonX - gameState.pullX;
+    const dy = gameState.cannonY - gameState.pullY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance < 20) return;
+
+    const power = Math.min(distance / 8, 15);
+    const angle = Math.atan2(dy, dx);
+
+    // Simulate trajectory
+    let simX = gameState.cannonX;
+    let simY = gameState.cannonY;
+    let simVx = Math.cos(angle) * power;
+    let simVy = Math.sin(angle) * power;
+
+    ctx.strokeStyle = 'rgba(26, 188, 156, 0.5)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.moveTo(simX, simY);
+
+    for (let i = 0; i < 50; i++) {
+        simVy += GAME_CONFIG.GRAVITY;
+        simX += simVx;
+        simY += simVy;
+
+        if (simY > gameState.cannonY) break;
+
+        ctx.lineTo(simX, simY);
+    }
+
+    ctx.stroke();
+    ctx.setLineDash([]);
+}
+
+function drawParticles(ctx) {
+    gameState.particles.forEach(p => p.draw(ctx));
 }
 
 init();
