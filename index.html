@@ -2699,9 +2699,49 @@ window.submitLogin = async function() {
     }
 };
 
-function showLoginError(msg) { 
-    $('loginError').textContent = msg; 
-    $('loginError').classList.add('show'); 
+function showLoginError(msg) {
+    $('loginError').textContent = msg;
+    $('loginError').classList.add('show');
+}
+
+// Award a specific badge to user
+async function awardBadge(badgeId) {
+    if (!user) return;
+
+    const badge = BADGES[badgeId];
+    if (!badge) {
+        console.warn('[Badge] Unknown badge:', badgeId);
+        return;
+    }
+
+    // Check if already unlocked
+    const unlockedBadges = JSON.parse(localStorage.getItem('unlocked_badges') || '[]');
+    if (unlockedBadges.includes(badgeId)) {
+        console.log('[Badge] Already unlocked:', badgeId);
+        return;
+    }
+
+    // Unlock the badge
+    unlockedBadges.push(badgeId);
+    localStorage.setItem('unlocked_badges', JSON.stringify(unlockedBadges));
+
+    // Show notification
+    showBadgeUnlock(badge);
+
+    // Save to Supabase if connected
+    if (!useLocalFallback && supabase) {
+        try {
+            await supabase.from('user_badges').upsert({
+                user_id: user.id,
+                badge_id: badgeId,
+                unlocked_at: new Date().toISOString()
+            });
+        } catch (e) {
+            console.error('[Badge] Failed to save to database:', e);
+        }
+    }
+
+    console.log('[Badge] Awarded:', badgeId);
 }
 
 window.continueAsGuest = () => { showView('homeView'); toast('Continuing as guest'); };
@@ -2862,23 +2902,27 @@ let huntUploadMethod = 'url'; // 'url' or 'upload'
 
 window.selectUploadMethod = function(method) {
     huntUploadMethod = method;
-    $('urlMethod').classList.toggle('active', method === 'url');
-    $('uploadMethod').classList.toggle('active', method === 'upload');
-    $('huntUrlSection').style.display = method === 'url' ? 'block' : 'none';
-    $('huntUploadSection').style.display = method === 'upload' ? 'block' : 'none';
+    // Use correct HTML element IDs
+    const urlOption = $('urlOption');
+    const uploadOption = $('uploadOption');
+    const urlSection = $('urlInputSection');
+    const uploadSection = $('uploadInputSection');
+
+    if (urlOption) urlOption.classList.toggle('active', method === 'url');
+    if (uploadOption) uploadOption.classList.toggle('active', method === 'upload');
+    if (urlSection) urlSection.style.display = method === 'url' ? 'block' : 'none';
+    if (uploadSection) uploadSection.style.display = method === 'upload' ? 'block' : 'none';
 
     // Clear the other method
     if (method === 'url') {
         huntImageFile = null;
         huntImageDataUrl = null;
-        const preview = $('huntUploadPreview');
-        if (preview) preview.innerHTML = '';
+        const preview = $('huntPreview');
+        if (preview) preview.style.display = 'none';
     } else {
         huntImageUrl = null;
         const input = $('huntUrlInput');
         if (input) input.value = '';
-        const preview = $('huntUrlPreview');
-        if (preview) preview.innerHTML = '';
     }
 
     updateHuntSubmitButton();
@@ -2886,16 +2930,23 @@ window.selectUploadMethod = function(method) {
 
 window.fetchImageFromUrl = async function() {
     const input = $('huntUrlInput');
-    const preview = $('huntUrlPreview');
-    const button = $('fetchUrlBtn');
+    const preview = $('huntPreview');
+    const previewImg = $('huntPreviewImg');
+    // Find the fetch button within the URL input section
+    const button = document.querySelector('#urlInputSection .fetch-btn');
 
-    if (!input || !preview || !button) return;
+    if (!input) return;
 
     const url = input.value.trim();
-    if (!url) return;
+    if (!url) {
+        toast('Please enter a URL');
+        return;
+    }
 
-    button.textContent = 'Loading...';
-    button.disabled = true;
+    if (button) {
+        button.textContent = 'Loading...';
+        button.disabled = true;
+    }
 
     try {
         // Try to fetch the image
@@ -2910,24 +2961,25 @@ window.fetchImageFromUrl = async function() {
         const reader = new FileReader();
         reader.onload = (e) => {
             huntImageDataUrl = e.target.result;
-            preview.innerHTML = `
-                <div class="hunt-preview-container">
-                    <img src="${e.target.result}" alt="Preview" style="max-width:100%;border-radius:12px">
-                    <button class="hunt-remove-btn" onclick="removeHuntImage()">✕</button>
-                </div>
-            `;
+            if (previewImg) previewImg.src = e.target.result;
+            if (preview) preview.style.display = 'block';
             updateHuntSubmitButton();
         };
         reader.readAsDataURL(blob);
 
-        button.textContent = '✓ Loaded';
-        button.style.background = 'var(--success)';
+        if (button) {
+            button.innerHTML = '<span class="fetch-icon">✓</span> Loaded';
+            button.style.background = 'var(--success)';
+        }
+        toast('Image loaded!');
 
     } catch (err) {
         console.error('[Hunt] Failed to fetch image:', err);
-        preview.innerHTML = `<div style="color:var(--danger);text-align:center;padding:16px">Failed to load image. Try uploading instead.</div>`;
-        button.textContent = 'Fetch Image';
-        button.disabled = false;
+        toast('Failed to load image. Try uploading instead.');
+        if (button) {
+            button.innerHTML = '<span class="fetch-icon">⬇️</span> Fetch Image';
+            button.disabled = false;
+        }
     }
 };
 
@@ -2936,7 +2988,7 @@ window.handleHuntFile = function(event) {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-        alert('Please select an image file');
+        toast('Please select an image file');
         return;
     }
 
@@ -2945,16 +2997,12 @@ window.handleHuntFile = function(event) {
     const reader = new FileReader();
     reader.onload = (e) => {
         huntImageDataUrl = e.target.result;
-        const preview = $('huntUploadPreview');
-        if (preview) {
-            preview.innerHTML = `
-                <div class="hunt-preview-container">
-                    <img src="${e.target.result}" alt="Preview" style="max-width:100%;border-radius:12px">
-                    <button class="hunt-remove-btn" onclick="removeHuntImage()">✕</button>
-                </div>
-            `;
-        }
+        const preview = $('huntPreview');
+        const previewImg = $('huntPreviewImg');
+        if (previewImg) previewImg.src = e.target.result;
+        if (preview) preview.style.display = 'block';
         updateHuntSubmitButton();
+        toast('Image loaded!');
     };
     reader.readAsDataURL(file);
 };
@@ -2964,16 +3012,18 @@ window.removeHuntImage = function() {
     huntImageFile = null;
     huntImageDataUrl = null;
 
-    const urlPreview = $('huntUrlPreview');
-    const uploadPreview = $('huntUploadPreview');
+    const preview = $('huntPreview');
+    const previewImg = $('huntPreviewImg');
     const urlInput = $('huntUrlInput');
-    const fetchBtn = $('fetchUrlBtn');
+    const fetchBtn = document.querySelector('#urlInputSection .fetch-btn');
+    const fileInput = $('huntFileInput');
 
-    if (urlPreview) urlPreview.innerHTML = '';
-    if (uploadPreview) uploadPreview.innerHTML = '';
+    if (preview) preview.style.display = 'none';
+    if (previewImg) previewImg.src = '';
     if (urlInput) urlInput.value = '';
+    if (fileInput) fileInput.value = '';
     if (fetchBtn) {
-        fetchBtn.textContent = 'Fetch Image';
+        fetchBtn.innerHTML = '<span class="fetch-icon">⬇️</span> Fetch Image';
         fetchBtn.disabled = false;
         fetchBtn.style.background = '';
     }
@@ -2986,80 +3036,120 @@ function updateHuntSubmitButton() {
     if (!button) return;
 
     const hasImage = huntImageDataUrl !== null;
-    const sourceUrl = huntUploadMethod === 'url' ? $('huntUrlInput')?.value : null;
-    const context = $('huntContext')?.value || '';
-    const claimed = $('huntClaimed')?.value || '';
+    // Use correct HTML element IDs
+    const context = $('suspicionInput')?.value?.trim() || '';
+    const claimed = $('claimInput')?.value?.trim() || '';
 
+    // Enable button only if we have image and both text fields
     button.disabled = !hasImage || !context || !claimed;
 }
 
 window.submitHunt = async function() {
     if (!user) {
-        alert('Please sign in to submit images');
+        toast('Please sign in to submit images');
+        openLogin();
         return;
     }
 
-    const sourceUrl = huntUploadMethod === 'url' ? $('huntUrlInput')?.value : null;
-    const sourcePlatform = $('huntPlatform')?.value || 'other';
-    const contextDesc = $('huntContext')?.value || '';
-    const claimedContext = $('huntClaimed')?.value || '';
+    // Use correct HTML element IDs
+    const sourceUrl = $('sourceUrlInput')?.value?.trim() || huntImageUrl || null;
+    const sourcePlatform = $('platformSelect')?.value || 'other';
+    const contextDesc = $('suspicionInput')?.value?.trim() || '';
+    const claimedContext = $('claimInput')?.value?.trim() || '';
 
     if (!huntImageDataUrl || !contextDesc || !claimedContext) {
-        alert('Please fill in all required fields');
+        toast('Please fill in all required fields');
         return;
     }
 
     const button = $('submitHuntBtn');
-    button.disabled = true;
-    button.innerHTML = '<span class="submit-icon">⏳</span>Submitting...';
+    if (button) {
+        button.disabled = true;
+        button.innerHTML = '<span class="submit-icon">⏳</span>Submitting...';
+    }
 
     try {
-        // TODO: Upload image to Supabase Storage
-        // For now, store data URL directly (not recommended for production)
-
-        // Insert submission
-        const { data, error } = await supabase
-            .from('submissions')
-            .insert({
-                submitter_id: user.id,
-                image_url: sourceUrl,
-                image_data: huntImageDataUrl, // Store base64 temporarily
+        // Check if Supabase is available
+        if (useLocalFallback || !supabase) {
+            // Store locally for offline/fallback mode
+            const localSubmissions = JSON.parse(localStorage.getItem('pending_submissions') || '[]');
+            localSubmissions.push({
+                id: Date.now(),
+                image_data: huntImageDataUrl,
                 source_url: sourceUrl,
                 source_platform: sourcePlatform,
                 context_description: contextDesc,
                 claimed_context: claimedContext,
-                status: 'voting',
-                featured: Math.random() < 0.3 // 30% chance to be featured
-            })
-            .select()
-            .single();
+                created_at: new Date().toISOString()
+            });
+            localStorage.setItem('pending_submissions', JSON.stringify(localSubmissions));
 
-        if (error) throw error;
+            // Award coins locally
+            if (userProgression) {
+                userProgression.truth_coins = (userProgression.truth_coins || 0) + 50;
+                updateCoinsDisplay();
+            }
 
-        // Award coins for submission
-        await awardCoins(50, 'Submission');
-        await addXP(25);
+            toast('Submitted locally! Will sync when online.');
+        } else {
+            // Insert submission to Supabase
+            // Note: image_data in schema is BYTEA, so we store URL reference instead
+            const { data, error } = await supabase
+                .from('submissions')
+                .insert({
+                    submitter_id: user.id,
+                    image_url: huntImageDataUrl, // Store as URL since schema has image_data as BYTEA
+                    source_url: sourceUrl,
+                    source_platform: sourcePlatform,
+                    context_description: contextDesc,
+                    claimed_context: claimedContext,
+                    status: 'voting',
+                    featured: Math.random() < 0.3 // 30% chance to be featured
+                })
+                .select()
+                .single();
+
+            if (error) throw error;
+
+            // Award coins for submission
+            await awardCoins(50, 'Submission');
+            await addXP(25);
+        }
 
         // Show success
-        button.innerHTML = '<span class="submit-icon">✅</span>Submitted! +50 🪙';
-        button.style.background = 'var(--success)';
+        if (button) {
+            button.innerHTML = '<span class="submit-icon">✅</span>Submitted! +50 🪙';
+            button.style.background = 'var(--success)';
+        }
+        toast('Image submitted for verification!');
 
         // Reset form after 2 seconds
         setTimeout(() => {
             removeHuntImage();
-            $('huntContext').value = '';
-            $('huntClaimed').value = '';
-            $('huntPlatform').value = 'twitter';
-            button.innerHTML = '<span class="submit-icon">🎯</span>Submit for Verification<span class="submit-reward">+50 🪙</span>';
-            button.style.background = '';
-            button.disabled = false;
+            const suspicionInput = $('suspicionInput');
+            const claimInput = $('claimInput');
+            const platformSelect = $('platformSelect');
+            const sourceUrlInput = $('sourceUrlInput');
+
+            if (suspicionInput) suspicionInput.value = '';
+            if (claimInput) claimInput.value = '';
+            if (platformSelect) platformSelect.value = 'twitter';
+            if (sourceUrlInput) sourceUrlInput.value = '';
+
+            if (button) {
+                button.innerHTML = '<span class="submit-icon">🎯</span>Submit for Verification<span class="submit-reward">+50 🪙</span>';
+                button.style.background = '';
+                button.disabled = true; // Disable until new image selected
+            }
         }, 2000);
 
     } catch (err) {
         console.error('[Hunt] Submission failed:', err);
-        alert('Submission failed: ' + err.message);
-        button.innerHTML = '<span class="submit-icon">🎯</span>Submit for Verification<span class="submit-reward">+50 🪙</span>';
-        button.disabled = false;
+        toast('Submission failed: ' + err.message);
+        if (button) {
+            button.innerHTML = '<span class="submit-icon">🎯</span>Submit for Verification<span class="submit-reward">+50 🪙</span>';
+            button.disabled = false;
+        }
     }
 };
 
@@ -3072,11 +3162,22 @@ async function loadHuntView() {
     // Update coins display
     updateCoinsDisplay();
 
-    // Add event listeners for input validation
-    const contextInput = $('huntContext');
-    const claimedInput = $('huntClaimed');
-    if (contextInput) contextInput.addEventListener('input', updateHuntSubmitButton);
-    if (claimedInput) claimedInput.addEventListener('input', updateHuntSubmitButton);
+    // Add event listeners for input validation - use correct HTML IDs
+    const suspicionInput = $('suspicionInput');
+    const claimInput = $('claimInput');
+
+    // Remove existing listeners to prevent duplicates
+    if (suspicionInput) {
+        suspicionInput.removeEventListener('input', updateHuntSubmitButton);
+        suspicionInput.addEventListener('input', updateHuntSubmitButton);
+    }
+    if (claimInput) {
+        claimInput.removeEventListener('input', updateHuntSubmitButton);
+        claimInput.addEventListener('input', updateHuntSubmitButton);
+    }
+
+    // Reset form state
+    removeHuntImage();
 }
 
 // ==================== VERIFY MODE ====================
@@ -3087,26 +3188,58 @@ let isSwiping = false;
 
 window.vote = async function(choice) {
     if (!user) {
-        alert('Please sign in to vote');
+        toast('Please sign in to vote');
+        openLogin();
         return;
     }
 
     if (!currentSubmission) {
         console.warn('[Verify] No current submission');
+        loadNextSubmission();
         return;
     }
 
     const voteControls = $('voteControls');
     if (voteControls) voteControls.style.display = 'none';
 
+    // Handle 'unsure' - skip this submission without voting
+    if (choice === 'unsure') {
+        toast('Skipped - try the next one!');
+        setTimeout(() => loadNextSubmission(), 500);
+        if (voteControls) voteControls.style.display = 'flex';
+        return;
+    }
+
     try {
-        // Insert vote
+        // Check if Supabase is available
+        if (useLocalFallback || !supabase) {
+            // Store vote locally
+            const localVotes = JSON.parse(localStorage.getItem('pending_votes') || '[]');
+            localVotes.push({
+                submission_id: currentSubmission.id,
+                vote: choice,
+                timestamp: Date.now()
+            });
+            localStorage.setItem('pending_votes', JSON.stringify(localVotes));
+
+            // Award coins locally
+            if (userProgression) {
+                userProgression.truth_coins = (userProgression.truth_coins || 0) + 10;
+                updateCoinsDisplay();
+            }
+
+            await showVoteFeedback(choice, 10);
+            setTimeout(() => loadNextSubmission(), 1000);
+            return;
+        }
+
+        // Insert vote to Supabase - database only accepts 'ai' or 'real'
         const { data, error } = await supabase
             .from('votes')
             .insert({
                 submission_id: currentSubmission.id,
                 user_id: user.id,
-                vote: choice,
+                vote: choice, // 'ai' or 'real' only
                 confidence: 3 // Default confidence
             })
             .select()
@@ -3114,7 +3247,7 @@ window.vote = async function(choice) {
 
         if (error) {
             if (error.code === '23505') { // Unique constraint violation
-                alert('You already voted on this submission');
+                toast('You already voted on this submission');
                 loadNextSubmission();
                 return;
             }
@@ -3134,7 +3267,7 @@ window.vote = async function(choice) {
 
     } catch (err) {
         console.error('[Verify] Vote failed:', err);
-        alert('Vote failed: ' + err.message);
+        toast('Vote failed. Please try again.');
         if (voteControls) voteControls.style.display = 'flex';
     }
 };
@@ -3622,19 +3755,239 @@ async function loadUserSquad() {
 }
 
 function renderUserSquad() {
-    // TODO: Render squad UI
+    if (!userSquad) return;
+
+    // Show squad card, hide no-squad state
+    const mySquadCard = $('mySquadCard');
+    const noSquadState = $('noSquadState');
+
+    if (mySquadCard) mySquadCard.style.display = 'block';
+    if (noSquadState) noSquadState.style.display = 'none';
+
+    // Update squad info
+    const squadAvatar = $('squadAvatar');
+    const squadName = $('squadName');
+    const squadMemberCount = $('squadMemberCount');
+    const squadRank = $('squadRank');
+    const squadPoints = $('squadPoints');
+    const squadAccuracy = $('squadAccuracy');
+    const challengeFill = $('challengeFill');
+    const challengeProgress = $('challengeProgress');
+    const challengeGoal = $('challengeGoal');
+
+    if (squadAvatar) squadAvatar.src = userSquad.avatar_url || '';
+    if (squadName) squadName.textContent = userSquad.name || 'My Squad';
+    if (squadMemberCount) squadMemberCount.textContent = `${userSquad.member_count || 1}/5 members`;
+    if (squadRank) squadRank.textContent = userSquad.squad_rank ? `#${userSquad.squad_rank}` : '--';
+    if (squadPoints) squadPoints.textContent = userSquad.total_points || 0;
+    if (squadAccuracy) squadAccuracy.textContent = userSquad.accuracy ? `${Math.round(userSquad.accuracy * 100)}%` : '--';
+
+    // Challenge progress
+    const progress = userSquad.weekly_progress || 0;
+    const goal = userSquad.weekly_goal || 100;
+    const percentage = Math.min((progress / goal) * 100, 100);
+
+    if (challengeFill) challengeFill.style.width = `${percentage}%`;
+    if (challengeProgress) challengeProgress.textContent = progress;
+    if (challengeGoal) challengeGoal.textContent = goal;
 }
 
 function renderNoSquad() {
-    // TODO: Render "no squad" state
+    // Show no-squad state, hide squad card
+    const mySquadCard = $('mySquadCard');
+    const noSquadState = $('noSquadState');
+
+    if (mySquadCard) mySquadCard.style.display = 'none';
+    if (noSquadState) noSquadState.style.display = 'block';
 }
 
 window.showCreateSquad = function() {
-    // TODO: Show create squad modal
+    if (!user) {
+        toast('Please sign in to create a squad');
+        openLogin();
+        return;
+    }
+
+    // Create modal for squad creation
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.id = 'createSquadModal';
+    modal.innerHTML = `
+        <div class="modal" style="max-width:400px;padding:24px">
+            <h3 style="margin:0 0 16px;font-size:18px">➕ Create New Squad</h3>
+            <div class="input-group" style="margin-bottom:16px">
+                <label style="font-size:12px;color:var(--text2)">Squad Name</label>
+                <input type="text" id="newSquadName" placeholder="e.g., Truth Seekers" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text)">
+            </div>
+            <div class="input-group" style="margin-bottom:24px">
+                <label style="font-size:12px;color:var(--text2)">Description (optional)</label>
+                <textarea id="newSquadDesc" placeholder="What's your squad about?" rows="2" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);resize:none"></textarea>
+            </div>
+            <button class="cta-btn" onclick="createSquad()">Create Squad</button>
+            <button class="cta-btn-secondary" onclick="closeCreateSquadModal()" style="margin-top:8px">Cancel</button>
+        </div>
+    `;
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeCreateSquadModal();
+    });
+    document.body.appendChild(modal);
+    modal.classList.add('show');
 };
 
-window.showJoinSquad = function() {
-    // TODO: Show join squad modal
+window.closeCreateSquadModal = function() {
+    const modal = $('createSquadModal');
+    if (modal) modal.remove();
+};
+
+window.createSquad = async function() {
+    const name = $('newSquadName')?.value?.trim();
+    const description = $('newSquadDesc')?.value?.trim();
+
+    if (!name) {
+        toast('Please enter a squad name');
+        return;
+    }
+
+    try {
+        if (useLocalFallback || !supabase) {
+            // Create locally
+            userSquad = {
+                id: Date.now(),
+                name,
+                description,
+                total_points: 0,
+                member_count: 1,
+                weekly_goal: 100,
+                weekly_progress: 0
+            };
+            localStorage.setItem('user_squad', JSON.stringify(userSquad));
+            toast('Squad created!');
+        } else {
+            const { data, error } = await supabase
+                .from('squads')
+                .insert({
+                    name,
+                    description,
+                    created_by: user.id
+                })
+                .select()
+                .single();
+
+            if (error) throw error;
+
+            // Add user as leader
+            await supabase.from('squad_members').insert({
+                squad_id: data.id,
+                user_id: user.id,
+                role: 'leader'
+            });
+
+            userSquad = data;
+            toast('Squad created!');
+        }
+
+        closeCreateSquadModal();
+        renderUserSquad();
+    } catch (err) {
+        console.error('[Squad] Create failed:', err);
+        toast('Failed to create squad: ' + err.message);
+    }
+};
+
+window.showJoinSquad = async function() {
+    if (!user) {
+        toast('Please sign in to join a squad');
+        openLogin();
+        return;
+    }
+
+    // Create modal for browsing squads
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.id = 'joinSquadModal';
+    modal.innerHTML = `
+        <div class="modal" style="max-width:400px;padding:24px;max-height:80vh;overflow-y:auto">
+            <h3 style="margin:0 0 16px;font-size:18px">🔍 Browse Squads</h3>
+            <div id="squadList" style="margin-bottom:16px">
+                <div style="text-align:center;padding:20px;color:var(--text2)">Loading squads...</div>
+            </div>
+            <button class="cta-btn-secondary" onclick="closeJoinSquadModal()">Cancel</button>
+        </div>
+    `;
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeJoinSquadModal();
+    });
+    document.body.appendChild(modal);
+    modal.classList.add('show');
+
+    // Load available squads
+    try {
+        if (useLocalFallback || !supabase) {
+            $('squadList').innerHTML = `
+                <div style="text-align:center;padding:20px;color:var(--text2)">
+                    No squads available yet. Why not create one?
+                </div>
+            `;
+        } else {
+            const { data, error } = await supabase
+                .from('squads')
+                .select('*')
+                .eq('is_public', true)
+                .limit(20);
+
+            if (error) throw error;
+
+            if (!data || data.length === 0) {
+                $('squadList').innerHTML = `
+                    <div style="text-align:center;padding:20px;color:var(--text2)">
+                        No squads available yet. Why not create one?
+                    </div>
+                `;
+            } else {
+                $('squadList').innerHTML = data.map(squad => `
+                    <div style="background:var(--surface);padding:12px;border-radius:12px;margin-bottom:8px;display:flex;align-items:center;gap:12px">
+                        <div style="width:48px;height:48px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:24px">👥</div>
+                        <div style="flex:1">
+                            <div style="font-weight:600">${squad.name}</div>
+                            <div style="font-size:12px;color:var(--text2)">${squad.total_points || 0} points</div>
+                        </div>
+                        <button class="cta-btn" style="padding:8px 16px;font-size:12px" onclick="joinSquad('${squad.id}')">Join</button>
+                    </div>
+                `).join('');
+            }
+        }
+    } catch (err) {
+        console.error('[Squad] Load failed:', err);
+        $('squadList').innerHTML = `<div style="color:var(--danger);padding:20px;text-align:center">Failed to load squads</div>`;
+    }
+};
+
+window.closeJoinSquadModal = function() {
+    const modal = $('joinSquadModal');
+    if (modal) modal.remove();
+};
+
+window.joinSquad = async function(squadId) {
+    try {
+        if (!useLocalFallback && supabase) {
+            const { error } = await supabase
+                .from('squad_members')
+                .insert({
+                    squad_id: squadId,
+                    user_id: user.id,
+                    role: 'member'
+                });
+
+            if (error) throw error;
+        }
+
+        toast('Joined squad!');
+        closeJoinSquadModal();
+        await loadUserSquad();
+    } catch (err) {
+        console.error('[Squad] Join failed:', err);
+        toast('Failed to join squad: ' + err.message);
+    }
 };
 
 // ==================== LEADERBOARD ====================
