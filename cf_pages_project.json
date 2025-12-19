@@ -1,0 +1,24 @@
+{
+  "name": "authenticadetector-v6",
+  "production_branch": "main",
+  "source": {
+    "type": "github",
+    "config": {
+      "owner": "Sharks820",
+      "repo_name": "authenticadetector",
+      "production_branch": "main",
+      "deployments_enabled": true,
+      "pr_comments_enabled": true,
+      "preview_deployment_setting": "all",
+      "preview_branch_includes": ["*"],
+      "preview_branch_excludes": [],
+      "production_deployments_enabled": true
+    }
+  },
+  "deployment_configs": {
+    "production": {
+      "compatibility_date": "2025-12-18",
+      "compatibility_flags": []
+    }
+  }
+}

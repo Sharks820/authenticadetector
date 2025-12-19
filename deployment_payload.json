@@ -1,0 +1,13 @@
+{
+  "branch": "master",
+  "manifest": {
+    "/index.html": "f01af01951739d419f99257d731376d970c6d6f9c85abd1df893b266a8d57656",
+    "/manifest.json": "c3b29c2903f8fd8a9400ea39d08d6b4c8fd1490d1095944edcde98148616a3a9",
+    "/sw.js": "3e604b8ef0bcf1fc8c8b64c0273a14410d189318d2c4836347641bc6f7c0f30d",
+    "/_headers": "d7aea9b61b28ce87eeae3e350927fce7361e27df9df76d5c62f3600f7ded1cc3",
+    "/_redirects": "66584af744075248a042165adbdbd6a0551fa708a85650ea1e3e777eee17080c",
+    "/icon-180.png": "8a988cc3f5f9bc0bfbff77f1e8938fc362bdb3aacfa5aa90db7fc8a306702923",
+    "/icon-192.png": "792593a1d1cde1da2faeaf3647b4ea1bd064a11b308ce891961986954412364e",
+    "/icon-512.png": "0c2630c84a8009e9ebaa974353fe14d45e93500ee498f29f810e6062145876c8"
+  }
+}

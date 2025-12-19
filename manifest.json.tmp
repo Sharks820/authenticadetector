@@ -1,0 +1,10 @@
+{
+  "/index.html": "$(sha256sum index.html | cut -d' ' -f1)",
+  "/manifest.json": "$(sha256sum manifest.json | cut -d' ' -f1)",
+  "/sw.js": "$(sha256sum sw.js | cut -d' ' -f1)",
+  "/_headers": "$(sha256sum _headers | cut -d' ' -f1)",
+  "/_redirects": "$(sha256sum _redirects | cut -d' ' -f1)",
+  "/icon-180.png": "$(sha256sum icon-180.png | cut -d' ' -f1)",
+  "/icon-192.png": "$(sha256sum icon-192.png | cut -d' ' -f1)",
+  "/icon-512.png": "$(sha256sum icon-512.png | cut -d' ' -f1)"
+}

@@ -1,0 +1,400 @@
+<!-- ========================================
+     TRUTH HUNTERS GAME VIEWS
+     The Revolutionary AI Detection Game
+     ======================================== -->
+
+<!-- HUNT MODE - Submit Suspicious Images -->
+<div class="view" id="huntView">
+    <div class="view-header">
+        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
+        <span class="view-title">🎯 Hunt Mode</span>
+        <div class="coins-display" id="headerCoins">
+            <span style="font-size:16px">🪙</span>
+            <span id="coinsCount">0</span>
+        </div>
+    </div>
+    <div class="view-body view-body-padded">
+        <!-- Active Outbreak Banner -->
+        <div class="outbreak-banner" id="activeOutbreakBanner" style="display:none">
+            <div class="outbreak-icon">⚠️</div>
+            <div class="outbreak-info">
+                <div class="outbreak-title" id="outbreakTitle">Political Deepfake Outbreak</div>
+                <div class="outbreak-timer" id="outbreakTimer">Ends in 23:45:12</div>
+            </div>
+            <div class="outbreak-multiplier">2x POINTS</div>
+        </div>
+
+        <!-- Hunt Instructions -->
+        <div class="hunt-intro">
+            <h2 style="margin:0 0 8px">🔍 Find Suspicious Images in the Wild</h2>
+            <p style="color:var(--text2);margin:0 0 20px;line-height:1.5">
+                Hunt for AI-generated images on social media, news sites, and forums.
+                Submit them for community verification and earn <strong>Truth Coins 🪙</strong>!
+            </p>
+        </div>
+
+        <!-- Submission Form -->
+        <div class="hunt-form">
+            <div class="form-section">
+                <label class="form-label">📷 Image Source</label>
+                <div class="upload-options">
+                    <button class="upload-option" id="urlOption" onclick="selectUploadMethod('url')">
+                        <div class="upload-option-icon">🔗</div>
+                        <div class="upload-option-text">Paste URL</div>
+                    </button>
+                    <button class="upload-option active" id="uploadOption" onclick="selectUploadMethod('upload')">
+                        <div class="upload-option-icon">📁</div>
+                        <div class="upload-option-text">Upload Screenshot</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- URL Input -->
+            <div class="form-section" id="urlInputSection" style="display:none">
+                <input type="url" class="hunt-input" id="huntUrlInput" placeholder="https://twitter.com/user/status/123...">
+                <button class="fetch-btn" onclick="fetchImageFromUrl()">
+                    <span class="fetch-icon">⬇️</span> Fetch Image
+                </button>
+            </div>
+
+            <!-- File Upload -->
+            <div class="form-section" id="uploadInputSection">
+                <div class="dropzone-small" id="huntDropzone">
+                    <input type="file" id="huntFileInput" accept="image/*" style="display:none" onchange="handleHuntFile(event)">
+                    <div class="dropzone-small-content" onclick="document.getElementById('huntFileInput').click()">
+                        <div class="dropzone-small-icon">📸</div>
+                        <div class="dropzone-small-text">Tap to select image</div>
+                    </div>
+                </div>
+                <div class="hunt-preview" id="huntPreview" style="display:none">
+                    <img id="huntPreviewImg" style="width:100%;border-radius:12px">
+                    <button class="preview-remove" onclick="removeHuntImage()">✕</button>
+                </div>
+            </div>
+
+            <!-- Context Fields -->
+            <div class="form-section">
+                <label class="form-label">📍 Where did you find this?</label>
+                <select class="hunt-select" id="platformSelect">
+                    <option value="">Select platform...</option>
+                    <option value="twitter">🐦 Twitter/X</option>
+                    <option value="instagram">📸 Instagram</option>
+                    <option value="facebook">👥 Facebook</option>
+                    <option value="reddit">🤖 Reddit</option>
+                    <option value="tiktok">🎵 TikTok</option>
+                    <option value="news">📰 News Site</option>
+                    <option value="other">🌐 Other</option>
+                </select>
+            </div>
+
+            <div class="form-section">
+                <label class="form-label">🔗 Source URL (optional)</label>
+                <input type="url" class="hunt-input" id="sourceUrlInput" placeholder="https://...">
+            </div>
+
+            <div class="form-section">
+                <label class="form-label">💭 Why is this suspicious?</label>
+                <textarea class="hunt-textarea" id="suspicionInput" placeholder="E.g., Hands look weird, lighting is off, unnatural shadows..." rows="3"></textarea>
+            </div>
+
+            <div class="form-section">
+                <label class="form-label">📝 What does the image claim to be?</label>
+                <input type="text" class="hunt-input" id="claimInput" placeholder="E.g., Real photo of politician at event">
+            </div>
+
+            <!-- Submit Button -->
+            <button class="submit-hunt-btn" id="submitHuntBtn" onclick="submitHunt()" disabled>
+                <span class="submit-icon">🎯</span>
+                Submit for Verification
+                <span class="submit-reward">+50 🪙</span>
+            </button>
+
+            <div class="hunt-tips">
+                <div class="tip-title">💡 Hunter Tips</div>
+                <ul class="tip-list">
+                    <li>Look for unnatural hands, teeth, or ears</li>
+                    <li>Check for inconsistent lighting or shadows</li>
+                    <li>Watch for repeated patterns in backgrounds</li>
+                    <li>Verify claims with reverse image search</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- VERIFY MODE - Vote on Submissions (THE ADDICTIVE CORE!) -->
+<div class="view" id="verifyView">
+    <div class="view-header">
+        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
+        <span class="view-title">✅ Verify Mode</span>
+        <div class="streak-display" id="streakDisplay">
+            <span>🔥</span>
+            <span id="streakCount">0</span>
+        </div>
+    </div>
+
+    <!-- Voting Stats Bar -->
+    <div class="verify-stats">
+        <div class="verify-stat">
+            <div class="verify-stat-value" id="verifyAccuracy">--</div>
+            <div class="verify-stat-label">Accuracy</div>
+        </div>
+        <div class="verify-stat">
+            <div class="verify-stat-value" id="verifyVotes">0</div>
+            <div class="verify-stat-label">Votes Today</div>
+        </div>
+        <div class="verify-stat">
+            <div class="verify-stat-value" id="verifyCoins">0 🪙</div>
+            <div class="verify-stat-label">Earned</div>
+        </div>
+    </div>
+
+    <div class="view-body" style="padding:0;overflow:hidden">
+        <!-- Card Stack -->
+        <div class="verify-container">
+            <!-- Loading State -->
+            <div class="verify-loading" id="verifyLoading">
+                <div class="loading-spinner"></div>
+                <div>Loading submissions...</div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="verify-empty" id="verifyEmpty" style="display:none">
+                <div style="font-size:60px;margin-bottom:16px">🎉</div>
+                <h3 style="margin:0 0 8px">All Caught Up!</h3>
+                <p style="color:var(--text2);margin:0">You've verified all available submissions. Check back soon!</p>
+                <button class="cta-btn" onclick="closeView()" style="margin-top:20px">
+                    🎯 Hunt for More
+                </button>
+            </div>
+
+            <!-- Card Stack (Tinder-style swipeable cards) -->
+            <div class="card-stack" id="cardStack"></div>
+
+            <!-- Vote Buttons -->
+            <div class="vote-controls" id="voteControls">
+                <button class="vote-btn vote-real" onclick="vote('real')">
+                    <div class="vote-btn-icon">✅</div>
+                    <div class="vote-btn-label">REAL</div>
+                </button>
+                <button class="vote-btn vote-unsure" onclick="vote('unsure')">
+                    <div class="vote-btn-icon">🤔</div>
+                    <div class="vote-btn-label">UNSURE</div>
+                </button>
+                <button class="vote-btn vote-ai" onclick="vote('ai')">
+                    <div class="vote-btn-icon">🤖</div>
+                    <div class="vote-btn-label">AI</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Feedback Overlay (shows after each vote) -->
+        <div class="vote-feedback" id="voteFeedback" style="display:none">
+            <div class="feedback-content">
+                <div class="feedback-icon" id="feedbackIcon"></div>
+                <div class="feedback-text" id="feedbackText"></div>
+                <div class="feedback-points" id="feedbackPoints"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SQUADS VIEW -->
+<div class="view" id="squadsView">
+    <div class="view-header">
+        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
+        <span class="view-title">👥 Squads</span>
+        <button class="icon-btn" onclick="showCreateSquad()">➕</button>
+    </div>
+    <div class="view-body view-body-padded">
+        <!-- My Squad Card -->
+        <div class="my-squad-card" id="mySquadCard" style="display:none">
+            <div class="squad-header">
+                <img class="squad-avatar" id="squadAvatar" src="" alt="">
+                <div class="squad-info">
+                    <div class="squad-name" id="squadName">Loading...</div>
+                    <div class="squad-members" id="squadMemberCount">0/5 members</div>
+                </div>
+                <button class="squad-settings-btn" onclick="showSquadSettings()">⚙️</button>
+            </div>
+
+            <!-- Weekly Challenge -->
+            <div class="weekly-challenge">
+                <div class="challenge-header">
+                    <span>🏆 Weekly Challenge</span>
+                    <span id="challengeTimer">Resets in 3d 12h</span>
+                </div>
+                <div class="challenge-progress">
+                    <div class="challenge-bar">
+                        <div class="challenge-fill" id="challengeFill" style="width:0%"></div>
+                    </div>
+                    <div class="challenge-label">
+                        <span id="challengeProgress">0</span> / <span id="challengeGoal">100</span> points
+                    </div>
+                </div>
+            </div>
+
+            <!-- Squad Members -->
+            <div class="squad-members-list" id="squadMembersList"></div>
+
+            <!-- Squad Stats -->
+            <div class="squad-stats">
+                <div class="squad-stat">
+                    <div class="squad-stat-value" id="squadRank">--</div>
+                    <div class="squad-stat-label">Global Rank</div>
+                </div>
+                <div class="squad-stat">
+                    <div class="squad-stat-value" id="squadPoints">0</div>
+                    <div class="squad-stat-label">Total Points</div>
+                </div>
+                <div class="squad-stat">
+                    <div class="squad-stat-value" id="squadAccuracy">--</div>
+                    <div class="squad-stat-label">Accuracy</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- No Squad State -->
+        <div class="no-squad" id="noSquadState">
+            <div style="font-size:60px;margin-bottom:16px">👥</div>
+            <h3 style="margin:0 0 8px">Join a Squad!</h3>
+            <p style="color:var(--text2);margin:0 0 24px;line-height:1.5">
+                Team up with 4 other Truth Hunters. Compete in weekly challenges,
+                climb the squad leaderboard, and earn exclusive rewards!
+            </p>
+            <button class="cta-btn" onclick="showJoinSquad()">
+                🔍 Browse Squads
+            </button>
+            <button class="cta-btn-secondary" onclick="showCreateSquad()">
+                ➕ Create Squad
+            </button>
+        </div>
+
+        <!-- Squad Leaderboard -->
+        <div class="section-header" style="margin-top:32px">
+            <h3>🏆 Squad Leaderboard</h3>
+        </div>
+        <div id="squadLeaderboardContent"></div>
+    </div>
+</div>
+
+<!-- OUTBREAKS VIEW -->
+<div class="view" id="outbreaksView">
+    <div class="view-header">
+        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
+        <span class="view-title">⚠️ Outbreaks</span>
+        <div style="width:44px"></div>
+    </div>
+    <div class="view-body view-body-padded">
+        <!-- Active Outbreak -->
+        <div class="outbreak-card active-outbreak" id="activeOutbreak">
+            <div class="outbreak-badge">⚡ ACTIVE NOW</div>
+            <div class="outbreak-card-header">
+                <h2 id="outbreakCardTitle">Political Deepfake Outbreak</h2>
+                <div class="outbreak-difficulty" id="outbreakDifficulty">
+                    <span>🔥</span><span>🔥</span><span>🔥</span>
+                </div>
+            </div>
+            <p class="outbreak-description" id="outbreakDescription">
+                A surge of AI-generated political figures has been detected across social media.
+                Hunt them down before they spread misinformation!
+            </p>
+
+            <!-- Timer -->
+            <div class="outbreak-timer-big">
+                <div class="timer-label">⏰ Time Remaining</div>
+                <div class="timer-display" id="outbreakTimerBig">23:45:12</div>
+            </div>
+
+            <!-- Goals -->
+            <div class="outbreak-goals">
+                <div class="outbreak-goal">
+                    <div class="goal-progress">
+                        <div class="goal-bar">
+                            <div class="goal-fill" id="submissionsGoalFill" style="width:40%"></div>
+                        </div>
+                        <div class="goal-label">
+                            <span>🎯 Submissions</span>
+                            <span><strong id="submissionsProgress">20</strong> / <span id="submissionsGoal">50</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="outbreak-goal">
+                    <div class="goal-progress">
+                        <div class="goal-bar">
+                            <div class="goal-fill" id="votesGoalFill" style="width:65%"></div>
+                        </div>
+                        <div class="goal-label">
+                            <span>✅ Verifications</span>
+                            <span><strong id="votesProgress">130</strong> / <span id="votesGoal">200</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rewards -->
+            <div class="outbreak-rewards">
+                <div class="rewards-label">🏆 Event Rewards</div>
+                <div class="reward-pills">
+                    <div class="reward-pill">2x Points Multiplier</div>
+                    <div class="reward-pill">Exclusive "Outbreak Hunter" Badge</div>
+                    <div class="reward-pill">500 🪙 Bonus</div>
+                </div>
+            </div>
+
+            <!-- Leaderboard -->
+            <div class="outbreak-leaderboard">
+                <div class="leaderboard-header">👑 Top Hunters This Outbreak</div>
+                <div id="outbreakTopHunters"></div>
+            </div>
+
+            <!-- CTA -->
+            <div class="outbreak-ctas">
+                <button class="cta-btn" onclick="openView('huntView')">
+                    🎯 Hunt Submissions
+                </button>
+                <button class="cta-btn-secondary" onclick="openView('verifyView')">
+                    ✅ Verify Images
+                </button>
+            </div>
+        </div>
+
+        <!-- Upcoming Outbreaks -->
+        <div class="section-header" style="margin-top:32px">
+            <h3>📅 Upcoming Outbreaks</h3>
+        </div>
+        <div id="upcomingOutbreaks"></div>
+
+        <!-- Past Outbreaks -->
+        <div class="section-header" style="margin-top:32px">
+            <h3>📜 Past Outbreaks</h3>
+        </div>
+        <div id="pastOutbreaks"></div>
+    </div>
+</div>
+
+<!-- Bottom Navigation for Truth Hunters -->
+<div class="game-nav" id="gameNav" style="display:none">
+    <button class="game-nav-btn" data-view="huntView" onclick="openView('huntView')">
+        <div class="game-nav-icon">🎯</div>
+        <div class="game-nav-label">Hunt</div>
+    </button>
+    <button class="game-nav-btn" data-view="verifyView" onclick="openView('verifyView')">
+        <div class="game-nav-icon">✅</div>
+        <div class="game-nav-label">Verify</div>
+        <div class="game-nav-badge" id="verifyBadge">0</div>
+    </button>
+    <button class="game-nav-btn" data-view="outbreaksView" onclick="openView('outbreaksView')">
+        <div class="game-nav-icon">⚠️</div>
+        <div class="game-nav-label">Outbreaks</div>
+        <div class="game-nav-pulse" id="outbreakPulse" style="display:none"></div>
+    </button>
+    <button class="game-nav-btn" data-view="squadsView" onclick="openView('squadsView')">
+        <div class="game-nav-icon">👥</div>
+        <div class="game-nav-label">Squad</div>
+    </button>
+    <button class="game-nav-btn" data-view="leaderboardView" onclick="openView('leaderboardView')">
+        <div class="game-nav-icon">🏆</div>
+        <div class="game-nav-label">Ranks</div>
+    </button>
+</div>
