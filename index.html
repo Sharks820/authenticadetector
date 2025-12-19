@@ -4460,8 +4460,36 @@ window.startScan = async function(mode) {
             updateFact();
         }
 
-        // Perform actual analysis
-        const result = await analyzeImage(currentDataUrl, mode);
+        // Perform actual analysis with overall timeout protection
+        console.log(`[Scan] Starting ${mode} analysis...`);
+        let result;
+
+        try {
+            // Wrap analysis in a timeout to prevent infinite hangs
+            const analysisPromise = analyzeImage(currentDataUrl, mode);
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('Analysis timeout')), mode === 'deep' ? 45000 : 15000);
+            });
+
+            result = await Promise.race([analysisPromise, timeoutPromise]);
+            console.log('[Scan] Analysis completed successfully');
+        } catch (analysisError) {
+            console.error('[Scan] Analysis error:', analysisError);
+            // Create a fallback result so we always show something
+            result = {
+                verdict: 'uncertain',
+                aiScore: 50,
+                confidence: 'low',
+                explainers: [{
+                    icon: 'INFO',
+                    text: `Analysis encountered an issue: ${analysisError.message}. Results may be incomplete.`,
+                    type: 'summary'
+                }],
+                mode,
+                timestamp: Date.now(),
+                indicatorCounts: { ai: 0, real: 0 }
+            };
+        }
 
         if (analysisAborted) {
             showUploadState();
@@ -4469,19 +4497,29 @@ window.startScan = async function(mode) {
         }
 
         currentResult = result;
+        console.log('[Scan] Displaying result...');
         displayResult(result, mode);
 
         // Save to history and update stats
-        saveToHistory(result, mode);
-        if (user) updateUserScanStats(mode, result);
+        try {
+            saveToHistory(result, mode);
+            if (user) updateUserScanStats(mode, result);
+        } catch (saveError) {
+            console.error('[Scan] Error saving results:', saveError);
+        }
 
     } catch (error) {
-        console.error('[Scan] Error:', error);
+        console.error('[Scan] Critical error:', error);
         toast('Analysis failed. Please try again.');
         showUploadState();
     } finally {
-        // Always reset scanning state
+        // Always reset scanning state and re-enable buttons
         isScanning = false;
+        console.log('[Scan] Scan complete, resetting state');
+        const quickBtn = $('quickBtn');
+        const deepBtn = $('deepBtn');
+        if (quickBtn && currentFile) quickBtn.disabled = false;
+        if (deepBtn && currentFile && user) deepBtn.disabled = false;
     }
 };
 
@@ -4584,8 +4622,49 @@ function fft2d(imageData, width, height) {
     return { magnitude, size };
 }
 
+// Helper: Run a detector with timeout and error handling
+async function runDetectorSafe(name, fn, timeoutMs = 3000) {
+    return new Promise((resolve) => {
+        const timeoutId = setTimeout(() => {
+            console.warn(`[DeepScan] ${name} timed out after ${timeoutMs}ms`);
+            resolve({ aiIndicators: [], realIndicators: [], timedOut: true });
+        }, timeoutMs);
+
+        try {
+            // Yield to event loop before running
+            setTimeout(() => {
+                try {
+                    console.log(`[DeepScan] Running ${name}...`);
+                    const startTime = performance.now();
+                    const result = fn();
+                    const elapsed = performance.now() - startTime;
+                    console.log(`[DeepScan] ${name} completed in ${elapsed.toFixed(0)}ms`);
+                    clearTimeout(timeoutId);
+                    resolve(result || { aiIndicators: [], realIndicators: [] });
+                } catch (err) {
+                    console.error(`[DeepScan] ${name} error:`, err);
+                    clearTimeout(timeoutId);
+                    resolve({ aiIndicators: [], realIndicators: [], error: err.message });
+                }
+            }, 0);
+        } catch (err) {
+            console.error(`[DeepScan] ${name} setup error:`, err);
+            clearTimeout(timeoutId);
+            resolve({ aiIndicators: [], realIndicators: [], error: err.message });
+        }
+    });
+}
+
+// Helper: Yield to event loop
+function yieldToMain() {
+    return new Promise(resolve => setTimeout(resolve, 0));
+}
+
 // Main Analysis Function - Completely Rewritten
 async function analyzeImage(dataUrl, mode) {
+    console.log(`[DeepScan] Starting ${mode} scan...`);
+    const scanStartTime = performance.now();
+
     // Create image element for analysis
     const img = new Image();
     await new Promise((resolve, reject) => {
@@ -4607,107 +4686,126 @@ async function analyzeImage(dataUrl, mode) {
     const width = canvas.width;
     const height = canvas.height;
 
+    console.log(`[DeepScan] Image loaded: ${width}x${height} pixels`);
+
     // Initialize detection indicators
     let indicators = [];
     let realIndicators = [];
+    let compressionResult = { aiIndicators: [], realIndicators: [], isHeavilyCompressed: false };
+
+    // Helper to add results
+    const addResults = (result) => {
+        if (result && result.aiIndicators) {
+            indicators.push(...result.aiIndicators);
+        }
+        if (result && result.realIndicators) {
+            realIndicators.push(...result.realIndicators);
+        }
+    };
 
     // =========================================
     // 1. METADATA & SIGNATURE DETECTION
     // =========================================
-    const metadataResult = analyzeMetadataAdvanced(currentFile, dataUrl);
-    if (metadataResult.aiIndicators.length > 0) {
-        indicators.push(...metadataResult.aiIndicators);
+    try {
+        console.log('[DeepScan] 1/12: Metadata analysis...');
+        const metadataResult = analyzeMetadataAdvanced(currentFile, dataUrl);
+        addResults(metadataResult);
+    } catch (err) {
+        console.error('[DeepScan] Metadata analysis error:', err);
     }
-    if (metadataResult.realIndicators.length > 0) {
-        realIndicators.push(...metadataResult.realIndicators);
-    }
+    await yieldToMain();
 
     // =========================================
     // 2. JPEG COMPRESSION ARTIFACT ANALYSIS
     // Proper DCT-based detection for real vs AI
     // =========================================
-    const compressionResult = analyzeJPEGCompressionProper(pixels, width, height);
-    if (compressionResult.aiIndicators.length > 0) {
-        indicators.push(...compressionResult.aiIndicators);
+    try {
+        console.log('[DeepScan] 2/12: JPEG compression analysis...');
+        compressionResult = analyzeJPEGCompressionProper(pixels, width, height);
+        addResults(compressionResult);
+    } catch (err) {
+        console.error('[DeepScan] JPEG compression analysis error:', err);
     }
-    if (compressionResult.realIndicators.length > 0) {
-        realIndicators.push(...compressionResult.realIndicators);
-    }
+    await yieldToMain();
 
     // =========================================
     // 3. FREQUENCY DOMAIN ANALYSIS (FFT)
     // Detects spectral anomalies in AI images
     // =========================================
     if (mode === 'deep') {
-        const frequencyResult = analyzeFrequencyDomain(pixels, width, height);
-        if (frequencyResult.aiIndicators.length > 0) {
-            indicators.push(...frequencyResult.aiIndicators);
-        }
-        if (frequencyResult.realIndicators.length > 0) {
-            realIndicators.push(...frequencyResult.realIndicators);
-        }
+        console.log('[DeepScan] 3/12: FFT frequency analysis...');
+        const frequencyResult = await runDetectorSafe('FFT Analysis',
+            () => analyzeFrequencyDomain(pixels, width, height),
+            5000 // 5 second timeout for FFT
+        );
+        addResults(frequencyResult);
+        await yieldToMain();
     }
 
     // =========================================
     // 4. GAN/DIFFUSION FINGERPRINT DETECTION
     // Checkerboard patterns, spectral peaks
     // =========================================
-    const fingerprintResult = analyzeGANFingerprints(pixels, width, height);
-    if (fingerprintResult.aiIndicators.length > 0) {
-        indicators.push(...fingerprintResult.aiIndicators);
+    try {
+        console.log('[DeepScan] 4/12: GAN fingerprint detection...');
+        const fingerprintResult = analyzeGANFingerprints(pixels, width, height);
+        addResults(fingerprintResult);
+    } catch (err) {
+        console.error('[DeepScan] GAN fingerprint error:', err);
     }
-    if (fingerprintResult.realIndicators.length > 0) {
-        realIndicators.push(...fingerprintResult.realIndicators);
-    }
+    await yieldToMain();
 
     // =========================================
     // 5. ERROR LEVEL ANALYSIS (ELA)
     // But with social media compression awareness
     // =========================================
-    const elaResult = analyzeErrorLevelsAware(pixels, width, height);
-    if (elaResult.aiIndicators.length > 0) {
-        indicators.push(...elaResult.aiIndicators);
+    try {
+        console.log('[DeepScan] 5/12: Error level analysis...');
+        const elaResult = analyzeErrorLevelsAware(pixels, width, height);
+        addResults(elaResult);
+    } catch (err) {
+        console.error('[DeepScan] ELA error:', err);
     }
-    if (elaResult.realIndicators.length > 0) {
-        realIndicators.push(...elaResult.realIndicators);
-    }
+    await yieldToMain();
 
     // =========================================
     // 6. STATISTICAL ANALYSIS
     // Color histograms, symmetry, noise patterns
     // =========================================
-    const statsResult = analyzeStatisticalPatterns(pixels, width, height);
-    if (statsResult.aiIndicators.length > 0) {
-        indicators.push(...statsResult.aiIndicators);
+    try {
+        console.log('[DeepScan] 6/12: Statistical analysis...');
+        const statsResult = analyzeStatisticalPatterns(pixels, width, height);
+        addResults(statsResult);
+    } catch (err) {
+        console.error('[DeepScan] Statistical analysis error:', err);
     }
-    if (statsResult.realIndicators.length > 0) {
-        realIndicators.push(...statsResult.realIndicators);
-    }
+    await yieldToMain();
 
     // =========================================
     // 7. TEXTURE AND DETAIL COHERENCE
     // AI often has inconsistent detail levels
     // =========================================
-    const textureResult = analyzeTextureCoherence(pixels, width, height);
-    if (textureResult.aiIndicators.length > 0) {
-        indicators.push(...textureResult.aiIndicators);
+    try {
+        console.log('[DeepScan] 7/12: Texture coherence analysis...');
+        const textureResult = analyzeTextureCoherence(pixels, width, height);
+        addResults(textureResult);
+    } catch (err) {
+        console.error('[DeepScan] Texture coherence error:', err);
     }
-    if (textureResult.realIndicators.length > 0) {
-        realIndicators.push(...textureResult.realIndicators);
-    }
+    await yieldToMain();
 
     // =========================================
     // 8. AI MODEL-SPECIFIC FINGERPRINTS (DEEP SCAN)
     // SDXL, DALL-E 3, Midjourney v6, Flux
     // =========================================
     if (mode === 'deep') {
-        const modelResult = analyzeModelSpecificFingerprints(pixels, width, height);
-        if (modelResult.aiIndicators.length > 0) {
-            indicators.push(...modelResult.aiIndicators);
-        }
-        if (modelResult.realIndicators.length > 0) {
-            realIndicators.push(...modelResult.realIndicators);
-        }
+        console.log('[DeepScan] 8/12: AI model fingerprint detection...');
+        const modelResult = await runDetectorSafe('Model Fingerprints',
+            () => analyzeModelSpecificFingerprints(pixels, width, height),
+            4000
+        );
+        addResults(modelResult);
+        await yieldToMain();
     }
 
     // =========================================
@@ -4715,13 +4813,13 @@ async function analyzeImage(dataUrl, mode) {
     // Eyes, skin, hands, symmetry
     // =========================================
     if (mode === 'deep') {
-        const anatomyResult = analyzeFaceAndAnatomy(pixels, width, height);
-        if (anatomyResult.aiIndicators.length > 0) {
-            indicators.push(...anatomyResult.aiIndicators);
-        }
-        if (anatomyResult.realIndicators.length > 0) {
-            realIndicators.push(...anatomyResult.realIndicators);
-        }
+        console.log('[DeepScan] 9/12: Face and anatomy analysis...');
+        const anatomyResult = await runDetectorSafe('Face/Anatomy Analysis',
+            () => analyzeFaceAndAnatomy(pixels, width, height),
+            4000
+        );
+        addResults(anatomyResult);
+        await yieldToMain();
     }
 
     // =========================================
@@ -4729,13 +4827,13 @@ async function analyzeImage(dataUrl, mode) {
     // Text artifacts, lighting, edge coherence
     // =========================================
     if (mode === 'deep') {
-        const semanticResult = analyzeSemanticInconsistencies(pixels, width, height);
-        if (semanticResult.aiIndicators.length > 0) {
-            indicators.push(...semanticResult.aiIndicators);
-        }
-        if (semanticResult.realIndicators.length > 0) {
-            realIndicators.push(...semanticResult.realIndicators);
-        }
+        console.log('[DeepScan] 10/12: Semantic inconsistency detection...');
+        const semanticResult = await runDetectorSafe('Semantic Analysis',
+            () => analyzeSemanticInconsistencies(pixels, width, height),
+            4000
+        );
+        addResults(semanticResult);
+        await yieldToMain();
     }
 
     // =========================================
@@ -4743,26 +4841,29 @@ async function analyzeImage(dataUrl, mode) {
     // Hair, fabric, background patterns
     // =========================================
     if (mode === 'deep') {
-        const advTextureResult = analyzeAdvancedTextures(pixels, width, height);
-        if (advTextureResult.aiIndicators.length > 0) {
-            indicators.push(...advTextureResult.aiIndicators);
-        }
-        if (advTextureResult.realIndicators.length > 0) {
-            realIndicators.push(...advTextureResult.realIndicators);
-        }
+        console.log('[DeepScan] 11/12: Advanced texture analysis...');
+        const advTextureResult = await runDetectorSafe('Advanced Textures',
+            () => analyzeAdvancedTextures(pixels, width, height),
+            4000
+        );
+        addResults(advTextureResult);
+        await yieldToMain();
     }
 
     // =========================================
     // 12. DEEP METADATA ANALYSIS
     // EXIF, GPS, Camera, AI tool signatures
     // =========================================
-    const deepMetaResult = analyzeDeepMetadata(currentFile, dataUrl);
-    if (deepMetaResult.aiIndicators.length > 0) {
-        indicators.push(...deepMetaResult.aiIndicators);
+    try {
+        console.log('[DeepScan] 12/12: Deep metadata analysis...');
+        const deepMetaResult = analyzeDeepMetadata(currentFile, dataUrl);
+        addResults(deepMetaResult);
+    } catch (err) {
+        console.error('[DeepScan] Deep metadata error:', err);
     }
-    if (deepMetaResult.realIndicators.length > 0) {
-        realIndicators.push(...deepMetaResult.realIndicators);
-    }
+
+    console.log(`[DeepScan] All detectors complete. AI indicators: ${indicators.length}, Real indicators: ${realIndicators.length}`);
+    await yieldToMain();
 
     // =========================================
     // ADVANCED BAYESIAN CONFIDENCE SCORING
@@ -4915,6 +5016,9 @@ async function analyzeImage(dataUrl, mode) {
         text: `${mode === 'deep' ? 'Deep' : 'Quick'} scan found ${aiIndicatorCount} AI indicator(s) and ${realIndicators.length} authenticity indicator(s) ${scanTypeInfo}`,
         type: 'summary'
     });
+
+    const totalScanTime = performance.now() - scanStartTime;
+    console.log(`[DeepScan] ${mode} scan complete! Score: ${round(aiScore)}%, Verdict: ${verdict}, Time: ${totalScanTime.toFixed(0)}ms`);
 
     return {
         verdict,
