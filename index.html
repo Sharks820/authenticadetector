@@ -190,7 +190,99 @@
             display:flex;align-items:flex-start;gap:8px;
         }
         .facts-icon{font-size:18px;flex-shrink:0}
-        
+
+        /* TRUTH HUNTERS GAME CTA - HIGHLY VISIBLE! */
+        .game-cta-card {
+            margin: 16px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(26, 188, 156, 0.1) 0%, rgba(142, 68, 173, 0.1) 100%);
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            animation: pulse 3s ease-in-out infinite;
+        }
+        .game-cta-glow {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(26, 188, 156, 0.2) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+        .game-cta-content {
+            position: relative;
+            z-index: 1;
+        }
+        .game-cta-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .game-cta-icon {
+            font-size: 48px;
+            line-height: 1;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        .game-cta-stats {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .game-cta-stat {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px 8px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .game-cta-stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .game-cta-stat-label {
+            font-size: 10px;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .game-cta-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(26, 188, 156, 0.3);
+        }
+        .game-cta-btn:active {
+            transform: scale(0.98);
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(26, 188, 156, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(26, 188, 156, 0.5); }
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
         /* UPLOAD SECTION */
         .upload-section{padding:12px 16px}
         .upload-hero{text-align:center;margin-bottom:12px}
@@ -1565,7 +1657,40 @@
                 <span id="factText">Loading...</span>
             </div>
         </div>
-        
+
+        <!-- TRUTH HUNTERS GAME CTA - HIGHLY VISIBLE! -->
+        <div class="game-cta-card" id="gameCTA" style="display:none">
+            <div class="game-cta-glow"></div>
+            <div class="game-cta-content">
+                <div class="game-cta-header">
+                    <div class="game-cta-icon">🎮</div>
+                    <div>
+                        <h2 style="margin:0;font-size:24px;font-weight:700">Truth Hunters</h2>
+                        <p style="margin:4px 0 0;color:var(--text2);font-size:14px">Hunt AI. Earn Coins. Compete.</p>
+                    </div>
+                </div>
+                <div class="game-cta-stats">
+                    <div class="game-cta-stat">
+                        <div class="game-cta-stat-value" id="userLevel">Lvl 1</div>
+                        <div class="game-cta-stat-label">Level</div>
+                    </div>
+                    <div class="game-cta-stat">
+                        <div class="game-cta-stat-value" id="userCoins">0 🪙</div>
+                        <div class="game-cta-stat-label">Coins</div>
+                    </div>
+                    <div class="game-cta-stat">
+                        <div class="game-cta-stat-value" id="userRank">#--</div>
+                        <div class="game-cta-stat-label">Rank</div>
+                    </div>
+                </div>
+                <button class="game-cta-btn" onclick="openView('huntView')">
+                    <span style="font-size:20px">🎯</span>
+                    <span style="font-weight:700">PLAY NOW</span>
+                    <span style="font-size:10px;opacity:0.8">→</span>
+                </button>
+            </div>
+        </div>
+
         <div class="upload-section">
             <div class="upload-hero">
                 <h1>Detect AI Images</h1>
@@ -3833,22 +3958,47 @@ async function saveUserProgression() {
 
 function updateProgressionUI() {
     updateCoinsDisplay();
+    updateGameCTA();
     // Update other progression displays
 }
 
 function updateCoinsDisplay() {
     const coins = userProgression?.truth_coins || 0;
-    const displays = ['coinsCount', 'headerCoins'];
+    const displays = ['coinsCount', 'headerCoins', 'userCoins'];
     displays.forEach(id => {
         const el = $(id);
         if (el) {
             if (id === 'coinsCount') {
                 el.textContent = coins;
+            } else if (id === 'userCoins') {
+                el.textContent = `${coins} 🪙`;
             } else {
                 el.innerHTML = `<span style="font-size:16px">🪙</span><span>${coins}</span>`;
             }
         }
     });
+}
+
+function updateGameCTA() {
+    const cta = $('gameCTA');
+    if (!cta || !user) return;
+
+    // Show CTA for logged in users
+    cta.style.display = 'block';
+
+    // Update level
+    const levelEl = $('userLevel');
+    if (levelEl && userProgression) {
+        levelEl.textContent = `Lvl ${userProgression.level || 1}`;
+    }
+
+    // Update coins (handled by updateCoinsDisplay)
+
+    // Update rank (TODO: fetch from leaderboard)
+    const rankEl = $('userRank');
+    if (rankEl) {
+        rankEl.textContent = '#--';  // Will be updated when leaderboard loads
+    }
 }
 
 function showLevelUpNotification(level) {
