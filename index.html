@@ -2693,7 +2693,7 @@ window.openLogin = function(isSignup = false) {
         inputs.forEach(input => {
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
-                    submitLogin();
+                    window.submitLogin();
                 }
             });
             // Clear error when user starts typing
@@ -4796,23 +4796,63 @@ async function analyzeImage(dataUrl, mode) {
         });
     }
 
-    // Social media compression penalty - reduces AI score
-    // because compression destroys many AI artifacts
-    const compressionPenalty = compressionResult.isHeavilyCompressed ? 0.6 : 1.0;
+    // =========================================
+    // SOCIAL MEDIA COMPRESSION DETECTION
+    // Real photos from Facebook/Instagram are heavily compressed
+    // This is a STRONG indicator of real photos
+    // =========================================
+    const fileSizeKB = currentFile ? currentFile.size / 1024 : 100;
+    const pixelCount = width * height;
+    const bitsPerPixel = currentFile ? (currentFile.size * 8) / pixelCount : 2;
+
+    // Social media typically compresses to 0.5-2 bits per pixel
+    // AI generators output 3-6+ bits per pixel
+    const isSocialMediaCompressed = bitsPerPixel < 2.5;
+    const isVeryCompressed = bitsPerPixel < 1.5 || fileSizeKB < 100;
+
+    // Strong compression penalty - social media photos should NOT flag as AI
+    let compressionPenalty = 1.0;
+    if (isVeryCompressed) {
+        compressionPenalty = 0.25; // Very aggressive - 75% reduction
+        realIndicators.push({
+            weight: 25,
+            confidence: 0.85,
+            reason: 'Heavy social media compression detected (typical of Facebook/Instagram)',
+            icon: 'COMPRESS'
+        });
+    } else if (isSocialMediaCompressed) {
+        compressionPenalty = 0.4; // 60% reduction
+        realIndicators.push({
+            weight: 15,
+            confidence: 0.7,
+            reason: 'Social media-level compression detected',
+            icon: 'COMPRESS'
+        });
+    } else if (compressionResult.isHeavilyCompressed) {
+        compressionPenalty = 0.5;
+    }
+
     aiPoints *= compressionPenalty;
 
     // Require minimum number of indicators for AI detection
     const minAIIndicators = mode === 'deep' ? 3 : 2;
     const aiIndicatorCount = indicators.length;
 
-    // Calculate raw weighted score
-    let rawScore = 25; // Base neutral-leaning-real
+    // Calculate raw weighted score - START LOWER at 15%
+    let rawScore = 15; // Base: assume real until proven AI
+
+    // Real indicators get BOOSTED weight
+    const realBoost = 1.5;
+    const adjustedRealPoints = realPoints * realBoost;
+
     if (aiIndicatorCount >= minAIIndicators) {
-        rawScore += Math.min(aiPoints, 65);
+        rawScore += Math.min(aiPoints, 60);
     } else if (aiIndicatorCount > 0) {
-        rawScore += Math.min(aiPoints * 0.3, 20);
+        rawScore += Math.min(aiPoints * 0.2, 15);
     }
-    rawScore -= Math.min(realPoints, 45);
+
+    // Real indicators STRONGLY reduce score
+    rawScore -= Math.min(adjustedRealPoints, 55);
     rawScore = clamp(rawScore, 0, 100);
 
     // Apply Bayesian ensemble scoring for deep scan
@@ -4959,20 +4999,28 @@ function analyzeMetadataAdvanced(file, dataUrl) {
     // AI images often have unusual size-to-dimension ratios
     // Social media compressed images are typically smaller
     const isSmallFile = size < 200000; // Under 200KB
-    const isVerySmallFile = size < 50000; // Under 50KB (heavy compression)
+    const isVerySmallFile = size < 100000; // Under 100KB (heavy compression)
+    const isTinyFile = size < 50000; // Under 50KB (very heavy compression)
 
-    if (isVerySmallFile) {
+    if (isTinyFile) {
         realIndicators.push({
-            weight: 10,
-            confidence: 0.6,
-            reason: 'Heavy compression typical of social media (artifacts may mask AI patterns)',
+            weight: 25,  // STRONGLY BOOSTED
+            confidence: 0.85,
+            reason: 'Very small file size typical of social media sharing (Facebook, Instagram, WhatsApp)',
+            icon: 'ZIP'
+        });
+    } else if (isVerySmallFile) {
+        realIndicators.push({
+            weight: 18,  // BOOSTED
+            confidence: 0.75,
+            reason: 'File size typical of social media compression',
             icon: 'ZIP'
         });
     } else if (isSmallFile) {
         realIndicators.push({
-            weight: 5,
-            confidence: 0.5,
-            reason: 'File size suggests social media compression',
+            weight: 10,
+            confidence: 0.6,
+            reason: 'Moderate file size compression detected',
             icon: 'ZIP'
         });
     }
@@ -5054,17 +5102,25 @@ function analyzeJPEGCompressionProper(pixels, width, height) {
     // High boundary variance relative to in-block = JPEG compression = real photo
     if (boundaryRatio > 1.3) {
         realIndicators.push({
-            weight: 15,
-            confidence: 0.7,
+            weight: 20,  // INCREASED weight
+            confidence: 0.8,  // INCREASED confidence
             reason: 'JPEG block artifacts detected (typical of real photos)',
             icon: 'JPEG'
         });
-        isHeavilyCompressed = boundaryRatio > 1.8;
-    } else if (boundaryRatio < 0.9) {
+        isHeavilyCompressed = boundaryRatio > 1.6; // Lower threshold
+    } else if (boundaryRatio > 1.1) {
+        // Moderate compression - still a real indicator
+        realIndicators.push({
+            weight: 10,
+            confidence: 0.6,
+            reason: 'Moderate JPEG compression detected',
+            icon: 'JPEG'
+        });
+    } else if (boundaryRatio < 0.8) {  // Made threshold stricter
         // Very smooth boundaries = possibly AI or heavily processed
         aiIndicators.push({
-            weight: 8,
-            confidence: 0.5,
+            weight: 6,   // REDUCED weight
+            confidence: 0.4,  // REDUCED confidence
             reason: 'Unusually smooth block transitions',
             icon: 'SMOOTH'
         });
@@ -5075,12 +5131,12 @@ function analyzeJPEGCompressionProper(pixels, width, height) {
         blockBoundaryVariance.reduce((a, b) => a + Math.pow(b - avgBoundary, 2), 0) / blockBoundaryVariance.length
     );
 
-    if (boundaryStdDev / avgBoundary < 0.3 && avgBoundary > 5) {
-        // Very uniform compression pattern
+    if (boundaryStdDev / avgBoundary < 0.2 && avgBoundary > 8) {  // Stricter thresholds
+        // Very uniform compression pattern - but social media also does this
         aiIndicators.push({
-            weight: 10,
-            confidence: 0.55,
-            reason: 'Uniform compression pattern (less common in real photos)',
+            weight: 5,   // REDUCED weight significantly
+            confidence: 0.35,  // REDUCED confidence
+            reason: 'Uniform compression pattern (can occur in both AI and social media)',
             icon: 'UNIFORM'
         });
     }
@@ -6887,32 +6943,32 @@ function analyzeDeepMetadata(file, dataUrl) {
         const exifResult = analyzeJPEGExif(base64Data);
         if (exifResult.hasCamera) {
             realIndicators.push({
-                weight: 20,
-                confidence: 0.85,
+                weight: 35,  // STRONGLY BOOSTED - camera = definitely real
+                confidence: 0.95,  // Very high confidence
                 reason: `Camera metadata: ${exifResult.camera}`,
                 icon: 'EXIF'
             });
         }
         if (exifResult.hasGPS) {
             realIndicators.push({
-                weight: 15,
-                confidence: 0.8,
+                weight: 30,  // STRONGLY BOOSTED - GPS = definitely real
+                confidence: 0.95,  // Very high confidence
                 reason: 'GPS coordinates present',
                 icon: 'GPS'
             });
         }
         if (exifResult.hasLens) {
             realIndicators.push({
-                weight: 15,
-                confidence: 0.8,
+                weight: 25,  // BOOSTED
+                confidence: 0.9,
                 reason: `Lens data: ${exifResult.lens}`,
                 icon: 'LENS'
             });
         }
         if (exifResult.hasValidDateTime) {
             realIndicators.push({
-                weight: 10,
-                confidence: 0.7,
+                weight: 15,  // BOOSTED
+                confidence: 0.8,
                 reason: 'Valid capture timestamp',
                 icon: 'TIME'
             });
@@ -7103,8 +7159,9 @@ function analyzePNGChunks(base64Data) {
 
 function calculateBayesianScore(indicators, realIndicators, mode) {
     // Prior probability of AI (based on general image population)
+    // LOWERED: Most images people check are real social media photos
     // For deep scan, we're more aggressive; for quick scan, more conservative
-    let priorAI = mode === 'deep' ? 0.35 : 0.25;
+    let priorAI = mode === 'deep' ? 0.20 : 0.15;
 
     // Likelihood ratios for each detector
     // How much more likely to see this indicator in AI vs real
@@ -7141,22 +7198,22 @@ function calculateBayesianScore(indicators, realIndicators, mode) {
     };
 
     const realLikelihoodRatios = {
-        'CAM': 20,
-        'EXIF': 25,
-        'GPS': 30,
-        'LENS': 20,
-        'TIME': 10,
-        'JPEG': 6,
-        'SENSOR': 8,
-        'NATURAL': 5,
-        'VARIED': 5,
-        'DETAIL': 6,
-        'DOF': 7,
-        'COMPRESS': 3,
-        'ZIP': 3,
-        'REAL': 5,
-        'LIGHT': 5,
-        'HAIR': 6
+        'CAM': 35,        // BOOSTED: Camera metadata is STRONG real indicator
+        'EXIF': 40,       // BOOSTED: EXIF data = almost certainly real
+        'GPS': 50,        // BOOSTED: GPS = definitely real
+        'LENS': 35,       // BOOSTED: Lens data = real camera
+        'TIME': 15,
+        'JPEG': 10,       // BOOSTED: JPEG compression artifacts
+        'SENSOR': 15,     // BOOSTED
+        'NATURAL': 8,
+        'VARIED': 8,
+        'DETAIL': 10,
+        'DOF': 12,
+        'COMPRESS': 25,   // BOOSTED: Social media compression = real
+        'ZIP': 20,        // BOOSTED: Small file = compressed social media
+        'REAL': 8,
+        'LIGHT': 8,
+        'HAIR': 10
     };
 
     // Calculate posterior using Naive Bayes
@@ -7214,21 +7271,35 @@ function calibrateScore(bayesianResult, rawScore, mode) {
 
     // Weighted combination (Bayesian gets more weight in deep scan)
     const bayesWeight = mode === 'deep' ? 0.6 : 0.4;
-    const combinedScore = bayesWeight * bayesianProb + (1 - bayesWeight) * weightedScore;
+    let combinedScore = bayesWeight * bayesianProb + (1 - bayesWeight) * weightedScore;
 
     // Apply sigmoid calibration to spread out the middle range
     // This ensures 50% truly means uncertain
-    const calibratedScore = sigmoidCalibrate(combinedScore);
+    let calibratedScore = sigmoidCalibrate(combinedScore);
+
+    // Apply learned adjustment from user feedback
+    const learnedAdjustment = getLearnedScoreAdjustment();
+    calibratedScore = Math.max(0.05, Math.min(0.95, calibratedScore + (learnedAdjustment / 100)));
 
     // Convert to percentage
     return Math.round(calibratedScore * 100);
 }
 
+// Get the learned score adjustment - forward declaration
+function getLearnedScoreAdjustment() {
+    try {
+        const calibration = JSON.parse(localStorage.getItem('detector_calibration') || '{}');
+        return calibration.scoreAdjustment || 0;
+    } catch (e) {
+        return 0;
+    }
+}
+
 function sigmoidCalibrate(score) {
     // Platt scaling-inspired calibration
-    // Parameters tuned to spread out the 30-70% range
-    const a = 5;  // Steepness
-    const b = 0.5; // Midpoint
+    // ADJUSTED: Lower steepness and shifted midpoint to reduce false positives
+    const a = 4;   // Lower steepness = less aggressive
+    const b = 0.55; // Shifted right = harder to get high AI scores
 
     // Transform using sigmoid
     const transformed = 1 / (1 + Math.exp(-a * (score - b)));
@@ -7353,7 +7424,7 @@ window.updateForensics = function() {
     toast(forensicsMode ? 'Forensics mode enabled' : 'Forensics mode disabled');
 };
 
-// Submit feedback
+// Submit feedback - NOW WITH LEARNING SYSTEM
 window.submitFeedback = function(type) {
     if (!currentResult) return;
 
@@ -7374,13 +7445,63 @@ window.submitFeedback = function(type) {
     feedbackHistory.push(feedback);
     setStorage('feedback_history', feedbackHistory.slice(-100));
 
-    toast(type === 'correct' ? 'Thanks for confirming!' : 'Thanks for the feedback!');
+    // =========================================
+    // LEARNING SYSTEM: Adjust calibration based on feedback
+    // =========================================
+    updateCalibrationFromFeedback(currentResult, type);
+
+    toast(type === 'correct' ? 'Thanks for confirming!' : 'Thanks! We\'ll improve our accuracy.');
 
     // Update accuracy stats if user is logged in
     if (user && !useLocalFallback && supabase) {
         // Could update accuracy stats in database here
     }
 };
+
+// Learning system - adjust calibration based on user feedback
+function updateCalibrationFromFeedback(result, feedbackType) {
+    // Load calibration data
+    let calibration = getStorage('detector_calibration', {
+        falsePositiveCount: 0,  // Times we said AI but user said wrong
+        falseNegativeCount: 0,  // Times we said real but user said wrong
+        truePositiveCount: 0,   // Times we said AI and user confirmed
+        trueNegativeCount: 0,   // Times we said real and user confirmed
+        scoreAdjustment: 0      // Running adjustment to apply to scores
+    });
+
+    const wasCalledAI = result.verdict === 'ai' || result.aiScore >= 50;
+    const wasCalledReal = result.verdict === 'real' || result.aiScore < 50;
+    const userSaysCorrect = feedbackType === 'correct';
+    const userSaysIncorrect = feedbackType === 'incorrect';
+
+    if (wasCalledAI && userSaysIncorrect) {
+        // FALSE POSITIVE - we said AI but it was real
+        calibration.falsePositiveCount++;
+        // Reduce future scores more aggressively
+        calibration.scoreAdjustment = Math.max(calibration.scoreAdjustment - 3, -25);
+        console.log('[Learning] False positive detected, adjusting scores down');
+    } else if (wasCalledReal && userSaysIncorrect) {
+        // FALSE NEGATIVE - we said real but it was AI
+        calibration.falseNegativeCount++;
+        // Increase future scores
+        calibration.scoreAdjustment = Math.min(calibration.scoreAdjustment + 2, 15);
+        console.log('[Learning] False negative detected, adjusting scores up');
+    } else if (wasCalledAI && userSaysCorrect) {
+        calibration.truePositiveCount++;
+    } else if (wasCalledReal && userSaysCorrect) {
+        calibration.trueNegativeCount++;
+    }
+
+    // Log stats
+    const total = calibration.falsePositiveCount + calibration.falseNegativeCount +
+                  calibration.truePositiveCount + calibration.trueNegativeCount;
+    const accuracy = total > 0 ?
+        ((calibration.truePositiveCount + calibration.trueNegativeCount) / total * 100).toFixed(1) : 'N/A';
+
+    console.log(`[Learning] Accuracy: ${accuracy}%, FP: ${calibration.falsePositiveCount}, FN: ${calibration.falseNegativeCount}, Adj: ${calibration.scoreAdjustment}`);
+
+    setStorage('detector_calibration', calibration);
+}
 
 // Share result
 window.shareResult = async function() {
