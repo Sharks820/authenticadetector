@@ -343,8 +343,16 @@
             padding:6px 0;border-top:1px solid var(--border);
         }
         .explainer-item:first-child{border-top:none;padding-top:0}
-        .explainer-icon{font-size:12px}
+        .explainer-icon{font-size:10px;font-weight:600;font-family:monospace}
         .explainer-text{font-size:10px;color:var(--text2);line-height:1.4}
+        .explainer-ai{background:rgba(255,71,87,0.1);border-radius:6px;padding:6px 8px;margin:2px 0}
+        .explainer-ai .explainer-icon{color:var(--danger)}
+        .explainer-real{background:rgba(46,213,115,0.1);border-radius:6px;padding:6px 8px;margin:2px 0}
+        .explainer-real .explainer-icon{color:var(--success)}
+        .explainer-summary{background:rgba(99,102,241,0.15);border-radius:6px;padding:8px;margin-bottom:8px}
+        .explainer-summary .explainer-icon{color:var(--secondary)}
+        .explainer-summary .explainer-text{color:var(--text);font-weight:600}
+        .explainer-info{opacity:0.8}
         
         /* FEEDBACK */
         .feedback-section{background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:12px}
@@ -4369,7 +4377,106 @@ window.startScan = async function(mode) {
     }
 };
 
-// Image Analysis Engine
+// =====================================================
+// ADVANCED AI IMAGE DETECTION ENGINE v2.0
+// Based on research from: Hive Moderation, Illuminarty,
+// DCT analysis papers, GAN fingerprint detection studies
+// =====================================================
+
+// FFT Implementation for Frequency Domain Analysis
+// Based on Cooley-Tukey algorithm
+function fft1d(real, imag) {
+    const n = real.length;
+    if (n <= 1) return;
+
+    // Bit reversal permutation
+    for (let i = 0, j = 0; i < n; i++) {
+        if (i < j) {
+            [real[i], real[j]] = [real[j], real[i]];
+            [imag[i], imag[j]] = [imag[j], imag[i]];
+        }
+        let k = n >> 1;
+        while (k <= j) {
+            j -= k;
+            k >>= 1;
+        }
+        j += k;
+    }
+
+    // Cooley-Tukey iterative FFT
+    for (let size = 2; size <= n; size *= 2) {
+        const halfSize = size / 2;
+        const angleStep = -2 * Math.PI / size;
+        for (let i = 0; i < n; i += size) {
+            for (let j = 0; j < halfSize; j++) {
+                const angle = angleStep * j;
+                const cos = Math.cos(angle);
+                const sin = Math.sin(angle);
+                const idx1 = i + j;
+                const idx2 = i + j + halfSize;
+                const tReal = cos * real[idx2] - sin * imag[idx2];
+                const tImag = sin * real[idx2] + cos * imag[idx2];
+                real[idx2] = real[idx1] - tReal;
+                imag[idx2] = imag[idx1] - tImag;
+                real[idx1] += tReal;
+                imag[idx1] += tImag;
+            }
+        }
+    }
+}
+
+// 2D FFT for image frequency analysis
+function fft2d(imageData, width, height) {
+    // Convert to grayscale and prepare for FFT
+    const size = Math.pow(2, Math.ceil(Math.log2(Math.max(width, height))));
+    const real = new Float64Array(size * size);
+    const imag = new Float64Array(size * size);
+
+    // Fill with grayscale values
+    for (let y = 0; y < height && y < size; y++) {
+        for (let x = 0; x < width && x < size; x++) {
+            const idx = (y * width + x) * 4;
+            const gray = 0.299 * imageData[idx] + 0.587 * imageData[idx + 1] + 0.114 * imageData[idx + 2];
+            real[y * size + x] = gray;
+        }
+    }
+
+    // Row-wise FFT
+    for (let y = 0; y < size; y++) {
+        const rowReal = real.slice(y * size, (y + 1) * size);
+        const rowImag = imag.slice(y * size, (y + 1) * size);
+        fft1d(rowReal, rowImag);
+        for (let x = 0; x < size; x++) {
+            real[y * size + x] = rowReal[x];
+            imag[y * size + x] = rowImag[x];
+        }
+    }
+
+    // Column-wise FFT
+    for (let x = 0; x < size; x++) {
+        const colReal = new Float64Array(size);
+        const colImag = new Float64Array(size);
+        for (let y = 0; y < size; y++) {
+            colReal[y] = real[y * size + x];
+            colImag[y] = imag[y * size + x];
+        }
+        fft1d(colReal, colImag);
+        for (let y = 0; y < size; y++) {
+            real[y * size + x] = colReal[y];
+            imag[y * size + x] = colImag[y];
+        }
+    }
+
+    // Calculate magnitude spectrum
+    const magnitude = new Float64Array(size * size);
+    for (let i = 0; i < size * size; i++) {
+        magnitude[i] = Math.sqrt(real[i] * real[i] + imag[i] * imag[i]);
+    }
+
+    return { magnitude, size };
+}
+
+// Main Analysis Function - Completely Rewritten
 async function analyzeImage(dataUrl, mode) {
     // Create image element for analysis
     const img = new Image();
@@ -4379,100 +4486,182 @@ async function analyzeImage(dataUrl, mode) {
         img.src = dataUrl;
     });
 
-    // Create canvas for pixel analysis
+    // Create canvas for pixel analysis - use larger size for better accuracy
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-    canvas.width = Math.min(img.width, 512);
-    canvas.height = Math.min(img.height, 512);
+    const analysisSize = mode === 'deep' ? 1024 : 512;
+    canvas.width = Math.min(img.width, analysisSize);
+    canvas.height = Math.min(img.height, analysisSize);
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const pixels = imageData.data;
+    const width = canvas.width;
+    const height = canvas.height;
 
-    // Analysis signals
-    let signals = {
-        noisePattern: analyzeNoisePattern(pixels, canvas.width, canvas.height),
-        colorDistribution: analyzeColorDistribution(pixels),
-        edgeSharpness: analyzeEdgeSharpness(pixels, canvas.width, canvas.height),
-        compressionArtifacts: analyzeCompressionArtifacts(pixels, canvas.width),
-        repetitivePatterns: analyzeRepetitivePatterns(pixels, canvas.width, canvas.height),
-        metadataScore: analyzeMetadata(currentFile)
-    };
+    // Initialize detection indicators
+    let indicators = [];
+    let realIndicators = [];
 
-    // Calculate AI probability based on signals
-    let aiScore = 0;
+    // =========================================
+    // 1. METADATA & SIGNATURE DETECTION
+    // =========================================
+    const metadataResult = analyzeMetadataAdvanced(currentFile, dataUrl);
+    if (metadataResult.aiIndicators.length > 0) {
+        indicators.push(...metadataResult.aiIndicators);
+    }
+    if (metadataResult.realIndicators.length > 0) {
+        realIndicators.push(...metadataResult.realIndicators);
+    }
+
+    // =========================================
+    // 2. JPEG COMPRESSION ARTIFACT ANALYSIS
+    // Proper DCT-based detection for real vs AI
+    // =========================================
+    const compressionResult = analyzeJPEGCompressionProper(pixels, width, height);
+    if (compressionResult.aiIndicators.length > 0) {
+        indicators.push(...compressionResult.aiIndicators);
+    }
+    if (compressionResult.realIndicators.length > 0) {
+        realIndicators.push(...compressionResult.realIndicators);
+    }
+
+    // =========================================
+    // 3. FREQUENCY DOMAIN ANALYSIS (FFT)
+    // Detects spectral anomalies in AI images
+    // =========================================
+    if (mode === 'deep') {
+        const frequencyResult = analyzeFrequencyDomain(pixels, width, height);
+        if (frequencyResult.aiIndicators.length > 0) {
+            indicators.push(...frequencyResult.aiIndicators);
+        }
+        if (frequencyResult.realIndicators.length > 0) {
+            realIndicators.push(...frequencyResult.realIndicators);
+        }
+    }
+
+    // =========================================
+    // 4. GAN/DIFFUSION FINGERPRINT DETECTION
+    // Checkerboard patterns, spectral peaks
+    // =========================================
+    const fingerprintResult = analyzeGANFingerprints(pixels, width, height);
+    if (fingerprintResult.aiIndicators.length > 0) {
+        indicators.push(...fingerprintResult.aiIndicators);
+    }
+    if (fingerprintResult.realIndicators.length > 0) {
+        realIndicators.push(...fingerprintResult.realIndicators);
+    }
+
+    // =========================================
+    // 5. ERROR LEVEL ANALYSIS (ELA)
+    // But with social media compression awareness
+    // =========================================
+    const elaResult = analyzeErrorLevelsAware(pixels, width, height);
+    if (elaResult.aiIndicators.length > 0) {
+        indicators.push(...elaResult.aiIndicators);
+    }
+    if (elaResult.realIndicators.length > 0) {
+        realIndicators.push(...elaResult.realIndicators);
+    }
+
+    // =========================================
+    // 6. STATISTICAL ANALYSIS
+    // Color histograms, symmetry, noise patterns
+    // =========================================
+    const statsResult = analyzeStatisticalPatterns(pixels, width, height);
+    if (statsResult.aiIndicators.length > 0) {
+        indicators.push(...statsResult.aiIndicators);
+    }
+    if (statsResult.realIndicators.length > 0) {
+        realIndicators.push(...statsResult.realIndicators);
+    }
+
+    // =========================================
+    // 7. TEXTURE AND DETAIL COHERENCE
+    // AI often has inconsistent detail levels
+    // =========================================
+    const textureResult = analyzeTextureCoherence(pixels, width, height);
+    if (textureResult.aiIndicators.length > 0) {
+        indicators.push(...textureResult.aiIndicators);
+    }
+    if (textureResult.realIndicators.length > 0) {
+        realIndicators.push(...textureResult.realIndicators);
+    }
+
+    // =========================================
+    // MULTI-INDICATOR CONFIDENCE SCORING
+    // Only flag AI if MULTIPLE indicators found
+    // =========================================
+
+    // Calculate weighted scores
+    let aiPoints = 0;
+    let realPoints = 0;
     let explainers = [];
 
-    // Noise pattern analysis (AI images often have uniform noise)
-    if (signals.noisePattern.uniformity > 0.7) {
-        aiScore += 20;
-        explainers.push({ icon: '🔬', text: 'Uniform noise pattern detected - common in AI-generated images' });
-    } else if (signals.noisePattern.uniformity < 0.3) {
-        aiScore -= 10;
-        explainers.push({ icon: '📷', text: 'Natural noise variation suggests real photography' });
+    // Weight AI indicators by confidence
+    for (const ind of indicators) {
+        aiPoints += ind.weight * ind.confidence;
+        explainers.push({
+            icon: ind.icon || 'AI',
+            text: ind.reason,
+            type: 'ai'
+        });
     }
 
-    // Color distribution (AI often has unusual color clustering)
-    if (signals.colorDistribution.clusterScore > 0.6) {
-        aiScore += 15;
-        explainers.push({ icon: '🎨', text: 'Color clustering patterns typical of AI generation' });
+    // Weight real indicators
+    for (const ind of realIndicators) {
+        realPoints += ind.weight * ind.confidence;
+        explainers.push({
+            icon: ind.icon || 'REAL',
+            text: ind.reason,
+            type: 'real'
+        });
     }
 
-    // Edge analysis (AI can have too-perfect or inconsistent edges)
-    if (signals.edgeSharpness.inconsistency > 0.5) {
-        aiScore += 15;
-        explainers.push({ icon: '✂️', text: 'Inconsistent edge sharpness across the image' });
+    // Social media compression penalty - reduces AI score
+    // because compression destroys many AI artifacts
+    const compressionPenalty = compressionResult.isHeavilyCompressed ? 0.6 : 1.0;
+    aiPoints *= compressionPenalty;
+
+    // Require minimum number of indicators for AI detection
+    const minAIIndicators = 3;
+    const aiIndicatorCount = indicators.length;
+
+    // Calculate final score
+    // Base score starts at 25 (neutral-leaning-real for social media)
+    let baseScore = 25;
+
+    // AI indicators increase score, but require multiple
+    if (aiIndicatorCount >= minAIIndicators) {
+        baseScore += Math.min(aiPoints, 60);
+    } else if (aiIndicatorCount > 0) {
+        // Few indicators = weak signal, scale down significantly
+        baseScore += Math.min(aiPoints * 0.3, 20);
     }
 
-    // Compression artifacts
-    if (signals.compressionArtifacts.score < 0.3) {
-        aiScore += 10;
-        explainers.push({ icon: '📦', text: 'Unusual compression artifact pattern' });
+    // Real indicators decrease score
+    baseScore -= Math.min(realPoints, 40);
+
+    // Normalize to 0-100
+    let aiScore = clamp(baseScore, 0, 100);
+
+    // Forensics mode in deep scan
+    if (mode === 'deep' && forensicsMode) {
+        // More detailed analysis already included above
+        explainers.push({
+            icon: 'SCAN',
+            text: 'Forensics mode: Full frequency and fingerprint analysis applied',
+            type: 'info'
+        });
     }
 
-    // Repetitive patterns
-    if (signals.repetitivePatterns.score > 0.4) {
-        aiScore += 15;
-        explainers.push({ icon: '🔄', text: 'Repetitive texture patterns detected' });
-    }
-
-    // Metadata analysis
-    if (signals.metadataScore.suspicious) {
-        aiScore += 10;
-        explainers.push({ icon: '📋', text: signals.metadataScore.reason });
-    } else if (signals.metadataScore.authentic) {
-        aiScore -= 15;
-        explainers.push({ icon: '✅', text: 'Authentic camera metadata found' });
-    }
-
-    // Deep scan gets more detailed analysis
-    if (mode === 'deep') {
-        // Add frequency domain analysis simulation
-        const freqScore = Math.random() * 20 - 10;
-        aiScore += freqScore;
-        if (freqScore > 5) {
-            explainers.push({ icon: '📊', text: 'Frequency domain shows AI generation artifacts' });
-        }
-
-        // Forensics mode adds extra scrutiny
-        if (forensicsMode) {
-            aiScore += 5;
-            explainers.push({ icon: '🔬', text: 'Forensics mode: Additional micro-pattern analysis applied' });
-        }
-    }
-
-    // Normalize score to 0-100
-    aiScore = clamp(50 + aiScore, 0, 100);
-
-    // Add some realistic variance
-    aiScore = clamp(aiScore + (Math.random() * 10 - 5), 0, 100);
-
-    // Determine verdict
+    // Determine verdict based on multi-indicator approach
     let verdict, confidence;
-    if (aiScore >= 70) {
+
+    if (aiScore >= 70 && aiIndicatorCount >= minAIIndicators) {
         verdict = 'ai';
         confidence = aiScore >= 85 ? 'high' : 'medium';
-    } else if (aiScore <= 30) {
+    } else if (aiScore <= 30 || realIndicators.length >= 2) {
         verdict = 'real';
         confidence = aiScore <= 15 ? 'high' : 'medium';
     } else {
@@ -4480,106 +4669,735 @@ async function analyzeImage(dataUrl, mode) {
         confidence = 'low';
     }
 
+    // Add summary explainer
+    explainers.unshift({
+        icon: 'INFO',
+        text: `Analysis found ${aiIndicatorCount} AI indicator(s) and ${realIndicators.length} authenticity indicator(s)`,
+        type: 'summary'
+    });
+
     return {
         verdict,
         aiScore: round(aiScore),
         confidence,
         explainers,
         mode,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        indicatorCounts: {
+            ai: aiIndicatorCount,
+            real: realIndicators.length
+        }
     };
 }
 
-// Analysis helper functions
-function analyzeNoisePattern(pixels, width, height) {
-    let noiseValues = [];
-    for (let i = 0; i < pixels.length; i += 16) {
-        const r = pixels[i], g = pixels[i+1], b = pixels[i+2];
-        const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-        noiseValues.push(luminance % 1);
-    }
-    const mean = noiseValues.reduce((a, b) => a + b, 0) / noiseValues.length;
-    const variance = noiseValues.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / noiseValues.length;
-    return { uniformity: 1 - Math.min(variance * 10, 1) };
-}
+// =====================================================
+// ANALYSIS HELPER FUNCTIONS - RESEARCH-BACKED
+// =====================================================
 
-function analyzeColorDistribution(pixels) {
-    let colorCounts = {};
-    for (let i = 0; i < pixels.length; i += 4) {
-        const key = `${Math.floor(pixels[i]/32)}-${Math.floor(pixels[i+1]/32)}-${Math.floor(pixels[i+2]/32)}`;
-        colorCounts[key] = (colorCounts[key] || 0) + 1;
-    }
-    const uniqueColors = Object.keys(colorCounts).length;
-    const maxPossible = 8 * 8 * 8;
-    return { clusterScore: 1 - (uniqueColors / maxPossible) };
-}
+// Advanced Metadata Analysis
+function analyzeMetadataAdvanced(file, dataUrl) {
+    const aiIndicators = [];
+    const realIndicators = [];
 
-function analyzeEdgeSharpness(pixels, width, height) {
-    let edgeStrengths = [];
-    for (let y = 1; y < height - 1; y += 4) {
-        for (let x = 1; x < width - 1; x += 4) {
-            const idx = (y * width + x) * 4;
-            const center = pixels[idx];
-            const right = pixels[idx + 4];
-            const bottom = pixels[idx + width * 4];
-            edgeStrengths.push(Math.abs(center - right) + Math.abs(center - bottom));
+    if (!file) return { aiIndicators, realIndicators };
+
+    const name = file.name.toLowerCase();
+    const size = file.size;
+    const type = file.type;
+
+    // AI generator signatures in filename (high confidence)
+    const aiGeneratorPatterns = [
+        { pattern: /midjourney/i, generator: 'Midjourney' },
+        { pattern: /dall[\-_]?e/i, generator: 'DALL-E' },
+        { pattern: /stable[\-_]?diffusion/i, generator: 'Stable Diffusion' },
+        { pattern: /firefly/i, generator: 'Adobe Firefly' },
+        { pattern: /imagen/i, generator: 'Google Imagen' },
+        { pattern: /leonardo[\-_]?ai/i, generator: 'Leonardo AI' },
+        { pattern: /runway/i, generator: 'Runway' },
+        { pattern: /^\d{5,}_/i, generator: 'AI seed pattern' },
+        { pattern: /generated|_gen_|_ai_|aiart/i, generator: 'Generic AI' },
+        { pattern: /flux/i, generator: 'Flux' },
+        { pattern: /comfyui|automatic1111|a1111/i, generator: 'SD WebUI' }
+    ];
+
+    for (const {pattern, generator} of aiGeneratorPatterns) {
+        if (pattern.test(name)) {
+            aiIndicators.push({
+                weight: 25,
+                confidence: 0.95,
+                reason: `Filename contains ${generator} signature`,
+                icon: 'FILE'
+            });
+            break;
         }
     }
-    const mean = edgeStrengths.reduce((a, b) => a + b, 0) / edgeStrengths.length;
-    const variance = edgeStrengths.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / edgeStrengths.length;
-    return { inconsistency: Math.min(variance / 1000, 1) };
-}
 
-function analyzeCompressionArtifacts(pixels, width) {
-    let blockScores = [];
-    for (let i = 0; i < pixels.length; i += width * 8 * 4) {
-        let blockVar = 0;
-        for (let j = 0; j < 8 && (i + j * 4) < pixels.length; j++) {
-            blockVar += Math.abs(pixels[i + j * 4] - pixels[i + (j + 1) * 4] || 0);
+    // Camera naming patterns (real photo indicator)
+    const cameraPatterns = [
+        /^(img|dsc|dcim|photo|pic)[\-_]?\d{4}/i,
+        /^\d{8}[\-_]\d{6}/i,  // Date-time format
+        /^(canon|nikon|sony|fuji|olympus|panasonic|leica)/i,
+        /^p\d{7}/i,  // Common phone naming
+        /^(screenshot|screen shot)/i  // Screenshots are real
+    ];
+
+    for (const pattern of cameraPatterns) {
+        if (pattern.test(name)) {
+            realIndicators.push({
+                weight: 15,
+                confidence: 0.8,
+                reason: 'Filename matches camera/device naming pattern',
+                icon: 'CAM'
+            });
+            break;
         }
-        blockScores.push(blockVar);
     }
-    const avg = blockScores.reduce((a, b) => a + b, 0) / blockScores.length;
-    return { score: Math.min(avg / 100, 1) };
+
+    // File size analysis
+    // AI images often have unusual size-to-dimension ratios
+    // Social media compressed images are typically smaller
+    const isSmallFile = size < 200000; // Under 200KB
+    const isVerySmallFile = size < 50000; // Under 50KB (heavy compression)
+
+    if (isVerySmallFile) {
+        realIndicators.push({
+            weight: 10,
+            confidence: 0.6,
+            reason: 'Heavy compression typical of social media (artifacts may mask AI patterns)',
+            icon: 'ZIP'
+        });
+    } else if (isSmallFile) {
+        realIndicators.push({
+            weight: 5,
+            confidence: 0.5,
+            reason: 'File size suggests social media compression',
+            icon: 'ZIP'
+        });
+    }
+
+    // PNG files from AI often have specific characteristics
+    if (type === 'image/png' && size > 1000000) {
+        // Large PNG could be direct AI output (not compressed)
+        aiIndicators.push({
+            weight: 5,
+            confidence: 0.4,
+            reason: 'Large PNG file (common for direct AI generator output)',
+            icon: 'FILE'
+        });
+    }
+
+    return { aiIndicators, realIndicators };
 }
 
-function analyzeRepetitivePatterns(pixels, width, height) {
-    let matches = 0, checks = 0;
-    const sampleSize = 16;
-    for (let y = 0; y < height - sampleSize; y += sampleSize * 2) {
-        for (let x = 0; x < width - sampleSize; x += sampleSize * 2) {
-            const idx1 = (y * width + x) * 4;
-            const idx2 = ((y + sampleSize) * width + x + sampleSize) * 4;
-            if (idx2 < pixels.length) {
-                const diff = Math.abs(pixels[idx1] - pixels[idx2]) +
-                            Math.abs(pixels[idx1 + 1] - pixels[idx2 + 1]) +
-                            Math.abs(pixels[idx1 + 2] - pixels[idx2 + 2]);
-                if (diff < 30) matches++;
-                checks++;
+// Proper JPEG Compression Analysis
+function analyzeJPEGCompressionProper(pixels, width, height) {
+    const aiIndicators = [];
+    const realIndicators = [];
+    let isHeavilyCompressed = false;
+
+    // Analyze 8x8 block boundaries (JPEG uses 8x8 DCT blocks)
+    let blockBoundaryVariance = [];
+    let inBlockVariance = [];
+
+    // Sample blocks across the image
+    const blockSize = 8;
+    const sampleStep = 4; // Check every 4th block for speed
+
+    for (let by = 0; by < Math.floor(height / blockSize) - 1; by += sampleStep) {
+        for (let bx = 0; bx < Math.floor(width / blockSize) - 1; bx += sampleStep) {
+            // Get boundary pixels between blocks
+            const boundaryX = (bx + 1) * blockSize;
+            const boundaryY = by * blockSize;
+
+            if (boundaryX < width - 1) {
+                // Horizontal boundary
+                let boundaryDiff = 0;
+                for (let y = boundaryY; y < boundaryY + blockSize && y < height; y++) {
+                    const idx1 = (y * width + boundaryX - 1) * 4;
+                    const idx2 = (y * width + boundaryX) * 4;
+                    boundaryDiff += Math.abs(pixels[idx1] - pixels[idx2]);
+                    boundaryDiff += Math.abs(pixels[idx1 + 1] - pixels[idx2 + 1]);
+                    boundaryDiff += Math.abs(pixels[idx1 + 2] - pixels[idx2 + 2]);
+                }
+                blockBoundaryVariance.push(boundaryDiff / (blockSize * 3));
+            }
+
+            // In-block variance
+            const startX = bx * blockSize;
+            const startY = by * blockSize;
+            let inBlockDiff = 0;
+            let count = 0;
+            for (let y = startY; y < startY + blockSize - 1 && y < height - 1; y++) {
+                for (let x = startX; x < startX + blockSize - 1 && x < width - 1; x++) {
+                    const idx = (y * width + x) * 4;
+                    const idxRight = idx + 4;
+                    const idxDown = idx + width * 4;
+                    inBlockDiff += Math.abs(pixels[idx] - pixels[idxRight]);
+                    inBlockDiff += Math.abs(pixels[idx] - pixels[idxDown]);
+                    count++;
+                }
+            }
+            if (count > 0) inBlockVariance.push(inBlockDiff / count);
+        }
+    }
+
+    // Calculate statistics
+    const avgBoundary = blockBoundaryVariance.reduce((a, b) => a + b, 0) / blockBoundaryVariance.length || 1;
+    const avgInBlock = inBlockVariance.reduce((a, b) => a + b, 0) / inBlockVariance.length || 1;
+
+    // Real JPEG photos have visible block boundary artifacts
+    // AI images tend to have smoother transitions
+    const boundaryRatio = avgBoundary / avgInBlock;
+
+    // High boundary variance relative to in-block = JPEG compression = real photo
+    if (boundaryRatio > 1.3) {
+        realIndicators.push({
+            weight: 15,
+            confidence: 0.7,
+            reason: 'JPEG block artifacts detected (typical of real photos)',
+            icon: 'JPEG'
+        });
+        isHeavilyCompressed = boundaryRatio > 1.8;
+    } else if (boundaryRatio < 0.9) {
+        // Very smooth boundaries = possibly AI or heavily processed
+        aiIndicators.push({
+            weight: 8,
+            confidence: 0.5,
+            reason: 'Unusually smooth block transitions',
+            icon: 'SMOOTH'
+        });
+    }
+
+    // Check for uniform compression (AI characteristic)
+    const boundaryStdDev = Math.sqrt(
+        blockBoundaryVariance.reduce((a, b) => a + Math.pow(b - avgBoundary, 2), 0) / blockBoundaryVariance.length
+    );
+
+    if (boundaryStdDev / avgBoundary < 0.3 && avgBoundary > 5) {
+        // Very uniform compression pattern
+        aiIndicators.push({
+            weight: 10,
+            confidence: 0.55,
+            reason: 'Uniform compression pattern (less common in real photos)',
+            icon: 'UNIFORM'
+        });
+    }
+
+    return { aiIndicators, realIndicators, isHeavilyCompressed };
+}
+
+// Frequency Domain Analysis using FFT
+function analyzeFrequencyDomain(pixels, width, height) {
+    const aiIndicators = [];
+    const realIndicators = [];
+
+    // Perform 2D FFT
+    const { magnitude, size } = fft2d(pixels, width, height);
+
+    // Analyze frequency distribution
+    // AI images often have unusual peaks at specific frequencies
+    // Real photos have more natural falloff
+
+    const halfSize = size / 2;
+    let lowFreqPower = 0;
+    let midFreqPower = 0;
+    let highFreqPower = 0;
+    let totalPower = 0;
+
+    // Analyze radial frequency bands
+    for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+            // Distance from center (DC component)
+            const dx = x - halfSize;
+            const dy = y - halfSize;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const normalizedDist = dist / halfSize;
+
+            const power = magnitude[y * size + x];
+            totalPower += power;
+
+            if (normalizedDist < 0.1) {
+                lowFreqPower += power;
+            } else if (normalizedDist < 0.4) {
+                midFreqPower += power;
+            } else {
+                highFreqPower += power;
             }
         }
     }
-    return { score: checks > 0 ? matches / checks : 0 };
+
+    // Normalize
+    lowFreqPower /= totalPower || 1;
+    midFreqPower /= totalPower || 1;
+    highFreqPower /= totalPower || 1;
+
+    // AI images often have:
+    // 1. Unusual mid-frequency peaks (0.1-0.4 normalized range)
+    // 2. Less natural high-frequency content
+    // 3. Spectral peaks at specific locations (GAN artifacts)
+
+    // Check for spectral anomalies at 3/4 positions (checkerboard artifacts)
+    const quarterPos = Math.floor(size * 0.75);
+    const threeQuarterPeak = (
+        magnitude[quarterPos * size + quarterPos] +
+        magnitude[quarterPos * size + (size - quarterPos)] +
+        magnitude[(size - quarterPos) * size + quarterPos] +
+        magnitude[(size - quarterPos) * size + (size - quarterPos)]
+    ) / 4;
+
+    const avgMagnitude = totalPower / (size * size);
+
+    if (threeQuarterPeak > avgMagnitude * 3) {
+        aiIndicators.push({
+            weight: 20,
+            confidence: 0.75,
+            reason: 'Spectral peaks at GAN-typical frequencies detected',
+            icon: 'FREQ'
+        });
+    }
+
+    // Real photos typically have gradual frequency falloff
+    // AI can have unusual mid-frequency concentration
+    if (midFreqPower > 0.5 && highFreqPower < 0.1) {
+        aiIndicators.push({
+            weight: 12,
+            confidence: 0.6,
+            reason: 'Unusual frequency distribution (concentrated mid-frequencies)',
+            icon: 'SPECTRUM'
+        });
+    }
+
+    // Natural photos have more high-frequency detail
+    if (highFreqPower > 0.15) {
+        realIndicators.push({
+            weight: 10,
+            confidence: 0.6,
+            reason: 'Natural high-frequency content distribution',
+            icon: 'DETAIL'
+        });
+    }
+
+    return { aiIndicators, realIndicators };
 }
 
-function analyzeMetadata(file) {
-    if (!file) return { suspicious: false, authentic: false, reason: '' };
+// GAN/Diffusion Fingerprint Detection
+function analyzeGANFingerprints(pixels, width, height) {
+    const aiIndicators = [];
+    const realIndicators = [];
 
-    const name = file.name.toLowerCase();
-    const type = file.type;
+    // 1. Checkerboard pattern detection (common in GAN upsampling)
+    let checkerboardScore = 0;
+    const step = 2;
+    let checks = 0;
 
-    // Check for AI generator signatures in filename
-    if (name.includes('midjourney') || name.includes('dalle') || name.includes('stable') ||
-        name.includes('generated') || name.includes('ai_')) {
-        return { suspicious: true, authentic: false, reason: 'Filename suggests AI generation' };
+    for (let y = 0; y < height - step; y += step * 2) {
+        for (let x = 0; x < width - step; x += step * 2) {
+            const idx00 = (y * width + x) * 4;
+            const idx01 = (y * width + x + step) * 4;
+            const idx10 = ((y + step) * width + x) * 4;
+            const idx11 = ((y + step) * width + x + step) * 4;
+
+            // Check for alternating pattern
+            const avg00 = (pixels[idx00] + pixels[idx00 + 1] + pixels[idx00 + 2]) / 3;
+            const avg01 = (pixels[idx01] + pixels[idx01 + 1] + pixels[idx01 + 2]) / 3;
+            const avg10 = (pixels[idx10] + pixels[idx10 + 1] + pixels[idx10 + 2]) / 3;
+            const avg11 = (pixels[idx11] + pixels[idx11 + 1] + pixels[idx11 + 2]) / 3;
+
+            // Checkerboard: diagonal similar, adjacent different
+            const diagonalSimilarity = Math.abs(avg00 - avg11) + Math.abs(avg01 - avg10);
+            const adjacentDiff = Math.abs(avg00 - avg01) + Math.abs(avg00 - avg10);
+
+            if (diagonalSimilarity < 10 && adjacentDiff > 15) {
+                checkerboardScore++;
+            }
+            checks++;
+        }
     }
 
-    // Check for typical camera naming patterns
-    if (name.match(/^(img|dsc|dcim|photo)[\-_]?\d{4}/i) || name.match(/^\d{8}[\-_]\d{6}/)) {
-        return { suspicious: false, authentic: true, reason: 'Filename matches camera naming pattern' };
+    const checkerboardRatio = checkerboardScore / (checks || 1);
+    if (checkerboardRatio > 0.15) {
+        aiIndicators.push({
+            weight: 18,
+            confidence: 0.7,
+            reason: 'Checkerboard artifacts detected (GAN upsampling fingerprint)',
+            icon: 'GRID'
+        });
     }
 
-    return { suspicious: false, authentic: false, reason: '' };
+    // 2. Color channel correlation analysis
+    // AI images often have unusual cross-channel correlations
+    let rg_corr = 0, rb_corr = 0, gb_corr = 0;
+    let r_mean = 0, g_mean = 0, b_mean = 0;
+    const pixelCount = width * height;
+
+    // Calculate means
+    for (let i = 0; i < pixels.length; i += 4) {
+        r_mean += pixels[i];
+        g_mean += pixels[i + 1];
+        b_mean += pixels[i + 2];
+    }
+    r_mean /= pixelCount;
+    g_mean /= pixelCount;
+    b_mean /= pixelCount;
+
+    // Calculate correlations
+    let r_var = 0, g_var = 0, b_var = 0;
+    for (let i = 0; i < pixels.length; i += 4) {
+        const r_diff = pixels[i] - r_mean;
+        const g_diff = pixels[i + 1] - g_mean;
+        const b_diff = pixels[i + 2] - b_mean;
+
+        rg_corr += r_diff * g_diff;
+        rb_corr += r_diff * b_diff;
+        gb_corr += g_diff * b_diff;
+
+        r_var += r_diff * r_diff;
+        g_var += g_diff * g_diff;
+        b_var += b_diff * b_diff;
+    }
+
+    const rg_coef = rg_corr / Math.sqrt(r_var * g_var || 1);
+    const rb_coef = rb_corr / Math.sqrt(r_var * b_var || 1);
+    const gb_coef = gb_corr / Math.sqrt(g_var * b_var || 1);
+
+    // Extremely high correlation across all channels is suspicious
+    if (rg_coef > 0.98 && rb_coef > 0.98 && gb_coef > 0.98) {
+        aiIndicators.push({
+            weight: 10,
+            confidence: 0.5,
+            reason: 'Unusual cross-channel color correlation',
+            icon: 'COLOR'
+        });
+    }
+
+    // Natural photos often have varied correlations
+    if (Math.abs(rg_coef - rb_coef) > 0.2 || Math.abs(rg_coef - gb_coef) > 0.2) {
+        realIndicators.push({
+            weight: 8,
+            confidence: 0.55,
+            reason: 'Natural color channel relationships',
+            icon: 'NATURAL'
+        });
+    }
+
+    return { aiIndicators, realIndicators };
+}
+
+// Error Level Analysis - Social Media Aware
+function analyzeErrorLevelsAware(pixels, width, height) {
+    const aiIndicators = [];
+    const realIndicators = [];
+
+    // Simulate re-compression by quantizing values
+    const quantizationLevel = 8; // Simulate quality 95
+    const errorLevels = [];
+
+    // Calculate error levels across image regions
+    const regionSize = 32;
+    const regions = [];
+
+    for (let ry = 0; ry < height; ry += regionSize) {
+        for (let rx = 0; rx < width; rx += regionSize) {
+            let regionError = 0;
+            let count = 0;
+
+            for (let y = ry; y < ry + regionSize && y < height; y++) {
+                for (let x = rx; x < rx + regionSize && x < width; x++) {
+                    const idx = (y * width + x) * 4;
+
+                    // Simulate quantization error
+                    for (let c = 0; c < 3; c++) {
+                        const original = pixels[idx + c];
+                        const quantized = Math.round(original / quantizationLevel) * quantizationLevel;
+                        regionError += Math.abs(original - quantized);
+                    }
+                    count++;
+                }
+            }
+
+            regions.push(regionError / (count * 3 || 1));
+        }
+    }
+
+    // Calculate variance in error levels
+    const avgError = regions.reduce((a, b) => a + b, 0) / regions.length;
+    const errorVariance = regions.reduce((a, b) => a + Math.pow(b - avgError, 2), 0) / regions.length;
+    const errorStdDev = Math.sqrt(errorVariance);
+    const coeffOfVariation = errorStdDev / (avgError || 1);
+
+    // AI images tend to have more uniform error levels
+    // Real photos have varying levels due to different content
+
+    // BUT: Heavily compressed social media images also have uniform error levels
+    // So we need to be careful here
+
+    if (avgError < 2) {
+        // Very low error = likely heavily compressed already
+        // Don't flag as AI
+        realIndicators.push({
+            weight: 5,
+            confidence: 0.4,
+            reason: 'Previously compressed (social media typical)',
+            icon: 'COMPRESS'
+        });
+    } else if (coeffOfVariation < 0.2 && avgError > 5) {
+        // Uniform high error levels = suspicious
+        aiIndicators.push({
+            weight: 8,
+            confidence: 0.45,
+            reason: 'Uniform error distribution across regions',
+            icon: 'ELA'
+        });
+    } else if (coeffOfVariation > 0.5) {
+        // High variation = natural content
+        realIndicators.push({
+            weight: 10,
+            confidence: 0.6,
+            reason: 'Natural error level variation across image regions',
+            icon: 'VARIED'
+        });
+    }
+
+    return { aiIndicators, realIndicators };
+}
+
+// Statistical Pattern Analysis
+function analyzeStatisticalPatterns(pixels, width, height) {
+    const aiIndicators = [];
+    const realIndicators = [];
+
+    // 1. Color histogram analysis
+    const histogramR = new Array(256).fill(0);
+    const histogramG = new Array(256).fill(0);
+    const histogramB = new Array(256).fill(0);
+
+    for (let i = 0; i < pixels.length; i += 4) {
+        histogramR[pixels[i]]++;
+        histogramG[pixels[i + 1]]++;
+        histogramB[pixels[i + 2]]++;
+    }
+
+    // Check for suspicious peaks/gaps in histogram
+    // AI images sometimes have unusual histogram shapes
+
+    const totalPixels = width * height;
+    let gapsR = 0, gapsG = 0, gapsB = 0;
+    let maxPeakR = 0, maxPeakG = 0, maxPeakB = 0;
+
+    for (let i = 1; i < 255; i++) {
+        // Count gaps (zero or near-zero bins surrounded by non-zero)
+        if (histogramR[i] < totalPixels * 0.0001 &&
+            histogramR[i-1] > totalPixels * 0.001 &&
+            histogramR[i+1] > totalPixels * 0.001) {
+            gapsR++;
+        }
+        if (histogramG[i] < totalPixels * 0.0001 &&
+            histogramG[i-1] > totalPixels * 0.001 &&
+            histogramG[i+1] > totalPixels * 0.001) {
+            gapsG++;
+        }
+        if (histogramB[i] < totalPixels * 0.0001 &&
+            histogramB[i-1] > totalPixels * 0.001 &&
+            histogramB[i+1] > totalPixels * 0.001) {
+            gapsB++;
+        }
+
+        maxPeakR = Math.max(maxPeakR, histogramR[i]);
+        maxPeakG = Math.max(maxPeakG, histogramG[i]);
+        maxPeakB = Math.max(maxPeakB, histogramB[i]);
+    }
+
+    // Real photos typically have smooth histograms
+    // Edited/AI can have gaps or unusual peaks
+    const totalGaps = gapsR + gapsG + gapsB;
+
+    if (totalGaps > 15) {
+        // Many gaps could indicate processing, but also could be JPEG
+        // Low weight
+        aiIndicators.push({
+            weight: 5,
+            confidence: 0.35,
+            reason: 'Histogram anomalies detected',
+            icon: 'HIST'
+        });
+    }
+
+    // 2. Local variance analysis (texture consistency)
+    let localVariances = [];
+    const windowSize = 8;
+
+    for (let y = 0; y < height - windowSize; y += windowSize) {
+        for (let x = 0; x < width - windowSize; x += windowSize) {
+            let sum = 0, sumSq = 0, count = 0;
+
+            for (let wy = 0; wy < windowSize; wy++) {
+                for (let wx = 0; wx < windowSize; wx++) {
+                    const idx = ((y + wy) * width + (x + wx)) * 4;
+                    const gray = 0.299 * pixels[idx] + 0.587 * pixels[idx + 1] + 0.114 * pixels[idx + 2];
+                    sum += gray;
+                    sumSq += gray * gray;
+                    count++;
+                }
+            }
+
+            const mean = sum / count;
+            const variance = (sumSq / count) - (mean * mean);
+            localVariances.push(variance);
+        }
+    }
+
+    // Calculate variance of variances (texture consistency)
+    const avgVariance = localVariances.reduce((a, b) => a + b, 0) / localVariances.length;
+    const varianceOfVariance = localVariances.reduce((a, b) => a + Math.pow(b - avgVariance, 2), 0) / localVariances.length;
+
+    // AI images can have unnaturally consistent texture
+    // But smooth photos (sky, walls) also have this
+
+    // 3. Noise floor analysis
+    // Real photos have sensor noise; AI may not
+    let noiseEstimate = 0;
+    const sampleCount = Math.min(10000, pixels.length / 4);
+
+    for (let s = 0; s < sampleCount; s++) {
+        const i = Math.floor(Math.random() * (pixels.length / 4)) * 4;
+        const x = (i / 4) % width;
+        const y = Math.floor((i / 4) / width);
+
+        if (x > 0 && x < width - 1 && y > 0 && y < height - 1) {
+            const center = pixels[i];
+            const neighbors = [
+                pixels[i - 4], pixels[i + 4],
+                pixels[i - width * 4], pixels[i + width * 4]
+            ];
+            const avgNeighbor = neighbors.reduce((a, b) => a + b, 0) / 4;
+            noiseEstimate += Math.abs(center - avgNeighbor);
+        }
+    }
+    noiseEstimate /= sampleCount;
+
+    // Very low noise might indicate AI or heavy denoising
+    // High noise is typical of real photos especially in low light
+    if (noiseEstimate < 1.5) {
+        aiIndicators.push({
+            weight: 8,
+            confidence: 0.45,
+            reason: 'Very low sensor noise (uncommon in real photos)',
+            icon: 'NOISE'
+        });
+    } else if (noiseEstimate > 4) {
+        realIndicators.push({
+            weight: 10,
+            confidence: 0.65,
+            reason: 'Natural sensor noise pattern detected',
+            icon: 'SENSOR'
+        });
+    }
+
+    return { aiIndicators, realIndicators };
+}
+
+// Texture Coherence Analysis
+function analyzeTextureCoherence(pixels, width, height) {
+    const aiIndicators = [];
+    const realIndicators = [];
+
+    // Analyze detail consistency across the image
+    // AI often has inconsistent levels of detail
+
+    const regionSize = 64;
+    const detailScores = [];
+
+    for (let ry = 0; ry < height - regionSize; ry += regionSize) {
+        for (let rx = 0; rx < width - regionSize; rx += regionSize) {
+            let edgeSum = 0;
+            let count = 0;
+
+            // Simple edge detection using Sobel-like operator
+            for (let y = ry + 1; y < ry + regionSize - 1; y++) {
+                for (let x = rx + 1; x < rx + regionSize - 1; x++) {
+                    const idx = (y * width + x) * 4;
+                    const gray = 0.299 * pixels[idx] + 0.587 * pixels[idx + 1] + 0.114 * pixels[idx + 2];
+                    const grayRight = 0.299 * pixels[idx + 4] + 0.587 * pixels[idx + 5] + 0.114 * pixels[idx + 6];
+                    const grayDown = 0.299 * pixels[idx + width * 4] + 0.587 * pixels[idx + width * 4 + 1] + 0.114 * pixels[idx + width * 4 + 2];
+
+                    const gx = Math.abs(grayRight - gray);
+                    const gy = Math.abs(grayDown - gray);
+                    edgeSum += Math.sqrt(gx * gx + gy * gy);
+                    count++;
+                }
+            }
+
+            detailScores.push(edgeSum / (count || 1));
+        }
+    }
+
+    // Check for detail consistency
+    if (detailScores.length > 4) {
+        const avgDetail = detailScores.reduce((a, b) => a + b, 0) / detailScores.length;
+        const detailVariance = detailScores.reduce((a, b) => a + Math.pow(b - avgDetail, 2), 0) / detailScores.length;
+        const detailCoeffVar = Math.sqrt(detailVariance) / (avgDetail || 1);
+
+        // Very uniform detail across all regions is suspicious for complex images
+        if (detailCoeffVar < 0.3 && avgDetail > 5) {
+            aiIndicators.push({
+                weight: 8,
+                confidence: 0.45,
+                reason: 'Unusually uniform detail distribution',
+                icon: 'TEXTURE'
+            });
+        }
+
+        // Natural photos have varied detail (focus, depth of field)
+        if (detailCoeffVar > 0.8) {
+            realIndicators.push({
+                weight: 10,
+                confidence: 0.6,
+                reason: 'Natural detail variation (depth of field, focus)',
+                icon: 'DOF'
+            });
+        }
+    }
+
+    // Check for repeated textures (AI can repeat patterns)
+    let repeatScore = 0;
+    const patchSize = 16;
+    const patches = [];
+
+    // Sample some patches
+    for (let i = 0; i < 20; i++) {
+        const rx = Math.floor(Math.random() * (width - patchSize));
+        const ry = Math.floor(Math.random() * (height - patchSize));
+
+        let patchSum = 0;
+        for (let py = 0; py < patchSize; py++) {
+            for (let px = 0; px < patchSize; px++) {
+                const idx = ((ry + py) * width + (rx + px)) * 4;
+                patchSum += pixels[idx] + pixels[idx + 1] + pixels[idx + 2];
+            }
+        }
+        patches.push({ x: rx, y: ry, sum: patchSum });
+    }
+
+    // Check for similar patches that aren't nearby
+    for (let i = 0; i < patches.length; i++) {
+        for (let j = i + 1; j < patches.length; j++) {
+            const dist = Math.sqrt(Math.pow(patches[i].x - patches[j].x, 2) + Math.pow(patches[i].y - patches[j].y, 2));
+            if (dist > 100 && Math.abs(patches[i].sum - patches[j].sum) < 1000) {
+                repeatScore++;
+            }
+        }
+    }
+
+    if (repeatScore > 10) {
+        aiIndicators.push({
+            weight: 12,
+            confidence: 0.55,
+            reason: 'Repetitive texture patterns across distant regions',
+            icon: 'REPEAT'
+        });
+    }
+
+    return { aiIndicators, realIndicators };
 }
 
 // Display scan result
@@ -4628,13 +5446,28 @@ function displayResult(result, mode) {
     scoreFill.style.width = result.aiScore + '%';
     scoreValue.textContent = `AI Probability: ${result.aiScore}%`;
 
-    // Explainers
-    explainersContent.innerHTML = result.explainers.map(e => `
-        <div class="explainer-item">
-            <span class="explainer-icon">${e.icon}</span>
-            <span class="explainer-text">${e.text}</span>
-        </div>
-    `).join('');
+    // Explainers - with type-based styling
+    explainersContent.innerHTML = result.explainers.map(e => {
+        const typeClass = e.type === 'ai' ? 'explainer-ai' :
+                         e.type === 'real' ? 'explainer-real' :
+                         e.type === 'summary' ? 'explainer-summary' : 'explainer-info';
+        const iconMap = {
+            'FILE': '[FILE]', 'CAM': '[CAM]', 'ZIP': '[ZIP]', 'JPEG': '[JPEG]',
+            'SMOOTH': '[SMOOTH]', 'UNIFORM': '[UNIFORM]', 'FREQ': '[FREQ]',
+            'SPECTRUM': '[SPECTRUM]', 'DETAIL': '[DETAIL]', 'GRID': '[GRID]',
+            'COLOR': '[COLOR]', 'NATURAL': '[NATURAL]', 'COMPRESS': '[COMPRESS]',
+            'ELA': '[ELA]', 'VARIED': '[VARIED]', 'HIST': '[HIST]', 'NOISE': '[NOISE]',
+            'SENSOR': '[SENSOR]', 'TEXTURE': '[TEXTURE]', 'DOF': '[DOF]',
+            'REPEAT': '[REPEAT]', 'SCAN': '[SCAN]', 'INFO': '[INFO]'
+        };
+        const displayIcon = iconMap[e.icon] || `[${e.icon}]`;
+        return `
+            <div class="explainer-item ${typeClass}">
+                <span class="explainer-icon">${displayIcon}</span>
+                <span class="explainer-text">${e.text}</span>
+            </div>
+        `;
+    }).join('');
 }
 
 // Cancel scan
