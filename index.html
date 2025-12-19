@@ -2682,10 +2682,26 @@ function updateGating() {
 }
 
 // ==================== LOGIN ====================
-window.openLogin = function(isSignup = false) { 
-    isLoginMode = isSignup; 
-    updateLoginUI(); 
-    showView('loginView'); 
+window.openLogin = function(isSignup = false) {
+    isLoginMode = isSignup;
+    updateLoginUI();
+    showView('loginView');
+
+    // Add keyboard support - Enter to submit
+    setTimeout(() => {
+        const inputs = [$('emailInput'), $('passwordInput'), $('nameInput')].filter(Boolean);
+        inputs.forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    submitLogin();
+                }
+            });
+            // Clear error when user starts typing
+            input.addEventListener('input', () => {
+                hideLoginError();
+            });
+        });
+    }, 100);
 };
 
 function updateLoginUI() {
@@ -2710,67 +2726,161 @@ function updateLoginUI() {
 window.toggleLoginMode = () => { isLoginMode = !isLoginMode; updateLoginUI(); };
 
 window.submitLogin = async function() {
-    const email = $('emailInput').value.trim();
-    const password = $('passwordInput').value;
-    const name = $('nameInput').value.trim();
-    
-    if (!email || !password) { showLoginError('Fill all fields'); return; }
-    if (isLoginMode && !name) { showLoginError('Enter your name'); return; }
-    if (password.length < 6) { showLoginError('Password min 6 chars'); return; }
-    
-    $('loginSubmit').disabled = true; 
-    $('loginSubmit').textContent = isLoginMode ? 'Creating...' : 'Signing in...';
-    
+    console.log('[Login] Starting login/signup');
+
+    const emailInput = $('emailInput');
+    const passwordInput = $('passwordInput');
+    const nameInput = $('nameInput');
+
+    if (!emailInput || !passwordInput) {
+        console.error('[Login] Input elements not found');
+        showLoginError('Login form not loaded properly. Refresh page.');
+        return;
+    }
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    const name = nameInput ? nameInput.value.trim() : '';
+
+    console.log('[Login] Mode:', isLoginMode ? 'signup' : 'signin', 'Email:', email);
+
+    // Clear previous error
+    hideLoginError();
+
+    // Validation
+    if (!email || !password) {
+        showLoginError('Please fill in all fields');
+        return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showLoginError('Please enter a valid email address');
+        return;
+    }
+
+    if (isLoginMode && !name) {
+        showLoginError('Please enter your name');
+        return;
+    }
+
+    if (password.length < 6) {
+        showLoginError('Password must be at least 6 characters');
+        return;
+    }
+
+    const submitBtn = $('loginSubmit');
+    submitBtn.disabled = true;
+    submitBtn.textContent = isLoginMode ? 'Creating Account...' : 'Signing In...';
+
     try {
+        console.log('[Login] Using', useLocalFallback ? 'local storage' : 'Supabase');
+
         if (!useLocalFallback && supabase) {
+            // Supabase auth
             if (isLoginMode) {
-                const { data, error } = await supabase.auth.signUp({ 
-                    email, password, 
-                    options: { data: { display_name: name } } 
+                console.log('[Login] Attempting Supabase signup');
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: { data: { display_name: name } }
                 });
-                if (error) throw error;
-                user = { id: data.user.id, email: data.user.email, name }; 
-                
+
+                if (error) {
+                    console.error('[Login] Supabase signup error:', error);
+                    throw new Error(error.message || 'Signup failed');
+                }
+
+                if (!data || !data.user) {
+                    throw new Error('No user data returned from signup');
+                }
+
+                console.log('[Login] Signup successful, user:', data.user.id);
+                user = { id: data.user.id, email: data.user.email, name };
+
                 // Award founding member badge
-                awardBadge('founding_member');
-                toast('🎉 Account created!');
+                setTimeout(() => awardBadge('founding_member'), 500);
+                toast('🎉 Account created successfully!');
             } else {
+                console.log('[Login] Attempting Supabase signin');
                 const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) throw error;
-                user = { 
-                    id: data.user.id, 
-                    email: data.user.email, 
-                    name: data.user.user_metadata?.display_name || email.split('@')[0] 
-                }; 
+
+                if (error) {
+                    console.error('[Login] Supabase signin error:', error);
+                    throw new Error(error.message || 'Invalid email or password');
+                }
+
+                if (!data || !data.user) {
+                    throw new Error('No user data returned from signin');
+                }
+
+                console.log('[Login] Signin successful, user:', data.user.id);
+                user = {
+                    id: data.user.id,
+                    email: data.user.email,
+                    name: data.user.user_metadata?.display_name || email.split('@')[0]
+                };
                 toast('Welcome back!');
             }
         } else {
-            // Local auth
+            // Local auth fallback
+            console.log('[Login] Using local authentication');
             const users = getStorage('users', {});
+
             if (isLoginMode) {
-                if (users[email]) throw new Error('Account exists');
+                if (users[email]) {
+                    throw new Error('An account with this email already exists. Please sign in instead.');
+                }
                 users[email] = { email, password, name, created: Date.now() };
                 setStorage('users', users);
                 user = { id: email, email, name };
-                awardBadge('founding_member');
-                toast('Account created!');
+                setTimeout(() => awardBadge('founding_member'), 500);
+                toast('✅ Account created!');
+                console.log('[Login] Local signup successful');
             } else {
-                if (!users[email] || users[email].password !== password) throw new Error('Invalid credentials');
+                if (!users[email]) {
+                    throw new Error('No account found with this email. Please sign up first.');
+                }
+                if (users[email].password !== password) {
+                    throw new Error('Incorrect password. Please try again.');
+                }
                 user = { id: email, email, name: users[email].name };
                 toast('Welcome back!');
+                console.log('[Login] Local signin successful');
             }
         }
-        saveUser(); 
-        updateUserUI(); 
-        loadUserStats(); 
+
+        // Save and update UI
+        saveUser();
+        updateUserUI();
+        await loadUserStats();
+
+        // Clear form
+        emailInput.value = '';
+        passwordInput.value = '';
+        if (nameInput) nameInput.value = '';
+
+        // Go to home
+        console.log('[Login] Redirecting to home');
         showView('homeView');
-    } catch (e) { 
-        showLoginError(e.message); 
-    } finally { 
-        $('loginSubmit').disabled = false; 
-        updateLoginUI(); 
+
+    } catch (e) {
+        console.error('[Login] Error:', e);
+        showLoginError(e.message || 'Login failed. Please try again.');
+    } finally {
+        submitBtn.disabled = false;
+        updateLoginUI();
     }
 };
+
+function hideLoginError() {
+    const errorEl = $('loginError');
+    if (errorEl) {
+        errorEl.classList.remove('show');
+        errorEl.textContent = '';
+    }
+}
 
 function showLoginError(msg) {
     $('loginError').textContent = msg;
