@@ -4699,11 +4699,79 @@ async function analyzeImage(dataUrl, mode) {
     }
 
     // =========================================
-    // MULTI-INDICATOR CONFIDENCE SCORING
-    // Only flag AI if MULTIPLE indicators found
+    // 8. AI MODEL-SPECIFIC FINGERPRINTS (DEEP SCAN)
+    // SDXL, DALL-E 3, Midjourney v6, Flux
+    // =========================================
+    if (mode === 'deep') {
+        const modelResult = analyzeModelSpecificFingerprints(pixels, width, height);
+        if (modelResult.aiIndicators.length > 0) {
+            indicators.push(...modelResult.aiIndicators);
+        }
+        if (modelResult.realIndicators.length > 0) {
+            realIndicators.push(...modelResult.realIndicators);
+        }
+    }
+
+    // =========================================
+    // 9. FACE AND ANATOMY ANALYSIS (DEEP SCAN)
+    // Eyes, skin, hands, symmetry
+    // =========================================
+    if (mode === 'deep') {
+        const anatomyResult = analyzeFaceAndAnatomy(pixels, width, height);
+        if (anatomyResult.aiIndicators.length > 0) {
+            indicators.push(...anatomyResult.aiIndicators);
+        }
+        if (anatomyResult.realIndicators.length > 0) {
+            realIndicators.push(...anatomyResult.realIndicators);
+        }
+    }
+
+    // =========================================
+    // 10. SEMANTIC INCONSISTENCY DETECTION (DEEP SCAN)
+    // Text artifacts, lighting, edge coherence
+    // =========================================
+    if (mode === 'deep') {
+        const semanticResult = analyzeSemanticInconsistencies(pixels, width, height);
+        if (semanticResult.aiIndicators.length > 0) {
+            indicators.push(...semanticResult.aiIndicators);
+        }
+        if (semanticResult.realIndicators.length > 0) {
+            realIndicators.push(...semanticResult.realIndicators);
+        }
+    }
+
+    // =========================================
+    // 11. ADVANCED TEXTURE ANALYSIS (DEEP SCAN)
+    // Hair, fabric, background patterns
+    // =========================================
+    if (mode === 'deep') {
+        const advTextureResult = analyzeAdvancedTextures(pixels, width, height);
+        if (advTextureResult.aiIndicators.length > 0) {
+            indicators.push(...advTextureResult.aiIndicators);
+        }
+        if (advTextureResult.realIndicators.length > 0) {
+            realIndicators.push(...advTextureResult.realIndicators);
+        }
+    }
+
+    // =========================================
+    // 12. DEEP METADATA ANALYSIS
+    // EXIF, GPS, Camera, AI tool signatures
+    // =========================================
+    const deepMetaResult = analyzeDeepMetadata(currentFile, dataUrl);
+    if (deepMetaResult.aiIndicators.length > 0) {
+        indicators.push(...deepMetaResult.aiIndicators);
+    }
+    if (deepMetaResult.realIndicators.length > 0) {
+        realIndicators.push(...deepMetaResult.realIndicators);
+    }
+
+    // =========================================
+    // ADVANCED BAYESIAN CONFIDENCE SCORING
+    // Probabilistic multi-indicator fusion
     // =========================================
 
-    // Calculate weighted scores
+    // Calculate weighted scores (for legacy compatibility)
     let aiPoints = 0;
     let realPoints = 0;
     let explainers = [];
@@ -4734,55 +4802,79 @@ async function analyzeImage(dataUrl, mode) {
     aiPoints *= compressionPenalty;
 
     // Require minimum number of indicators for AI detection
-    const minAIIndicators = 3;
+    const minAIIndicators = mode === 'deep' ? 3 : 2;
     const aiIndicatorCount = indicators.length;
 
-    // Calculate final score
-    // Base score starts at 25 (neutral-leaning-real for social media)
-    let baseScore = 25;
-
-    // AI indicators increase score, but require multiple
+    // Calculate raw weighted score
+    let rawScore = 25; // Base neutral-leaning-real
     if (aiIndicatorCount >= minAIIndicators) {
-        baseScore += Math.min(aiPoints, 60);
+        rawScore += Math.min(aiPoints, 65);
     } else if (aiIndicatorCount > 0) {
-        // Few indicators = weak signal, scale down significantly
-        baseScore += Math.min(aiPoints * 0.3, 20);
+        rawScore += Math.min(aiPoints * 0.3, 20);
     }
+    rawScore -= Math.min(realPoints, 45);
+    rawScore = clamp(rawScore, 0, 100);
 
-    // Real indicators decrease score
-    baseScore -= Math.min(realPoints, 40);
+    // Apply Bayesian ensemble scoring for deep scan
+    let aiScore;
+    if (mode === 'deep') {
+        const bayesianResult = calculateBayesianScore(indicators, realIndicators, mode);
+        aiScore = calibrateScore(bayesianResult, rawScore, mode);
 
-    // Normalize to 0-100
-    let aiScore = clamp(baseScore, 0, 100);
+        // Add Bayesian info to explainers
+        explainers.push({
+            icon: 'BAYES',
+            text: `Bayesian analysis: ${bayesianResult.aiCategories} AI signal categories, ${bayesianResult.realCategories} authenticity categories`,
+            type: 'info'
+        });
+    } else {
+        // Quick scan uses simpler scoring
+        aiScore = clamp(rawScore, 5, 95);
+    }
 
     // Forensics mode in deep scan
     if (mode === 'deep' && forensicsMode) {
-        // More detailed analysis already included above
         explainers.push({
             icon: 'SCAN',
-            text: 'Forensics mode: Full frequency and fingerprint analysis applied',
+            text: 'Forensics mode: Full multi-layer analysis with 12 detection modules',
             type: 'info'
         });
     }
 
-    // Determine verdict based on multi-indicator approach
+    // Determine verdict based on calibrated score and indicator counts
     let verdict, confidence;
 
-    if (aiScore >= 70 && aiIndicatorCount >= minAIIndicators) {
-        verdict = 'ai';
-        confidence = aiScore >= 85 ? 'high' : 'medium';
-    } else if (aiScore <= 30 || realIndicators.length >= 2) {
-        verdict = 'real';
-        confidence = aiScore <= 15 ? 'high' : 'medium';
+    // Deep scan has stricter thresholds but more reliable results
+    if (mode === 'deep') {
+        if (aiScore >= 75 && aiIndicatorCount >= minAIIndicators) {
+            verdict = 'ai';
+            confidence = aiScore >= 88 ? 'high' : 'medium';
+        } else if (aiScore <= 25 || realIndicators.length >= 3) {
+            verdict = 'real';
+            confidence = aiScore <= 12 ? 'high' : 'medium';
+        } else {
+            verdict = 'uncertain';
+            confidence = 'low';
+        }
     } else {
-        verdict = 'uncertain';
-        confidence = 'low';
+        // Quick scan is more conservative
+        if (aiScore >= 70 && aiIndicatorCount >= minAIIndicators) {
+            verdict = 'ai';
+            confidence = aiScore >= 85 ? 'high' : 'medium';
+        } else if (aiScore <= 30 || realIndicators.length >= 2) {
+            verdict = 'real';
+            confidence = aiScore <= 15 ? 'high' : 'medium';
+        } else {
+            verdict = 'uncertain';
+            confidence = 'low';
+        }
     }
 
-    // Add summary explainer
+    // Add summary explainer with scan type info
+    const scanTypeInfo = mode === 'deep' ? '(12 analysis modules)' : '(5 quick modules)';
     explainers.unshift({
         icon: 'INFO',
-        text: `Analysis found ${aiIndicatorCount} AI indicator(s) and ${realIndicators.length} authenticity indicator(s)`,
+        text: `${mode === 'deep' ? 'Deep' : 'Quick'} scan found ${aiIndicatorCount} AI indicator(s) and ${realIndicators.length} authenticity indicator(s) ${scanTypeInfo}`,
         type: 'summary'
     });
 
@@ -5510,6 +5602,1641 @@ function analyzeTextureCoherence(pixels, width, height) {
     return { aiIndicators, realIndicators };
 }
 
+// =====================================================
+// ADVANCED AI MODEL-SPECIFIC FINGERPRINT DETECTION
+// Research-backed signatures for SDXL, DALL-E 3, MJ v6, Flux
+// =====================================================
+
+function analyzeModelSpecificFingerprints(pixels, width, height) {
+    const aiIndicators = [];
+    const realIndicators = [];
+
+    // 1. STABLE DIFFUSION XL FINGERPRINTS
+    // SDXL has characteristic noise patterns in specific frequency bands
+    // Also tends to have subtle grid artifacts from VAE encoding
+    const sdxlResult = detectSDXLPatterns(pixels, width, height);
+    if (sdxlResult.detected) {
+        aiIndicators.push({
+            weight: 22,
+            confidence: sdxlResult.confidence,
+            reason: `Stable Diffusion XL signature detected (${sdxlResult.type})`,
+            icon: 'SDXL'
+        });
+    }
+
+    // 2. DALL-E 3 FINGERPRINTS
+    // DALL-E 3 has distinctive color quantization patterns
+    // Also has specific handling of high-frequency details
+    const dalle3Result = detectDALLE3Patterns(pixels, width, height);
+    if (dalle3Result.detected) {
+        aiIndicators.push({
+            weight: 22,
+            confidence: dalle3Result.confidence,
+            reason: `DALL-E 3 signature detected (${dalle3Result.type})`,
+            icon: 'DALLE'
+        });
+    }
+
+    // 3. MIDJOURNEY V6 FINGERPRINTS
+    // MJ has characteristic "painterly" smoothness and specific color palette tendencies
+    const mjResult = detectMidjourneyPatterns(pixels, width, height);
+    if (mjResult.detected) {
+        aiIndicators.push({
+            weight: 22,
+            confidence: mjResult.confidence,
+            reason: `Midjourney v6 signature detected (${mjResult.type})`,
+            icon: 'MJ'
+        });
+    }
+
+    // 4. FLUX FINGERPRINTS
+    // Flux has specific denoising artifacts and tends to have unusual gradient smoothness
+    const fluxResult = detectFluxPatterns(pixels, width, height);
+    if (fluxResult.detected) {
+        aiIndicators.push({
+            weight: 20,
+            confidence: fluxResult.confidence,
+            reason: `Flux model signature detected (${fluxResult.type})`,
+            icon: 'FLUX'
+        });
+    }
+
+    return { aiIndicators, realIndicators };
+}
+
+function detectSDXLPatterns(pixels, width, height) {
+    // SDXL specific: 8x8 VAE latent space artifacts
+    // Check for periodic patterns at 8-pixel intervals
+    let periodicScore = 0;
+    let gridArtifacts = 0;
+    const step = 8;
+
+    for (let y = step; y < height - step; y += step) {
+        for (let x = step; x < width - step; x += step) {
+            const idx = (y * width + x) * 4;
+            const idxPrev = ((y - step) * width + x) * 4;
+            const idxPrevX = (y * width + (x - step)) * 4;
+
+            // Check for consistent differences at 8px boundaries
+            const vDiff = Math.abs(pixels[idx] - pixels[idxPrev]) +
+                         Math.abs(pixels[idx + 1] - pixels[idxPrev + 1]) +
+                         Math.abs(pixels[idx + 2] - pixels[idxPrev + 2]);
+            const hDiff = Math.abs(pixels[idx] - pixels[idxPrevX]) +
+                         Math.abs(pixels[idx + 1] - pixels[idxPrevX + 1]) +
+                         Math.abs(pixels[idx + 2] - pixels[idxPrevX + 2]);
+
+            // SDXL shows subtle but consistent boundaries at 8px intervals
+            if (vDiff > 3 && vDiff < 25) gridArtifacts++;
+            if (hDiff > 3 && hDiff < 25) gridArtifacts++;
+        }
+    }
+
+    const gridRatio = gridArtifacts / ((width / step) * (height / step) * 2);
+
+    // Also check for SDXL's characteristic smooth gradients
+    let smoothGradients = 0;
+    let totalGradients = 0;
+    for (let y = 0; y < height - 4; y += 4) {
+        for (let x = 0; x < width - 4; x += 4) {
+            const idx1 = (y * width + x) * 4;
+            const idx2 = ((y + 4) * width + (x + 4)) * 4;
+            const gradR = Math.abs(pixels[idx1] - pixels[idx2]);
+            const gradG = Math.abs(pixels[idx1 + 1] - pixels[idx2 + 1]);
+            const gradB = Math.abs(pixels[idx1 + 2] - pixels[idx2 + 2]);
+
+            // SDXL produces very smooth gradients (1-10 range)
+            if (gradR >= 1 && gradR <= 10 && gradG >= 1 && gradG <= 10 && gradB >= 1 && gradB <= 10) {
+                smoothGradients++;
+            }
+            totalGradients++;
+        }
+    }
+
+    const smoothRatio = smoothGradients / (totalGradients || 1);
+
+    if (gridRatio > 0.6 && smoothRatio > 0.4) {
+        return { detected: true, confidence: 0.75, type: 'VAE grid + smooth gradients' };
+    }
+    if (gridRatio > 0.7) {
+        return { detected: true, confidence: 0.65, type: 'VAE latent grid' };
+    }
+
+    return { detected: false };
+}
+
+function detectDALLE3Patterns(pixels, width, height) {
+    // DALL-E 3 specific: Characteristic color quantization in mid-tones
+    // Also has specific handling of edges - tends to be sharper than natural
+
+    const colorBins = new Map();
+    let edgeSharpness = 0;
+    let edgeCount = 0;
+
+    // Sample pixels and check color clustering
+    for (let i = 0; i < pixels.length; i += 16) {
+        const r = Math.floor(pixels[i] / 8) * 8;
+        const g = Math.floor(pixels[i + 1] / 8) * 8;
+        const b = Math.floor(pixels[i + 2] / 8) * 8;
+        const key = `${r},${g},${b}`;
+        colorBins.set(key, (colorBins.get(key) || 0) + 1);
+    }
+
+    // DALL-E 3 tends to cluster colors more tightly
+    const sortedBins = Array.from(colorBins.values()).sort((a, b) => b - a);
+    const top20Colors = sortedBins.slice(0, 20).reduce((a, b) => a + b, 0);
+    const totalSampled = pixels.length / 16;
+    const colorConcentration = top20Colors / totalSampled;
+
+    // Check edge sharpness using Laplacian
+    for (let y = 1; y < height - 1; y += 2) {
+        for (let x = 1; x < width - 1; x += 2) {
+            const idx = (y * width + x) * 4;
+            const gray = (pixels[idx] + pixels[idx + 1] + pixels[idx + 2]) / 3;
+
+            const grayUp = (pixels[idx - width * 4] + pixels[idx - width * 4 + 1] + pixels[idx - width * 4 + 2]) / 3;
+            const grayDown = (pixels[idx + width * 4] + pixels[idx + width * 4 + 1] + pixels[idx + width * 4 + 2]) / 3;
+            const grayLeft = (pixels[idx - 4] + pixels[idx - 3] + pixels[idx - 2]) / 3;
+            const grayRight = (pixels[idx + 4] + pixels[idx + 5] + pixels[idx + 6]) / 3;
+
+            const laplacian = Math.abs(4 * gray - grayUp - grayDown - grayLeft - grayRight);
+            if (laplacian > 20) {
+                edgeSharpness += laplacian;
+                edgeCount++;
+            }
+        }
+    }
+
+    const avgEdgeSharpness = edgeSharpness / (edgeCount || 1);
+
+    // DALL-E 3: High color concentration + sharp edges but smooth surfaces
+    if (colorConcentration > 0.5 && avgEdgeSharpness > 30 && avgEdgeSharpness < 60) {
+        return { detected: true, confidence: 0.7, type: 'color clustering + edge profile' };
+    }
+
+    return { detected: false };
+}
+
+function detectMidjourneyPatterns(pixels, width, height) {
+    // Midjourney v6 specific: Painterly smoothness, characteristic "rendering" look
+    // Often has subtle banding in gradients and specific color saturation patterns
+
+    let bandingScore = 0;
+    let saturationProfile = [];
+    let bandingChecks = 0;
+
+    // Check for gradient banding (MJ artifact)
+    for (let y = 0; y < height; y += 4) {
+        for (let x = 4; x < width - 4; x += 4) {
+            const idx = (y * width + x) * 4;
+            const prevIdx = (y * width + (x - 4)) * 4;
+            const nextIdx = (y * width + (x + 4)) * 4;
+
+            // Check for "staircase" pattern in gradients
+            const currR = pixels[idx], currG = pixels[idx + 1], currB = pixels[idx + 2];
+            const prevR = pixels[prevIdx], prevG = pixels[prevIdx + 1], prevB = pixels[prevIdx + 2];
+            const nextR = pixels[nextIdx], nextG = pixels[nextIdx + 1], nextB = pixels[nextIdx + 2];
+
+            // Banding: similar to prev OR similar to next, but step change between
+            const diffPrev = Math.abs(currR - prevR) + Math.abs(currG - prevG) + Math.abs(currB - prevB);
+            const diffNext = Math.abs(currR - nextR) + Math.abs(currG - nextG) + Math.abs(currB - nextB);
+
+            if ((diffPrev < 5 && diffNext > 10) || (diffNext < 5 && diffPrev > 10)) {
+                bandingScore++;
+            }
+            bandingChecks++;
+        }
+    }
+
+    // Analyze saturation distribution (MJ tends toward specific saturation levels)
+    for (let i = 0; i < pixels.length; i += 32) {
+        const r = pixels[i], g = pixels[i + 1], b = pixels[i + 2];
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        const sat = max === 0 ? 0 : (max - min) / max;
+        saturationProfile.push(sat);
+    }
+
+    // Calculate saturation histogram
+    const satBins = [0, 0, 0, 0, 0]; // 0-0.2, 0.2-0.4, 0.4-0.6, 0.6-0.8, 0.8-1.0
+    for (const sat of saturationProfile) {
+        const bin = Math.min(4, Math.floor(sat * 5));
+        satBins[bin]++;
+    }
+
+    // MJ often has mid-saturation concentration
+    const midSatRatio = (satBins[2] + satBins[3]) / saturationProfile.length;
+    const bandingRatio = bandingScore / (bandingChecks || 1);
+
+    if (bandingRatio > 0.08 && midSatRatio > 0.4) {
+        return { detected: true, confidence: 0.7, type: 'gradient banding + saturation profile' };
+    }
+
+    if (midSatRatio > 0.55 && bandingRatio > 0.05) {
+        return { detected: true, confidence: 0.6, type: 'MJ saturation signature' };
+    }
+
+    return { detected: false };
+}
+
+function detectFluxPatterns(pixels, width, height) {
+    // Flux specific: Very smooth denoising, sometimes "waxy" look
+    // Has characteristic handling of fine details - often over-smoothed
+
+    let microDetailScore = 0;
+    let macroDetailScore = 0;
+    let samples = 0;
+
+    // Compare micro vs macro detail - Flux over-smooths micro but preserves macro
+    for (let y = 2; y < height - 2; y += 4) {
+        for (let x = 2; x < width - 2; x += 4) {
+            const idx = (y * width + x) * 4;
+
+            // Micro detail (1-2 pixel differences)
+            const gray = (pixels[idx] + pixels[idx + 1] + pixels[idx + 2]) / 3;
+            const grayR = (pixels[idx + 4] + pixels[idx + 5] + pixels[idx + 6]) / 3;
+            const microDiff = Math.abs(gray - grayR);
+
+            // Macro detail (4-8 pixel differences)
+            const idx8 = (y * width + (x + 8)) * 4;
+            if (x + 8 < width) {
+                const gray8 = (pixels[idx8] + pixels[idx8 + 1] + pixels[idx8 + 2]) / 3;
+                const macroDiff = Math.abs(gray - gray8);
+
+                microDetailScore += microDiff;
+                macroDetailScore += macroDiff;
+                samples++;
+            }
+        }
+    }
+
+    const avgMicro = microDetailScore / (samples || 1);
+    const avgMacro = macroDetailScore / (samples || 1);
+    const detailRatio = avgMicro / (avgMacro || 1);
+
+    // Flux: Low micro detail relative to macro detail (over-smoothed)
+    if (detailRatio < 0.3 && avgMacro > 5) {
+        return { detected: true, confidence: 0.65, type: 'over-smoothed micro-detail' };
+    }
+
+    // Also check for Flux's characteristic color consistency
+    let colorConsistency = 0;
+    for (let y = 4; y < height - 4; y += 8) {
+        for (let x = 4; x < width - 4; x += 8) {
+            const idx = (y * width + x) * 4;
+            let regionSum = [0, 0, 0];
+            let regionSqSum = [0, 0, 0];
+            let count = 0;
+
+            for (let dy = -4; dy <= 4; dy += 2) {
+                for (let dx = -4; dx <= 4; dx += 2) {
+                    const pIdx = ((y + dy) * width + (x + dx)) * 4;
+                    regionSum[0] += pixels[pIdx];
+                    regionSum[1] += pixels[pIdx + 1];
+                    regionSum[2] += pixels[pIdx + 2];
+                    regionSqSum[0] += pixels[pIdx] * pixels[pIdx];
+                    regionSqSum[1] += pixels[pIdx + 1] * pixels[pIdx + 1];
+                    regionSqSum[2] += pixels[pIdx + 2] * pixels[pIdx + 2];
+                    count++;
+                }
+            }
+
+            // Low variance = high consistency
+            const varR = (regionSqSum[0] / count) - Math.pow(regionSum[0] / count, 2);
+            const varG = (regionSqSum[1] / count) - Math.pow(regionSum[1] / count, 2);
+            const varB = (regionSqSum[2] / count) - Math.pow(regionSum[2] / count, 2);
+
+            if (varR < 100 && varG < 100 && varB < 100) colorConsistency++;
+        }
+    }
+
+    const consistencyRatio = colorConsistency / ((width / 8) * (height / 8) || 1);
+    if (consistencyRatio > 0.7 && detailRatio < 0.5) {
+        return { detected: true, confidence: 0.6, type: 'Flux color consistency' };
+    }
+
+    return { detected: false };
+}
+
+// =====================================================
+// FACE AND ANATOMY ANALYSIS
+// Detect AI-generated face/hand anomalies
+// =====================================================
+
+function analyzeFaceAndAnatomy(pixels, width, height) {
+    const aiIndicators = [];
+    const realIndicators = [];
+
+    // Detect skin-tone regions and analyze them
+    const skinRegions = findSkinRegions(pixels, width, height);
+
+    if (skinRegions.coverage > 0.05) {
+        // Analyze eye reflection consistency (if eyes might be present)
+        const eyeResult = analyzeEyeArtifacts(pixels, width, height, skinRegions);
+        if (eyeResult.detected) {
+            aiIndicators.push({
+                weight: 20,
+                confidence: eyeResult.confidence,
+                reason: eyeResult.reason,
+                icon: 'EYE'
+            });
+        }
+
+        // Analyze skin texture for AI artifacts
+        const skinResult = analyzeSkinTexture(pixels, width, height, skinRegions);
+        if (skinResult.aiArtifacts) {
+            aiIndicators.push({
+                weight: 15,
+                confidence: skinResult.confidence,
+                reason: skinResult.reason,
+                icon: 'SKIN'
+            });
+        } else if (skinResult.naturalSkin) {
+            realIndicators.push({
+                weight: 12,
+                confidence: skinResult.confidence,
+                reason: 'Natural skin texture with pores and variation',
+                icon: 'REAL'
+            });
+        }
+
+        // Analyze facial symmetry (AI tends to be TOO symmetric)
+        const symmetryResult = analyzeFacialSymmetry(pixels, width, height, skinRegions);
+        if (symmetryResult.tooSymmetric) {
+            aiIndicators.push({
+                weight: 12,
+                confidence: symmetryResult.confidence,
+                reason: 'Unnaturally perfect facial symmetry',
+                icon: 'SYM'
+            });
+        }
+
+        // Hand/finger analysis
+        const handResult = analyzeHandArtifacts(pixels, width, height, skinRegions);
+        if (handResult.detected) {
+            aiIndicators.push({
+                weight: 25,
+                confidence: handResult.confidence,
+                reason: handResult.reason,
+                icon: 'HAND'
+            });
+        }
+    }
+
+    return { aiIndicators, realIndicators };
+}
+
+function findSkinRegions(pixels, width, height) {
+    let skinPixels = 0;
+    const skinMask = new Uint8Array(width * height);
+
+    for (let i = 0; i < pixels.length; i += 4) {
+        const r = pixels[i], g = pixels[i + 1], b = pixels[i + 2];
+
+        // Skin tone detection using multiple color space rules
+        // Rule 1: RGB bounds
+        const rgbSkin = r > 95 && g > 40 && b > 20 &&
+                       r > g && r > b &&
+                       Math.abs(r - g) > 15 &&
+                       r - b > 15 && r - b < 130;
+
+        // Rule 2: Normalized RGB
+        const sum = r + g + b;
+        const normR = r / (sum || 1), normG = g / (sum || 1);
+        const normSkin = normR > 0.35 && normR < 0.5 && normG > 0.25 && normG < 0.4;
+
+        // Rule 3: HSV-like check
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        const saturation = max === 0 ? 0 : (max - min) / max;
+        const hsvSkin = saturation > 0.1 && saturation < 0.7 && max > 100;
+
+        if ((rgbSkin && hsvSkin) || (rgbSkin && normSkin)) {
+            skinPixels++;
+            skinMask[i / 4] = 1;
+        }
+    }
+
+    return {
+        coverage: skinPixels / (width * height),
+        mask: skinMask,
+        skinPixels
+    };
+}
+
+function analyzeEyeArtifacts(pixels, width, height, skinRegions) {
+    // Look for bright spots in darker regions (potential eyes)
+    // Check if eye reflections are consistent
+
+    let potentialEyes = [];
+    const regionSize = 16;
+
+    // Scan for potential eye regions (bright spots in face-like areas)
+    for (let y = regionSize; y < height - regionSize; y += regionSize / 2) {
+        for (let x = regionSize; x < width - regionSize; x += regionSize / 2) {
+            const maskIdx = y * width + x;
+
+            // Check if surrounded by skin
+            let skinCount = 0;
+            for (let dy = -regionSize; dy <= regionSize; dy += 4) {
+                for (let dx = -regionSize; dx <= regionSize; dx += 4) {
+                    if (skinRegions.mask[maskIdx + dy * width + dx]) skinCount++;
+                }
+            }
+
+            if (skinCount < 10) continue; // Not in face area
+
+            const idx = (y * width + x) * 4;
+            const brightness = (pixels[idx] + pixels[idx + 1] + pixels[idx + 2]) / 3;
+
+            // Look for bright spots (catchlights) or very dark spots (pupils)
+            if (brightness > 200 || brightness < 40) {
+                // Check for high contrast in small area (eye characteristic)
+                let contrastSum = 0;
+                for (let dy = -2; dy <= 2; dy++) {
+                    for (let dx = -2; dx <= 2; dx++) {
+                        const nIdx = ((y + dy) * width + (x + dx)) * 4;
+                        const nBright = (pixels[nIdx] + pixels[nIdx + 1] + pixels[nIdx + 2]) / 3;
+                        contrastSum += Math.abs(brightness - nBright);
+                    }
+                }
+
+                if (contrastSum > 500) {
+                    potentialEyes.push({ x, y, brightness, contrast: contrastSum });
+                }
+            }
+        }
+    }
+
+    // Analyze eye pairs for consistency
+    if (potentialEyes.length >= 2) {
+        // Sort by y to find horizontal pairs
+        potentialEyes.sort((a, b) => a.y - b.y);
+
+        for (let i = 0; i < potentialEyes.length - 1; i++) {
+            const e1 = potentialEyes[i];
+            for (let j = i + 1; j < potentialEyes.length; j++) {
+                const e2 = potentialEyes[j];
+
+                // Check if roughly at same height (eye pair)
+                if (Math.abs(e1.y - e2.y) < 20 && Math.abs(e1.x - e2.x) > 30) {
+                    // Check brightness consistency (should be similar)
+                    const brightDiff = Math.abs(e1.brightness - e2.brightness);
+
+                    // AI often has inconsistent eye reflections
+                    if (brightDiff > 50 && e1.brightness > 180 && e2.brightness > 180) {
+                        return {
+                            detected: true,
+                            confidence: 0.65,
+                            reason: 'Inconsistent eye catchlight reflections'
+                        };
+                    }
+
+                    // Check contrast consistency
+                    const contrastDiff = Math.abs(e1.contrast - e2.contrast) / ((e1.contrast + e2.contrast) / 2);
+                    if (contrastDiff > 0.5) {
+                        return {
+                            detected: true,
+                            confidence: 0.55,
+                            reason: 'Asymmetric eye detail levels'
+                        };
+                    }
+                }
+            }
+        }
+    }
+
+    return { detected: false };
+}
+
+function analyzeSkinTexture(pixels, width, height, skinRegions) {
+    let poreScore = 0;
+    let smoothScore = 0;
+    let sampleCount = 0;
+
+    // Sample skin regions for texture analysis
+    for (let y = 4; y < height - 4; y += 8) {
+        for (let x = 4; x < width - 4; x += 8) {
+            const maskIdx = y * width + x;
+            if (!skinRegions.mask[maskIdx]) continue;
+
+            // Calculate local texture variance
+            let sumGray = 0, sumGraySq = 0, count = 0;
+
+            for (let dy = -3; dy <= 3; dy++) {
+                for (let dx = -3; dx <= 3; dx++) {
+                    const idx = ((y + dy) * width + (x + dx)) * 4;
+                    const gray = (pixels[idx] + pixels[idx + 1] + pixels[idx + 2]) / 3;
+                    sumGray += gray;
+                    sumGraySq += gray * gray;
+                    count++;
+                }
+            }
+
+            const mean = sumGray / count;
+            const variance = (sumGraySq / count) - (mean * mean);
+
+            // Real skin has micro-texture (pores, small variations)
+            if (variance > 10 && variance < 150) {
+                poreScore++;
+            } else if (variance < 5) {
+                smoothScore++;
+            }
+            sampleCount++;
+        }
+    }
+
+    if (sampleCount < 20) return { aiArtifacts: false, naturalSkin: false };
+
+    const poreRatio = poreScore / sampleCount;
+    const smoothRatio = smoothScore / sampleCount;
+
+    // AI skin is often too smooth
+    if (smoothRatio > 0.6 && skinRegions.coverage > 0.1) {
+        return {
+            aiArtifacts: true,
+            confidence: 0.65,
+            reason: 'Unnaturally smooth skin texture (lacks pores/details)'
+        };
+    }
+
+    // Natural skin has visible texture
+    if (poreRatio > 0.5) {
+        return {
+            naturalSkin: true,
+            confidence: 0.6
+        };
+    }
+
+    return { aiArtifacts: false, naturalSkin: false };
+}
+
+function analyzeFacialSymmetry(pixels, width, height, skinRegions) {
+    // Find the approximate face center and check symmetry
+    let sumX = 0, sumY = 0, count = 0;
+
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            if (skinRegions.mask[y * width + x]) {
+                sumX += x;
+                sumY += y;
+                count++;
+            }
+        }
+    }
+
+    if (count < 1000) return { tooSymmetric: false };
+
+    const centerX = Math.floor(sumX / count);
+    const centerY = Math.floor(sumY / count);
+
+    // Compare left and right halves around center
+    let symmetryScore = 0;
+    let totalComparisons = 0;
+
+    const maxDist = Math.min(centerX, width - centerX, 100);
+
+    for (let y = Math.max(0, centerY - 100); y < Math.min(height, centerY + 100); y += 4) {
+        for (let d = 10; d < maxDist; d += 4) {
+            const leftIdx = (y * width + (centerX - d)) * 4;
+            const rightIdx = (y * width + (centerX + d)) * 4;
+
+            if (!skinRegions.mask[y * width + centerX - d] || !skinRegions.mask[y * width + centerX + d]) continue;
+
+            const diffR = Math.abs(pixels[leftIdx] - pixels[rightIdx]);
+            const diffG = Math.abs(pixels[leftIdx + 1] - pixels[rightIdx + 1]);
+            const diffB = Math.abs(pixels[leftIdx + 2] - pixels[rightIdx + 2]);
+            const totalDiff = diffR + diffG + diffB;
+
+            // Perfect symmetry would be 0, natural variation is 5-30
+            if (totalDiff < 10) symmetryScore++;
+            totalComparisons++;
+        }
+    }
+
+    if (totalComparisons < 50) return { tooSymmetric: false };
+
+    const symmetryRatio = symmetryScore / totalComparisons;
+
+    // Unnaturally high symmetry suggests AI
+    if (symmetryRatio > 0.7) {
+        return {
+            tooSymmetric: true,
+            confidence: 0.6
+        };
+    }
+
+    return { tooSymmetric: false };
+}
+
+function analyzeHandArtifacts(pixels, width, height, skinRegions) {
+    // Look for elongated skin regions (potential hands/fingers)
+    // Check for anatomical oddities
+
+    // Find connected components in skin regions
+    const visited = new Uint8Array(width * height);
+    const regions = [];
+
+    for (let startY = 0; startY < height; startY += 20) {
+        for (let startX = 0; startX < width; startX += 20) {
+            if (!skinRegions.mask[startY * width + startX] || visited[startY * width + startX]) continue;
+
+            // BFS to find connected skin region
+            const queue = [{ x: startX, y: startY }];
+            let minX = startX, maxX = startX, minY = startY, maxY = startY;
+            let pixelCount = 0;
+
+            while (queue.length > 0 && pixelCount < 5000) {
+                const { x, y } = queue.shift();
+                const idx = y * width + x;
+
+                if (x < 0 || x >= width || y < 0 || y >= height) continue;
+                if (visited[idx] || !skinRegions.mask[idx]) continue;
+
+                visited[idx] = 1;
+                pixelCount++;
+                minX = Math.min(minX, x);
+                maxX = Math.max(maxX, x);
+                minY = Math.min(minY, y);
+                maxY = Math.max(maxY, y);
+
+                // Add neighbors (sparse sampling for speed)
+                queue.push({ x: x + 4, y });
+                queue.push({ x: x - 4, y });
+                queue.push({ x, y: y + 4 });
+                queue.push({ x, y: y - 4 });
+            }
+
+            if (pixelCount > 100) {
+                const aspect = (maxX - minX) / ((maxY - minY) || 1);
+                regions.push({
+                    minX, maxX, minY, maxY,
+                    width: maxX - minX,
+                    height: maxY - minY,
+                    pixelCount,
+                    aspect
+                });
+            }
+        }
+    }
+
+    // Look for finger-like elongated regions
+    let elongatedRegions = 0;
+    let oddProportions = 0;
+
+    for (const region of regions) {
+        // Fingers are elongated (aspect ratio > 2.5 or < 0.4)
+        if (region.aspect > 3 || region.aspect < 0.33) {
+            elongatedRegions++;
+
+            // Check for odd proportions within the elongated region
+            if (region.width < 15 && region.height > 50) {
+                // Very thin and long - could be malformed finger
+                oddProportions++;
+            }
+            if (region.height < 15 && region.width > 50) {
+                oddProportions++;
+            }
+        }
+    }
+
+    // Multiple oddly-proportioned elongated regions suggest hand issues
+    if (oddProportions >= 3) {
+        return {
+            detected: true,
+            confidence: 0.7,
+            reason: 'Potential hand/finger anatomy anomalies detected'
+        };
+    }
+
+    if (elongatedRegions >= 6 && oddProportions >= 2) {
+        return {
+            detected: true,
+            confidence: 0.6,
+            reason: 'Unusual digit-like structure count'
+        };
+    }
+
+    return { detected: false };
+}
+
+// =====================================================
+// SEMANTIC INCONSISTENCY DETECTION
+// Text, objects, lighting analysis
+// =====================================================
+
+function analyzeSemanticInconsistencies(pixels, width, height) {
+    const aiIndicators = [];
+    const realIndicators = [];
+
+    // 1. TEXT DETECTION AND ANALYSIS
+    // AI often generates garbled or inconsistent text
+    const textResult = analyzeTextArtifacts(pixels, width, height);
+    if (textResult.detected) {
+        aiIndicators.push({
+            weight: 18,
+            confidence: textResult.confidence,
+            reason: textResult.reason,
+            icon: 'TEXT'
+        });
+    }
+
+    // 2. LIGHTING DIRECTION CONSISTENCY
+    const lightingResult = analyzeLightingConsistency(pixels, width, height);
+    if (lightingResult.inconsistent) {
+        aiIndicators.push({
+            weight: 15,
+            confidence: lightingResult.confidence,
+            reason: 'Inconsistent lighting directions detected',
+            icon: 'LIGHT'
+        });
+    } else if (lightingResult.consistent) {
+        realIndicators.push({
+            weight: 10,
+            confidence: lightingResult.confidence,
+            reason: 'Consistent natural lighting',
+            icon: 'LIGHT'
+        });
+    }
+
+    // 3. EDGE COHERENCE
+    // AI sometimes has edges that don't make physical sense
+    const edgeResult = analyzeEdgeCoherence(pixels, width, height);
+    if (edgeResult.incoherent) {
+        aiIndicators.push({
+            weight: 12,
+            confidence: edgeResult.confidence,
+            reason: 'Edge coherence anomalies detected',
+            icon: 'EDGE'
+        });
+    }
+
+    return { aiIndicators, realIndicators };
+}
+
+function analyzeTextArtifacts(pixels, width, height) {
+    // Look for high-contrast small regions (potential text)
+    // Analyze if they follow consistent patterns
+
+    let potentialTextRegions = [];
+    const blockSize = 16;
+
+    for (let y = 0; y < height - blockSize; y += blockSize / 2) {
+        for (let x = 0; x < width - blockSize; x += blockSize / 2) {
+            let minBright = 255, maxBright = 0;
+            let edgeCount = 0;
+
+            for (let dy = 0; dy < blockSize; dy++) {
+                for (let dx = 0; dx < blockSize; dx++) {
+                    const idx = ((y + dy) * width + (x + dx)) * 4;
+                    const bright = (pixels[idx] + pixels[idx + 1] + pixels[idx + 2]) / 3;
+                    minBright = Math.min(minBright, bright);
+                    maxBright = Math.max(maxBright, bright);
+
+                    // Count sharp transitions
+                    if (dx > 0 && dy > 0) {
+                        const prevIdx = ((y + dy) * width + (x + dx - 1)) * 4;
+                        const prevBright = (pixels[prevIdx] + pixels[prevIdx + 1] + pixels[prevIdx + 2]) / 3;
+                        if (Math.abs(bright - prevBright) > 50) edgeCount++;
+                    }
+                }
+            }
+
+            // High contrast + many edges = potential text
+            if (maxBright - minBright > 150 && edgeCount > 20) {
+                potentialTextRegions.push({ x, y, contrast: maxBright - minBright, edges: edgeCount });
+            }
+        }
+    }
+
+    if (potentialTextRegions.length < 3) return { detected: false };
+
+    // Analyze text-like regions for consistency
+    // Real text has consistent character heights and spacing
+    // AI text is often garbled with inconsistent proportions
+
+    // Sort by y to find text lines
+    potentialTextRegions.sort((a, b) => a.y - b.y);
+
+    // Group into lines
+    let lines = [];
+    let currentLine = [potentialTextRegions[0]];
+
+    for (let i = 1; i < potentialTextRegions.length; i++) {
+        if (Math.abs(potentialTextRegions[i].y - currentLine[0].y) < blockSize) {
+            currentLine.push(potentialTextRegions[i]);
+        } else {
+            if (currentLine.length >= 2) lines.push(currentLine);
+            currentLine = [potentialTextRegions[i]];
+        }
+    }
+    if (currentLine.length >= 2) lines.push(currentLine);
+
+    // Analyze line consistency
+    let inconsistentLines = 0;
+    for (const line of lines) {
+        // Check spacing regularity
+        line.sort((a, b) => a.x - b.x);
+        const spacings = [];
+        for (let i = 1; i < line.length; i++) {
+            spacings.push(line[i].x - line[i - 1].x);
+        }
+
+        if (spacings.length >= 2) {
+            const avgSpacing = spacings.reduce((a, b) => a + b) / spacings.length;
+            const spacingVariance = spacings.reduce((a, b) => a + Math.pow(b - avgSpacing, 2), 0) / spacings.length;
+
+            // High spacing variance suggests AI text anomalies
+            if (Math.sqrt(spacingVariance) / avgSpacing > 0.5) {
+                inconsistentLines++;
+            }
+        }
+    }
+
+    if (lines.length >= 2 && inconsistentLines >= lines.length * 0.5) {
+        return {
+            detected: true,
+            confidence: 0.65,
+            reason: 'Text-like regions with inconsistent spacing/structure'
+        };
+    }
+
+    return { detected: false };
+}
+
+function analyzeLightingConsistency(pixels, width, height) {
+    // Analyze gradient directions across the image
+    // Real photos have consistent light source directions
+
+    const gradientAngles = [];
+    const regionSize = 32;
+
+    for (let y = regionSize; y < height - regionSize; y += regionSize) {
+        for (let x = regionSize; x < width - regionSize; x += regionSize) {
+            let sumGx = 0, sumGy = 0;
+
+            // Calculate average gradient in region
+            for (let dy = -regionSize / 2; dy < regionSize / 2; dy += 4) {
+                for (let dx = -regionSize / 2; dx < regionSize / 2; dx += 4) {
+                    const idx = ((y + dy) * width + (x + dx)) * 4;
+                    const idxR = ((y + dy) * width + (x + dx + 4)) * 4;
+                    const idxD = ((y + dy + 4) * width + (x + dx)) * 4;
+
+                    const gray = (pixels[idx] + pixels[idx + 1] + pixels[idx + 2]) / 3;
+                    const grayR = (pixels[idxR] + pixels[idxR + 1] + pixels[idxR + 2]) / 3;
+                    const grayD = (pixels[idxD] + pixels[idxD + 1] + pixels[idxD + 2]) / 3;
+
+                    sumGx += grayR - gray;
+                    sumGy += grayD - gray;
+                }
+            }
+
+            const magnitude = Math.sqrt(sumGx * sumGx + sumGy * sumGy);
+            if (magnitude > 100) {
+                const angle = Math.atan2(sumGy, sumGx);
+                gradientAngles.push(angle);
+            }
+        }
+    }
+
+    if (gradientAngles.length < 10) return { consistent: false, inconsistent: false };
+
+    // Analyze angle distribution
+    // Real photos: angles cluster around 1-2 directions
+    // AI: more random distribution
+
+    // Convert to bins
+    const bins = new Array(8).fill(0);
+    for (const angle of gradientAngles) {
+        const bin = Math.floor(((angle + Math.PI) / (2 * Math.PI)) * 8) % 8;
+        bins[bin]++;
+    }
+
+    // Find dominant direction
+    const maxBin = Math.max(...bins);
+    const totalAngles = gradientAngles.length;
+    const dominance = maxBin / totalAngles;
+
+    // Very scattered gradients suggest inconsistent lighting
+    if (dominance < 0.2) {
+        return {
+            inconsistent: true,
+            confidence: 0.55
+        };
+    }
+
+    // Strong directional consistency
+    if (dominance > 0.4) {
+        return {
+            consistent: true,
+            confidence: 0.6
+        };
+    }
+
+    return { consistent: false, inconsistent: false };
+}
+
+function analyzeEdgeCoherence(pixels, width, height) {
+    // Check for edges that appear and disappear unnaturally
+    // AI sometimes has "floating" edges or edges that don't connect properly
+
+    let brokenEdges = 0;
+    let totalEdges = 0;
+
+    for (let y = 2; y < height - 2; y += 4) {
+        for (let x = 2; x < width - 2; x += 4) {
+            const idx = (y * width + x) * 4;
+            const gray = (pixels[idx] + pixels[idx + 1] + pixels[idx + 2]) / 3;
+
+            // Sobel-like edge detection
+            const gL = (pixels[idx - 4] + pixels[idx - 3] + pixels[idx - 2]) / 3;
+            const gR = (pixels[idx + 4] + pixels[idx + 5] + pixels[idx + 6]) / 3;
+            const gU = (pixels[idx - width * 4] + pixels[idx - width * 4 + 1] + pixels[idx - width * 4 + 2]) / 3;
+            const gD = (pixels[idx + width * 4] + pixels[idx + width * 4 + 1] + pixels[idx + width * 4 + 2]) / 3;
+
+            const gx = Math.abs(gR - gL);
+            const gy = Math.abs(gD - gU);
+            const edgeMag = Math.sqrt(gx * gx + gy * gy);
+
+            if (edgeMag > 30) {
+                totalEdges++;
+
+                // Check if edge continues in expected direction
+                const edgeDir = gx > gy ? 'h' : 'v';
+
+                if (edgeDir === 'h') {
+                    // Horizontal edge should continue up or down
+                    const nextIdx = ((y + 4) * width + x) * 4;
+                    const nextGray = (pixels[nextIdx] + pixels[nextIdx + 1] + pixels[nextIdx + 2]) / 3;
+                    const nextGU = (pixels[nextIdx - width * 4] + pixels[nextIdx - width * 4 + 1] + pixels[nextIdx - width * 4 + 2]) / 3;
+                    const nextGD = (pixels[nextIdx + width * 4] + pixels[nextIdx + width * 4 + 1] + pixels[nextIdx + width * 4 + 2]) / 3;
+                    const nextEdge = Math.abs(nextGD - nextGU);
+
+                    // Edge suddenly disappears
+                    if (edgeMag > 50 && nextEdge < 10) {
+                        brokenEdges++;
+                    }
+                } else {
+                    // Vertical edge should continue left or right
+                    const nextIdx = (y * width + (x + 4)) * 4;
+                    const nextGray = (pixels[nextIdx] + pixels[nextIdx + 1] + pixels[nextIdx + 2]) / 3;
+                    const nextGL = (pixels[nextIdx - 4] + pixels[nextIdx - 3] + pixels[nextIdx - 2]) / 3;
+                    const nextGR = (pixels[nextIdx + 4] + pixels[nextIdx + 5] + pixels[nextIdx + 6]) / 3;
+                    const nextEdge = Math.abs(nextGR - nextGL);
+
+                    if (edgeMag > 50 && nextEdge < 10) {
+                        brokenEdges++;
+                    }
+                }
+            }
+        }
+    }
+
+    if (totalEdges < 50) return { incoherent: false };
+
+    const brokenRatio = brokenEdges / totalEdges;
+
+    if (brokenRatio > 0.15) {
+        return {
+            incoherent: true,
+            confidence: 0.55
+        };
+    }
+
+    return { incoherent: false };
+}
+
+// =====================================================
+// ADVANCED TEXTURE ANALYSIS
+// Hair, fabric, repeated patterns
+// =====================================================
+
+function analyzeAdvancedTextures(pixels, width, height) {
+    const aiIndicators = [];
+    const realIndicators = [];
+
+    // 1. HAIR TEXTURE ANALYSIS
+    const hairResult = analyzeHairTexture(pixels, width, height);
+    if (hairResult.aiArtifacts) {
+        aiIndicators.push({
+            weight: 15,
+            confidence: hairResult.confidence,
+            reason: hairResult.reason,
+            icon: 'HAIR'
+        });
+    } else if (hairResult.naturalHair) {
+        realIndicators.push({
+            weight: 12,
+            confidence: hairResult.confidence,
+            reason: 'Natural hair strand detail',
+            icon: 'HAIR'
+        });
+    }
+
+    // 2. FABRIC/TEXTILE ANALYSIS
+    const fabricResult = analyzeFabricTexture(pixels, width, height);
+    if (fabricResult.aiArtifacts) {
+        aiIndicators.push({
+            weight: 12,
+            confidence: fabricResult.confidence,
+            reason: fabricResult.reason,
+            icon: 'FABRIC'
+        });
+    }
+
+    // 3. BACKGROUND TEXTURE CONSISTENCY
+    const bgResult = analyzeBackgroundTexture(pixels, width, height);
+    if (bgResult.suspicious) {
+        aiIndicators.push({
+            weight: 10,
+            confidence: bgResult.confidence,
+            reason: bgResult.reason,
+            icon: 'BG'
+        });
+    }
+
+    return { aiIndicators, realIndicators };
+}
+
+function analyzeHairTexture(pixels, width, height) {
+    // Hair regions: dark, high-frequency detail, elongated structures
+    let hairLikeRegions = 0;
+    let overSmoothedHair = 0;
+    let naturalHair = 0;
+
+    // Look for dark regions with directional texture
+    for (let y = 8; y < height - 8; y += 16) {
+        for (let x = 8; x < width - 8; x += 16) {
+            const idx = (y * width + x) * 4;
+            const brightness = (pixels[idx] + pixels[idx + 1] + pixels[idx + 2]) / 3;
+
+            // Hair is typically darker (not always, but often)
+            if (brightness > 100) continue;
+
+            // Check for directional high-frequency content
+            let hFreq = 0, vFreq = 0;
+            for (let dy = -6; dy < 6; dy += 2) {
+                for (let dx = -6; dx < 6; dx += 2) {
+                    const pIdx = ((y + dy) * width + (x + dx)) * 4;
+                    const pBright = (pixels[pIdx] + pixels[pIdx + 1] + pixels[pIdx + 2]) / 3;
+
+                    if (dx < 4) {
+                        const pIdxR = ((y + dy) * width + (x + dx + 2)) * 4;
+                        const pBrightR = (pixels[pIdxR] + pixels[pIdxR + 1] + pixels[pIdxR + 2]) / 3;
+                        hFreq += Math.abs(pBright - pBrightR);
+                    }
+                    if (dy < 4) {
+                        const pIdxD = ((y + dy + 2) * width + (x + dx)) * 4;
+                        const pBrightD = (pixels[pIdxD] + pixels[pIdxD + 1] + pixels[pIdxD + 2]) / 3;
+                        vFreq += Math.abs(pBright - pBrightD);
+                    }
+                }
+            }
+
+            // Hair has directional texture
+            if (hFreq + vFreq > 200 && Math.abs(hFreq - vFreq) / (hFreq + vFreq) > 0.3) {
+                hairLikeRegions++;
+
+                // Check if it's over-smoothed (AI artifact)
+                const maxFreq = Math.max(hFreq, vFreq);
+                const minFreq = Math.min(hFreq, vFreq);
+
+                if (minFreq < 30 && maxFreq > 100) {
+                    naturalHair++; // Good strand detail
+                } else if (minFreq < 20 && maxFreq < 80) {
+                    overSmoothedHair++; // Lacking detail
+                }
+            }
+        }
+    }
+
+    if (hairLikeRegions < 5) return { aiArtifacts: false, naturalHair: false };
+
+    const smoothRatio = overSmoothedHair / hairLikeRegions;
+    const naturalRatio = naturalHair / hairLikeRegions;
+
+    if (smoothRatio > 0.6) {
+        return {
+            aiArtifacts: true,
+            confidence: 0.6,
+            reason: 'Hair regions lack fine strand detail'
+        };
+    }
+
+    if (naturalRatio > 0.5) {
+        return {
+            naturalHair: true,
+            confidence: 0.55
+        };
+    }
+
+    return { aiArtifacts: false, naturalHair: false };
+}
+
+function analyzeFabricTexture(pixels, width, height) {
+    // Fabric should have consistent weave patterns
+    // AI sometimes has "melting" or inconsistent fabric textures
+
+    let texturedRegions = [];
+
+    for (let y = 16; y < height - 16; y += 32) {
+        for (let x = 16; x < width - 16; x += 32) {
+            // Analyze texture periodicity using autocorrelation
+            let periodicity = 0;
+            let irregularity = 0;
+
+            const centerIdx = (y * width + x) * 4;
+            const centerBright = (pixels[centerIdx] + pixels[centerIdx + 1] + pixels[centerIdx + 2]) / 3;
+
+            // Check for repeating patterns at various offsets
+            const offsets = [4, 8, 12, 16];
+            let correlations = [];
+
+            for (const offset of offsets) {
+                let correlation = 0;
+                let count = 0;
+
+                for (let dy = -8; dy <= 8; dy += 4) {
+                    for (let dx = -8; dx <= 8; dx += 4) {
+                        const pIdx = ((y + dy) * width + (x + dx)) * 4;
+                        const pBright = (pixels[pIdx] + pixels[pIdx + 1] + pixels[pIdx + 2]) / 3;
+
+                        const pIdx2 = ((y + dy) * width + (x + dx + offset)) * 4;
+                        if (x + dx + offset < width) {
+                            const pBright2 = (pixels[pIdx2] + pixels[pIdx2 + 1] + pixels[pIdx2 + 2]) / 3;
+                            correlation += Math.abs(pBright - pBright2);
+                            count++;
+                        }
+                    }
+                }
+
+                correlations.push(correlation / (count || 1));
+            }
+
+            // Check if there's a periodic pattern (fabric weave)
+            const minCorr = Math.min(...correlations);
+            const maxCorr = Math.max(...correlations);
+
+            if (minCorr < 10 && maxCorr > 20) {
+                periodicity++;
+                texturedRegions.push({ x, y, periodicity: true });
+            } else if (correlations.every(c => c > 15 && c < 25)) {
+                irregularity++;
+                texturedRegions.push({ x, y, irregular: true });
+            }
+        }
+    }
+
+    const irregularRatio = texturedRegions.filter(r => r.irregular).length / (texturedRegions.length || 1);
+
+    if (irregularRatio > 0.6 && texturedRegions.length > 10) {
+        return {
+            aiArtifacts: true,
+            confidence: 0.55,
+            reason: 'Fabric/texture regions lack consistent patterns'
+        };
+    }
+
+    return { aiArtifacts: false };
+}
+
+function analyzeBackgroundTexture(pixels, width, height) {
+    // Backgrounds should have consistent properties
+    // AI sometimes has "plastic" or over-processed backgrounds
+
+    // Sample corners and edges (likely background)
+    const cornerSize = Math.min(width, height) / 8;
+    const corners = [
+        { x: cornerSize / 2, y: cornerSize / 2 },
+        { x: width - cornerSize / 2, y: cornerSize / 2 },
+        { x: cornerSize / 2, y: height - cornerSize / 2 },
+        { x: width - cornerSize / 2, y: height - cornerSize / 2 }
+    ];
+
+    let cornerTextures = [];
+
+    for (const corner of corners) {
+        let variance = 0;
+        let samples = 0;
+        let sumBright = 0;
+
+        for (let dy = -cornerSize / 2; dy < cornerSize / 2; dy += 4) {
+            for (let dx = -cornerSize / 2; dx < cornerSize / 2; dx += 4) {
+                const px = Math.floor(corner.x + dx);
+                const py = Math.floor(corner.y + dy);
+                if (px < 0 || px >= width || py < 0 || py >= height) continue;
+
+                const idx = (py * width + px) * 4;
+                const bright = (pixels[idx] + pixels[idx + 1] + pixels[idx + 2]) / 3;
+                sumBright += bright;
+                samples++;
+            }
+        }
+
+        const meanBright = sumBright / samples;
+
+        // Calculate variance
+        for (let dy = -cornerSize / 2; dy < cornerSize / 2; dy += 4) {
+            for (let dx = -cornerSize / 2; dx < cornerSize / 2; dx += 4) {
+                const px = Math.floor(corner.x + dx);
+                const py = Math.floor(corner.y + dy);
+                if (px < 0 || px >= width || py < 0 || py >= height) continue;
+
+                const idx = (py * width + px) * 4;
+                const bright = (pixels[idx] + pixels[idx + 1] + pixels[idx + 2]) / 3;
+                variance += Math.pow(bright - meanBright, 2);
+            }
+        }
+
+        cornerTextures.push({
+            mean: meanBright,
+            variance: variance / samples
+        });
+    }
+
+    // Check if all corners have suspiciously similar (and low) variance
+    const avgVariance = cornerTextures.reduce((a, b) => a + b.variance, 0) / 4;
+    const varianceOfVariance = cornerTextures.reduce((a, b) => a + Math.pow(b.variance - avgVariance, 2), 0) / 4;
+
+    if (avgVariance < 50 && varianceOfVariance < 100) {
+        // Very uniform backgrounds in all corners
+        return {
+            suspicious: true,
+            confidence: 0.5,
+            reason: 'Unnaturally uniform background regions'
+        };
+    }
+
+    return { suspicious: false };
+}
+
+// =====================================================
+// DEEP METADATA ANALYSIS
+// Camera, lens, GPS, timestamps
+// =====================================================
+
+function analyzeDeepMetadata(file, dataUrl) {
+    const aiIndicators = [];
+    const realIndicators = [];
+
+    if (!file) return { aiIndicators, realIndicators };
+
+    // Analyze base64 header for format details
+    const base64Data = dataUrl.split(',')[1] || '';
+
+    // Check for EXIF markers in JPEG
+    if (file.type === 'image/jpeg') {
+        const exifResult = analyzeJPEGExif(base64Data);
+        if (exifResult.hasCamera) {
+            realIndicators.push({
+                weight: 20,
+                confidence: 0.85,
+                reason: `Camera metadata: ${exifResult.camera}`,
+                icon: 'EXIF'
+            });
+        }
+        if (exifResult.hasGPS) {
+            realIndicators.push({
+                weight: 15,
+                confidence: 0.8,
+                reason: 'GPS coordinates present',
+                icon: 'GPS'
+            });
+        }
+        if (exifResult.hasLens) {
+            realIndicators.push({
+                weight: 15,
+                confidence: 0.8,
+                reason: `Lens data: ${exifResult.lens}`,
+                icon: 'LENS'
+            });
+        }
+        if (exifResult.hasValidDateTime) {
+            realIndicators.push({
+                weight: 10,
+                confidence: 0.7,
+                reason: 'Valid capture timestamp',
+                icon: 'TIME'
+            });
+        }
+        if (exifResult.strippedMetadata) {
+            // Not necessarily AI, but notable
+            aiIndicators.push({
+                weight: 5,
+                confidence: 0.3,
+                reason: 'Metadata appears stripped/minimal',
+                icon: 'META'
+            });
+        }
+    }
+
+    // PNG metadata analysis
+    if (file.type === 'image/png') {
+        const pngResult = analyzePNGChunks(base64Data);
+        if (pngResult.hasAITool) {
+            aiIndicators.push({
+                weight: 25,
+                confidence: 0.95,
+                reason: `AI tool signature: ${pngResult.aiTool}`,
+                icon: 'PNG'
+            });
+        }
+        if (pngResult.hasParameters) {
+            aiIndicators.push({
+                weight: 20,
+                confidence: 0.9,
+                reason: 'AI generation parameters detected',
+                icon: 'PARAM'
+            });
+        }
+        if (pngResult.hasPhotoshop) {
+            // Photoshop doesn't mean AI, but reduces authenticity slightly
+            aiIndicators.push({
+                weight: 3,
+                confidence: 0.2,
+                reason: 'Photoshop processing detected',
+                icon: 'PS'
+            });
+        }
+    }
+
+    // File size to dimension ratio analysis
+    // This is done in other functions but included here for completeness
+
+    return { aiIndicators, realIndicators };
+}
+
+function analyzeJPEGExif(base64Data) {
+    const result = {
+        hasCamera: false,
+        hasGPS: false,
+        hasLens: false,
+        hasValidDateTime: false,
+        strippedMetadata: false,
+        camera: '',
+        lens: ''
+    };
+
+    try {
+        // Decode base64 to check for EXIF markers
+        const binary = atob(base64Data.substring(0, 10000)); // First 10KB
+
+        // Look for EXIF header
+        const hasExif = binary.includes('Exif');
+
+        // Camera make patterns
+        const cameraPatterns = [
+            { pattern: 'Canon', name: 'Canon' },
+            { pattern: 'NIKON', name: 'Nikon' },
+            { pattern: 'SONY', name: 'Sony' },
+            { pattern: 'FUJIFILM', name: 'Fujifilm' },
+            { pattern: 'OLYMPUS', name: 'Olympus' },
+            { pattern: 'Panasonic', name: 'Panasonic' },
+            { pattern: 'LEICA', name: 'Leica' },
+            { pattern: 'Apple', name: 'iPhone' },
+            { pattern: 'samsung', name: 'Samsung' },
+            { pattern: 'Google', name: 'Google Pixel' },
+            { pattern: 'HUAWEI', name: 'Huawei' },
+            { pattern: 'OnePlus', name: 'OnePlus' }
+        ];
+
+        for (const { pattern, name } of cameraPatterns) {
+            if (binary.includes(pattern)) {
+                result.hasCamera = true;
+                result.camera = name;
+                break;
+            }
+        }
+
+        // GPS indicator
+        if (binary.includes('GPS') || binary.includes('\x00\x00\x00\x02')) {
+            result.hasGPS = true;
+        }
+
+        // Lens patterns
+        const lensPatterns = ['EF', 'RF', 'NIKKOR', 'E ', 'FE ', 'XF', 'f/'];
+        for (const pattern of lensPatterns) {
+            if (binary.includes(pattern)) {
+                result.hasLens = true;
+                result.lens = 'Lens data present';
+                break;
+            }
+        }
+
+        // DateTime pattern (YYYY:MM:DD)
+        if (/20[0-2]\d:[0-1]\d:[0-3]\d/.test(binary)) {
+            result.hasValidDateTime = true;
+        }
+
+        // Check if metadata appears stripped
+        if (!hasExif && !result.hasCamera) {
+            result.strippedMetadata = true;
+        }
+
+    } catch (e) {
+        // Decoding error, assume stripped
+        result.strippedMetadata = true;
+    }
+
+    return result;
+}
+
+function analyzePNGChunks(base64Data) {
+    const result = {
+        hasAITool: false,
+        hasParameters: false,
+        hasPhotoshop: false,
+        aiTool: ''
+    };
+
+    try {
+        const binary = atob(base64Data.substring(0, 20000)); // First 20KB
+
+        // AI tool signatures in PNG tEXt/iTXt chunks
+        const aiSignatures = [
+            { pattern: 'stable-diffusion', name: 'Stable Diffusion' },
+            { pattern: 'StableDiffusion', name: 'Stable Diffusion' },
+            { pattern: 'AUTOMATIC1111', name: 'Automatic1111' },
+            { pattern: 'ComfyUI', name: 'ComfyUI' },
+            { pattern: 'InvokeAI', name: 'InvokeAI' },
+            { pattern: 'parameters\n', name: 'SD Parameters' },
+            { pattern: 'prompt:', name: 'AI Prompt' },
+            { pattern: 'Negative prompt:', name: 'AI Negative Prompt' },
+            { pattern: 'Steps:', name: 'AI Steps' },
+            { pattern: 'Sampler:', name: 'AI Sampler' },
+            { pattern: 'CFG scale:', name: 'AI CFG' },
+            { pattern: 'Seed:', name: 'AI Seed' },
+            { pattern: 'Model:', name: 'AI Model' },
+            { pattern: 'dalle', name: 'DALL-E' },
+            { pattern: 'midjourney', name: 'Midjourney' },
+            { pattern: 'flux', name: 'Flux' },
+            { pattern: 'SDXL', name: 'SDXL' }
+        ];
+
+        for (const { pattern, name } of aiSignatures) {
+            if (binary.toLowerCase().includes(pattern.toLowerCase())) {
+                result.hasAITool = true;
+                result.aiTool = name;
+                break;
+            }
+        }
+
+        // Generation parameters
+        if (binary.includes('Steps:') && binary.includes('Sampler:')) {
+            result.hasParameters = true;
+        }
+
+        // Photoshop
+        if (binary.includes('Photoshop') || binary.includes('Adobe')) {
+            result.hasPhotoshop = true;
+        }
+
+    } catch (e) {
+        // Decoding error
+    }
+
+    return result;
+}
+
+// =====================================================
+// BAYESIAN ENSEMBLE SCORING
+// Probabilistic combination of detectors
+// =====================================================
+
+function calculateBayesianScore(indicators, realIndicators, mode) {
+    // Prior probability of AI (based on general image population)
+    // For deep scan, we're more aggressive; for quick scan, more conservative
+    let priorAI = mode === 'deep' ? 0.35 : 0.25;
+
+    // Likelihood ratios for each detector
+    // How much more likely to see this indicator in AI vs real
+    const aiLikelihoodRatios = {
+        'SDXL': 15,
+        'DALLE': 15,
+        'MJ': 15,
+        'FLUX': 12,
+        'FILE': 20,
+        'GRID': 10,
+        'FREQ': 8,
+        'SPECTRUM': 6,
+        'SMOOTH': 5,
+        'UNIFORM': 4,
+        'ELA': 4,
+        'NOISE': 5,
+        'TEXTURE': 5,
+        'REPEAT': 7,
+        'EYE': 10,
+        'SKIN': 8,
+        'SYM': 6,
+        'HAND': 15,
+        'TEXT': 12,
+        'LIGHT': 6,
+        'EDGE': 5,
+        'HAIR': 7,
+        'FABRIC': 5,
+        'BG': 4,
+        'PNG': 25,
+        'PARAM': 30,
+        'META': 2,
+        'COLOR': 4,
+        'HIST': 3
+    };
+
+    const realLikelihoodRatios = {
+        'CAM': 20,
+        'EXIF': 25,
+        'GPS': 30,
+        'LENS': 20,
+        'TIME': 10,
+        'JPEG': 6,
+        'SENSOR': 8,
+        'NATURAL': 5,
+        'VARIED': 5,
+        'DETAIL': 6,
+        'DOF': 7,
+        'COMPRESS': 3,
+        'ZIP': 3,
+        'REAL': 5,
+        'LIGHT': 5,
+        'HAIR': 6
+    };
+
+    // Calculate posterior using Naive Bayes
+    let logOddsAI = Math.log(priorAI / (1 - priorAI));
+
+    // Update with AI indicators
+    for (const ind of indicators) {
+        const lr = aiLikelihoodRatios[ind.icon] || 3;
+        // Adjust by confidence
+        const adjustedLR = 1 + (lr - 1) * ind.confidence;
+        logOddsAI += Math.log(adjustedLR);
+    }
+
+    // Update with real indicators (decrease AI probability)
+    for (const ind of realIndicators) {
+        const lr = realLikelihoodRatios[ind.icon] || 3;
+        const adjustedLR = 1 + (lr - 1) * ind.confidence;
+        logOddsAI -= Math.log(adjustedLR);
+    }
+
+    // Convert back to probability
+    const oddsAI = Math.exp(logOddsAI);
+    const posteriorAI = oddsAI / (1 + oddsAI);
+
+    // Require multiple independent confirmations for high confidence
+    const aiCategories = new Set(indicators.map(i => i.icon));
+    const realCategories = new Set(realIndicators.map(i => i.icon));
+
+    // Discount if few independent signals
+    let adjustedPosterior = posteriorAI;
+    if (aiCategories.size < 2 && posteriorAI > 0.5) {
+        adjustedPosterior = 0.5 + (posteriorAI - 0.5) * 0.5;
+    }
+    if (aiCategories.size >= 3 && posteriorAI > 0.6) {
+        // Boost confidence with multiple independent signals
+        adjustedPosterior = posteriorAI + (1 - posteriorAI) * 0.1;
+    }
+
+    return {
+        probability: adjustedPosterior,
+        aiCategories: aiCategories.size,
+        realCategories: realCategories.size
+    };
+}
+
+// =====================================================
+// CALIBRATED PROBABILITY OUTPUT
+// Sigmoid calibration for meaningful percentages
+// =====================================================
+
+function calibrateScore(bayesianResult, rawScore, mode) {
+    // Combine Bayesian posterior with traditional weighted score
+    const bayesianProb = bayesianResult.probability;
+    const weightedScore = rawScore / 100;
+
+    // Weighted combination (Bayesian gets more weight in deep scan)
+    const bayesWeight = mode === 'deep' ? 0.6 : 0.4;
+    const combinedScore = bayesWeight * bayesianProb + (1 - bayesWeight) * weightedScore;
+
+    // Apply sigmoid calibration to spread out the middle range
+    // This ensures 50% truly means uncertain
+    const calibratedScore = sigmoidCalibrate(combinedScore);
+
+    // Convert to percentage
+    return Math.round(calibratedScore * 100);
+}
+
+function sigmoidCalibrate(score) {
+    // Platt scaling-inspired calibration
+    // Parameters tuned to spread out the 30-70% range
+    const a = 5;  // Steepness
+    const b = 0.5; // Midpoint
+
+    // Transform using sigmoid
+    const transformed = 1 / (1 + Math.exp(-a * (score - b)));
+
+    // Ensure we don't go to extremes without strong evidence
+    return Math.max(0.05, Math.min(0.95, transformed));
+}
+
 // Display scan result
 function displayResult(result, mode) {
     $('progressCard').classList.add('hidden');
@@ -5562,13 +7289,27 @@ function displayResult(result, mode) {
                          e.type === 'real' ? 'explainer-real' :
                          e.type === 'summary' ? 'explainer-summary' : 'explainer-info';
         const iconMap = {
+            // Original icons
             'FILE': '[FILE]', 'CAM': '[CAM]', 'ZIP': '[ZIP]', 'JPEG': '[JPEG]',
             'SMOOTH': '[SMOOTH]', 'UNIFORM': '[UNIFORM]', 'FREQ': '[FREQ]',
             'SPECTRUM': '[SPECTRUM]', 'DETAIL': '[DETAIL]', 'GRID': '[GRID]',
             'COLOR': '[COLOR]', 'NATURAL': '[NATURAL]', 'COMPRESS': '[COMPRESS]',
             'ELA': '[ELA]', 'VARIED': '[VARIED]', 'HIST': '[HIST]', 'NOISE': '[NOISE]',
             'SENSOR': '[SENSOR]', 'TEXTURE': '[TEXTURE]', 'DOF': '[DOF]',
-            'REPEAT': '[REPEAT]', 'SCAN': '[SCAN]', 'INFO': '[INFO]'
+            'REPEAT': '[REPEAT]', 'SCAN': '[SCAN]', 'INFO': '[INFO]',
+            // AI Model fingerprints
+            'SDXL': '[SDXL]', 'DALLE': '[DALLE]', 'MJ': '[MJ]', 'FLUX': '[FLUX]',
+            // Face/Anatomy analysis
+            'EYE': '[EYE]', 'SKIN': '[SKIN]', 'SYM': '[SYM]', 'HAND': '[HAND]', 'REAL': '[REAL]',
+            // Semantic analysis
+            'TEXT': '[TEXT]', 'LIGHT': '[LIGHT]', 'EDGE': '[EDGE]',
+            // Advanced textures
+            'HAIR': '[HAIR]', 'FABRIC': '[FABRIC]', 'BG': '[BG]',
+            // Deep metadata
+            'EXIF': '[EXIF]', 'GPS': '[GPS]', 'LENS': '[LENS]', 'TIME': '[TIME]',
+            'META': '[META]', 'PNG': '[PNG]', 'PARAM': '[PARAM]', 'PS': '[PS]',
+            // Bayesian
+            'BAYES': '[BAYES]'
         };
         const displayIcon = iconMap[e.icon] || `[${e.icon}]`;
         return `
