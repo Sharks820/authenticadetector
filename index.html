@@ -4898,7 +4898,7 @@ async function analyzeImage(dataUrl, mode) {
     // =========================================
     // SOCIAL MEDIA COMPRESSION DETECTION
     // Real photos from Facebook/Instagram are heavily compressed
-    // This is a STRONG indicator of real photos
+    // This is a moderate indicator of real photos (not definitive)
     // =========================================
     const fileSizeKB = currentFile ? currentFile.size / 1024 : 100;
     const pixelCount = width * height;
@@ -4909,26 +4909,27 @@ async function analyzeImage(dataUrl, mode) {
     const isSocialMediaCompressed = bitsPerPixel < 2.5;
     const isVeryCompressed = bitsPerPixel < 1.5 || fileSizeKB < 100;
 
-    // Strong compression penalty - social media photos should NOT flag as AI
+    // REBALANCED: Compression penalty should be moderate, not extreme
+    // Compression alone doesn't prove an image is real
     let compressionPenalty = 1.0;
     if (isVeryCompressed) {
-        compressionPenalty = 0.25; // Very aggressive - 75% reduction
+        compressionPenalty = 0.6; // REBALANCED: 40% reduction (was 75%)
         realIndicators.push({
-            weight: 25,
-            confidence: 0.85,
+            weight: 12,  // REDUCED from 25
+            confidence: 0.7,
             reason: 'Heavy social media compression detected (typical of Facebook/Instagram)',
             icon: 'COMPRESS'
         });
     } else if (isSocialMediaCompressed) {
-        compressionPenalty = 0.4; // 60% reduction
+        compressionPenalty = 0.75; // REBALANCED: 25% reduction (was 60%)
         realIndicators.push({
-            weight: 15,
-            confidence: 0.7,
+            weight: 8,   // REDUCED from 15
+            confidence: 0.6,
             reason: 'Social media-level compression detected',
             icon: 'COMPRESS'
         });
     } else if (compressionResult.isHeavilyCompressed) {
-        compressionPenalty = 0.5;
+        compressionPenalty = 0.8;
     }
 
     aiPoints *= compressionPenalty;
@@ -4937,22 +4938,23 @@ async function analyzeImage(dataUrl, mode) {
     const minAIIndicators = mode === 'deep' ? 3 : 2;
     const aiIndicatorCount = indicators.length;
 
-    // Calculate raw weighted score - START LOWER at 15%
-    let rawScore = 15; // Base: assume real until proven AI
+    // REBALANCED: Base score at 20% - neutral starting point
+    let rawScore = 20;
 
-    // Real indicators get BOOSTED weight
-    const realBoost = 1.5;
+    // REBALANCED: Real indicators get modest boost (was 1.5)
+    const realBoost = 1.2;
     const adjustedRealPoints = realPoints * realBoost;
 
+    // REBALANCED: AI indicators can contribute more (was capped at 60)
     if (aiIndicatorCount >= minAIIndicators) {
-        rawScore += Math.min(aiPoints, 60);
+        rawScore += Math.min(aiPoints, 75);  // INCREASED cap from 60
     } else if (aiIndicatorCount > 0) {
-        rawScore += Math.min(aiPoints * 0.2, 15);
+        rawScore += Math.min(aiPoints * 0.4, 25);  // INCREASED from 0.2/15
     }
 
-    // Real indicators STRONGLY reduce score
-    rawScore -= Math.min(adjustedRealPoints, 55);
-    rawScore = clamp(rawScore, 0, 100);
+    // REBALANCED: Real indicators reduce score moderately (was 55)
+    rawScore -= Math.min(adjustedRealPoints, 40);
+    rawScore = clamp(rawScore, 5, 95);
 
     // Apply Bayesian ensemble scoring for deep scan
     let aiScore;
@@ -5104,24 +5106,25 @@ function analyzeMetadataAdvanced(file, dataUrl) {
     const isVerySmallFile = size < 100000; // Under 100KB (heavy compression)
     const isTinyFile = size < 50000; // Under 50KB (very heavy compression)
 
+    // REBALANCED: File size indicators - moderate weights
     if (isTinyFile) {
         realIndicators.push({
-            weight: 25,  // STRONGLY BOOSTED
-            confidence: 0.85,
+            weight: 12,  // REDUCED from 25
+            confidence: 0.7,
             reason: 'Very small file size typical of social media sharing (Facebook, Instagram, WhatsApp)',
             icon: 'ZIP'
         });
     } else if (isVerySmallFile) {
         realIndicators.push({
-            weight: 18,  // BOOSTED
-            confidence: 0.75,
+            weight: 8,   // REDUCED from 18
+            confidence: 0.6,
             reason: 'File size typical of social media compression',
             icon: 'ZIP'
         });
     } else if (isSmallFile) {
         realIndicators.push({
-            weight: 10,
-            confidence: 0.6,
+            weight: 5,   // REDUCED from 10
+            confidence: 0.5,
             reason: 'Moderate file size compression detected',
             icon: 'ZIP'
         });
@@ -7261,61 +7264,62 @@ function analyzePNGChunks(base64Data) {
 
 function calculateBayesianScore(indicators, realIndicators, mode) {
     // Prior probability of AI (based on general image population)
-    // LOWERED: Most images people check are real social media photos
-    // For deep scan, we're more aggressive; for quick scan, more conservative
-    let priorAI = mode === 'deep' ? 0.20 : 0.15;
+    // REBALANCED: Moderate prior - not too aggressive, not too conservative
+    let priorAI = mode === 'deep' ? 0.30 : 0.25;  // INCREASED from 0.20/0.15
 
     // Likelihood ratios for each detector
     // How much more likely to see this indicator in AI vs real
+    // REBALANCED: Increased AI indicator ratios
     const aiLikelihoodRatios = {
-        'SDXL': 15,
-        'DALLE': 15,
-        'MJ': 15,
-        'FLUX': 12,
-        'FILE': 20,
-        'GRID': 10,
-        'FREQ': 8,
-        'SPECTRUM': 6,
-        'SMOOTH': 5,
-        'UNIFORM': 4,
-        'ELA': 4,
-        'NOISE': 5,
-        'TEXTURE': 5,
-        'REPEAT': 7,
-        'EYE': 10,
-        'SKIN': 8,
-        'SYM': 6,
-        'HAND': 15,
-        'TEXT': 12,
-        'LIGHT': 6,
-        'EDGE': 5,
-        'HAIR': 7,
-        'FABRIC': 5,
-        'BG': 4,
-        'PNG': 25,
-        'PARAM': 30,
-        'META': 2,
-        'COLOR': 4,
-        'HIST': 3
+        'SDXL': 20,       // INCREASED from 15
+        'DALLE': 20,      // INCREASED from 15
+        'MJ': 20,         // INCREASED from 15
+        'FLUX': 15,       // INCREASED from 12
+        'FILE': 25,       // INCREASED from 20
+        'GRID': 12,       // INCREASED from 10
+        'FREQ': 10,       // INCREASED from 8
+        'SPECTRUM': 8,    // INCREASED from 6
+        'SMOOTH': 7,      // INCREASED from 5
+        'UNIFORM': 6,     // INCREASED from 4
+        'ELA': 6,         // INCREASED from 4
+        'NOISE': 7,       // INCREASED from 5
+        'TEXTURE': 7,     // INCREASED from 5
+        'REPEAT': 10,     // INCREASED from 7
+        'EYE': 12,        // INCREASED from 10
+        'SKIN': 10,       // INCREASED from 8
+        'SYM': 8,         // INCREASED from 6
+        'HAND': 20,       // INCREASED from 15
+        'TEXT': 15,       // INCREASED from 12
+        'LIGHT': 8,       // INCREASED from 6
+        'EDGE': 7,        // INCREASED from 5
+        'HAIR': 10,       // INCREASED from 7
+        'FABRIC': 7,      // INCREASED from 5
+        'BG': 6,          // INCREASED from 4
+        'PNG': 30,        // INCREASED from 25
+        'PARAM': 35,      // INCREASED from 30
+        'META': 4,        // INCREASED from 2
+        'COLOR': 6,       // INCREASED from 4
+        'HIST': 5         // INCREASED from 3
     };
 
+    // REBALANCED: Reduced real indicator ratios
     const realLikelihoodRatios = {
-        'CAM': 35,        // BOOSTED: Camera metadata is STRONG real indicator
-        'EXIF': 40,       // BOOSTED: EXIF data = almost certainly real
-        'GPS': 50,        // BOOSTED: GPS = definitely real
-        'LENS': 35,       // BOOSTED: Lens data = real camera
-        'TIME': 15,
-        'JPEG': 10,       // BOOSTED: JPEG compression artifacts
-        'SENSOR': 15,     // BOOSTED
-        'NATURAL': 8,
-        'VARIED': 8,
-        'DETAIL': 10,
-        'DOF': 12,
-        'COMPRESS': 25,   // BOOSTED: Social media compression = real
-        'ZIP': 20,        // BOOSTED: Small file = compressed social media
-        'REAL': 8,
-        'LIGHT': 8,
-        'HAIR': 10
+        'CAM': 20,        // REDUCED from 35
+        'EXIF': 25,       // REDUCED from 40
+        'GPS': 30,        // REDUCED from 50
+        'LENS': 20,       // REDUCED from 35
+        'TIME': 10,       // REDUCED from 15
+        'JPEG': 6,        // REDUCED from 10
+        'SENSOR': 10,     // REDUCED from 15
+        'NATURAL': 6,     // REDUCED from 8
+        'VARIED': 6,      // REDUCED from 8
+        'DETAIL': 8,      // REDUCED from 10
+        'DOF': 8,         // REDUCED from 12
+        'COMPRESS': 10,   // REDUCED from 25
+        'ZIP': 8,         // REDUCED from 20
+        'REAL': 6,        // REDUCED from 8
+        'LIGHT': 6,       // REDUCED from 8
+        'HAIR': 8         // REDUCED from 10
     };
 
     // Calculate posterior using Naive Bayes
@@ -7399,9 +7403,9 @@ function getLearnedScoreAdjustment() {
 
 function sigmoidCalibrate(score) {
     // Platt scaling-inspired calibration
-    // ADJUSTED: Lower steepness and shifted midpoint to reduce false positives
-    const a = 4;   // Lower steepness = less aggressive
-    const b = 0.55; // Shifted right = harder to get high AI scores
+    // REBALANCED: Centered midpoint for balanced scoring
+    const a = 5;    // INCREASED steepness for better separation
+    const b = 0.50; // CENTERED: midpoint at 50% (was 0.55)
 
     // Transform using sigmoid
     const transformed = 1 / (1 + Math.exp(-a * (score - b)));
