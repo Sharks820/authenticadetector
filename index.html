@@ -784,10 +784,25 @@
         
         /* LEADERBOARD - EPIC TIERS */
         .podium{display:flex;justify-content:center;gap:8px;margin-bottom:14px;padding:12px}
-        .podium-item{text-align:center;flex:1;max-width:90px}
-        .podium-item.first{order:2;margin-top:-8px}
-        .podium-item.second{order:1}
-        .podium-item.third{order:3}
+        .podium-item{text-align:center;flex:1;max-width:90px;position:relative}
+        .podium-item.first{order:2;margin-top:-8px;animation:goldPulse 2s ease-in-out infinite}
+        .podium-item.second{order:1;animation:silverGlow 3s ease-in-out infinite}
+        .podium-item.third{order:3;animation:bronzeShimmer 2.5s ease-in-out infinite}
+
+        /* TOP 3 ANIMATIONS */
+        @keyframes goldPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes silverGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.15); }
+        }
+        @keyframes bronzeShimmer {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.1); }
+        }
+
         .podium-avatar{
             width:50px;height:50px;border-radius:50%;margin:0 auto 6px;
             display:flex;align-items:center;justify-content:center;
@@ -796,13 +811,18 @@
         .podium-item.first .podium-avatar{
             width:60px;height:60px;font-size:22px;
             background:linear-gradient(135deg,#ffd700,#ffed4a);
-            border:3px solid #ffd700;box-shadow:0 0 20px rgba(255,215,0,.5);
+            border:4px solid #ffd700;
+            box-shadow:0 0 30px rgba(255,215,0,.7), 0 0 60px rgba(255,215,0,.4), inset 0 0 20px rgba(255,255,255,.3);
         }
         .podium-item.second .podium-avatar{
-            background:linear-gradient(135deg,#c0c0c0,#e8e8e8);border:3px solid #c0c0c0;
+            background:linear-gradient(135deg,#c0c0c0,#e8e8e8);
+            border:4px solid #c0c0c0;
+            box-shadow:0 0 20px rgba(192,192,192,.6), inset 0 0 15px rgba(255,255,255,.2);
         }
         .podium-item.third .podium-avatar{
-            background:linear-gradient(135deg,#cd7f32,#daa520);border:3px solid #cd7f32;
+            background:linear-gradient(135deg,#cd7f32,#daa520);
+            border:4px solid #cd7f32;
+            box-shadow:0 0 18px rgba(205,127,50,.5), inset 0 0 12px rgba(255,255,255,.15);
         }
         .podium-avatar img{width:100%;height:100%;object-fit:cover}
         .podium-crown{position:absolute;top:-10px;font-size:24px;z-index:10}
@@ -825,13 +845,53 @@
         .lb-item{
             display:flex;align-items:center;gap:10px;padding:10px;
             background:var(--surface);border-radius:10px;margin-bottom:6px;cursor:pointer;
+            transition:all .3s ease;position:relative;
         }
+        /* TOP 10 SPECIAL BORDERS */
+        .lb-item:has(.lb-rank.top10){
+            border:2px solid transparent;
+            background:linear-gradient(var(--surface),var(--surface)) padding-box,
+                       linear-gradient(135deg,var(--primary),#00ff88,#1abc9c) border-box;
+            box-shadow:0 0 15px rgba(26,188,156,.3);
+        }
+        .lb-item:has(.lb-rank.top10):hover{
+            box-shadow:0 0 25px rgba(26,188,156,.5);
+            transform:translateX(4px);
+        }
+        /* TIERED BORDERS FOR ALL PLAYERS */
+        .lb-item:has(.lb-tier.tier-king){
+            border-left:4px solid #ffd700;
+        }
+        .lb-item:has(.lb-tier.tier-viceroy){
+            border-left:4px solid #c0c0c0;
+        }
+        .lb-item:has(.lb-tier.tier-archduke){
+            border-left:4px solid #cd7f32;
+        }
+        .lb-item:has(.lb-tier.tier-legend){
+            border-left:4px solid #9b59b6;
+        }
+        .lb-item:has(.lb-tier.tier-elite){
+            border-left:4px solid #3498db;
+        }
+        .lb-item:has(.lb-tier.tier-veteran){
+            border-left:4px solid #27ae60;
+        }
+        .lb-item:has(.lb-tier.tier-rising){
+            border-left:4px solid #7f8c8d;
+        }
+
         .lb-rank{
             width:28px;height:28px;border-radius:6px;
             display:flex;align-items:center;justify-content:center;
             font-size:11px;font-weight:800;
         }
-        .lb-rank.top10{background:linear-gradient(135deg,var(--primary),#00ff88);color:#000}
+        .lb-rank.top10{
+            background:linear-gradient(135deg,var(--primary),#00ff88);
+            color:#000;
+            box-shadow:0 0 10px rgba(26,188,156,.4);
+            font-weight:900;
+        }
         .lb-rank.normal{background:var(--surface2);color:var(--text2)}
         .lb-avatar{
             width:36px;height:36px;border-radius:50%;
