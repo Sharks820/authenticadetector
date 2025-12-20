@@ -812,29 +812,7 @@
         }
         .stat-label{font-size:9px;color:var(--text3);margin-top:2px}
         
-        /* BADGES - PREMIUM DESIGN */
-        .badges-preview{background:var(--surface);border-radius:12px;padding:12px;margin-bottom:12px}
-        .badges-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-        .badges-title{font-size:12px;font-weight:700}
-        .badges-see-all{font-size:10px;color:var(--primary);background:none;border:none;cursor:pointer}
-        .badges-grid{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
-        .badge-item{flex-shrink:0;width:52px;text-align:center}
-        .badge-icon{
-            width:44px;height:44px;border-radius:10px;
-            display:flex;align-items:center;justify-content:center;
-            font-size:18px;margin:0 auto 3px;position:relative;
-        }
-        .badge-icon.common{background:linear-gradient(135deg,#4a5568,#718096);box-shadow:0 2px 6px rgba(74,85,104,.3)}
-        .badge-icon.rare{background:linear-gradient(135deg,#3182ce,#63b3ed);box-shadow:0 2px 6px rgba(49,130,206,.3)}
-        .badge-icon.epic{background:linear-gradient(135deg,#805ad5,#b794f4);box-shadow:0 2px 6px rgba(128,90,213,.3)}
-        .badge-icon.legendary{
-            background:linear-gradient(135deg,#d69e2e,#f6e05e);
-            box-shadow:0 2px 10px rgba(214,158,46,.4);
-            animation:badge-glow 2s ease-in-out infinite;
-        }
-        @keyframes badge-glow{0%,100%{box-shadow:0 2px 10px rgba(214,158,46,.4)}50%{box-shadow:0 2px 20px rgba(214,158,46,.6)}}
-        .badge-icon.locked{background:var(--surface2);opacity:.4}
-        .badge-name{font-size:8px;color:var(--text3)}
+        /* BADGES - Styles moved to PROFESSIONAL_UI_OVERHAUL.css */
 
         /* ENHANCED BADGE DISPLAY - PROFILE & DETAILED VIEWS */
         .enhanced-badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:16px;padding:12px}
@@ -3717,6 +3695,7 @@
 
 <input type="file" id="profilePicInput" accept="image/*" style="display:none" onchange="handleProfilePic(event)">
 
+<link rel="stylesheet" href="PROFESSIONAL_UI_OVERHAUL.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script src="tank-shooter-enhanced.js"></script>
