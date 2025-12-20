@@ -1638,23 +1638,23 @@
             <span class="logo-text">AuthenticaDetector</span>
         </div>
         <div class="header-btns">
-            <button class="icon-btn" onclick="openTankShooter()" title="Tank Shooter Game">🎮</button>
-            <button class="icon-btn" onclick="openHelp()">❓</button>
-            <button class="icon-btn quest-btn" onclick="openQuests()" title="Daily Quests">
+            <button class="btn-icon" onclick="openTankShooter()" title="Tank Shooter Game">🎮</button>
+            <button class="btn-icon" onclick="openHelp()">❓</button>
+            <button class="btn-icon quest-btn" onclick="openQuests()" title="Daily Quests">
                 <span>🎯</span>
                 <span class="quest-badge" id="questBadge" style="display:none">0</span>
             </button>
-            <button class="icon-btn" onclick="openShop()" title="Item Shop">🛒</button>
-            <button class="icon-btn" onclick="openHistory()">📋</button>
-            <button class="icon-btn" onclick="openLeaderboard()">🏆</button>
-            <button class="user-btn" id="userBtn" onclick="openProfile()"><span id="userInitial">?</span></button>
+            <button class="btn-icon" onclick="openShop()" title="Item Shop">🛒</button>
+            <button class="btn-icon" onclick="openHistory()">📋</button>
+            <button class="btn-icon" onclick="openLeaderboard()">🏆</button>
+            <button class="btn-icon" id="userBtn" onclick="openProfile()"><span id="userInitial">?</span></button>
         </div>
     </div>
     
     <div class="status-bar" id="statusBar">
-        <button class="status-chip pending" id="installChip" onclick="promptInstall()"><span>📲</span> Install</button>
-        <button class="status-chip signup" id="signupChip" onclick="openLogin(true)"><span>✨</span> Sign Up</button>
-        <button class="status-chip pending" id="loginChip" onclick="openLogin()"><span>🔑</span> Sign In</button>
+        <button class="btn-secondary" id="installChip" onclick="promptInstall()"><span>📲</span> Install</button>
+        <button class="btn-primary" id="signupChip" onclick="openLogin(true)"><span>✨</span> Sign Up</button>
+        <button class="btn-secondary" id="loginChip" onclick="openLogin()"><span>🔑</span> Sign In</button>
     </div>
     
     <div class="install-banner" id="installBanner">
@@ -1663,7 +1663,7 @@
             <strong>Install AuthenticaDetector</strong>
             <span>Unlock Deep Scan & more!</span>
         </div>
-        <button class="install-banner-btn" onclick="promptInstall()">Install</button>
+        <button class="btn-primary" onclick="promptInstall()">Install</button>
     </div>
     
     <div class="ios-helper" id="iosHelper">
@@ -1673,7 +1673,7 @@
             <div class="ios-step"><div class="ios-step-num">2</div><span>Tap "Add to Home Screen"</span></div>
             <div class="ios-step"><div class="ios-step-num">3</div><span>Tap Add</span></div>
         </div>
-        <button class="ios-dismiss" onclick="dismissIosHelper()">Later</button>
+        <button class="btn-ghost" onclick="dismissIosHelper()">Later</button>
     </div>
     
     <!-- SCROLLABLE HOME CONTENT -->
@@ -1709,12 +1709,12 @@
             <input type="file" class="file-input" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
             
             <!-- PROGRESS -->
-            <div class="progress-card hidden" id="progressCard">
+            <div class="card card-glass hidden" id="progressCard">
                 <div class="progress-header">
                     <div class="progress-title" id="progressTitle">🔍 Analyzing...</div>
-                    <button class="progress-cancel" onclick="cancelScan()">Cancel</button>
+                    <button class="btn-ghost" onclick="cancelScan()">Cancel</button>
                 </div>
-                <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+                <div class="progress progress-primary"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
                 <div class="progress-status" id="progressStatus">Initializing...</div>
                 <div class="progress-fact">
                     <span class="progress-fact-icon" id="progressFactIcon">💡</span>
@@ -1723,7 +1723,7 @@
             </div>
             
             <!-- RESULT -->
-            <div class="result-card hidden" id="resultCard">
+            <div class="card card-glass hidden" id="resultCard">
                 <div class="result-glow" id="resultGlow"></div>
                 <div class="result-header">
                     <div class="result-icon" id="resultIcon">🤖</div>
@@ -1748,13 +1748,13 @@
                 <div class="feedback-section">
                     <div class="feedback-title">📝 Was this accurate?</div>
                     <div class="feedback-btns">
-                        <button class="feedback-btn" onclick="submitFeedback('correct')">✓ Correct</button>
-                        <button class="feedback-btn" onclick="submitFeedback('incorrect')">✗ Incorrect</button>
+                        <button class="btn-secondary" onclick="submitFeedback('correct')">✓ Correct</button>
+                        <button class="btn-secondary" onclick="submitFeedback('incorrect')">✗ Incorrect</button>
                     </div>
                 </div>
                 <div class="result-actions">
-                    <button class="result-action action-share" onclick="shareResult()">📤 Share</button>
-                    <button class="result-action action-new" onclick="newScan()">🔄 New Scan</button>
+                    <button class="btn-secondary" onclick="shareResult()">📤 Share</button>
+                    <button class="btn-primary" onclick="newScan()">🔄 New Scan</button>
                 </div>
             </div>
         </div>
@@ -1779,11 +1779,11 @@
         </div>
         
         <div class="scan-btns">
-            <button class="scan-btn quick-btn" id="quickBtn" onclick="startScan('quick')" disabled>
+            <button class="btn-primary btn-lg" id="quickBtn" onclick="startScan('quick')" disabled>
                 <div class="scan-btn-title">⚡ Quick Scan</div>
                 <div class="scan-btn-desc">Fast basic check</div>
             </button>
-            <button class="scan-btn deep-btn" id="deepBtn" onclick="startScan('deep')" disabled>
+            <button class="btn-primary btn-lg" id="deepBtn" onclick="startScan('deep')" disabled>
                 <div class="scan-btn-title">🔬 Deep Scan</div>
                 <div class="scan-btn-desc">AI-powered • 90%+</div>
                 <span class="scan-lock" id="deepLock">🔒</span>
@@ -1795,7 +1795,7 @@
 <!-- HISTORY VIEW -->
 <div class="view" id="historyView">
     <div class="view-header">
-        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
+        <button class="btn-ghost" onclick="closeView()" style="background:none;font-size:20px">←</button>
         <span class="view-title">📋 History</span>
         <div style="width:44px"></div>
     </div>
@@ -1807,13 +1807,13 @@
 <!-- LEADERBOARD VIEW -->
 <div class="view" id="leaderboardView">
     <div class="view-header">
-        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
+        <button class="btn-ghost" onclick="closeView()" style="background:none;font-size:20px">←</button>
         <span class="view-title">🏆 Leaderboard</span>
         <div style="width:44px"></div>
     </div>
     <div class="view-body view-body-padded">
         <!-- REWARDS TEASER -->
-        <div class="rewards-card">
+        <div class="card card-hoverable">
             <div class="rewards-title">🏆 Weekly Rewards</div>
             <div class="rewards-list">
                 <div class="reward-item">
@@ -1841,24 +1841,26 @@
 <!-- PROFILE VIEW -->
 <div class="view" id="profileView">
     <div class="view-header">
-        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
+        <button class="btn-ghost" onclick="closeView()" style="background:none;font-size:20px">←</button>
         <span class="view-title">👤 Profile</span>
         <div style="width:44px"></div>
     </div>
     <div class="view-body view-body-padded">
-        <div class="profile-header">
-            <div class="profile-avatar" id="profileAvatar" onclick="changeProfilePic()">?</div>
-            <div class="profile-name" id="profileName">Guest</div>
-            <div class="profile-email" id="profileEmail">Sign in to save progress</div>
-        </div>
-        <div class="stats-grid">
-            <div class="stat-card"><div class="stat-value" id="statScans">0</div><div class="stat-label">Scans</div></div>
-            <div class="stat-card"><div class="stat-value" id="statFound">0</div><div class="stat-label">AI Found</div></div>
-            <div class="stat-card"><div class="stat-value" id="statPoints">0</div><div class="stat-label">Points</div></div>
-        </div>
-        <div class="badges-preview">
-            <div class="badges-header"><span class="badges-title">🎖️ Badges</span><button class="badges-see-all" onclick="openAllBadges()">See All →</button></div>
-            <div class="badges-grid" id="badgesPreview"></div>
+        <div class="card">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar" onclick="changeProfilePic()">?</div>
+                <div class="profile-name" id="profileName">Guest</div>
+                <div class="profile-email" id="profileEmail">Sign in to save progress</div>
+            </div>
+            <div class="stats-grid">
+                <div class="card"><div class="stat-value" id="statScans">0</div><div class="stat-label">Scans</div></div>
+                <div class="card"><div class="stat-value" id="statFound">0</div><div class="stat-label">AI Found</div></div>
+                <div class="card"><div class="stat-value" id="statPoints">0</div><div class="stat-label">Points</div></div>
+            </div>
+            <div class="badges-preview">
+                <div class="badges-header"><span class="badges-title">🎖️ Badges</span><button class="btn-secondary" onclick="openAllBadges()">See All →</button></div>
+                <div class="badges-grid" id="badgesPreview"></div>
+            </div>
         </div>
         <div class="menu">
             <button class="menu-item" onclick="handleLoginLogout()"><span class="menu-icon" id="loginLogoutIcon">🔑</span><span class="menu-text" id="loginLogoutText">Sign In</span><span class="menu-arrow">→</span></button>
@@ -1870,7 +1872,7 @@
 <!-- ALL BADGES VIEW -->
 <div class="view" id="allBadgesView">
     <div class="view-header">
-        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
+        <button class="btn-ghost" onclick="closeView()" style="background:none;font-size:20px">←</button>
         <span class="view-title">🎖️ All Badges</span>
         <div style="width:44px"></div>
     </div>
@@ -1881,7 +1883,7 @@
 <div class="view" id="loginView">
     <div class="view-header">
         <span class="view-title" id="loginViewTitle">Sign In</span>
-        <button class="view-close" onclick="closeView()">✕</button>
+        <button class="btn-ghost" onclick="closeView()">✕</button>
     </div>
     <div class="view-body">
         <div class="login-content">
@@ -1899,10 +1901,10 @@
                     <input type="password" id="passwordInput" placeholder="••••••••">
                 </div>
                 <div class="login-forgot" id="forgotLink"><a onclick="forgotPassword()">Forgot Password?</a></div>
-                <button class="login-submit" id="loginSubmit" onclick="submitLogin()">Sign In</button>
+                <button class="btn-primary" id="loginSubmit" onclick="submitLogin()">Sign In</button>
             </div>
             <div class="login-toggle" id="loginToggle">Don't have an account? <a onclick="toggleLoginMode()">Sign Up</a></div>
-            <button class="login-guest" onclick="continueAsGuest()">Continue as Guest</button>
+            <button class="btn-secondary" onclick="continueAsGuest()">Continue as Guest</button>
         </div>
     </div>
 </div>
@@ -1910,7 +1912,7 @@
 <!-- HELP VIEW -->
 <div class="view" id="helpView">
     <div class="view-header">
-        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
+        <button class="btn-ghost" onclick="closeView()" style="background:none;font-size:20px">←</button>
         <span class="view-title">❓ Help</span>
         <div style="width:44px"></div>
     </div>
@@ -1937,16 +1939,16 @@
 <!-- SHOP VIEW -->
 <div class="view" id="shopView">
     <div class="view-header">
-        <button class="view-close" onclick="closeView()">←</button>
+        <button class="btn-ghost" onclick="closeView()">←</button>
         <span class="view-title">🛒 Item Shop</span>
         <div class="user-points-badge" id="shopPoints">0 pts</div>
     </div>
     <div class="view-body">
         <div class="shop-categories">
-            <button class="shop-cat-btn active" onclick="filterShop('all')">All</button>
-            <button class="shop-cat-btn" onclick="filterShop('powerups')">Power-ups</button>
-            <button class="shop-cat-btn" onclick="filterShop('cosmetics')">Cosmetics</button>
-            <button class="shop-cat-btn" onclick="filterShop('boosters')">Boosters</button>
+            <button class="btn-secondary active" onclick="filterShop('all')">All</button>
+            <button class="btn-secondary" onclick="filterShop('powerups')">Power-ups</button>
+            <button class="btn-secondary" onclick="filterShop('cosmetics')">Cosmetics</button>
+            <button class="btn-secondary" onclick="filterShop('boosters')">Boosters</button>
         </div>
         <div id="shopItems" class="shop-grid"></div>
         <div id="inventorySection" style="margin-top:20px">
@@ -1959,12 +1961,12 @@
 <!-- DAILY QUESTS VIEW -->
 <div class="view" id="questsView">
     <div class="view-header">
-        <button class="view-close" onclick="closeView()">←</button>
+        <button class="btn-ghost" onclick="closeView()">←</button>
         <span class="view-title">🎯 Daily Quests</span>
         <div class="quest-timer" id="questTimer">00:00:00</div>
     </div>
     <div class="view-body view-body-padded">
-        <div class="quest-streak-card" id="questStreakCard">
+        <div class="card card-hoverable" id="questStreakCard">
             <div class="quest-streak-icon">🔥</div>
             <div class="quest-streak-info">
                 <div class="quest-streak-title">Daily Streak</div>
@@ -1982,7 +1984,7 @@
 <!-- TANK SHOOTER GAME VIEW -->
 <div class="view" id="tankShooterView" style="background: #000;">
     <div class="view-header" style="background: rgba(0,0,0,0.9);">
-        <button class="view-close" onclick="closeTankShooter()">←</button>
+        <button class="btn-ghost" onclick="closeTankShooter()">←</button>
         <span class="view-title">🎮 Tank Shooter</span>
         <div style="width:44px"></div>
     </div>
@@ -2097,7 +2099,7 @@
 
 <!-- PUBLIC PROFILE MODAL -->
 <div class="modal-overlay" id="publicProfileModal">
-    <div class="modal"><button class="modal-close" onclick="closePublicProfile()">✕</button><div id="publicProfileContent"></div></div>
+    <div class="modal"><button class="btn-ghost" onclick="closePublicProfile()">✕</button><div id="publicProfileContent"></div></div>
 </div>
 
 <!-- LOGIN REQUIRED MODAL -->
@@ -2106,8 +2108,8 @@
         <div style="font-size:40px;margin-bottom:12px">🔒</div>
         <h3 style="margin-bottom:4px;font-size:16px">Feature Locked</h3>
         <p style="color:var(--text2);font-size:12px;margin-bottom:16px">Deep Scan requires sign in.</p>
-        <button class="login-submit" onclick="openLoginFromModal()" style="margin-bottom:8px">Sign In / Sign Up</button>
-        <button class="login-guest" onclick="closeLoginRequired()">Use Quick Scan</button>
+        <button class="btn-primary" onclick="openLoginFromModal()" style="margin-bottom:8px">Sign In / Sign Up</button>
+        <button class="btn-secondary" onclick="closeLoginRequired()">Use Quick Scan</button>
     </div>
 </div>
 
@@ -4625,7 +4627,7 @@ window.viewPublicProfile = async function(userId) {
         badgesHtml = '<div style="margin-top:12px"><div style="font-size:12px;font-weight:700;margin-bottom:8px">🎖️ Badges Earned</div><div class="badges-grid" style="justify-content:center">';
         for (const bid of profile.badges.slice(0, 6)) {
             const b = BADGES[bid];
-            if (b) badgesHtml += `<div class="badge-item"><div class="badge-icon ${b.rarity}">${b.icon}</div><div class="badge-name">${b.name}</div></div>`;
+            if (b) badgesHtml += `<div class="badge"><div class="badge-icon ${b.rarity}">${b.icon}</div><div class="badge-name">${b.name}</div></div>`;
         }
         badgesHtml += '</div></div>';
     }
@@ -4835,7 +4837,7 @@ function renderBadgesPreview() {
     for (const b of display) {
         const isEarned = earned.includes(b.id);
         html += `
-            <div class="badge-item">
+            <div class="badge">
                 <div class="badge-icon ${isEarned ? b.rarity : 'locked'}">${isEarned ? b.icon : '🔒'}</div>
                 <div class="badge-name">${isEarned ? b.name : '???'}</div>
             </div>
