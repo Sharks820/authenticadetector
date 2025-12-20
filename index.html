@@ -2791,6 +2791,7 @@ let currentFile = null, currentDataUrl = null, currentResult = null;
 let analysisAborted = false;
 let isLoginMode = false, scanCount = 0, sessionScanCount = 0;
 let forensicsMode = false;
+let activeOutbreak = null;
 
 // AI Detection Models - WE USE REAL AI DETECTORS NOW
 let aiDetectorPipeline = null;
@@ -4551,7 +4552,7 @@ async function loadActiveOutbreak() {
 
         if (activeOutbreak) {
             showOutbreakBanner();
-            updateOutbreakTimer();
+            updateOutbreakTimers();
         } else {
             hideOutbreakBanner();
         }
@@ -4581,11 +4582,11 @@ function hideOutbreakBanner() {
     if (pulse) pulse.style.display = 'none';
 }
 
-function updateOutbreakTimer() {
+function updateOutbreakTimers() {
     if (!activeOutbreak) return;
 
-    const timer = $('outbreakTimer');
-    if (!timer) return;
+    const timerSmall = $('outbreakTimer'); // Banner timer
+    const timerBig = $('outbreakTimerBig'); // View timer
 
     const updateTime = () => {
         const now = new Date();
@@ -4593,7 +4594,8 @@ function updateOutbreakTimer() {
         const diff = end - now;
 
         if (diff <= 0) {
-            timer.textContent = 'Ended';
+            if (timerSmall) timerSmall.textContent = 'Ended';
+            if (timerBig) timerBig.textContent = 'Event Ended';
             hideOutbreakBanner();
             return;
         }
@@ -4602,7 +4604,10 @@ function updateOutbreakTimer() {
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-        timer.textContent = `Ends in ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        const timeStr = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+        if (timerSmall) timerSmall.textContent = `Ends in ${timeStr}`;
+        if (timerBig) timerBig.textContent = timeStr;
     };
 
     updateTime();
@@ -4612,7 +4617,43 @@ function updateOutbreakTimer() {
 async function loadOutbreaksView() {
     console.log('[Outbreak] Loading Outbreaks view');
     await loadActiveOutbreak();
+    renderOutbreakView();
     // TODO: Load upcoming and past outbreaks
+}
+
+function renderOutbreakView() {
+    if (!activeOutbreak) {
+        console.log('[Outbreak] No active outbreak');
+        const card = $('activeOutbreak');
+        if (card) card.style.display = 'none';
+        return;
+    }
+
+    // Show outbreak card
+    const card = $('activeOutbreak');
+    if (card) card.style.display = 'block';
+
+    // Update title and description
+    const title = $('outbreakCardTitle');
+    const desc = $('outbreakDescription');
+    if (title) title.textContent = activeOutbreak.title || 'Active Outbreak';
+    if (desc) desc.textContent = activeOutbreak.description || '';
+
+    // Update difficulty (1-5 fire emojis)
+    const difficultyEl = $('outbreakDifficulty');
+    if (difficultyEl && activeOutbreak.difficulty) {
+        const fires = '🔥'.repeat(activeOutbreak.difficulty);
+        difficultyEl.innerHTML = fires.split('').map(f => `<span>${f}</span>`).join('');
+    }
+
+    // Update goals
+    const subGoal = $('submissionsGoal');
+    const voteGoal = $('votesGoal');
+    if (subGoal) subGoal.textContent = activeOutbreak.target_submissions || 50;
+    if (voteGoal) voteGoal.textContent = activeOutbreak.target_votes || 200;
+
+    // Start timer
+    updateOutbreakTimers();
 }
 
 // ==================== SQUADS ====================
