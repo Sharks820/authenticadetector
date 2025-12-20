@@ -3364,7 +3364,7 @@ function showLoginError(msg) {
 }
 
 // Award a specific badge to user
-async function awardBadge(badgeId) {
+async function awardBadge(badgeId, coinReward = 0) {
     if (!user) return;
 
     const badge = BADGES[badgeId];
@@ -3373,34 +3373,50 @@ async function awardBadge(badgeId) {
         return;
     }
 
-    // Check if already unlocked
-    const unlockedBadges = getStorage('unlocked_badges', []);
-    if (unlockedBadges.includes(badgeId)) {
-        console.log('[Badge] Already unlocked:', badgeId);
-        return;
-    }
+    try {
+        // Use atomic badge award function (idempotent + coin reward)
+        const { data, error } = await supabase.rpc('award_badge_atomic', {
+            p_user_id: user.id,
+            p_badge_id: badgeId,
+            p_coin_reward: coinReward
+        });
 
-    // Unlock the badge
-    unlockedBadges.push(badgeId);
-    setStorage('unlocked_badges', unlockedBadges);
+        if (error) throw error;
 
-    // Show notification
-    showBadgeUnlock(badge);
+        if (data && data.length > 0) {
+            const result = data[0];
 
-    // Save to Supabase if connected
-    if (!useLocalFallback && supabase) {
-        try {
-            await supabase.from('user_badges').upsert({
-                user_id: user.id,
-                badge_id: badgeId,
-                unlocked_at: new Date().toISOString()
-            });
-        } catch (e) {
-            console.error('[Badge] Failed to save to database:', e);
+            if (result.awarded) {
+                // Badge was newly awarded
+                const unlockedBadges = getStorage('unlocked_badges', []);
+                unlockedBadges.push(badgeId);
+                setStorage('unlocked_badges', unlockedBadges);
+
+                // Show notification
+                showBadgeUnlock(badge);
+
+                // Update coins if rewarded
+                if (result.new_coins > 0) {
+                    userProgression.truth_coins = result.new_coins;
+                    updateCoinsDisplay();
+                }
+
+                console.log(`[Badge] Awarded: ${badgeId} ${coinReward > 0 ? `(+${coinReward} coins)` : ''}`);
+            } else if (result.already_had) {
+                console.log('[Badge] Already unlocked:', badgeId);
+            }
+        }
+    } catch (err) {
+        console.error('[Badge] Failed to award badge:', err);
+
+        // Fallback to local-only unlock (no coin reward)
+        const unlockedBadges = getStorage('unlocked_badges', []);
+        if (!unlockedBadges.includes(badgeId)) {
+            unlockedBadges.push(badgeId);
+            setStorage('unlocked_badges', unlockedBadges);
+            showBadgeUnlock(badge);
         }
     }
-
-    console.log('[Badge] Awarded:', badgeId);
 }
 
 window.continueAsGuest = () => { showView('homeView'); toast('Continuing as guest'); };
@@ -4329,13 +4345,30 @@ async function addXP(amount) {
 async function awardCoins(amount, reason) {
     if (!user || !userProgression) return;
 
-    userProgression.truth_coins += amount;
-    userProgression.lifetime_coins_earned = (userProgression.lifetime_coins_earned || 0) + amount;
+    try {
+        // Use atomic coin award function (prevents race conditions)
+        const { data, error } = await supabase.rpc('award_coins_atomic', {
+            p_user_id: user.id,
+            p_amount: amount
+        });
 
-    await saveUserProgression();
-    updateCoinsDisplay();
+        if (error) throw error;
 
-    console.log(`[Progression] Awarded ${amount} coins for ${reason}`);
+        if (data && data.length > 0) {
+            // Update local state with server response
+            userProgression.truth_coins = data[0].truth_coins;
+            userProgression.lifetime_coins_earned = data[0].lifetime_coins_earned;
+            updateCoinsDisplay();
+            console.log(`[Progression] Awarded ${amount} coins for ${reason} (New total: ${data[0].truth_coins})`);
+        }
+    } catch (err) {
+        console.error('[Progression] Failed to award coins:', err);
+        // Fallback to local update
+        userProgression.truth_coins += amount;
+        userProgression.lifetime_coins_earned = (userProgression.lifetime_coins_earned || 0) + amount;
+        await saveUserProgression();
+        updateCoinsDisplay();
+    }
 }
 
 async function saveUserProgression() {
