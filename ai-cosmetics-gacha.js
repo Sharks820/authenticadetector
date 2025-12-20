@@ -584,15 +584,15 @@ function createInventoryModal() {
                     <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">Your Collection</h3>
 
                     <div class="items-filter">
-                        <button class="filter-btn active" onclick="filterItems('all')">All</button>
-                        <button class="filter-btn" onclick="filterItems('head')">Head</button>
-                        <button class="filter-btn" onclick="filterItems('torso')">Torso</button>
-                        <button class="filter-btn" onclick="filterItems('armLeft')">Arms</button>
-                        <button class="filter-btn" onclick="filterItems('legs')">Legs</button>
-                        <button class="filter-btn" onclick="filterItems('hat')">Hats</button>
-                        <button class="filter-btn" onclick="filterItems('glasses')">Glasses</button>
-                        <button class="filter-btn" onclick="filterItems('back')">Back</button>
-                        <button class="filter-btn" onclick="filterItems('effect')">Effects</button>
+                        <button class="filter-btn active" onclick="filterItems('all', this)">All</button>
+                        <button class="filter-btn" onclick="filterItems('head', this)">Head</button>
+                        <button class="filter-btn" onclick="filterItems('torso', this)">Torso</button>
+                        <button class="filter-btn" onclick="filterItems('armLeft', this)">Arms</button>
+                        <button class="filter-btn" onclick="filterItems('legs', this)">Legs</button>
+                        <button class="filter-btn" onclick="filterItems('hat', this)">Hats</button>
+                        <button class="filter-btn" onclick="filterItems('glasses', this)">Glasses</button>
+                        <button class="filter-btn" onclick="filterItems('back', this)">Back</button>
+                        <button class="filter-btn" onclick="filterItems('effect', this)">Effects</button>
                     </div>
 
                     <div class="items-grid" id="itemsGrid">
@@ -701,12 +701,14 @@ async function loadItemsCollection(filter = 'all') {
     `).join('');
 }
 
-function filterItems(bodyPart) {
+function filterItems(bodyPart, clickedButton) {
     // Update active filter button
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    event.target.classList.add('active');
+    if (clickedButton) {
+        clickedButton.classList.add('active');
+    }
 
     // Reload items with filter
     loadItemsCollection(bodyPart);
