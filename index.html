@@ -752,6 +752,59 @@
         @keyframes badge-glow{0%,100%{box-shadow:0 2px 10px rgba(214,158,46,.4)}50%{box-shadow:0 2px 20px rgba(214,158,46,.6)}}
         .badge-icon.locked{background:var(--surface2);opacity:.4}
         .badge-name{font-size:8px;color:var(--text3)}
+
+        /* ENHANCED BADGE DISPLAY - PROFILE & DETAILED VIEWS */
+        .enhanced-badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:16px;padding:12px}
+        .badge-card{
+            position:relative;padding:16px;border-radius:16px;
+            background:rgba(255,255,255,.08);backdrop-filter:blur(10px);
+            border:1px solid rgba(255,255,255,.2);text-align:center;
+            transition:all 0.3s ease;cursor:pointer;
+            display:flex;flex-direction:column;align-items:center;justify-content:center;
+            min-height:140px;
+        }
+        .badge-card:hover{
+            transform:translateY(-8px);background:rgba(255,255,255,.12);
+            border-color:rgba(255,255,255,.3);box-shadow:0 8px 24px rgba(0,0,0,.3)
+        }
+        .badge-card.locked{opacity:0.5;pointer-events:none}
+        .badge-card.unlocked{box-shadow:0 4px 16px rgba(0,0,0,.2)}
+        .badge-card-icon{
+            width:64px;height:64px;border-radius:14px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:40px;margin-bottom:12px;position:relative;
+            transition:transform 0.3s ease
+        }
+        .badge-card:hover .badge-card-icon{transform:scale(1.15)}
+        .badge-card-icon.common{background:linear-gradient(135deg,#4a5568,#718096);box-shadow:0 4px 12px rgba(74,85,104,.4)}
+        .badge-card-icon.rare{background:linear-gradient(135deg,#3182ce,#63b3ed);box-shadow:0 4px 12px rgba(49,130,206,.4)}
+        .badge-card-icon.epic{background:linear-gradient(135deg,#805ad5,#b794f4);box-shadow:0 4px 12px rgba(128,90,213,.4)}
+        .badge-card-icon.legendary{
+            background:linear-gradient(135deg,#d69e2e,#f6e05e);
+            box-shadow:0 4px 16px rgba(214,158,46,.5);
+            animation:badge-glow 2s ease-in-out infinite;
+        }
+        .badge-card-icon.locked{background:var(--surface2);opacity:0.4}
+        .badge-card-title{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--text)}
+        .badge-card-desc{font-size:11px;color:var(--text2);margin-bottom:8px;line-height:1.4}
+        .badge-card-points{font-size:12px;color:var(--gold);font-weight:600;margin-top:auto}
+        .badge-tooltip{
+            position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);
+            background:rgba(0,0,0,.9);color:white;padding:10px 14px;border-radius:8px;
+            font-size:12px;white-space:nowrap;pointer-events:none;opacity:0;
+            transition:opacity 0.2s ease;z-index:1000;font-weight:600;
+            box-shadow:0 4px 12px rgba(0,0,0,.3)
+        }
+        .badge-card:hover .badge-tooltip{opacity:1}
+        .badge-progress{width:100%;height:4px;background:var(--surface2);border-radius:2px;margin-top:8px;overflow:hidden}
+        .badge-progress-bar{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));
+            width:var(--progress,0%);transition:width 0.3s ease;border-radius:2px}
+        .badge-status-indicator{
+            position:absolute;top:8px;right:8px;width:20px;height:20px;
+            border-radius:50%;display:flex;align-items:center;justify-content:center;
+            font-size:10px;font-weight:700;background:var(--primary);color:white
+        }
+        .badge-status-indicator.locked{background:var(--surface2);color:var(--text3)}
         
         .menu{background:var(--surface);border-radius:12px;overflow:hidden}
         .menu-item{
@@ -879,6 +932,51 @@
         }
         .lb-item:has(.lb-tier.tier-rising){
             border-left:4px solid #7f8c8d;
+        }
+
+        /* TIER GROUP SECTIONS WITH BRACKETED HEADERS */
+        .tier-group-section{
+            margin-bottom:18px;border-radius:10px;overflow:hidden;
+            background:linear-gradient(135deg,rgba(255,255,255,.02),rgba(255,255,255,.01));
+            border:1px solid rgba(255,255,255,.1);
+        }
+
+        .tier-group-header{
+            padding:12px 14px;font-weight:800;font-size:13px;
+            display:flex;align-items:center;justify-content:center;gap:8px;
+            text-transform:uppercase;letter-spacing:1px;
+            background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
+            border-bottom:2px solid;
+        }
+
+        .tier-group-header.tier-legend{
+            border-bottom-color:#9b59b6;color:#9b59b6;
+        }
+        .tier-group-header.tier-elite{
+            border-bottom-color:#3498db;color:#3498db;
+        }
+        .tier-group-header.tier-veteran{
+            border-bottom-color:#27ae60;color:#27ae60;
+        }
+        .tier-group-header.tier-rising{
+            border-bottom-color:#7f8c8d;color:#7f8c8d;
+        }
+
+        .tier-group-bracket{
+            font-size:16px;opacity:.7;
+        }
+
+        .tier-group-label{
+            flex:1;text-align:center;
+        }
+
+        .tier-group-content{
+            padding:8px 10px;
+            display:flex;flex-direction:column;gap:6px;
+        }
+
+        .tier-group-content .lb-item{
+            margin-bottom:0;
         }
 
         .lb-rank{
@@ -5000,25 +5098,64 @@ function renderLeaderboard(leaderboard) {
     });
     html += `</div>`;
 
-    // Render rest of leaderboard
+    // Group remaining players by tier with visual separation
     if (rest.length > 0) {
-        html += `<div class="lb-list">`;
+        // Define tier groups with their display info
+        const tierGroups = [
+            { name: 'LEGEND', class: 'tier-legend', range: [4, 10], bracket: '⭐ LEGEND TIER ⭐' },
+            { name: 'ELITE', class: 'tier-elite', range: [11, 25], bracket: '★ ELITE TIER ★' },
+            { name: 'VETERAN', class: 'tier-veteran', range: [26, 50], bracket: '◆ VETERAN TIER ◆' },
+            { name: 'RISING', class: 'tier-rising', range: [51, 100], bracket: '● RISING TIER ●' }
+        ];
+
+        // Group players by tier
+        const grouped = {};
         rest.forEach((p, i) => {
             const rank = i + 4;
             const tier = getTier(rank);
-            html += `
-                <div class="lb-item">
-                    <div class="lb-rank ${rank <= 10 ? 'top10' : 'normal'}">${rank}</div>
-                    <div class="lb-avatar">${p.avatar_url ? `<img src="${p.avatar_url}">` : (p.display_name || 'A')[0].toUpperCase()}</div>
-                    <div class="lb-info">
-                        <div class="lb-name">${p.display_name || 'Anonymous'}</div>
-                        <div class="lb-stats">${p.total_scans || 0} scans</div>
-                    </div>
-                    <div class="lb-points">${p.total_points || 0}</div>
-                    <span class="lb-tier ${tier.class}">${tier.name}</span>
-                </div>
-            `;
+            if (!grouped[tier.name]) {
+                grouped[tier.name] = [];
+            }
+            grouped[tier.name].push({ ...p, rank: rank, tier: tier });
         });
+
+        html += `<div class="lb-list">`;
+
+        // Render each tier group with header and bracketed separator
+        tierGroups.forEach(group => {
+            if (grouped[group.name] && grouped[group.name].length > 0) {
+                html += `
+                    <div class="tier-group-section tier-group-${group.name.toLowerCase()}">
+                        <div class="tier-group-header ${group.class}">
+                            <span class="tier-group-bracket">[</span>
+                            <span class="tier-group-label">${group.bracket}</span>
+                            <span class="tier-group-bracket">]</span>
+                        </div>
+                        <div class="tier-group-content">
+                `;
+
+                grouped[group.name].forEach((p) => {
+                    html += `
+                        <div class="lb-item">
+                            <div class="lb-rank ${p.rank <= 10 ? 'top10' : 'normal'}">${p.rank}</div>
+                            <div class="lb-avatar">${p.avatar_url ? `<img src="${p.avatar_url}">` : (p.display_name || 'A')[0].toUpperCase()}</div>
+                            <div class="lb-info">
+                                <div class="lb-name">${p.display_name || 'Anonymous'}</div>
+                                <div class="lb-stats">${p.total_scans || 0} scans</div>
+                            </div>
+                            <div class="lb-points">${p.total_points || 0}</div>
+                            <span class="lb-tier ${p.tier.class}">${p.tier.name}</span>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+        });
+
         html += `</div>`;
     }
 
@@ -8737,27 +8874,49 @@ function renderHistory() {
     `).join('');
 }
 
-// Render badges preview (for profile page)
+// Render badges preview (for profile page) with enhanced design
 function renderBadgesPreview() {
     const grid = $('badgesPreview');
     if (!grid) return;
 
     const unlockedBadges = getStorage('unlocked_badges', []);
-    const badgeKeys = Object.keys(BADGES).slice(0, 6);
+    const allBadges = Object.values(BADGES);
+    const badgeKeys = allBadges.slice(0, 6);
+    const unlockedCount = badgeKeys.filter(b => unlockedBadges.includes(b.id)).length;
 
-    grid.innerHTML = badgeKeys.map(key => {
-        const badge = BADGES[key];
+    grid.innerHTML = badgeKeys.map(badge => {
         const isUnlocked = unlockedBadges.includes(badge.id);
         return `
-            <div class="badge-item">
-                <div class="badge-icon ${isUnlocked ? badge.rarity : 'locked'}">${badge.icon}</div>
-                <div class="badge-name">${badge.name}</div>
+            <div class="badge-item" style="position:relative;transition:transform 0.2s ease"
+                 onmouseover="this.style.transform='scale(1.1)'"
+                 onmouseout="this.style.transform='scale(1)'">
+                <div class="badge-icon ${isUnlocked ? badge.rarity : 'locked'}"
+                     style="box-shadow:${isUnlocked ? '0 4px 12px rgba(0,0,0,0.3)' : 'none'};
+                             transition:all 0.2s ease">${badge.icon}</div>
+                <div class="badge-name" title="${badge.name}: ${badge.desc}">${badge.name}</div>
+                <div style="position:absolute;top:0;right:-4px;width:18px;height:18px;
+                           border-radius:50%;background:${isUnlocked ? 'var(--primary)' : 'var(--surface2)'};
+                           color:white;display:flex;align-items:center;justify-content:center;
+                           font-size:10px;font-weight:700;box-shadow:0 2px 4px rgba(0,0,0,0.2)">
+                    ${isUnlocked ? '✓' : ''}
+                </div>
             </div>
         `;
     }).join('');
+
+    // Add footer showing progress
+    const container = grid.parentElement;
+    if (container && !container.querySelector('.badges-footer')) {
+        const footer = document.createElement('div');
+        footer.className = 'badges-footer';
+        footer.style.cssText = 'padding-top:8px;border-top:1px solid var(--border);' +
+            'text-align:center;font-size:11px;color:var(--text3);margin-top:8px';
+        footer.innerHTML = `${unlockedCount}/${badgeKeys.length} badges earned`;
+        container.appendChild(footer);
+    }
 }
 
-// Render all badges
+// Render all badges with enhanced design
 function renderAllBadges() {
     const container = $('allBadgesContent');
     if (!container) return;
@@ -8768,18 +8927,27 @@ function renderAllBadges() {
     let html = '';
     rarities.forEach(rarity => {
         const badges = Object.values(BADGES).filter(b => b.rarity === rarity);
+        const rarityEmojis = { common: '🔷', rare: '🔹', epic: '💜', legendary: '✨' };
+
         html += `
-            <div style="margin-bottom:20px">
-                <div style="font-size:14px;font-weight:700;margin-bottom:10px;text-transform:capitalize;color:var(--text2)">${rarity} Badges</div>
-                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+            <div style="margin-bottom:32px">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                    <span style="font-size:20px">${rarityEmojis[rarity]}</span>
+                    <div style="font-size:16px;font-weight:800;text-transform:capitalize;color:var(--text);
+                        text-shadow:0 2px 8px rgba(0,0,0,.1)">${rarity} Badges</div>
+                    <span style="font-size:12px;color:var(--text3);margin-left:auto">${badges.length} total</span>
+                </div>
+                <div class="enhanced-badges-grid">
                     ${badges.map(badge => {
                         const isUnlocked = unlockedBadges.includes(badge.id);
                         return `
-                            <div style="text-align:center;padding:12px;background:var(--surface);border-radius:12px;${isUnlocked ? '' : 'opacity:0.5'}">
-                                <div class="badge-icon ${isUnlocked ? badge.rarity : 'locked'}" style="margin:0 auto 8px">${badge.icon}</div>
-                                <div style="font-size:11px;font-weight:600">${badge.name}</div>
-                                <div style="font-size:9px;color:var(--text3);margin-top:2px">${badge.desc}</div>
-                                <div style="font-size:10px;color:var(--gold);margin-top:4px">${badge.points} pts</div>
+                            <div class="badge-card ${isUnlocked ? 'unlocked' : 'locked'}">
+                                <div class="badge-tooltip">${badge.name}</div>
+                                <div class="badge-status-indicator ${isUnlocked ? '' : 'locked'}">${isUnlocked ? '✓' : '🔒'}</div>
+                                <div class="badge-card-icon ${isUnlocked ? badge.rarity : 'locked'}">${badge.icon}</div>
+                                <div class="badge-card-title">${badge.name}</div>
+                                <div class="badge-card-desc">${badge.desc}</div>
+                                <div class="badge-card-points">${badge.points} pts</div>
                             </div>
                         `;
                     }).join('')}
