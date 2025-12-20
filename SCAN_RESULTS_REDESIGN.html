@@ -1,0 +1,900 @@
+<!-- MODERN SCAN RESULTS REDESIGN - UX-Mobile (Visualization) -->
+<!-- This file demonstrates the enhanced scan results display with modern design patterns -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan Results - Modern Design Redesign</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Modern Dark Theme */
+            --bg: #0a0d14;
+            --surface: #12161f;
+            --surface-alt: #1a1f2e;
+            --surface-glass: rgba(18, 22, 31, 0.8);
+
+            /* Vibrant gradient colors */
+            --primary: #00d4aa;
+            --primary-bright: #00ffcc;
+            --primary-glow: rgba(0, 212, 170, 0.35);
+
+            /* Status colors */
+            --ai: #ff4757;
+            --ai-light: #ff6b7a;
+            --real: #2ed573;
+            --real-light: #7bed9f;
+            --uncertain: #ffa502;
+            --uncertain-light: #ffc048;
+
+            /* Text */
+            --text: #ffffff;
+            --text2: #b4bcd0;
+            --text3: #6b7280;
+
+            /* Effects */
+            --border: rgba(255,255,255,0.1);
+            --border-bright: rgba(255,255,255,0.2);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ===== MODERN RESULTS CARD ===== */
+        .modern-result-card {
+            background: linear-gradient(135deg, var(--surface) 0%, var(--surface-alt) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-bright);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 24px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .modern-result-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(30px);
+        }
+
+        .modern-result-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* VERDICT HEADER - Large, Prominent */
+        .verdict-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .verdict-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            flex-shrink: 0;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            animation: verdict-bounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .verdict-icon.ai-generated {
+            background: linear-gradient(135deg, var(--ai) 0%, var(--ai-light) 100%);
+        }
+
+        .verdict-icon.authentic {
+            background: linear-gradient(135deg, var(--real) 0%, var(--real-light) 100%);
+        }
+
+        .verdict-icon.uncertain {
+            background: linear-gradient(135deg, var(--uncertain) 0%, var(--uncertain-light) 100%);
+        }
+
+        @keyframes verdict-bounce {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .verdict-info h2 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, var(--primary), #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .verdict-info p {
+            color: var(--text2);
+            font-size: 14px;
+        }
+
+        /* CONFIDENCE METER - Animated Circular Progress */
+        .confidence-section {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: rgba(0, 212, 170, 0.08);
+            border-radius: 16px;
+            border: 1px solid rgba(0, 212, 170, 0.15);
+        }
+
+        .confidence-gauge {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            flex-shrink: 0;
+        }
+
+        .gauge-bg {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                var(--real) 0deg,
+                var(--uncertain) 180deg,
+                var(--ai) 360deg
+            );
+            opacity: 0.15;
+            position: absolute;
+        }
+
+        .gauge-fill {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                var(--real) 0deg,
+                var(--uncertain) 180deg,
+                var(--ai) 360deg
+            );
+            opacity: 0;
+            position: absolute;
+            animation: gauge-fill-animation 0.8s ease-out forwards;
+        }
+
+        @keyframes gauge-fill-animation {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .gauge-fill.ai-generated {
+            background: conic-gradient(from -90deg, var(--real) 0%, var(--ai) 75%, var(--ai) 100%);
+        }
+
+        .gauge-fill.authentic {
+            background: conic-gradient(from -90deg, var(--real) 0%, var(--real) 75%, var(--ai) 100%);
+        }
+
+        .gauge-inner {
+            position: absolute;
+            inset: 12px;
+            border-radius: 50%;
+            background: var(--surface);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--border-bright);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .gauge-value {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gauge-label {
+            font-size: 10px;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .confidence-info {
+            flex: 1;
+        }
+
+        .confidence-info h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .confidence-info p {
+            font-size: 13px;
+            color: var(--text2);
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .confidence-badge-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .confidence-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .confidence-badge.high {
+            border-color: var(--real);
+            color: var(--real);
+            background: rgba(46, 213, 115, 0.08);
+        }
+
+        .confidence-badge.medium {
+            border-color: var(--uncertain);
+            color: var(--uncertain);
+            background: rgba(255, 165, 2, 0.08);
+        }
+
+        .confidence-badge.low {
+            border-color: var(--ai);
+            color: var(--ai);
+            background: rgba(255, 71, 87, 0.08);
+        }
+
+        /* DETECTION SCORE SPECTRUM */
+        .score-spectrum {
+            margin-bottom: 24px;
+        }
+
+        .spectrum-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .spectrum-bar {
+            height: 12px;
+            background: var(--surface-alt);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .spectrum-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--real) 0%, var(--uncertain) 50%, var(--ai) 100%);
+            width: 0%;
+            animation: spectrum-fill 1s ease-out forwards;
+            position: relative;
+        }
+
+        @keyframes spectrum-fill {
+            from { width: 0%; }
+            to { width: var(--fill-width, 50%); }
+        }
+
+        .spectrum-marker {
+            position: absolute;
+            width: 3px;
+            height: 16px;
+            background: var(--text);
+            left: var(--marker-pos, 50%);
+            top: -2px;
+            transform: translateX(-50%);
+            border-radius: 1px;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+        }
+
+        .spectrum-hint {
+            font-size: 11px;
+            color: var(--text3);
+            margin-top: 8px;
+        }
+
+        /* MODULE BREAKDOWN - Card Layout */
+        .modules-section {
+            margin-bottom: 24px;
+        }
+
+        .modules-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modules-title::before {
+            content: '🔬';
+            font-size: 16px;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .module-card {
+            background: var(--surface-alt);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .module-card:hover {
+            border-color: var(--primary);
+            background: rgba(0, 212, 170, 0.08);
+            transform: translateY(-4px);
+        }
+
+        .module-card:hover::before {
+            opacity: 1;
+        }
+
+        .module-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .module-name {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .module-score {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            font-size: 11px;
+            color: var(--text2);
+        }
+
+        .module-indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: pulse-indicator 2s ease-in-out infinite;
+        }
+
+        .module-indicator.triggered {
+            background: var(--ai);
+        }
+
+        .module-indicator.caution {
+            background: var(--uncertain);
+        }
+
+        .module-indicator.clear {
+            background: var(--real);
+        }
+
+        @keyframes pulse-indicator {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.3); }
+        }
+
+        /* EXPANDABLE MODULE DETAILS */
+        .module-details {
+            display: none;
+            padding: 12px;
+            background: var(--surface);
+            border-radius: 10px;
+            font-size: 12px;
+            margin-top: 8px;
+            border-left: 3px solid var(--primary);
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .module-details.expanded {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .module-detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .module-detail-label {
+            color: var(--text3);
+            font-weight: 500;
+        }
+
+        .module-detail-value {
+            color: var(--text2);
+            font-weight: 600;
+        }
+
+        /* RESULT EXPLANATION */
+        .explanation-section {
+            background: rgba(0, 212, 170, 0.06);
+            border: 1px solid rgba(0, 212, 170, 0.15);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .explanation-title {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .explanation-title::before {
+            content: '💡';
+        }
+
+        .explanation-text {
+            font-size: 12px;
+            color: var(--text2);
+            line-height: 1.6;
+        }
+
+        /* SUGGESTED ACTIONS */
+        .actions-section {
+            margin-bottom: 24px;
+        }
+
+        .actions-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .actions-title::before {
+            content: '📋';
+        }
+
+        .action-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background: var(--surface-alt);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-item:hover {
+            border-color: var(--primary);
+            background: rgba(0, 212, 170, 0.08);
+        }
+
+        .action-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .action-content {
+            flex: 1;
+        }
+
+        .action-name {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .action-desc {
+            font-size: 11px;
+            color: var(--text3);
+        }
+
+        /* INTERACTIVE BUTTONS */
+        .result-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .result-btn {
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: none;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .result-btn.primary {
+            background: linear-gradient(135deg, var(--primary), #00ff88);
+            color: #000;
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+        }
+
+        .result-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 212, 170, 0.4);
+        }
+
+        .result-btn.secondary {
+            background: var(--surface-alt);
+            color: var(--text);
+            border: 1px solid var(--border-bright);
+        }
+
+        .result-btn.secondary:hover {
+            border-color: var(--primary);
+            background: rgba(0, 212, 170, 0.08);
+        }
+
+        /* ADDITIONAL FEATURES */
+        .feature-chips {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .feature-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: var(--surface-alt);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text2);
+        }
+
+        .feature-chip::before {
+            font-size: 14px;
+        }
+
+        .feature-chip.share::before {
+            content: '📤';
+        }
+
+        .feature-chip.download::before {
+            content: '📥';
+        }
+
+        .feature-chip.history::before {
+            content: '📚';
+        }
+
+        /* TOOLTIP STYLES */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            border-bottom: 1px dotted var(--text2);
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--surface-alt);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            white-space: nowrap;
+            border: 1px solid var(--border-bright);
+            z-index: 100;
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 480px) {
+            .confidence-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .modules-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .result-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .verdict-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .verdict-info h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- MODERN RESULTS CARD -->
+        <div class="modern-result-card">
+            <!-- VERDICT HEADER -->
+            <div class="verdict-header">
+                <div class="verdict-icon ai-generated">🤖</div>
+                <div class="verdict-info">
+                    <h2>Likely AI-Generated</h2>
+                    <p>Deep Scan Analysis • High Confidence</p>
+                </div>
+            </div>
+
+            <!-- CONFIDENCE METER -->
+            <div class="confidence-section">
+                <div class="confidence-gauge">
+                    <div class="gauge-bg"></div>
+                    <div class="gauge-fill ai-generated"></div>
+                    <div class="gauge-inner">
+                        <div class="gauge-value">87%</div>
+                        <div class="gauge-label">AI</div>
+                    </div>
+                </div>
+                <div class="confidence-info">
+                    <h3>High Confidence</h3>
+                    <p>Multiple detection signals align on AI generation patterns with 87% certainty.</p>
+                    <div class="confidence-badge-group">
+                        <div class="confidence-badge high">✓ High</div>
+                        <div class="confidence-badge medium">◆ Forensics</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DETECTION SCORE SPECTRUM -->
+            <div class="score-spectrum">
+                <div class="spectrum-label">
+                    <span>100% Authentic</span>
+                    <span>100% AI-Generated</span>
+                </div>
+                <div class="spectrum-bar">
+                    <div class="spectrum-fill ai-generated" style="--fill-width: 87%;"></div>
+                    <div class="spectrum-marker" style="--marker-pos: 87%;"></div>
+                </div>
+                <div class="spectrum-hint">Score: 87/100 • Trend: Strong AI signals</div>
+            </div>
+
+            <!-- MODULE BREAKDOWN -->
+            <div class="modules-section">
+                <div class="modules-title">Detection Modules</div>
+                <div class="modules-grid">
+                    <div class="module-card">
+                        <div class="module-icon">🧬</div>
+                        <div class="module-name">Artifacts</div>
+                        <div class="module-score">
+                            <span>92%</span>
+                            <div class="module-indicator triggered"></div>
+                        </div>
+                        <div class="module-details">
+                            <div class="module-detail-row">
+                                <span class="module-detail-label">Noise:</span>
+                                <span class="module-detail-value">94%</span>
+                            </div>
+                            <div class="module-detail-row">
+                                <span class="module-detail-label">Compression:</span>
+                                <span class="module-detail-value">89%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="module-card">
+                        <div class="module-icon">🎨</div>
+                        <div class="module-name">Color Balance</div>
+                        <div class="module-score">
+                            <span>78%</span>
+                            <div class="module-indicator triggered"></div>
+                        </div>
+                        <div class="module-details">
+                            <div class="module-detail-row">
+                                <span class="module-detail-label">Saturation:</span>
+                                <span class="module-detail-value">81%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="module-card">
+                        <div class="module-icon">🧠</div>
+                        <div class="module-name">AI Model</div>
+                        <div class="module-score">
+                            <span>91%</span>
+                            <div class="module-indicator triggered"></div>
+                        </div>
+                        <div class="module-details">
+                            <div class="module-detail-row">
+                                <span class="module-detail-label">ViT Score:</span>
+                                <span class="module-detail-value">94%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="module-card">
+                        <div class="module-icon">🔊</div>
+                        <div class="module-name">Frequency</div>
+                        <div class="module-score">
+                            <span>68%</span>
+                            <div class="module-indicator caution"></div>
+                        </div>
+                        <div class="module-details">
+                            <div class="module-detail-row">
+                                <span class="module-detail-label">FFT Entropy:</span>
+                                <span class="module-detail-value">71%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXPLANATION -->
+            <div class="explanation-section">
+                <div class="explanation-title">What This Means</div>
+                <div class="explanation-text">
+                    The image shows consistent patterns typical of diffusion-model AI generation. Artifacts in the texture layer and anomalies in frequency distribution strongly suggest artificial creation. The AI model detection score of 91% provides high confidence in this assessment.
+                </div>
+            </div>
+
+            <!-- SUGGESTED ACTIONS -->
+            <div class="actions-section">
+                <div class="actions-title">Suggested Actions</div>
+                <div class="action-item">
+                    <div class="action-icon">🔍</div>
+                    <div class="action-content">
+                        <div class="action-name">Run Full Forensics</div>
+                        <div class="action-desc">Get detailed technical analysis</div>
+                    </div>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon">💾</div>
+                    <div class="action-content">
+                        <div class="action-name">Save Report</div>
+                        <div class="action-desc">Download as PDF for reference</div>
+                    </div>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon">📊</div>
+                    <div class="action-content">
+                        <div class="action-name">View History</div>
+                        <div class="action-desc">Compare with past scans</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INTERACTIVE BUTTONS -->
+            <div class="result-buttons">
+                <button class="result-btn primary">📤 Share Result</button>
+                <button class="result-btn secondary">🔄 New Scan</button>
+            </div>
+
+            <!-- FEATURE CHIPS -->
+            <div class="feature-chips">
+                <div class="feature-chip share">Share with privacy controls</div>
+                <div class="feature-chip download">Download PDF/Image</div>
+                <div class="feature-chip history">Save to history</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add click handlers for module cards
+        document.querySelectorAll('.module-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const details = this.querySelector('.module-details');
+                details.classList.toggle('expanded');
+            });
+        });
+
+        // Add click handlers for action items
+        document.querySelectorAll('.action-item').forEach(item => {
+            item.addEventListener('click', function() {
+                console.log('Action clicked');
+            });
+        });
+
+        // Button handlers
+        document.querySelectorAll('.result-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const text = this.textContent.trim();
+                if (text.includes('Share')) {
+                    alert('Opening share dialog with privacy controls...');
+                } else if (text.includes('New')) {
+                    alert('Starting new scan...');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

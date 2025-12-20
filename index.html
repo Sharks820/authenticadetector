@@ -3424,15 +3424,21 @@ function analyzeNoisePatterns(img) {
 
     // Factor 1: Average variance (camera sensors have predictable noise ranges)
     // Real photos: 100-600, Screenshots: 10-100, AI: <50 or >700
+    // HIGH-ISO FIX: Extended range for high-ISO photos (can go up to 1200)
     if (avgVariance < 20) {
         score += 40; // Extremely smooth = GAN or over-processed AI
     } else if (avgVariance < 50) {
         // Could be screenshot OR AI - check other factors
         score += 15;
-    } else if (avgVariance >= 100 && avgVariance <= 600) {
+    } else if (avgVariance >= 100 && avgVariance <= 1200) {
+        // Extended range to include high-ISO photos (was 600, now 1200)
         score -= 25; // Strong indicator of real photo with natural noise
-    } else if (avgVariance > 700) {
+    } else if (avgVariance > 1500) {
+        // Raised threshold for over-sharpened detection (was 700, now 1500)
         score += 30; // Over-sharpened or artificial noise added
+    } else if (avgVariance > 1200 && avgVariance <= 1500) {
+        // Middle ground - could be high-ISO or processed
+        score += 5; // Slight suspicion only
     }
 
     // Factor 2: Variance consistency (GANs produce unnaturally uniform noise)
