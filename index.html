@@ -6439,9 +6439,49 @@ function yieldToMain() {
     return new Promise(resolve => setTimeout(resolve, 10));
 }
 
+// FORENSICS: Helper function to downsample pixels for FFT on large images
+function downsamplePixelsSimple(pixelData, width, height, targetSize) {
+    if (width <= targetSize && height <= targetSize) {
+        return { data: pixelData, width: width, height: height };
+    }
+
+    const scale = Math.min(width, height) / targetSize;
+    const newWidth = Math.ceil(width / scale);
+    const newHeight = Math.ceil(height / scale);
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = width;
+    canvas.height = height;
+
+    // Reconstruct image from pixels
+    const imageData = new ImageData(new Uint8ClampedArray(pixelData), width, height);
+    ctx.putImageData(imageData, 0, 0);
+
+    // Draw downsampled version
+    const canvas2 = document.createElement('canvas');
+    const ctx2 = canvas2.getContext('2d');
+    canvas2.width = newWidth;
+    canvas2.height = newHeight;
+    ctx2.drawImage(canvas, 0, 0, newWidth, newHeight);
+
+    const downsampled = ctx2.getImageData(0, 0, newWidth, newHeight);
+    return {
+        data: downsampled.data,
+        width: newWidth,
+        height: newHeight
+    };
+}
+
 // Main Analysis Function - Completely Rewritten
 async function analyzeImage(dataUrl, mode) {
-    console.log(`[DeepScan] Starting ${mode} scan...`);
+    // FORENSICS FIX: mode can now be 'quick', 'deep', or 'forensics'
+    // Normalize mode - if 'forensics' passed as mode, use it
+    // If mode is 'deep' but forensicsMode is true, convert to 'forensics'
+    const normalizedMode = (mode === 'forensics' || (mode === 'deep' && forensicsMode)) ? 'forensics' : mode;
+    const finalMode = normalizedMode;
+
+    console.log(`[DeepScan] Starting ${finalMode} scan...`);
     const scanStartTime = performance.now();
 
     // Create image element for analysis
@@ -6456,9 +6496,21 @@ async function analyzeImage(dataUrl, mode) {
     // Max 512x512 even for deep scan to keep FFT computation fast
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-    const analysisSize = mode === 'deep' ? 256 : 256;  // Reduced from 512 to 256 - prevents FFT freeze
+
+    // FORENSICS: Higher resolution analysis for forensics mode
+    let analysisSize = 256;
+    if (finalMode === 'forensics') {
+        analysisSize = 512;  // Forensics uses higher resolution
+    } else if (finalMode === 'deep') {
+        analysisSize = 256;  // Deep uses 256 (FFT safe size)
+    } else {
+        analysisSize = 128;  // Quick uses 128 (faster)
+    }
     canvas.width = Math.min(img.width, analysisSize);
     canvas.height = Math.min(img.height, analysisSize);
+
+    console.log(`[Scan] Using ${analysisSize}x${analysisSize} for ${finalMode} mode`);
+
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -6522,13 +6574,18 @@ async function analyzeImage(dataUrl, mode) {
     // Detects spectral anomalies in AI images
     // OPTIMIZED: Skip FFT for very large images to prevent freeze
     // =========================================
-    if (mode === 'deep') {
-        console.log('[DeepScan] 3/12: FFT frequency analysis...');
-        // Only run FFT on reasonably sized images (max 256x256)
-        if (width <= 256 && height <= 256) {
+    if (finalMode === 'deep' || finalMode === 'forensics') {
+        const isForensics = finalMode === 'forensics';
+        console.log(`[Scan] 3/12: FFT frequency analysis (${isForensics ? 'Forensics' : 'Deep'})...`);
+
+        // FORENSICS: More aggressive FFT analysis
+        const fftMaxSize = isForensics ? 512 : 256;
+        const fftTimeout = isForensics ? 6000 : 3000;
+
+        if (width <= fftMaxSize && height <= fftMaxSize) {
             const frequencyResult = await runDetectorSafe('FFT Analysis',
                 () => analyzeFrequencyDomain(pixels, width, height),
-                3000 // 3 second timeout for FFT
+                fftTimeout
             );
             trackModule('fft', frequencyResult);
 
@@ -6536,10 +6593,19 @@ async function analyzeImage(dataUrl, mode) {
             console.log('[DeepScan] 3.5/12: UGAD multi-channel spectral analysis...');
             const ugadResult = await runDetectorSafe('UGAD Analysis',
                 () => ugadSpectralAnalysis(pixels, width, height),
-                3000 // 3 second timeout for UGAD
+                fftTimeout
             );
             trackModule('ugad', ugadResult);
-        } else {
+        } else if (isForensics && width > fftMaxSize) {
+            // FORENSICS: Try FFT on large images by downsampling
+            console.log('[Forensics] Image large, attempting FFT on downsampled version...');
+            const downsampled = downsamplePixelsSimple(pixels, width, height, fftMaxSize);
+            const frequencyResult = await runDetectorSafe('FFT Analysis (Downsampled)',
+                () => analyzeFrequencyDomain(downsampled.data, downsampled.width, downsampled.height),
+                8000  // Extended timeout
+            );
+            trackModule('fft', frequencyResult);
+        } else if (!isForensics) {
             console.log('[DeepScan] Image too large for FFT/UGAD, skipping to prevent freeze');
         }
         await yieldToMain();
@@ -6601,11 +6667,13 @@ async function analyzeImage(dataUrl, mode) {
     // 8. AI MODEL-SPECIFIC FINGERPRINTS (DEEP SCAN)
     // SDXL, DALL-E 3, Midjourney v6, Flux
     // =========================================
-    if (mode === 'deep') {
+    if (finalMode === 'deep' || finalMode === 'forensics') {
         console.log('[DeepScan] 8/12: AI model fingerprint detection...');
+        // FORENSICS: Extended timeout for forensics mode
+        const timeout = finalMode === 'forensics' ? 6000 : 4000;
         const modelResult = await runDetectorSafe('Model Fingerprints',
             () => analyzeModelSpecificFingerprints(pixels, width, height),
-            4000
+            timeout
         );
         trackModule('modelFingerprints', modelResult);
         await yieldToMain();
@@ -6615,11 +6683,13 @@ async function analyzeImage(dataUrl, mode) {
     // 9. FACE AND ANATOMY ANALYSIS (DEEP SCAN)
     // Eyes, skin, hands, symmetry
     // =========================================
-    if (mode === 'deep') {
+    if (finalMode === 'deep' || finalMode === 'forensics') {
         console.log('[DeepScan] 9/12: Face and anatomy analysis...');
+        // FORENSICS: Extended timeout for forensics mode
+        const timeout = finalMode === 'forensics' ? 6000 : 4000;
         const anatomyResult = await runDetectorSafe('Face/Anatomy Analysis',
             () => analyzeFaceAndAnatomy(pixels, width, height),
-            4000
+            timeout
         );
         trackModule('anatomy', anatomyResult);
         await yieldToMain();
@@ -6629,11 +6699,13 @@ async function analyzeImage(dataUrl, mode) {
     // 10. SEMANTIC INCONSISTENCY DETECTION (DEEP SCAN)
     // Text artifacts, lighting, edge coherence
     // =========================================
-    if (mode === 'deep') {
+    if (finalMode === 'deep' || finalMode === 'forensics') {
         console.log('[DeepScan] 10/12: Semantic inconsistency detection...');
+        // FORENSICS: Extended timeout for forensics mode
+        const timeout = finalMode === 'forensics' ? 6000 : 4000;
         const semanticResult = await runDetectorSafe('Semantic Analysis',
             () => analyzeSemanticInconsistencies(pixels, width, height),
-            4000
+            timeout
         );
         trackModule('semantics', semanticResult);
         await yieldToMain();
@@ -6643,11 +6715,13 @@ async function analyzeImage(dataUrl, mode) {
     // 11. ADVANCED TEXTURE ANALYSIS (DEEP SCAN)
     // Hair, fabric, background patterns
     // =========================================
-    if (mode === 'deep') {
+    if (finalMode === 'deep' || finalMode === 'forensics') {
         console.log('[DeepScan] 11/12: Advanced texture analysis...');
+        // FORENSICS: Extended timeout for forensics mode
+        const timeout = finalMode === 'forensics' ? 6000 : 4000;
         const advTextureResult = await runDetectorSafe('Advanced Textures',
             () => analyzeAdvancedTextures(pixels, width, height),
-            4000
+            timeout
         );
         trackModule('advTextures', advTextureResult);
         await yieldToMain();
@@ -6817,8 +6891,22 @@ async function analyzeImage(dataUrl, mode) {
     // Use ensemble confidence as baseline
     confidence = ensembleResult.confidence;
 
-    // Deep scan has stricter thresholds but more reliable results
-    if (mode === 'deep') {
+    // FORENSICS: Stricter thresholds for professional use
+    if (finalMode === 'forensics') {
+        // Forensics mode: Maximum accuracy, stricter thresholds
+        if (aiScore >= 78 && aiIndicatorCount >= minAIIndicators) {
+            verdict = 'ai';
+            // Harder to reach 'high' confidence in forensics mode
+            confidence = aiScore >= 90 ? 'high' : 'medium';
+        } else if (aiScore <= 22 || realIndicators.length >= 4) {
+            verdict = 'real';
+            confidence = aiScore <= 10 ? 'high' : 'medium';
+        } else {
+            verdict = 'uncertain';
+            confidence = 'low';
+        }
+    } else if (finalMode === 'deep') {
+        // Deep scan has stricter thresholds but more reliable results
         if (aiScore >= 75 && aiIndicatorCount >= minAIIndicators) {
             verdict = 'ai';
             // Boost confidence if ensemble also agrees
@@ -6849,23 +6937,50 @@ async function analyzeImage(dataUrl, mode) {
         }
     }
 
+    // FORENSICS: Additional confidence boost for high indicator agreement
+    if (finalMode === 'forensics' && indicators.length >= 8) {
+        // If 8+ AI indicators strongly agree, boost to high confidence
+        if (verdict === 'ai') {
+            confidence = 'high';
+        }
+    }
+
+    // FORENSICS: Enhanced explainer for forensics mode
+    if (finalMode === 'forensics') {
+        explainers.push({
+            icon: 'SCAN',
+            text: `Forensics mode: Maximum accuracy analysis with ${indicators.length + realIndicators.length} detection signals across 12 modules (stricter thresholds, extended analysis)`,
+            type: 'info'
+        });
+    }
+
     // Add summary explainer with scan type info
-    const scanTypeInfo = mode === 'deep' ? '(12 analysis modules)' : '(5 quick modules)';
+    // FORENSICS: Include forensics in label
+    let scanTypeLabel = 'Quick';
+    let scanTypeInfo = '(5 quick modules)';
+    if (finalMode === 'forensics') {
+        scanTypeLabel = 'Forensics';
+        scanTypeInfo = '(12 forensics modules, stricter verification)';
+    } else if (finalMode === 'deep') {
+        scanTypeLabel = 'Deep';
+        scanTypeInfo = '(12 analysis modules)';
+    }
+
     explainers.unshift({
         icon: 'INFO',
-        text: `${mode === 'deep' ? 'Deep' : 'Quick'} scan found ${aiIndicatorCount} AI indicator(s) and ${realIndicators.length} authenticity indicator(s) ${scanTypeInfo}`,
+        text: `${scanTypeLabel} scan found ${aiIndicatorCount} AI indicator(s) and ${realIndicators.length} authenticity indicator(s) ${scanTypeInfo}`,
         type: 'summary'
     });
 
     const totalScanTime = performance.now() - scanStartTime;
-    console.log(`[DeepScan] ${mode} scan complete! Score: ${round(aiScore)}%, Verdict: ${verdict}, Time: ${totalScanTime.toFixed(0)}ms`);
+    console.log(`[DeepScan] ${finalMode} scan complete! Score: ${round(aiScore)}%, Verdict: ${verdict}, Time: ${totalScanTime.toFixed(0)}ms`);
 
     return {
         verdict,
         aiScore: round(aiScore),
         confidence,
         explainers,
-        mode,
+        mode: finalMode,  // FORENSICS: Return correct mode (forensics, not deep)
         timestamp: Date.now(),
         indicatorCounts: {
             ai: aiIndicatorCount,
