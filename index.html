@@ -401,6 +401,57 @@
         .explainer-item:first-child{border-top:none;padding-top:0}
         .explainer-icon{font-size:12px}
         .explainer-text{font-size:10px;color:var(--text2);line-height:1.4}
+
+        /* NEW EXPLAINABILITY MODULES */
+        .explainer-section{margin-top:8px}
+        .explainer-section-title{font-size:11px;font-weight:700;color:var(--text);margin-bottom:8px}
+
+        .module-card{
+            background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:8px;
+            border:1px solid var(--border);
+        }
+        .module-card.ai-indicator{border-color:rgba(255,71,87,0.3);background:linear-gradient(135deg, var(--surface2) 0%, rgba(255,71,87,0.05) 100%)}
+        .module-card.real-indicator{border-color:rgba(46,213,115,0.3);background:linear-gradient(135deg, var(--surface2) 0%, rgba(46,213,115,0.05) 100%)}
+
+        .module-header{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+        .module-icon{font-size:14px}
+        .module-name{font-size:11px;font-weight:700;flex:1;color:var(--text)}
+        .module-confidence{font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;background:var(--card)}
+
+        .module-reason{font-size:10px;color:var(--text2);line-height:1.4;margin-bottom:6px}
+
+        .module-technical{
+            font-size:9px;color:var(--text3);background:var(--card);
+            padding:4px 6px;border-radius:4px;margin-bottom:6px;
+            font-family:'Courier New',monospace;
+        }
+        .tech-label{font-weight:700}
+
+        .module-meter{
+            height:4px;background:var(--card);border-radius:2px;overflow:hidden;margin-bottom:4px;
+        }
+        .module-meter-fill{height:100%;transition:width 0.3s ease;border-radius:2px}
+
+        .module-score{font-size:9px;color:var(--text3);text-align:right}
+
+        /* COMPACT MODULE CARDS */
+        .module-card-compact{
+            background:var(--card);border-radius:8px;padding:8px;margin-bottom:6px;
+        }
+        .module-compact-header{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+        .module-compact-score{font-size:10px;font-weight:600;margin-left:auto}
+        .module-compact-meter{height:3px;background:var(--surface2);border-radius:2px;overflow:hidden}
+        .module-compact-meter-fill{height:100%;transition:width 0.3s ease;border-radius:2px}
+
+        /* DETECTION SUMMARY */
+        .detection-summary{
+            background:var(--card);border-radius:8px;padding:10px;margin-top:12px;
+            border:1px dashed var(--border);
+        }
+        .summary-stat{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+        .summary-stat:last-child{margin-bottom:0}
+        .summary-label{font-size:10px;color:var(--text2);font-weight:600}
+        .summary-value{font-size:10px;color:var(--primary);font-weight:700}
         
         /* FEEDBACK */
         .feedback-section{background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:12px}
@@ -611,6 +662,9 @@
             cursor:pointer;font-family:inherit;
         }
         .login-submit:disabled{opacity:.5}
+        .login-forgot{text-align:right;margin-top:8px;margin-bottom:16px}
+        .login-forgot a{color:var(--primary);font-size:11px;cursor:pointer;text-decoration:none}
+        .login-forgot a:hover{text-decoration:underline}
         .login-toggle{text-align:center;font-size:11px;color:var(--text3);margin-top:12px}
         .login-toggle a{color:var(--primary);cursor:pointer}
         .login-guest{
@@ -813,10 +867,10 @@
                 </div>
                 <div class="explainers" id="explainersCard">
                     <div class="explainers-header" onclick="toggleExplainers()">
-                        <div class="explainers-title">🔍 Why we think this</div>
-                        <span class="explainers-toggle" id="explainersToggle">▼</span>
+                        <div class="explainers-title">🔍 Detection Analysis</div>
+                        <span class="explainers-toggle" id="explainersToggle">▲</span>
                     </div>
-                    <div class="explainers-content" id="explainersContent"></div>
+                    <div class="explainers-content show" id="explainersContent"></div>
                 </div>
                 <div class="feedback-section">
                     <div class="feedback-title">📝 Was this accurate?</div>
@@ -967,7 +1021,11 @@
             <div class="login-form">
                 <div class="input-group hidden" id="nameGroup"><label>Display Name</label><input type="text" id="nameInput" placeholder="Your name"></div>
                 <div class="input-group"><label>Email</label><input type="email" id="emailInput" placeholder="you@example.com"></div>
-                <div class="input-group"><label>Password</label><input type="password" id="passwordInput" placeholder="••••••••"></div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="passwordInput" placeholder="••••••••">
+                </div>
+                <div class="login-forgot" id="forgotLink"><a onclick="forgotPassword()">Forgot Password?</a></div>
                 <button class="login-submit" id="loginSubmit" onclick="submitLogin()">Sign In</button>
             </div>
             <div class="login-toggle" id="loginToggle">Don't have an account? <a onclick="toggleLoginMode()">Sign Up</a></div>
@@ -1503,19 +1561,23 @@ window.openLogin = function(signupMode = false) {
 };
 function updateLoginUI() {
     if (isLoginMode) {
-        $('loginViewTitle').textContent = 'Sign Up'; 
+        $('loginViewTitle').textContent = 'Sign Up';
         $('loginHeroTitle').textContent = 'Create Account';
         $('loginHeroSubtitle').textContent = 'Join to unlock all features';
-        $('nameGroup').classList.remove('hidden'); 
+        $('nameGroup').classList.remove('hidden');
         $('loginSubmit').textContent = 'Create Account';
         $('loginToggle').innerHTML = 'Already have an account? <a onclick="toggleLoginMode()">Sign In</a>';
+        // Hide forgot password link in signup mode
+        if ($('forgotLink')) $('forgotLink').style.display = 'none';
     } else {
-        $('loginViewTitle').textContent = 'Sign In'; 
+        $('loginViewTitle').textContent = 'Sign In';
         $('loginHeroTitle').textContent = 'Welcome Back';
         $('loginHeroSubtitle').textContent = 'Sign in to access all features';
-        $('nameGroup').classList.add('hidden'); 
+        $('nameGroup').classList.add('hidden');
         $('loginSubmit').textContent = 'Sign In';
         $('loginToggle').innerHTML = "Don't have an account? <a onclick=\"toggleLoginMode()\">Sign Up</a>";
+        // Show forgot password link in login mode
+        if ($('forgotLink')) $('forgotLink').style.display = 'block';
     }
     $('loginError').classList.remove('show');
 }
@@ -1526,21 +1588,49 @@ window.submitLogin = async function() {
     if (!email || !password) { showLoginError('Fill all fields'); return; }
     if (isLoginMode && !name) { showLoginError('Enter your name'); return; }
     if (password.length < 6) { showLoginError('Password min 6 chars'); return; }
-    
-    $('loginSubmit').disabled = true; 
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) { showLoginError('Invalid email address'); return; }
+
+    $('loginSubmit').disabled = true;
     $('loginSubmit').textContent = isLoginMode ? 'Creating...' : 'Signing in...';
-    
+
     try {
         if (!useLocalFallback && supabase) {
             if (isLoginMode) {
-                const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { display_name: name } } });
+                // SIGNUP with email verification
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: { display_name: name },
+                        emailRedirectTo: window.location.origin + '/verified'
+                    }
+                });
                 if (error) throw error;
-                user = { id: data.user.id, email: data.user.email, name }; 
+
+                // Check if email confirmation is required
+                if (data.user && !data.user.confirmed_at && data.user.identities?.length === 0) {
+                    showLoginError('✉️ Check your email to verify your account!');
+                    toast('📧 Verification email sent! Check your inbox.', 'info', 5000);
+                    // Don't log in yet - wait for verification
+                    return;
+                }
+
+                user = { id: data.user.id, email: data.user.email, name };
                 toast('🎉 Account created!');
             } else {
+                // LOGIN
                 const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) throw error;
-                user = { id: data.user.id, email: data.user.email, name: data.user.user_metadata?.display_name || email.split('@')[0] }; 
+                if (error) {
+                    // Better error messages
+                    if (error.message.includes('Email not confirmed')) {
+                        throw new Error('Please verify your email first. Check your inbox.');
+                    }
+                    throw error;
+                }
+                user = { id: data.user.id, email: data.user.email, name: data.user.user_metadata?.display_name || email.split('@')[0] };
                 toast('Welcome back!');
             }
         } else {
@@ -1550,20 +1640,50 @@ window.submitLogin = async function() {
                 if (users[email]) throw new Error('Account exists');
                 users[email] = { email, password, name, created: Date.now() };
                 localStorage.setItem('local_users', JSON.stringify(users));
-                user = { id: 'local_' + Date.now(), email, name }; 
+                user = { id: 'local_' + Date.now(), email, name };
                 toast('🎉 Account created!');
             } else {
                 if (!users[email] || users[email].password !== password) throw new Error('Invalid credentials');
-                user = { id: 'local_' + email, email, name: users[email].name }; 
+                user = { id: 'local_' + email, email, name: users[email].name };
                 toast('Welcome back!');
             }
         }
         saveUser(); updateUserUI(); loadUserStats(); showView('homeView');
-    } catch (e) { 
-        showLoginError(e.message); 
-    } finally { 
-        $('loginSubmit').disabled = false; 
-        updateLoginUI(); 
+    } catch (e) {
+        showLoginError(e.message);
+    } finally {
+        $('loginSubmit').disabled = false;
+        updateLoginUI();
+    }
+};
+
+// FORGOT PASSWORD
+window.forgotPassword = async function() {
+    const email = $('emailInput').value.trim();
+    if (!email) {
+        showLoginError('Enter your email address');
+        return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showLoginError('Invalid email address');
+        return;
+    }
+
+    try {
+        if (!useLocalFallback && supabase) {
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + '/reset-password'
+            });
+            if (error) throw error;
+            toast('📧 Password reset link sent! Check your email.', 'success', 5000);
+            showLoginError('✉️ Check your email for reset link');
+        } else {
+            toast('Password reset not available in guest mode', 'warning');
+        }
+    } catch (e) {
+        showLoginError('Error: ' + e.message);
     }
 };
 
@@ -1700,7 +1820,58 @@ async function runQuickScan() {
         confidence,
         breakdown: { noise: round(noise), compression: round(compression), color: round(color), edges: round(edges) },
         mode: 'quick',
-        version: DETECTOR_VERSION
+        version: DETECTOR_VERSION,
+        // Enhanced explainability data
+        moduleExplanations: [
+            {
+                name: 'Noise Patterns',
+                icon: '📊',
+                confidence: round(noise),
+                triggered: noise > 55 || noise < 45,
+                reason: noise > 65 ? 'Unnaturally uniform noise patterns typical of GAN generation' :
+                        noise > 55 ? 'Noise consistency suggests possible AI generation' :
+                        noise < 35 ? 'Natural camera sensor noise detected' :
+                        noise < 45 ? 'Noise patterns consistent with real photography' :
+                        'Noise analysis inconclusive',
+                technical: `Variance analysis: ${noise > 65 ? 'Too uniform (GAN signature)' : noise < 35 ? 'Natural sensor noise' : 'Mixed indicators'}`
+            },
+            {
+                name: 'Compression Artifacts',
+                icon: '🔲',
+                confidence: round(compression),
+                triggered: compression > 55 || compression < 45,
+                reason: compression > 60 ? 'Periodic block artifacts suggest AI upscaling or generation' :
+                        compression > 55 ? 'Compression patterns differ from typical camera output' :
+                        compression < 40 ? 'Natural JPEG compression from camera' :
+                        compression < 45 ? 'Compression consistent with real photos' :
+                        'Compression analysis inconclusive',
+                technical: `DCT block analysis: ${compression > 60 ? 'Synthetic patterns' : compression < 40 ? 'Natural JPEG' : 'Indeterminate'}`
+            },
+            {
+                name: 'Color Distribution',
+                icon: '🎨',
+                confidence: round(color),
+                triggered: color > 55 || color < 45,
+                reason: color > 60 ? 'Mathematically smooth color gradients typical of AI' :
+                        color > 55 ? 'Color distribution appears slightly synthetic' :
+                        color < 35 ? 'Natural color variation from real scene' :
+                        color < 45 ? 'Color patterns consistent with photography' :
+                        'Color analysis inconclusive',
+                technical: `Histogram entropy: ${color > 60 ? 'Low (synthetic)' : color < 35 ? 'High (natural)' : 'Medium'}`
+            },
+            {
+                name: 'Edge Coherence',
+                icon: '✂️',
+                confidence: round(edges),
+                triggered: edges > 55 || edges < 45,
+                reason: edges > 60 ? 'Edge patterns suggest synthetic generation process' :
+                        edges > 55 ? 'Edge coherence slightly abnormal' :
+                        edges < 40 ? 'Natural edge characteristics from real imaging' :
+                        edges < 45 ? 'Edges consistent with camera optics' :
+                        'Edge analysis inconclusive',
+                technical: `Sobel analysis: ${edges > 60 ? 'Synthetic edges' : edges < 40 ? 'Natural optical blur' : 'Mixed'}`
+            }
+        ]
     };
 }
 
@@ -1880,7 +2051,142 @@ async function runDeepScan() {
             deepfake: deepfakeScore,
             clip: clipScore,
             generator: generatorSig.score
-        }
+        },
+        // Enhanced explainability data - ALL modules
+        moduleExplanations: [
+            {
+                name: 'Noise Patterns',
+                icon: '📊',
+                confidence: round(noise),
+                triggered: noise > 55 || noise < 45,
+                reason: noise > 65 ? 'Unnaturally uniform noise - GAN fingerprint detected' :
+                        noise > 55 ? 'Noise patterns show AI generation characteristics' :
+                        noise < 35 ? 'Natural camera sensor noise detected' :
+                        noise < 45 ? 'Noise consistent with real photography' :
+                        'Noise analysis inconclusive',
+                technical: `Multi-scale variance: ${noise > 65 ? 'Too uniform (StyleGAN/Midjourney)' : noise < 35 ? 'Natural Poisson noise' : 'Mixed indicators'}`
+            },
+            {
+                name: 'Compression Artifacts',
+                icon: '🔲',
+                confidence: round(compression),
+                triggered: compression > 55 || compression < 45,
+                reason: compression > 65 ? 'Unnatural 8x8 or 16x16 block patterns - AI upscaling signature' :
+                        compression > 55 ? 'Compression artifacts differ from camera JPEG' :
+                        compression < 40 ? 'Natural camera JPEG compression detected' :
+                        compression < 45 ? 'Compression consistent with real photos' :
+                        'Compression analysis inconclusive',
+                technical: `DCT analysis: ${compression > 65 ? 'Synthetic block patterns' : compression < 40 ? 'Natural JPEG baseline' : 'Indeterminate'}`
+            },
+            {
+                name: 'Color Distribution',
+                icon: '🎨',
+                confidence: round(color),
+                triggered: color > 55 || color < 45,
+                reason: color > 65 ? 'Mathematically perfect gradients - AI signature' :
+                        color > 55 ? 'Color distribution shows synthetic characteristics' :
+                        color < 35 ? 'Natural color variation from real scene lighting' :
+                        color < 45 ? 'Colors consistent with real photography' :
+                        'Color analysis inconclusive',
+                technical: `Histogram entropy: ${color > 65 ? 'Low entropy (synthetic)' : color < 35 ? 'High entropy (natural)' : 'Medium entropy'}`
+            },
+            {
+                name: 'Edge Coherence',
+                icon: '✂️',
+                confidence: round(edges),
+                triggered: edges > 55 || edges < 45,
+                reason: edges > 65 ? 'Edge artifacts typical of diffusion model generation' :
+                        edges > 55 ? 'Edges show synthetic generation characteristics' :
+                        edges < 40 ? 'Natural optical blur and depth-of-field' :
+                        edges < 45 ? 'Edges consistent with camera lens optics' :
+                        'Edge analysis inconclusive',
+                technical: `Gradient analysis: ${edges > 65 ? 'Synthetic boundaries' : edges < 40 ? 'Natural lens blur' : 'Mixed signals'}`
+            },
+            {
+                name: 'Frequency Analysis',
+                icon: '〰️',
+                confidence: round(frequency),
+                triggered: frequency > 55 || frequency < 45,
+                reason: frequency > 65 ? 'Abnormal frequency patterns - strong AI indicator' :
+                        frequency > 55 ? 'Frequency domain shows synthetic characteristics' :
+                        frequency < 40 ? 'Natural frequency distribution from camera' :
+                        frequency < 45 ? 'Frequencies consistent with optical capture' :
+                        'Frequency analysis inconclusive',
+                technical: `FFT analysis: ${frequency > 65 ? 'Unnatural high-freq artifacts' : frequency < 40 ? 'Natural freq rolloff' : 'Moderate patterns'}`
+            },
+            {
+                name: 'EXIF Metadata',
+                icon: '📷',
+                confidence: round(exif),
+                triggered: exif > 55 || exif < 45,
+                reason: exif > 65 ? 'Missing or suspicious camera metadata - likely AI' :
+                        exif > 55 ? 'Metadata shows anomalies or inconsistencies' :
+                        exif < 35 ? 'Complete authentic camera EXIF data present' :
+                        exif < 45 ? 'Metadata consistent with camera capture' :
+                        'EXIF analysis inconclusive',
+                technical: `Metadata check: ${exif > 65 ? 'No camera info (AI generated)' : exif < 35 ? 'Full camera EXIF' : 'Partial metadata'}`
+            },
+            {
+                name: 'File Metadata',
+                icon: '📄',
+                confidence: round(metadata),
+                triggered: metadata > 55 || metadata < 45,
+                reason: metadata > 65 ? 'File structure suggests AI generation or heavy processing' :
+                        metadata > 55 ? 'File metadata shows possible AI origin' :
+                        metadata < 40 ? 'File properties consistent with camera output' :
+                        metadata < 45 ? 'Metadata indicates natural file creation' :
+                        'File metadata inconclusive',
+                technical: `File analysis: ${metadata > 65 ? 'Software creation signature' : metadata < 40 ? 'Camera file structure' : 'Modified file'}`
+            },
+            {
+                name: 'Deepfake Detector (AI Model)',
+                icon: '🧠',
+                confidence: round(deepfakeScore),
+                triggered: deepfakeScore > 55 || deepfakeScore < 45,
+                reason: deepfakeScore > 70 ? 'Vision Transformer detected strong AI signatures' :
+                        deepfakeScore > 55 ? 'Neural network detected possible AI generation' :
+                        deepfakeScore < 35 ? 'AI model confirmed natural photograph' :
+                        deepfakeScore < 45 ? 'Neural network leans toward real photo' :
+                        'AI model inconclusive',
+                technical: `ViT-based detection: ${deepfakeLoaded ? (deepfakeScore > 70 ? 'High AI confidence' : deepfakeScore < 35 ? 'High real confidence' : 'Uncertain') : 'Model not loaded'}`
+            },
+            {
+                name: 'CLIP Semantic Analysis',
+                icon: '🔍',
+                confidence: round(clipScore),
+                triggered: clipScore > 55 || clipScore < 45,
+                reason: clipScore > 65 ? 'Semantic inconsistencies detected - AI generation likely' :
+                        clipScore > 55 ? 'Image-text alignment suggests synthetic origin' :
+                        clipScore < 40 ? 'Semantics consistent with real photographs' :
+                        clipScore < 45 ? 'CLIP analysis leans toward authentic' :
+                        'CLIP analysis inconclusive',
+                technical: `Zero-shot classification: ${clipLoaded ? (clipScore > 65 ? 'AI prompts matched' : clipScore < 40 ? 'Real photo matched' : 'Mixed results') : 'Model not loaded'}`
+            },
+            {
+                name: 'Generator Fingerprints',
+                icon: '🔬',
+                confidence: generatorSig.detected ? generatorSig.score : 50,
+                triggered: generatorSig.detected,
+                reason: generatorSig.type === 'midjourney' ? 'Midjourney signature detected - characteristic noise & color grading' :
+                        generatorSig.type === 'dalle' ? 'DALL-E signature detected - smooth rendering with low compression' :
+                        generatorSig.type === 'stable-diffusion' ? 'Stable Diffusion signature detected - high noise fingerprint' :
+                        generatorSig.detected ? 'AI generator signature detected' :
+                        'No specific generator identified',
+                technical: `Signature match: ${generatorSig.detected ? `${generatorSig.type.toUpperCase()} (${generatorSig.confidence})` : 'None detected'}`
+            },
+            ...(forensicsMode ? [{
+                name: 'Multi-Crop Forensics',
+                icon: '🔬',
+                confidence: round(cropScore),
+                triggered: Math.abs(cropScore - 50) > 15,
+                reason: cropScore > 65 ? 'Multiple image regions show consistent AI artifacts' :
+                        cropScore > 55 ? 'Regional analysis suggests possible AI generation' :
+                        cropScore < 40 ? 'All regions show natural characteristics' :
+                        cropScore < 45 ? 'Forensic analysis favors authenticity' :
+                        'Multi-region analysis inconclusive',
+                technical: `Regional consistency: ${cropScore > 65 ? 'Uniform AI artifacts' : cropScore < 40 ? 'Natural variation' : 'Mixed regions'}`
+            }] : [])
+        ].filter(m => m !== undefined)
     };
 }
 
@@ -2797,6 +3103,7 @@ function displayResults(result, mode) {
     const explainers = generateExplainers(result);
     $('explainersContent').innerHTML = explainers;
     $('explainersContent').classList.add('show');
+    $('explainersToggle').textContent = '▲';
     
     // Reset feedback buttons
     document.querySelectorAll('.feedback-btn').forEach(b => b.classList.remove('selected'));
@@ -2805,64 +3112,150 @@ function displayResults(result, mode) {
 }
 
 function generateExplainers(result) {
-    const { breakdown, aiScore, mode, confidence } = result;
+    const { moduleExplanations, aiScore, mode, confidence } = result;
     let html = '';
-    
-    // Noise
-    if (breakdown.noise > 65) {
-        html += `<div class="explainer-item"><span class="explainer-icon">📊</span><span class="explainer-text">Noise patterns appear unnaturally uniform - common in AI images</span></div>`;
-    } else if (breakdown.noise < 35) {
-        html += `<div class="explainer-item"><span class="explainer-icon">📊</span><span class="explainer-text">Natural camera sensor noise detected</span></div>`;
+
+    // If we have the new comprehensive module explanations
+    if (moduleExplanations && moduleExplanations.length > 0) {
+        // First show triggered modules (strong signals)
+        const triggered = moduleExplanations.filter(m => m.triggered);
+        const notTriggered = moduleExplanations.filter(m => !m.triggered);
+
+        if (triggered.length > 0) {
+            html += `<div class="explainer-section">
+                <div class="explainer-section-title">🎯 Key Detection Signals (${triggered.length} modules triggered)</div>
+            `;
+
+            triggered.forEach(module => {
+                const isAIIndicator = module.confidence > 55;
+                const strength = module.confidence > 70 ? 'Strong' : module.confidence > 60 ? 'Moderate' : module.confidence < 30 ? 'Strong' : module.confidence < 40 ? 'Moderate' : 'Weak';
+                const direction = module.confidence > 55 ? 'AI' : 'Real';
+
+                html += `
+                    <div class="module-card ${isAIIndicator ? 'ai-indicator' : 'real-indicator'}">
+                        <div class="module-header">
+                            <span class="module-icon">${module.icon}</span>
+                            <span class="module-name">${module.name}</span>
+                            <span class="module-confidence" style="color: ${isAIIndicator ? '#ff4757' : '#2ed573'}">${strength} ${direction}</span>
+                        </div>
+                        <div class="module-reason">${module.reason}</div>
+                        <div class="module-technical">
+                            <span class="tech-label">Technical:</span> ${module.technical}
+                        </div>
+                        <div class="module-meter">
+                            <div class="module-meter-fill" style="width: ${module.confidence}%; background: ${isAIIndicator ? 'linear-gradient(90deg, #ff6b81, #ff4757)' : 'linear-gradient(90deg, #7bed9f, #2ed573)'}"></div>
+                        </div>
+                        <div class="module-score">${module.confidence}% confidence</div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+        }
+
+        // Show all other modules in collapsed section
+        if (notTriggered.length > 0) {
+            html += `
+                <div class="explainer-section" style="margin-top: 12px;">
+                    <div class="explainer-section-toggle" onclick="toggleAllModules()" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--card);border-radius:8px;">
+                        <span class="explainer-section-title" style="margin:0">📊 All Detection Modules (${notTriggered.length} more)</span>
+                        <span id="allModulesToggle">▼</span>
+                    </div>
+                    <div id="allModulesContent" class="all-modules-content" style="display:none;margin-top:8px;">
+            `;
+
+            notTriggered.forEach(module => {
+                const isAIIndicator = module.confidence > 55;
+
+                html += `
+                    <div class="module-card-compact">
+                        <div class="module-compact-header">
+                            <span class="module-icon">${module.icon}</span>
+                            <span class="module-name">${module.name}</span>
+                            <span class="module-compact-score" style="color: ${module.confidence > 55 ? '#ff6b81' : module.confidence < 45 ? '#7bed9f' : '#a4b0be'}">${module.confidence}%</span>
+                        </div>
+                        <div class="module-compact-meter">
+                            <div class="module-compact-meter-fill" style="width: ${module.confidence}%; background: ${module.confidence > 55 ? '#ff6b81' : module.confidence < 45 ? '#7bed9f' : '#a4b0be'}"></div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+        }
+
+        // Summary statistics
+        const avgConfidence = Math.round(moduleExplanations.reduce((sum, m) => sum + m.confidence, 0) / moduleExplanations.length);
+        const aiVotes = moduleExplanations.filter(m => m.confidence > 55).length;
+        const realVotes = moduleExplanations.filter(m => m.confidence < 45).length;
+
+        html += `
+            <div class="detection-summary">
+                <div class="summary-stat">
+                    <span class="summary-label">Module Agreement:</span>
+                    <span class="summary-value">${aiVotes} vote AI, ${realVotes} vote Real</span>
+                </div>
+                <div class="summary-stat">
+                    <span class="summary-label">Average Confidence:</span>
+                    <span class="summary-value">${avgConfidence}%</span>
+                </div>
+            </div>
+        `;
+
+    } else {
+        // Fallback to old explainer format for backward compatibility
+        const { breakdown } = result;
+
+        if (breakdown.noise > 65 || breakdown.noise < 35) {
+            html += `<div class="explainer-item"><span class="explainer-icon">📊</span><span class="explainer-text">${breakdown.noise > 65 ? 'Noise patterns appear unnaturally uniform - common in AI images' : 'Natural camera sensor noise detected'}</span></div>`;
+        }
+        if (breakdown.compression > 60) {
+            html += `<div class="explainer-item"><span class="explainer-icon">🔲</span><span class="explainer-text">Periodic compression artifacts detected - may indicate AI upscaling</span></div>`;
+        }
+        if (breakdown.color > 60 || breakdown.color < 35) {
+            html += `<div class="explainer-item"><span class="explainer-icon">🎨</span><span class="explainer-text">${breakdown.color > 60 ? 'Color distribution appears mathematically smooth' : 'Natural color variation consistent with real photography'}</span></div>`;
+        }
+        if (breakdown.edges > 60) {
+            html += `<div class="explainer-item"><span class="explainer-icon">✂️</span><span class="explainer-text">Edge coherence patterns suggest synthetic generation</span></div>`;
+        }
     }
-    
-    // Compression
-    if (breakdown.compression > 60) {
-        html += `<div class="explainer-item"><span class="explainer-icon">🔲</span><span class="explainer-text">Periodic compression artifacts detected - may indicate AI upscaling</span></div>`;
-    }
-    
-    // Color
-    if (breakdown.color > 60) {
-        html += `<div class="explainer-item"><span class="explainer-icon">🎨</span><span class="explainer-text">Color distribution appears mathematically smooth</span></div>`;
-    } else if (breakdown.color < 35) {
-        html += `<div class="explainer-item"><span class="explainer-icon">🎨</span><span class="explainer-text">Natural color variation consistent with real photography</span></div>`;
-    }
-    
-    // Edges
-    if (breakdown.edges > 60) {
-        html += `<div class="explainer-item"><span class="explainer-icon">✂️</span><span class="explainer-text">Edge coherence patterns suggest synthetic generation</span></div>`;
-    }
-    
-    // Frequency (Deep scan only)
-    if (breakdown.frequency && breakdown.frequency > 60) {
-        html += `<div class="explainer-item"><span class="explainer-icon">〰️</span><span class="explainer-text">Frequency analysis reveals unusual patterns</span></div>`;
-    }
-    
-    // Model (Deep scan only)
-    if (breakdown.model && breakdown.model > 60) {
-        html += `<div class="explainer-item"><span class="explainer-icon">🧠</span><span class="explainer-text">AI model detected synthetic signatures</span></div>`;
-    } else if (breakdown.model && breakdown.model < 40) {
-        html += `<div class="explainer-item"><span class="explainer-icon">🧠</span><span class="explainer-text">AI model found characteristics of real photography</span></div>`;
-    }
-    
+
     // Add suggestion for low confidence quick scans
     if (mode === 'quick' && confidence === 'low' && !user) {
-        html += `<div class="explainer-item" style="border-top:1px dashed var(--border);padding-top:8px;margin-top:4px">
+        html += `<div class="explainer-item" style="border-top:1px dashed var(--border);padding-top:8px;margin-top:12px">
             <span class="explainer-icon">💡</span>
-            <span class="explainer-text">Sign in for Deep Scan with 90%+ accuracy</span>
+            <span class="explainer-text">Sign in for Deep Scan with 90%+ accuracy and detailed module breakdown</span>
         </div>`;
     }
-    
-    // Fallback if no specific explainers
+
+    // Fallback if still no content
     if (!html) {
         html = `<div class="explainer-item"><span class="explainer-icon">ℹ️</span><span class="explainer-text">Analysis based on multiple image characteristics</span></div>`;
     }
-    
+
     return html;
 }
 
-window.toggleExplainers = () => { 
-    $('explainersContent').classList.toggle('show'); 
-    $('explainersToggle').textContent = $('explainersContent').classList.contains('show') ? '▲' : '▼'; 
+window.toggleExplainers = () => {
+    $('explainersContent').classList.toggle('show');
+    $('explainersToggle').textContent = $('explainersContent').classList.contains('show') ? '▲' : '▼';
+};
+
+window.toggleAllModules = () => {
+    const content = $('allModulesContent');
+    const toggle = $('allModulesToggle');
+    if (content && toggle) {
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            toggle.textContent = '▲';
+        } else {
+            content.style.display = 'none';
+            toggle.textContent = '▼';
+        }
+    }
 };
 
 // ==================== FEEDBACK ====================
