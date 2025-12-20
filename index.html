@@ -4368,15 +4368,17 @@ function updateStatusBar() {
         ic.innerHTML = '<span>📲</span> Install'; 
     }
     
-    if (user) { 
-        lc.classList.remove('pending'); 
-        lc.classList.add('complete'); 
+    if (user) {
+        lc.classList.remove('pending');
+        lc.classList.add('complete');
         lc.innerHTML = '<span>✓</span> Signed In';
+        lc.onclick = () => openProfile(); // When logged in, go to profile
         sc.classList.add('hidden');
-    } else { 
-        lc.classList.add('pending'); 
-        lc.classList.remove('complete'); 
+    } else {
+        lc.classList.add('pending');
+        lc.classList.remove('complete');
         lc.innerHTML = '<span>🔑</span> Sign In';
+        lc.onclick = () => openLogin(); // When logged out, open login
         sc.classList.remove('hidden');
     }
     
@@ -4498,6 +4500,13 @@ function updateGating() {
 
 // ==================== LOGIN ====================
 window.openLogin = function(isSignup = false) {
+    // Guard: If already logged in, go to profile instead
+    if (user) {
+        toast('You are already signed in!');
+        openProfile();
+        return;
+    }
+
     isLoginMode = isSignup;
     updateLoginUI();
     showView('loginView');
@@ -10954,6 +10963,35 @@ window.openLeaderboard = function() {
 window.openAllBadges = function() {
     showView('allBadgesView');
     renderAllBadges();
+};
+
+// ==================== AVATAR/COSMETICS NAVIGATION ====================
+
+window.openAvatarSelector = function() {
+    // Open the avatar/cosmetics customization view
+    showView('avatarView');
+    // Initialize the cosmetics display if the function exists
+    if (typeof initCosmeticsSystem === 'function') {
+        initCosmeticsSystem();
+    } else if (typeof switchCosmeticTab === 'function') {
+        switchCosmeticTab('avatars');
+    }
+};
+
+window.openAvatarView = function() {
+    // Same as openAvatarSelector - customization view
+    showView('avatarView');
+    if (typeof initCosmeticsSystem === 'function') {
+        initCosmeticsSystem();
+    } else if (typeof switchCosmeticTab === 'function') {
+        switchCosmeticTab('avatars');
+    }
+};
+
+window.openQuestsView = function() {
+    showView('helpView'); // Quests are in help for now
+    // TODO: Create dedicated quests view
+    toast('Check daily quests on your profile!');
 };
 
 // ==================== QUEST SYSTEM ====================
