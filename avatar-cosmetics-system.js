@@ -1127,6 +1127,34 @@ window.closeAvatarModal = function() {
     }
 };
 
+// ==================== CLOSE GACHA RESULT MODAL ====================
+// BUG FIX: This function was missing - called from index.html but not defined
+
+window.closeGachaResult = function() {
+    const modal = document.getElementById('gachaResultModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+};
+
+// ==================== OPEN AVATAR VIEW ====================
+// BUG FIX: This function was missing - called from index.html but not defined
+
+window.openAvatarView = function() {
+    // Open the avatar selector/customization view
+    if (typeof openAvatarSelector === 'function') {
+        openAvatarSelector();
+    } else {
+        console.error('[Cosmetics] openAvatarSelector not available');
+        // Fallback: show view directly if it exists
+        const avatarView = document.getElementById('avatarView');
+        if (avatarView) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            avatarView.classList.add('active');
+        }
+    }
+};
+
 // ==================== EXPORTS ====================
 
 window.openAvatarSelector = openAvatarSelector;

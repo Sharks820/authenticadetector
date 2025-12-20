@@ -644,3 +644,279 @@
     border-radius: 6px;
     margin-top: 4px;
 }
+
+/* ============================================================
+   PREMIUM GACHA ENHANCEMENTS - WORLD-CLASS VISUALS
+   ============================================================ */
+
+/* Enhanced Gacha Box Cards */
+.gacha-box-card {
+    background: linear-gradient(135deg,
+        rgba(0, 212, 170, 0.1) 0%,
+        rgba(0, 255, 136, 0.05) 100%) !important;
+    border: 2px solid rgba(0, 212, 170, 0.3) !important;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.gacha-box-card:hover {
+    border-color: rgba(0, 255, 136, 0.6) !important;
+    box-shadow:
+        0 20px 60px rgba(0, 212, 170, 0.4),
+        0 0 80px rgba(0, 255, 136, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Box Type Specific Glows */
+.gacha-box-card[data-box="bronze"] {
+    border-color: rgba(205, 127, 50, 0.4) !important;
+}
+.gacha-box-card[data-box="bronze"]:hover {
+    box-shadow: 0 20px 60px rgba(205, 127, 50, 0.3), 0 0 40px rgba(205, 127, 50, 0.2) !important;
+}
+
+.gacha-box-card[data-box="silver"] {
+    border-color: rgba(192, 192, 192, 0.4) !important;
+}
+.gacha-box-card[data-box="silver"]:hover {
+    box-shadow: 0 20px 60px rgba(192, 192, 192, 0.3), 0 0 40px rgba(192, 192, 192, 0.2) !important;
+}
+
+.gacha-box-card[data-box="gold"] {
+    border-color: rgba(255, 215, 0, 0.5) !important;
+    animation: gold-box-glow 2s ease-in-out infinite !important;
+}
+
+@keyframes gold-box-glow {
+    0%, 100% {
+        box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3), 0 0 40px rgba(255, 215, 0, 0.2);
+    }
+    50% {
+        box-shadow: 0 12px 48px rgba(255, 215, 0, 0.5), 0 0 60px rgba(255, 215, 0, 0.3);
+    }
+}
+
+.gacha-box-card[data-box="diamond"] {
+    border-color: rgba(0, 191, 255, 0.5) !important;
+    animation: diamond-box-sparkle 2.5s ease-in-out infinite !important;
+}
+
+@keyframes diamond-box-sparkle {
+    0%, 100% {
+        box-shadow: 0 8px 32px rgba(0, 191, 255, 0.4), 0 0 50px rgba(0, 191, 255, 0.2);
+    }
+    50% {
+        box-shadow: 0 15px 60px rgba(0, 191, 255, 0.6), 0 0 80px rgba(0, 191, 255, 0.4);
+    }
+}
+
+.gacha-box-card[data-box="rainbow"] {
+    border-color: rgba(255, 105, 180, 0.5) !important;
+    animation: rainbow-box-magic 3s ease-in-out infinite !important;
+    background: linear-gradient(135deg,
+        rgba(255, 105, 180, 0.1) 0%,
+        rgba(138, 43, 226, 0.1) 25%,
+        rgba(0, 191, 255, 0.1) 50%,
+        rgba(0, 255, 127, 0.1) 75%,
+        rgba(255, 215, 0, 0.1) 100%) !important;
+    background-size: 400% 400% !important;
+}
+
+@keyframes rainbow-box-magic {
+    0% {
+        background-position: 0% 50%;
+        box-shadow:
+            0 0 30px rgba(255, 105, 180, 0.5),
+            0 0 60px rgba(138, 43, 226, 0.3);
+    }
+    50% {
+        background-position: 100% 50%;
+        box-shadow:
+            0 0 50px rgba(0, 255, 127, 0.5),
+            0 0 100px rgba(0, 191, 255, 0.4),
+            0 0 150px rgba(255, 215, 0, 0.3);
+    }
+    100% {
+        background-position: 0% 50%;
+        box-shadow:
+            0 0 30px rgba(255, 105, 180, 0.5),
+            0 0 60px rgba(138, 43, 226, 0.3);
+    }
+}
+
+/* Enhanced Box Icons */
+.gacha-box-icon {
+    filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.4)) !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.gacha-box-card:hover .gacha-box-icon {
+    transform: scale(1.15) rotate(-5deg) !important;
+    filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 20px rgba(0, 212, 170, 0.4)) !important;
+}
+
+/* Enhanced Modal Content */
+.gacha-modal-content,
+.inventory-modal-content {
+    background: linear-gradient(135deg,
+        rgba(18, 22, 31, 0.98) 0%,
+        rgba(26, 31, 44, 0.98) 100%) !important;
+    border: 1px solid rgba(0, 212, 170, 0.2) !important;
+    border-radius: 28px !important;
+    box-shadow:
+        0 30px 100px rgba(0, 0, 0, 0.6),
+        0 0 80px rgba(0, 212, 170, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(30px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+}
+
+/* Enhanced Reveal Animations */
+.item-reveal-content {
+    border: 2px solid rgba(0, 212, 170, 0.3) !important;
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.5),
+        0 0 60px rgba(0, 212, 170, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.item-reveal-content.legendary-explosion {
+    border: 4px solid rgba(255, 215, 0, 0.8) !important;
+    box-shadow:
+        0 0 60px rgba(255, 215, 0, 0.9),
+        0 0 120px rgba(255, 215, 0, 0.6),
+        0 0 180px rgba(254, 225, 64, 0.4),
+        0 0 240px rgba(250, 112, 154, 0.3),
+        inset 0 0 100px rgba(255, 215, 0, 0.2) !important;
+}
+
+/* Legendary Particle Effect */
+.item-reveal-content.legendary-explosion::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: -50% !important;
+    background: conic-gradient(from 0deg,
+        transparent,
+        rgba(255, 215, 0, 0.3),
+        transparent,
+        rgba(250, 112, 154, 0.3),
+        transparent) !important;
+    animation: legendary-spin 3s linear infinite !important;
+}
+
+@keyframes legendary-spin {
+    100% { transform: rotate(360deg); }
+}
+
+/* Enhanced Rarity Badges */
+.rarity-badge.legendary {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 30%, #fee140 60%, #fbbf24 100%) !important;
+    background-size: 300% 100% !important;
+    animation: legendary-badge-flow 3s linear infinite !important;
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.5) !important;
+}
+
+@keyframes legendary-badge-flow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
+}
+
+/* Enhanced Inventory Items */
+.inventory-item-card {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.inventory-item-card:hover {
+    transform: translateY(-10px) scale(1.03) !important;
+    box-shadow:
+        0 15px 40px rgba(0, 212, 170, 0.35),
+        0 0 40px rgba(0, 255, 136, 0.15) !important;
+}
+
+.inventory-item-card.equipped {
+    border-color: rgba(0, 212, 170, 0.6) !important;
+    background: linear-gradient(135deg,
+        rgba(0, 212, 170, 0.15) 0%,
+        rgba(0, 255, 136, 0.08) 100%) !important;
+    box-shadow: 0 0 30px rgba(0, 212, 170, 0.3) !important;
+}
+
+/* Enhanced Filter Buttons */
+.filter-btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, #00d4aa 0%, #00ff88 100%) !important;
+    box-shadow: 0 4px 20px rgba(0, 212, 170, 0.4) !important;
+}
+
+.filter-btn:hover:not(.active) {
+    background: rgba(0, 212, 170, 0.15) !important;
+    border-color: rgba(0, 212, 170, 0.4) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Equipped Slots Enhancement */
+.equipped-slots {
+    background: linear-gradient(135deg,
+        rgba(0, 212, 170, 0.06) 0%,
+        rgba(0, 255, 136, 0.03) 100%) !important;
+    border: 1px solid rgba(0, 212, 170, 0.15) !important;
+}
+
+.equipped-slot {
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    transition: all 0.3s ease !important;
+}
+
+.equipped-slot:hover {
+    background: rgba(0, 212, 170, 0.1) !important;
+    border-color: rgba(0, 212, 170, 0.3) !important;
+    transform: translateX(6px) !important;
+}
+
+/* Box Opening Enhancements */
+.box-opening-animation {
+    background: radial-gradient(circle at center,
+        rgba(0, 0, 0, 0.9) 0%,
+        rgba(0, 0, 0, 0.98) 100%) !important;
+}
+
+.box-shaking {
+    filter: drop-shadow(0 0 30px rgba(0, 212, 170, 0.5)) !important;
+}
+
+.box-opening-text {
+    background: linear-gradient(135deg, #00ffdd 0%, #00d4aa 50%, #00ff88 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    animation: text-pulse 1s ease-in-out infinite !important;
+}
+
+@keyframes text-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+/* Mobile Responsive Gacha */
+@media (max-width: 480px) {
+    .gacha-boxes-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+        gap: 14px !important;
+    }
+
+    .gacha-box-icon {
+        font-size: 56px !important;
+    }
+
+    .items-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)) !important;
+        gap: 12px !important;
+    }
+
+    .inventory-item-icon {
+        font-size: 36px !important;
+    }
+}
