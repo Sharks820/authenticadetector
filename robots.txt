@@ -1,0 +1,122 @@
+# robots.txt for authenticadetector.com
+# AI Detection Platform - Optimized for SEO
+
+# IMPORTANT: This file controls what search engines can crawl
+# Test changes at: https://www.google.com/webmasters/tools/robots-testing-tool
+
+# ===================================================================
+# Allow ALL major search engines to crawl public content
+# ===================================================================
+
+User-agent: *
+Allow: /
+
+# ===================================================================
+# Disallow private/admin areas (if applicable)
+# ===================================================================
+
+# Uncomment these if you have admin or private sections:
+# Disallow: /admin/
+# Disallow: /api/
+# Disallow: /private/
+# Disallow: /_next/    # Next.js build files (if using Next.js)
+# Disallow: /auth/     # Authentication pages (if you want to hide)
+
+# ===================================================================
+# Block sensitive data from being indexed
+# ===================================================================
+
+# Prevent indexing of user-specific data (if applicable):
+# Disallow: /users/
+# Disallow: /profile/private/
+# Disallow: /results/private/
+
+# Prevent indexing of raw API endpoints:
+Disallow: /api/
+
+# ===================================================================
+# Allow specific pages to be crawled explicitly
+# ===================================================================
+
+Allow: /
+Allow: /scan
+Allow: /profile
+Allow: /leaderboard
+Allow: /help
+
+# Add more as you create them:
+# Allow: /about
+# Allow: /privacy
+# Allow: /terms
+# Allow: /blog
+# Allow: /blog/*
+
+# ===================================================================
+# Sitemap location (CRITICAL for SEO)
+# ===================================================================
+
+Sitemap: https://authenticadetector.com/sitemap.xml
+
+# If you have multiple sitemaps or a sitemap index:
+# Sitemap: https://authenticadetector.com/sitemap-index.xml
+# Sitemap: https://authenticadetector.com/sitemap-blog.xml
+
+# ===================================================================
+# Crawl-delay (optional - only if you have server load issues)
+# ===================================================================
+
+# Crawl-delay: 1  # Uncomment only if bots are overwhelming your server
+
+# ===================================================================
+# Specific bot instructions (optional)
+# ===================================================================
+
+# Allow Google to crawl everything (default is permissive):
+User-agent: Googlebot
+Allow: /
+
+# Allow Bing to crawl everything:
+User-agent: Bingbot
+Allow: /
+
+# Block bad bots (optional - aggressive bots, scrapers):
+# User-agent: AhrefsBot
+# Disallow: /
+
+# User-agent: SemrushBot
+# Disallow: /
+
+# User-agent: DotBot
+# Disallow: /
+
+# ===================================================================
+# Notes for maintaining this file:
+# ===================================================================
+
+# 1. TEST BEFORE DEPLOYING
+#    - Use Google's robots.txt Tester in Search Console
+#    - Mistakes here can block your entire site from Google!
+
+# 2. COMMON PATTERNS
+#    - Disallow: /admin/*         # Block all admin pages
+#    - Disallow: /*?*             # Block URLs with query parameters
+#    - Disallow: /*.json$         # Block all JSON files
+#    - Disallow: /*_private/*     # Block private directories
+
+# 3. DEBUGGING
+#    - If pages aren't being indexed, check this file first
+#    - Ensure you're not accidentally blocking important pages
+#    - Use "Allow:" to override broader "Disallow:" rules
+
+# 4. DYNAMIC CONTENT
+#    - If you generate pages dynamically, ensure robots.txt doesn't block them
+#    - Use sitemap.xml to explicitly list important dynamic URLs
+
+# 5. SECURITY
+#    - Don't rely on robots.txt for security (bots can ignore it)
+#    - Use proper authentication for sensitive areas
+#    - robots.txt is publicly accessible - don't list secret paths!
+
+# ===================================================================
+# Last updated: 2025-12-20
+# ===================================================================
