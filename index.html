@@ -28,6 +28,7 @@
             --text:#fff;--text2:#b4bcd0;--text3:#6b7280;--border:rgba(255,255,255,0.1);
             --safe-top:env(safe-area-inset-top,0px);
             --safe-bottom:env(safe-area-inset-bottom,0px);
+            --safe-left:env(safe-area-inset-left,0px);--safe-right:env(safe-area-inset-right,0px);
         }
         
         /* BASE - CRITICAL RESPONSIVE FIX */
@@ -694,7 +695,7 @@
         
         /* TOAST */
         .toast-container{
-            position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+            position:fixed;bottom:calc(80px + var(--safe-bottom));left:50%;transform:translateX(-50%);
             z-index:9999;display:flex;flex-direction:column;gap:6px;pointer-events:none;
         }
         .toast{
@@ -903,7 +904,7 @@
             max-width:320px;width:100%;max-height:80vh;overflow-y:auto;position:relative;
         }
         .modal-close{
-            position:absolute;top:10px;right:10px;background:var(--surface2);border:none;
+            position:absolute;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));background:var(--surface2);border:none;
             color:var(--text);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:14px;
         }
         
@@ -984,7 +985,7 @@
         .game-nav-badge {
             position: absolute;
             top: 0;
-            right: 20%;
+            right: 12px;
             background: var(--danger);
             color: #fff;
             font-size: 10px;
@@ -998,7 +999,7 @@
         .game-nav-pulse {
             position: absolute;
             top: 4px;
-            right: 25%;
+            right: 12px;
             width: 12px;
             height: 12px;
             background: var(--danger);
@@ -1828,6 +1829,52 @@
         @keyframes slideInDown {
             from { transform: translateY(-100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* ========== MOBILE RESPONSIVE MEDIA QUERIES ========== */
+        
+        /* Small phones: 320px - 480px */
+        @media (max-width: 480px) {
+            .game-cta-card {
+                margin: 8px;
+                padding: 12px;
+            }
+            .game-cta-stat-value {
+                font-size: clamp(14px, 4vw, 18px);
+            }
+            .game-cta-stat-label {
+                font-size: clamp(8px, 2.5vw, 10px);
+            }
+            .game-cta-btn {
+                padding: clamp(12px, 3vw, 16px);
+                font-size: clamp(14px, 3.5vw, 16px);
+            }
+            .vote-btn {
+                max-width: 80px;
+            }
+            .modal {
+                max-width: 90vw;
+            }
+        }
+        
+        /* Tablets: 768px+ */
+        @media (min-width: 768px) {
+            .vote-btn {
+                max-width: 120px;
+            }
+            .modal {
+                max-width: 480px;
+            }
+        }
+        
+        /* Landscape orientation */
+        @media (orientation: landscape) {
+            .toast-container {
+                bottom: calc(20px + var(--safe-bottom));
+            }
+            .game-nav {
+                padding: 4px 0;
+            }
         }
     </style>
 </head>
