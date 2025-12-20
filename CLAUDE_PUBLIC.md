@@ -48,10 +48,36 @@ adb --version
 **IMPORTANT:** Always run Claude from the repo root directory!
 
 ### CLAUDE.md Maintenance
-- Located in repo root (this file)
-- Added to `.gitignore` (contains API keys/secrets)
+- **CLAUDE.md** = Private memory (git-ignored, contains API keys/secrets)
+- **CLAUDE_PUBLIC.md** = This file (committed, sanitized, no secrets)
 - **Update after each completed step** to maintain project memory
-- Never commit to git (keeps sensitive credentials safe)
+- Never commit secrets to git
+
+### ⚡ Batch Approval Workflow (CRITICAL)
+**All shell commands require explicit user approval:**
+
+1. **Claude proposes** numbered command batch with explanations
+2. **User reviews** and replies "RUN COMMANDS" to approve
+3. **Claude executes** commands sequentially
+4. **If any command fails:** Claude stops and reports error, then proposes revised batch
+
+**Why This Workflow:**
+- Prevents automation errors (interactive TTY issues, path mangling)
+- User maintains control over all operations
+- Allows review before execution
+- Safer for security-sensitive operations
+
+**Manual Auth (PowerShell Only):**
+- GitHub CLI: `gh auth login` (user runs manually)
+- Wrangler: `wrangler login` (user runs manually)
+- Supabase: `supabase login` (user runs manually)
+- Claude verifies auth status after, never attempts to automate
+
+**Security Policies:**
+- ✅ Use HTTPS remotes only (no embedded tokens)
+- ✅ GitHub CLI handles auth via keyring
+- ✅ Never print/store secrets in markdown
+- ✅ Never embed tokens in git remote URLs
 
 ---
 
@@ -1113,6 +1139,34 @@ User collaborated with Opus subagent to design Truth Cannon game mechanics. Opus
 ---
 
 ## 📝 CLAUDE.md Changelog
+
+### Dec 20, 2024 00:10 - GitHub Authentication & Batch Approval Workflow
+- 🔒 **Security Fix:** Removed embedded token from git remote URL
+  - Git remote now uses clean HTTPS URL
+  - GitHub CLI handles authentication via keyring
+- ✅ GitHub CLI authentication configured (manual auth in PowerShell)
+  - Logged in as: Sharks820
+  - Token stored securely in keyring
+  - Git operations use HTTPS via GitHub CLI credentials
+- ✅ Configured git to use GitHub CLI for auth (`gh auth setup-git`)
+- ✅ **Batch Approval Workflow Established:**
+  - Claude proposes numbered command list
+  - Waits for user's "RUN COMMANDS" approval
+  - Executes commands only after approval
+  - Stops and reports if any command fails
+- ⚠️ **Policy:** NEVER embed tokens in git remote URLs
+- ⚠️ **Policy:** Manual auth commands (gh/wrangler/supabase login) done by user in PowerShell
+
+### Dec 20, 2024 00:00 - Proper Secrets Management (Commit 6232365)
+- ✅ Created **CLAUDE_PUBLIC.md** (sanitized, no secrets, committed to git)
+- ✅ Created **.env.example** (environment variable template)
+- ✅ Updated **.gitignore** (protects .env, CLAUDE.md, node_modules, IDE files)
+- ✅ Established security practice:
+  - **CLAUDE.md** = private/local memory (git-ignored, contains API keys)
+  - **CLAUDE_PUBLIC.md** = public documentation (committed, sanitized)
+  - **Never store secrets in committed markdown files**
+  - Use .env locally + Cloudflare Pages env vars + Supabase secrets manager
+- ✅ Deployed to production (auto-deployed via GitHub push)
 
 ### Dec 19, 2024 23:50 - Development Environment Setup
 - ✅ Installed Node.js LTS, pnpm, Wrangler, Supabase CLI, ripgrep, adb
