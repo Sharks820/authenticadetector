@@ -3111,6 +3111,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+<script src="tank-shooter.js"></script>
 
 <script type="module">
 // ============================================================
@@ -6472,6 +6473,9 @@ async function analyzeImage(dataUrl, mode) {
     let realIndicators = [];
     let compressionResult = { aiIndicators: [], realIndicators: [], isHeavilyCompressed: false };
 
+    // ENSEMBLE TRACKING: Store individual module results for weighted fusion
+    const moduleResults = {};
+
     // Helper to add results
     const addResults = (result) => {
         if (result && result.aiIndicators) {
@@ -6482,13 +6486,19 @@ async function analyzeImage(dataUrl, mode) {
         }
     };
 
+    // ENSEMBLE TRACKING: Helper to track module results
+    const trackModule = (moduleName, result) => {
+        moduleResults[moduleName] = result;
+        addResults(result);
+    };
+
     // =========================================
     // 1. METADATA & SIGNATURE DETECTION
     // =========================================
     try {
         console.log('[DeepScan] 1/12: Metadata analysis...');
         const metadataResult = analyzeMetadataAdvanced(currentFile, dataUrl);
-        addResults(metadataResult);
+        trackModule('metadata', metadataResult);
     } catch (err) {
         console.error('[DeepScan] Metadata analysis error:', err);
     }
@@ -6501,7 +6511,7 @@ async function analyzeImage(dataUrl, mode) {
     try {
         console.log('[DeepScan] 2/12: JPEG compression analysis...');
         compressionResult = analyzeJPEGCompressionProper(pixels, width, height);
-        addResults(compressionResult);
+        trackModule('jpeg', compressionResult);
     } catch (err) {
         console.error('[DeepScan] JPEG compression analysis error:', err);
     }
@@ -6520,9 +6530,17 @@ async function analyzeImage(dataUrl, mode) {
                 () => analyzeFrequencyDomain(pixels, width, height),
                 3000 // 3 second timeout for FFT
             );
-            addResults(frequencyResult);
+            trackModule('fft', frequencyResult);
+
+            // UGAD Spectral Analysis (CIKM 2024) - Superior diffusion model detection
+            console.log('[DeepScan] 3.5/12: UGAD multi-channel spectral analysis...');
+            const ugadResult = await runDetectorSafe('UGAD Analysis',
+                () => ugadSpectralAnalysis(pixels, width, height),
+                3000 // 3 second timeout for UGAD
+            );
+            trackModule('ugad', ugadResult);
         } else {
-            console.log('[DeepScan] Image too large for FFT, skipping to prevent freeze');
+            console.log('[DeepScan] Image too large for FFT/UGAD, skipping to prevent freeze');
         }
         await yieldToMain();
     }
@@ -6534,7 +6552,7 @@ async function analyzeImage(dataUrl, mode) {
     try {
         console.log('[DeepScan] 4/12: GAN fingerprint detection...');
         const fingerprintResult = analyzeGANFingerprints(pixels, width, height);
-        addResults(fingerprintResult);
+        trackModule('gan', fingerprintResult);
     } catch (err) {
         console.error('[DeepScan] GAN fingerprint error:', err);
     }
@@ -6547,7 +6565,7 @@ async function analyzeImage(dataUrl, mode) {
     try {
         console.log('[DeepScan] 5/12: Error level analysis...');
         const elaResult = analyzeErrorLevelsAware(pixels, width, height);
-        addResults(elaResult);
+        trackModule('ela', elaResult);
     } catch (err) {
         console.error('[DeepScan] ELA error:', err);
     }
@@ -6560,7 +6578,7 @@ async function analyzeImage(dataUrl, mode) {
     try {
         console.log('[DeepScan] 6/12: Statistical analysis...');
         const statsResult = analyzeStatisticalPatterns(pixels, width, height);
-        addResults(statsResult);
+        trackModule('noise', statsResult);
     } catch (err) {
         console.error('[DeepScan] Statistical analysis error:', err);
     }
@@ -6573,7 +6591,7 @@ async function analyzeImage(dataUrl, mode) {
     try {
         console.log('[DeepScan] 7/12: Texture coherence analysis...');
         const textureResult = analyzeTextureCoherence(pixels, width, height);
-        addResults(textureResult);
+        trackModule('texture', textureResult);
     } catch (err) {
         console.error('[DeepScan] Texture coherence error:', err);
     }
@@ -6589,7 +6607,7 @@ async function analyzeImage(dataUrl, mode) {
             () => analyzeModelSpecificFingerprints(pixels, width, height),
             4000
         );
-        addResults(modelResult);
+        trackModule('modelFingerprints', modelResult);
         await yieldToMain();
     }
 
@@ -6603,7 +6621,7 @@ async function analyzeImage(dataUrl, mode) {
             () => analyzeFaceAndAnatomy(pixels, width, height),
             4000
         );
-        addResults(anatomyResult);
+        trackModule('anatomy', anatomyResult);
         await yieldToMain();
     }
 
@@ -6617,7 +6635,7 @@ async function analyzeImage(dataUrl, mode) {
             () => analyzeSemanticInconsistencies(pixels, width, height),
             4000
         );
-        addResults(semanticResult);
+        trackModule('semantics', semanticResult);
         await yieldToMain();
     }
 
@@ -6631,7 +6649,7 @@ async function analyzeImage(dataUrl, mode) {
             () => analyzeAdvancedTextures(pixels, width, height),
             4000
         );
-        addResults(advTextureResult);
+        trackModule('advTextures', advTextureResult);
         await yieldToMain();
     }
 
@@ -6642,7 +6660,7 @@ async function analyzeImage(dataUrl, mode) {
     try {
         console.log('[DeepScan] 12/12: Deep metadata analysis...');
         const deepMetaResult = analyzeDeepMetadata(currentFile, dataUrl);
-        addResults(deepMetaResult);
+        trackModule('deepMetadata', deepMetaResult);
     } catch (err) {
         console.error('[DeepScan] Deep metadata error:', err);
     }
@@ -6744,21 +6762,44 @@ async function analyzeImage(dataUrl, mode) {
     rawScore -= Math.min(adjustedRealPoints, 40);
     rawScore = clamp(rawScore, 5, 95);
 
-    // Apply Bayesian ensemble scoring for deep scan
-    let aiScore;
+    // =========================================
+    // ENSEMBLE ORCHESTRATOR INTEGRATION
+    // Use weighted voting system for improved accuracy
+    // =========================================
+    console.log('[Ensemble] Using ensemble orchestrator for final score fusion...');
+    const ensembleResult = ensembleOrchestrator.fuseScores(moduleResults, mode);
+    let aiScore = ensembleResult.aiScore;
+
+    // Add ensemble methodology info to explainers
+    explainers.push({
+        icon: 'ENSEMBLE',
+        text: `Ensemble voting: ${ensembleResult.methodology.modulesUsed} modules, ${ensembleResult.breakdown.length} contributing signals`,
+        type: 'info'
+    });
+
+    // Add detailed module breakdown for transparency
+    if (ensembleResult.breakdown && ensembleResult.breakdown.length > 0) {
+        explainers.push({
+            icon: 'BREAKDOWN',
+            text: `Top contributing modules: ${ensembleResult.breakdown.slice(0, 3).map(m => `${m.module} (${m.aiProbability}%)`).join(', ')}`,
+            type: 'info'
+        });
+    }
+
+    // Legacy Bayesian scoring (keep for comparison/fallback)
     if (mode === 'deep') {
         const bayesianResult = calculateBayesianScore(indicators, realIndicators, mode);
-        aiScore = calibrateScore(bayesianResult, rawScore, mode);
+        const legacyScore = calibrateScore(bayesianResult, rawScore, mode);
+
+        // Log comparison for debugging
+        console.log(`[Ensemble] Ensemble score: ${aiScore}%, Legacy score: ${legacyScore}%`);
 
         // Add Bayesian info to explainers
         explainers.push({
             icon: 'BAYES',
-            text: `Bayesian analysis: ${bayesianResult.aiCategories} AI signal categories, ${bayesianResult.realCategories} authenticity categories`,
+            text: `Bayesian analysis: ${bayesianResult.aiCategories} AI signal categories, ${bayesianResult.realCategories} authenticity categories (legacy comparison)`,
             type: 'info'
         });
-    } else {
-        // Quick scan uses simpler scoring
-        aiScore = clamp(rawScore, 5, 95);
     }
 
     // Forensics mode in deep scan
@@ -6773,17 +6814,26 @@ async function analyzeImage(dataUrl, mode) {
     // Determine verdict based on calibrated score and indicator counts
     let verdict, confidence;
 
+    // Use ensemble confidence as baseline
+    confidence = ensembleResult.confidence;
+
     // Deep scan has stricter thresholds but more reliable results
     if (mode === 'deep') {
         if (aiScore >= 75 && aiIndicatorCount >= minAIIndicators) {
             verdict = 'ai';
-            confidence = aiScore >= 88 ? 'high' : 'medium';
+            // Boost confidence if ensemble also agrees
+            if (ensembleResult.confidence === 'high') confidence = 'high';
+            else if (aiScore >= 88) confidence = 'high';
+            else confidence = 'medium';
         } else if (aiScore <= 25 || realIndicators.length >= 3) {
             verdict = 'real';
-            confidence = aiScore <= 12 ? 'high' : 'medium';
+            // Boost confidence if ensemble also agrees
+            if (ensembleResult.confidence === 'high') confidence = 'high';
+            else if (aiScore <= 12) confidence = 'high';
+            else confidence = 'medium';
         } else {
             verdict = 'uncertain';
-            confidence = 'low';
+            confidence = ensembleResult.confidence; // Use ensemble confidence for uncertain cases
         }
     } else {
         // Quick scan is more conservative
@@ -6795,7 +6845,7 @@ async function analyzeImage(dataUrl, mode) {
             confidence = aiScore <= 15 ? 'high' : 'medium';
         } else {
             verdict = 'uncertain';
-            confidence = 'low';
+            confidence = ensembleResult.confidence; // Use ensemble confidence
         }
     }
 
@@ -6820,6 +6870,12 @@ async function analyzeImage(dataUrl, mode) {
         indicatorCounts: {
             ai: aiIndicatorCount,
             real: realIndicators.length
+        },
+        // ENSEMBLE DATA: Include module-level breakdown for transparency
+        ensembleData: {
+            methodology: ensembleResult.methodology,
+            moduleBreakdown: ensembleResult.breakdown,
+            modulesUsed: ensembleResult.methodology.modulesUsed
         }
     };
 
