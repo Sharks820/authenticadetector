@@ -6,7 +6,11 @@ const PROJECT_REF = 'vrvoyxxdlcpysthzjbeu';
 
 async function executeSQLViaAPI(sqlContent) {
     return new Promise((resolve, reject) => {
-        const data = JSON.stringify({ query: sqlContent });
+        // Properly escape the SQL content for JSON
+        const payload = {
+            query: sqlContent
+        };
+        const data = JSON.stringify(payload);
 
         const options = {
             hostname: 'api.supabase.com',
@@ -16,7 +20,7 @@ async function executeSQLViaAPI(sqlContent) {
             headers: {
                 'Authorization': `Bearer ${API_KEY}`,
                 'Content-Type': 'application/json',
-                'Content-Length': data.length
+                'Content-Length': Buffer.byteLength(data)
             }
         };
 
@@ -41,7 +45,7 @@ async function executeSQLViaAPI(sqlContent) {
 }
 
 async function main() {
-    const files = ['supabase/URGENT_FIXES.sql', 'supabase/PERSISTENCE_FIXES.sql'];
+    const files = ['supabase/COSMETICS_MIGRATION.sql'];
 
     for (const file of files) {
         console.log(`\n========== Executing ${file} ==========`);

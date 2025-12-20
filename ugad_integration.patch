@@ -1,0 +1,17 @@
+--- a/index.html
++++ b/index.html
+@@ -6529,6 +6529,13 @@
+                 3000 // 3 second timeout for FFT
+             );
+             trackModule('fft', frequencyResult);
++
++            // UGAD Spectral Analysis (CIKM 2024) - Superior diffusion model detection
++            console.log('[DeepScan] 3.5/12: UGAD multi-channel spectral analysis...');
++            const ugadResult = await runDetectorSafe('UGAD Analysis',
++                () => ugadSpectralAnalysis(pixels, width, height),
++                3000 // 3 second timeout for UGAD
++            );
++            trackModule('ugad', ugadResult);
+         } else {
+             console.log('[DeepScan] Image too large for FFT, skipping to prevent freeze');
+         }

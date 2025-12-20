@@ -1,0 +1,10 @@
+{
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "supabase",
+    "cloudflare-docs",
+    "cloudflare-bindings",
+    "cloudflare-observability",
+    "playwright"
+  ]
+}

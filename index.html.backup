@@ -28,7 +28,6 @@
             --text:#fff;--text2:#b4bcd0;--text3:#6b7280;--border:rgba(255,255,255,0.1);
             --safe-top:env(safe-area-inset-top,0px);
             --safe-bottom:env(safe-area-inset-bottom,0px);
-            --safe-left:env(safe-area-inset-left,0px);--safe-right:env(safe-area-inset-right,0px);
         }
         
         /* BASE - CRITICAL RESPONSIVE FIX */
@@ -509,80 +508,6 @@
             cursor: pointer;
         }
 
-        /* POWER-UPS */
-        .powerup-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(26, 188, 156, 0.5);
-            border-radius: 12px;
-            padding: 8px 12px;
-            min-width: 70px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .powerup-btn:hover:not(:disabled) {
-            background: rgba(26, 188, 156, 0.2);
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .powerup-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .powerup-btn.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            border-color: var(--primary);
-            animation: powerup-pulse 0.5s ease-in-out;
-        }
-
-        @keyframes powerup-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .powerup-icon {
-            font-size: 24px;
-            text-align: center;
-            margin-bottom: 4px;
-        }
-
-        .powerup-name {
-            font-size: 10px;
-            font-weight: 700;
-            text-align: center;
-            color: var(--text);
-            text-transform: uppercase;
-        }
-
-        .powerup-cooldown {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            background: rgba(0, 0, 0, 0.8);
-            color: var(--warning);
-            font-size: 10px;
-            font-weight: 700;
-            padding: 2px 4px;
-            border-radius: 4px;
-        }
-
-        @media (max-width: 480px) {
-            .powerup-btn {
-                min-width: 60px;
-                padding: 6px 8px;
-            }
-            .powerup-icon {
-                font-size: 20px;
-            }
-            .powerup-name {
-                font-size: 8px;
-            }
-        }
-
         /* UPLOAD SECTION */
         .upload-section{padding:12px 16px}
         .upload-hero{text-align:center;margin-bottom:12px}
@@ -595,17 +520,8 @@
             border-radius:16px;padding:24px 16px;text-align:center;
             cursor:pointer;transition:all .2s;margin-bottom:12px;
         }
-        .dropzone:hover{
-            border-color:var(--primary);transform:scale(1.02);
-        }
         .dropzone:active,.dropzone.dragover{
             border-color:var(--primary);background:rgba(0,212,170,.08);
-            transform:scale(0.98);animation:tap-pulse 0.3s ease-out;
-        }
-        @keyframes tap-pulse {
-            0% { transform:scale(0.95); }
-            50% { transform:scale(1.02); box-shadow:0 0 20px rgba(0,212,170,0.3); }
-            100% { transform:scale(0.98); }
         }
         .dropzone.has-file{border-color:var(--success);border-style:solid}
         .dropzone-preview{max-width:100%;max-height:150px;border-radius:10px;object-fit:contain}
@@ -778,7 +694,7 @@
         
         /* TOAST */
         .toast-container{
-            position:fixed;bottom:calc(80px + var(--safe-bottom));left:50%;transform:translateX(-50%);
+            position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
             z-index:9999;display:flex;flex-direction:column;gap:6px;pointer-events:none;
         }
         .toast{
@@ -835,148 +751,7 @@
         @keyframes badge-glow{0%,100%{box-shadow:0 2px 10px rgba(214,158,46,.4)}50%{box-shadow:0 2px 20px rgba(214,158,46,.6)}}
         .badge-icon.locked{background:var(--surface2);opacity:.4}
         .badge-name{font-size:8px;color:var(--text3)}
-
-        /* ENHANCED BADGE DISPLAY - PROFILE & DETAILED VIEWS */
-        .enhanced-badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:16px;padding:12px}
-        .badge-card{
-            position:relative;padding:16px;border-radius:16px;
-            background:rgba(255,255,255,.08);backdrop-filter:blur(10px);
-            border:1px solid rgba(255,255,255,.2);text-align:center;
-            transition:all 0.3s ease;cursor:pointer;
-            display:flex;flex-direction:column;align-items:center;justify-content:center;
-            min-height:140px;
-        }
-        .badge-card:hover{
-            transform:translateY(-8px);background:rgba(255,255,255,.12);
-            border-color:rgba(255,255,255,.3);box-shadow:0 8px 24px rgba(0,0,0,.3)
-        }
-        .badge-card.locked{opacity:0.5;pointer-events:none}
-        .badge-card.unlocked{box-shadow:0 4px 16px rgba(0,0,0,.2)}
-        .badge-card-icon{
-            width:64px;height:64px;border-radius:14px;
-            display:flex;align-items:center;justify-content:center;
-            font-size:40px;margin-bottom:12px;position:relative;
-            transition:transform 0.3s ease
-        }
-        .badge-card:hover .badge-card-icon{transform:scale(1.15)}
-        .badge-card-icon.common{background:linear-gradient(135deg,#4a5568,#718096);box-shadow:0 4px 12px rgba(74,85,104,.4)}
-        .badge-card-icon.rare{background:linear-gradient(135deg,#3182ce,#63b3ed);box-shadow:0 4px 12px rgba(49,130,206,.4)}
-        .badge-card-icon.epic{background:linear-gradient(135deg,#805ad5,#b794f4);box-shadow:0 4px 12px rgba(128,90,213,.4)}
-        .badge-card-icon.legendary{
-            background:linear-gradient(135deg,#d69e2e,#f6e05e);
-            box-shadow:0 4px 16px rgba(214,158,46,.5);
-            animation:badge-glow 2s ease-in-out infinite;
-        }
-        .badge-card-icon.locked{background:var(--surface2);opacity:0.4}
-        .badge-card-title{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--text)}
-        .badge-card-desc{font-size:11px;color:var(--text2);margin-bottom:8px;line-height:1.4}
-        .badge-card-points{font-size:12px;color:var(--gold);font-weight:600;margin-top:auto}
-        .badge-tooltip{
-            position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);
-            background:rgba(0,0,0,.9);color:white;padding:10px 14px;border-radius:8px;
-            font-size:12px;white-space:nowrap;pointer-events:none;opacity:0;
-            transition:opacity 0.2s ease;z-index:1000;font-weight:600;
-            box-shadow:0 4px 12px rgba(0,0,0,.3)
-        }
-        .badge-card:hover .badge-tooltip{opacity:1}
-        .badge-progress{width:100%;height:4px;background:var(--surface2);border-radius:2px;margin-top:8px;overflow:hidden}
-        .badge-progress-bar{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));
-            width:var(--progress,0%);transition:width 0.3s ease;border-radius:2px}
-        .badge-status-indicator{
-            position:absolute;top:8px;right:8px;width:20px;height:20px;
-            border-radius:50%;display:flex;align-items:center;justify-content:center;
-            font-size:10px;font-weight:700;background:var(--primary);color:white
-        }
-        .badge-status-indicator.locked{background:var(--surface2);color:var(--text3)}
-
-        /* SHOP - GLASSMORPHIC DESIGN */
-        .shop-category{margin-bottom:24px}
-        .shop-category-title{
-            font-size:14px;font-weight:700;color:var(--text);
-            margin-bottom:12px;padding-left:4px;
-            border-bottom:2px solid var(--primary);padding-bottom:8px;
-            display:inline-block
-        }
-        .shop-grid{
-            display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
-            gap:12px;margin-bottom:16px
-        }
-        .shop-item{
-            position:relative;padding:16px;border-radius:16px;
-            background:rgba(255,255,255,.08);backdrop-filter:blur(10px);
-            border:1px solid rgba(255,255,255,.2);text-align:center;
-            transition:all 0.3s ease;cursor:pointer;
-            display:flex;flex-direction:column;align-items:center;justify-content:center;
-            min-height:160px;
-        }
-        .shop-item:hover{
-            transform:translateY(-8px);background:rgba(255,255,255,.12);
-            border-color:rgba(255,255,255,.3);box-shadow:0 8px 24px rgba(0,212,170,.15)
-        }
-        .shop-item.locked{opacity:0.6;pointer-events:none;border-color:rgba(255,255,255,.1)}
-        .shop-item.purchased{
-            background:rgba(0,212,170,.1);border-color:var(--primary);
-        }
-        .shop-item.purchased::after{
-            content:'✓';position:absolute;top:8px;right:8px;
-            width:24px;height:24px;border-radius:50%;
-            background:var(--primary);color:var(--bg);
-            display:flex;align-items:center;justify-content:center;
-            font-weight:700;font-size:12px
-        }
-        .shop-item-icon{
-            width:64px;height:64px;border-radius:14px;
-            display:flex;align-items:center;justify-content:center;
-            font-size:32px;margin-bottom:12px;position:relative;
-            transition:transform 0.3s ease;
-            background:linear-gradient(135deg,rgba(0,212,170,.2),rgba(99,179,237,.2));
-            border:1px solid rgba(0,212,170,.3)
-        }
-        .shop-item:hover .shop-item-icon{transform:scale(1.1)}
-        .shop-item-name{
-            font-size:12px;font-weight:700;color:var(--text);
-            margin-bottom:6px;line-height:1.3
-        }
-        .shop-item-desc{
-            font-size:10px;color:var(--text2);margin-bottom:10px;
-            line-height:1.3;flex:1;display:flex;align-items:center;justify-content:center
-        }
-        .shop-item-cost{
-            display:flex;align-items:center;justify-content:center;gap:4px;
-            font-size:13px;font-weight:700;color:var(--gold);
-            padding:8px 12px;background:rgba(255,215,0,.1);
-            border-radius:8px;width:100%;margin-bottom:8px;border:1px solid rgba(255,215,0,.3)
-        }
-        .shop-item-cost-icon{font-size:14px}
-        .shop-item-btn{
-            width:100%;padding:8px 12px;border:none;
-            border-radius:8px;font-size:11px;font-weight:700;
-            cursor:pointer;transition:all 0.2s ease;
-            font-family:inherit;
-        }
-        .shop-item-btn.purchase{
-            background:var(--primary);color:var(--bg);
-            box-shadow:0 4px 12px rgba(0,212,170,.3)
-        }
-        .shop-item-btn.purchase:hover{
-            background:#00e8bc;box-shadow:0 6px 16px rgba(0,212,170,.4)
-        }
-        .shop-item-btn.purchase:active{transform:scale(0.95)}
-        .shop-item-btn.purchase.insufficient{
-            background:var(--surface2);color:var(--text3);
-            box-shadow:none;cursor:not-allowed;opacity:0.6
-        }
-        .shop-item-btn.owned{
-            background:var(--surface2);color:var(--text3);
-            cursor:default;opacity:0.7
-        }
-        .shop-item-rarity{
-            position:absolute;top:8px;left:8px;
-            font-size:8px;font-weight:700;padding:3px 6px;
-            background:rgba(255,255,255,.15);border-radius:4px;
-            color:var(--text2);text-transform:uppercase
-        }
-
+        
         .menu{background:var(--surface);border-radius:12px;overflow:hidden}
         .menu-item{
             display:flex;align-items:center;gap:10px;padding:12px;
@@ -1008,25 +783,10 @@
         
         /* LEADERBOARD - EPIC TIERS */
         .podium{display:flex;justify-content:center;gap:8px;margin-bottom:14px;padding:12px}
-        .podium-item{text-align:center;flex:1;max-width:90px;position:relative}
-        .podium-item.first{order:2;margin-top:-8px;animation:goldPulse 2s ease-in-out infinite}
-        .podium-item.second{order:1;animation:silverGlow 3s ease-in-out infinite}
-        .podium-item.third{order:3;animation:bronzeShimmer 2.5s ease-in-out infinite}
-
-        /* TOP 3 ANIMATIONS */
-        @keyframes goldPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        @keyframes silverGlow {
-            0%, 100% { filter: brightness(1); }
-            50% { filter: brightness(1.15); }
-        }
-        @keyframes bronzeShimmer {
-            0%, 100% { filter: brightness(1); }
-            50% { filter: brightness(1.1); }
-        }
-
+        .podium-item{text-align:center;flex:1;max-width:90px}
+        .podium-item.first{order:2;margin-top:-8px}
+        .podium-item.second{order:1}
+        .podium-item.third{order:3}
         .podium-avatar{
             width:50px;height:50px;border-radius:50%;margin:0 auto 6px;
             display:flex;align-items:center;justify-content:center;
@@ -1035,22 +795,17 @@
         .podium-item.first .podium-avatar{
             width:60px;height:60px;font-size:22px;
             background:linear-gradient(135deg,#ffd700,#ffed4a);
-            border:4px solid #ffd700;
-            box-shadow:0 0 30px rgba(255,215,0,.7), 0 0 60px rgba(255,215,0,.4), inset 0 0 20px rgba(255,255,255,.3);
+            border:3px solid #ffd700;box-shadow:0 0 20px rgba(255,215,0,.5);
         }
         .podium-item.second .podium-avatar{
-            background:linear-gradient(135deg,#c0c0c0,#e8e8e8);
-            border:4px solid #c0c0c0;
-            box-shadow:0 0 20px rgba(192,192,192,.6), inset 0 0 15px rgba(255,255,255,.2);
+            background:linear-gradient(135deg,#c0c0c0,#e8e8e8);border:3px solid #c0c0c0;
         }
         .podium-item.third .podium-avatar{
-            background:linear-gradient(135deg,#cd7f32,#daa520);
-            border:4px solid #cd7f32;
-            box-shadow:0 0 18px rgba(205,127,50,.5), inset 0 0 12px rgba(255,255,255,.15);
+            background:linear-gradient(135deg,#cd7f32,#daa520);border:3px solid #cd7f32;
         }
         .podium-avatar img{width:100%;height:100%;object-fit:cover}
-        .podium-crown{position:absolute;top:-10px;font-size:24px;z-index:10}
-        .podium-item.first .podium-crown{font-size:32px;top:-12px;z-index:10}
+        .podium-crown{position:absolute;top:-10px;font-size:14px}
+        .podium-item.first .podium-crown{font-size:18px;top:-12px}
         .podium-name{font-size:10px;font-weight:700}
         .podium-item.first .podium-name{color:var(--gold)}
         .podium-points{font-size:9px;color:var(--text3)}
@@ -1069,98 +824,13 @@
         .lb-item{
             display:flex;align-items:center;gap:10px;padding:10px;
             background:var(--surface);border-radius:10px;margin-bottom:6px;cursor:pointer;
-            transition:all .3s ease;position:relative;
         }
-        /* TOP 10 SPECIAL BORDERS */
-        .lb-item:has(.lb-rank.top10){
-            border:2px solid transparent;
-            background:linear-gradient(var(--surface),var(--surface)) padding-box,
-                       linear-gradient(135deg,var(--primary),#00ff88,#1abc9c) border-box;
-            box-shadow:0 0 15px rgba(26,188,156,.3);
-        }
-        .lb-item:has(.lb-rank.top10):hover{
-            box-shadow:0 0 25px rgba(26,188,156,.5);
-            transform:translateX(4px);
-        }
-        /* TIERED BORDERS FOR ALL PLAYERS */
-        .lb-item:has(.lb-tier.tier-king){
-            border-left:4px solid #ffd700;
-        }
-        .lb-item:has(.lb-tier.tier-viceroy){
-            border-left:4px solid #c0c0c0;
-        }
-        .lb-item:has(.lb-tier.tier-archduke){
-            border-left:4px solid #cd7f32;
-        }
-        .lb-item:has(.lb-tier.tier-legend){
-            border-left:4px solid #9b59b6;
-        }
-        .lb-item:has(.lb-tier.tier-elite){
-            border-left:4px solid #3498db;
-        }
-        .lb-item:has(.lb-tier.tier-veteran){
-            border-left:4px solid #27ae60;
-        }
-        .lb-item:has(.lb-tier.tier-rising){
-            border-left:4px solid #7f8c8d;
-        }
-
-        /* TIER GROUP SECTIONS WITH BRACKETED HEADERS */
-        .tier-group-section{
-            margin-bottom:18px;border-radius:10px;overflow:hidden;
-            background:linear-gradient(135deg,rgba(255,255,255,.02),rgba(255,255,255,.01));
-            border:1px solid rgba(255,255,255,.1);
-        }
-
-        .tier-group-header{
-            padding:12px 14px;font-weight:800;font-size:13px;
-            display:flex;align-items:center;justify-content:center;gap:8px;
-            text-transform:uppercase;letter-spacing:1px;
-            background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
-            border-bottom:2px solid;
-        }
-
-        .tier-group-header.tier-legend{
-            border-bottom-color:#9b59b6;color:#9b59b6;
-        }
-        .tier-group-header.tier-elite{
-            border-bottom-color:#3498db;color:#3498db;
-        }
-        .tier-group-header.tier-veteran{
-            border-bottom-color:#27ae60;color:#27ae60;
-        }
-        .tier-group-header.tier-rising{
-            border-bottom-color:#7f8c8d;color:#7f8c8d;
-        }
-
-        .tier-group-bracket{
-            font-size:16px;opacity:.7;
-        }
-
-        .tier-group-label{
-            flex:1;text-align:center;
-        }
-
-        .tier-group-content{
-            padding:8px 10px;
-            display:flex;flex-direction:column;gap:6px;
-        }
-
-        .tier-group-content .lb-item{
-            margin-bottom:0;
-        }
-
         .lb-rank{
             width:28px;height:28px;border-radius:6px;
             display:flex;align-items:center;justify-content:center;
             font-size:11px;font-weight:800;
         }
-        .lb-rank.top10{
-            background:linear-gradient(135deg,var(--primary),#00ff88);
-            color:#000;
-            box-shadow:0 0 10px rgba(26,188,156,.4);
-            font-weight:900;
-        }
+        .lb-rank.top10{background:linear-gradient(135deg,var(--primary),#00ff88);color:#000}
         .lb-rank.normal{background:var(--surface2);color:var(--text2)}
         .lb-avatar{
             width:36px;height:36px;border-radius:50%;
@@ -1233,7 +903,7 @@
             max-width:320px;width:100%;max-height:80vh;overflow-y:auto;position:relative;
         }
         .modal-close{
-            position:absolute;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));background:var(--surface2);border:none;
+            position:absolute;top:10px;right:10px;background:var(--surface2);border:none;
             color:var(--text);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:14px;
         }
         
@@ -1314,7 +984,7 @@
         .game-nav-badge {
             position: absolute;
             top: 0;
-            right: 12px;
+            right: 20%;
             background: var(--danger);
             color: #fff;
             font-size: 10px;
@@ -1328,7 +998,7 @@
         .game-nav-pulse {
             position: absolute;
             top: 4px;
-            right: 12px;
+            right: 25%;
             width: 12px;
             height: 12px;
             background: var(--danger);
@@ -2159,453 +1829,6 @@
             from { transform: translateY(-100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-
-        /* ========== MOBILE RESPONSIVE MEDIA QUERIES ========== */
-        
-        /* Small phones: 320px - 480px */
-        @media (max-width: 480px) {
-            .game-cta-card {
-                margin: 8px;
-                padding: 12px;
-            }
-            .game-cta-stat-value {
-                font-size: clamp(14px, 4vw, 18px);
-            }
-            .game-cta-stat-label {
-                font-size: clamp(8px, 2.5vw, 10px);
-            }
-            .game-cta-btn {
-                padding: clamp(12px, 3vw, 16px);
-                font-size: clamp(14px, 3.5vw, 16px);
-            }
-            .vote-btn {
-                max-width: 80px;
-            }
-            .modal {
-                max-width: 90vw;
-            }
-        }
-        
-        /* Tablets: 768px+ */
-        @media (min-width: 768px) {
-            .vote-btn {
-                max-width: 120px;
-            }
-            .modal {
-                max-width: 480px;
-            }
-        }
-        
-        /* Landscape orientation */
-        @media (orientation: landscape) {
-            .toast-container {
-                bottom: calc(20px + var(--safe-bottom));
-            }
-            .game-nav {
-                padding: 4px 0;
-            }
-        }
-
-        /* ====================================
-           QUEST SYSTEM STYLES
-           ==================================== */
-        .quest-section {
-            margin-bottom: 24px;
-        }
-        .quest-section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        .quest-section-header h3 {
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--text1);
-        }
-        .quest-timer {
-            font-size: 12px;
-            color: var(--text3);
-            font-weight: 600;
-        }
-        .quest-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .quest-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.2s;
-        }
-        .quest-card:hover {
-            border-color: var(--primary);
-            box-shadow: 0 2px 8px rgba(0,212,170,0.1);
-        }
-        .quest-card.completed {
-            opacity: 0.6;
-            background: var(--surface2);
-        }
-        .quest-icon {
-            font-size: 32px;
-            min-width: 40px;
-            text-align: center;
-        }
-        .quest-info {
-            flex: 1;
-        }
-        .quest-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text1);
-            margin-bottom: 4px;
-        }
-        .quest-desc {
-            font-size: 11px;
-            color: var(--text3);
-            margin-bottom: 6px;
-        }
-        .quest-progress {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .quest-progress-bar {
-            flex: 1;
-            height: 6px;
-            background: var(--surface2);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .quest-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), #00E5B8);
-            border-radius: 10px;
-            transition: width 0.3s;
-        }
-        .quest-progress-text {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text2);
-            min-width: 50px;
-            text-align: right;
-        }
-        .quest-reward {
-            text-align: center;
-            min-width: 60px;
-        }
-        .quest-reward-value {
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--primary);
-        }
-        .quest-reward-label {
-            font-size: 9px;
-            color: var(--text3);
-            text-transform: uppercase;
-        }
-        .quest-claim-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .quest-claim-btn:hover {
-            background: #00B88C;
-            transform: scale(1.05);
-        }
-        .quest-claim-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* ====================================
-           AVATAR CUSTOMIZATION STYLES
-           ==================================== */
-        .avatar-preview-section {
-            margin-bottom: 24px;
-        }
-        .avatar-preview-section h3 {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--text1);
-        }
-        .avatar-preview-large {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto;
-            position: relative;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--surface), var(--surface2));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            font-weight: 900;
-            color: var(--text1);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .avatar-preview-frame {
-            position: absolute;
-            inset: -8px;
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .avatar-preview-effects {
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        .cosmetic-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        .cosmetic-tab {
-            flex: 1;
-            min-width: 80px;
-            padding: 10px 12px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text2);
-            cursor: pointer;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-        .cosmetic-tab:hover {
-            border-color: var(--primary);
-        }
-        .cosmetic-tab.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .cosmetic-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-        .cosmetic-item {
-            aspect-ratio: 1;
-            background: var(--surface);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-        }
-        .cosmetic-item:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,212,170,0.2);
-        }
-        .cosmetic-item.equipped {
-            border-color: var(--primary);
-            background: rgba(0,212,170,0.1);
-        }
-        .cosmetic-item.locked {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        .cosmetic-item-icon {
-            font-size: 32px;
-            margin-bottom: 4px;
-        }
-        .cosmetic-item-name {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--text2);
-            text-align: center;
-        }
-        .cosmetic-item-rarity {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-        .rarity-common { background: #95a5a6; }
-        .rarity-rare { background: #3498db; }
-        .rarity-epic { background: #9b59b6; }
-        .rarity-legendary { background: #f1c40f; }
-
-        .cosmetic-item-badge {
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            background: var(--primary);
-            color: white;
-            font-size: 8px;
-            font-weight: 700;
-            padding: 2px 4px;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-
-        /* ====================================
-           GACHA SYSTEM STYLES
-           ==================================== */
-        .gacha-section {
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 2px solid var(--border);
-        }
-        .gacha-banner {
-            background: linear-gradient(135deg, rgba(0,212,170,0.1), rgba(0,229,184,0.05));
-            border: 2px solid var(--primary);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-        }
-        .gacha-banner h3 {
-            font-size: 18px;
-            font-weight: 900;
-            color: var(--text1);
-            margin-bottom: 4px;
-        }
-        .gacha-banner p {
-            font-size: 12px;
-            color: var(--text3);
-            margin-bottom: 16px;
-        }
-        .gacha-costs {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
-        .gacha-btn {
-            flex: 1;
-            max-width: 150px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .gacha-btn:hover {
-            background: #00B88C;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,212,170,0.3);
-        }
-        .gacha-btn-multi {
-            background: linear-gradient(135deg, var(--primary), #00E5B8);
-        }
-        .gacha-discount {
-            font-size: 10px;
-            background: #FFD700;
-            color: #000;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 900;
-        }
-
-        .gacha-result-content {
-            max-width: 500px;
-        }
-        .gacha-result-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .gacha-result-header h2 {
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--text1);
-        }
-        .gacha-results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .gacha-result-item {
-            background: var(--surface2);
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            position: relative;
-            animation: gacha-reveal 0.5s ease-out;
-        }
-        .gacha-result-item-icon {
-            font-size: 48px;
-            margin-bottom: 8px;
-        }
-        .gacha-result-item-name {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text1);
-            margin-bottom: 4px;
-        }
-        .gacha-result-item-rarity {
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        .gacha-result-item.new::before {
-            content: "NEW!";
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: #FFD700;
-            color: #000;
-            font-size: 8px;
-            font-weight: 900;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-        @keyframes gacha-reveal {
-            0% {
-                opacity: 0;
-                transform: scale(0) rotate(-180deg);
-            }
-            60% {
-                transform: scale(1.1) rotate(10deg);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) rotate(0deg);
-            }
-        }
-        .gacha-result-actions {
-            display: flex;
-            gap: 12px;
-        }
-        .gacha-result-actions button {
-            flex: 1;
-        }
     </style>
 </head>
 <body>
@@ -2613,7 +1836,7 @@
 <!-- HOME VIEW -->
 <div class="view active" id="homeView">
     <div class="home-header">
-        <div class="logo" onclick="showView('homeView')" style="cursor: pointer;">
+        <div class="logo">
             <div class="logo-icon" id="mainLogo"></div>
             <span class="logo-text">AuthenticaDetector</span>
         </div>
@@ -2621,7 +1844,6 @@
             <button class="icon-btn" onclick="openHelp()">❓</button>
             <button class="icon-btn" onclick="openHistory()">📋</button>
             <button class="icon-btn" onclick="openLeaderboard()">🏆</button>
-            <button class="icon-btn" onclick="openAvatarSelector()" title="Avatars & Shop">🎭</button>
             <button class="user-btn" id="userBtn" onclick="openProfile()"><span id="userInitial">?</span></button>
         </div>
     </div>
@@ -2805,10 +2027,7 @@
     <div class="view-header">
         <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
         <span class="view-title">📋 History</span>
-        <div class="coins-display" id="historyViewCoins">
-            <span style="font-size:16px">🪙</span>
-            <span>0</span>
-        </div>
+        <div style="width:44px"></div>
     </div>
     <div class="view-body view-body-padded" id="historyContent">
         <div class="history-empty"><div style="font-size:40px;margin-bottom:8px">📋</div><p>No scans yet</p></div>
@@ -2820,10 +2039,7 @@
     <div class="view-header">
         <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
         <span class="view-title">🏆 Leaderboard</span>
-        <div class="coins-display" id="leaderboardViewCoins">
-            <span style="font-size:16px">🪙</span>
-            <span>0</span>
-        </div>
+        <div style="width:44px"></div>
     </div>
     <div class="view-body view-body-padded">
         <!-- REWARDS TEASER -->
@@ -2857,10 +2073,7 @@
     <div class="view-header">
         <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
         <span class="view-title">👤 Profile</span>
-        <div class="coins-display" id="profileViewCoins">
-            <span style="font-size:16px">🪙</span>
-            <span>0</span>
-        </div>
+        <div style="width:44px"></div>
     </div>
     <div class="view-body view-body-padded">
         <div class="profile-header">
@@ -2878,8 +2091,6 @@
             <div class="badges-grid" id="badgesPreview"></div>
         </div>
         <div class="menu">
-            <button class="menu-item" onclick="openAvatarView()"><span class="menu-icon">🎨</span><span class="menu-text">Customize Avatar</span><span class="menu-arrow">→</span></button>
-            <button class="menu-item" onclick="openQuestsView()"><span class="menu-icon">⚡</span><span class="menu-text">Quests</span><span class="menu-arrow">→</span></button>
             <button class="menu-item" onclick="handleLoginLogout()"><span class="menu-icon" id="loginLogoutIcon">🔑</span><span class="menu-text" id="loginLogoutText">Sign In</span><span class="menu-arrow">→</span></button>
             <button class="menu-item" onclick="openHelp()"><span class="menu-icon">❓</span><span class="menu-text">Help & FAQ</span><span class="menu-arrow">→</span></button>
         </div>
@@ -2891,110 +2102,9 @@
     <div class="view-header">
         <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
         <span class="view-title">🎖️ All Badges</span>
-        <div class="coins-display" id="badgesViewCoins">
-            <span style="font-size:16px">🪙</span>
-            <span>0</span>
-        </div>
+        <div style="width:44px"></div>
     </div>
     <div class="view-body view-body-padded" id="allBadgesContent"></div>
-</div>
-
-<!-- QUESTS VIEW -->
-<div class="view" id="questsView">
-    <div class="view-header">
-        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
-        <span class="view-title">⚡ Quests & Challenges</span>
-        <div class="coins-display" id="questsViewCoins">
-            <span style="font-size:16px">🪙</span>
-            <span>0</span>
-        </div>
-    </div>
-    <div class="view-body view-body-padded">
-        <div class="quest-section">
-            <div class="quest-section-header">
-                <h3>📅 Daily Quests</h3>
-                <div class="quest-timer" id="dailyTimer">Resets in: --:--:--</div>
-            </div>
-            <div class="quest-list" id="dailyQuests"></div>
-        </div>
-        <div class="quest-section">
-            <div class="quest-section-header">
-                <h3>🌟 Weekly Challenges</h3>
-                <div class="quest-timer" id="weeklyTimer">Resets in: -- days</div>
-            </div>
-            <div class="quest-list" id="weeklyQuests"></div>
-        </div>
-        <div class="quest-section">
-            <div class="quest-section-header">
-                <h3>🏆 Special Events</h3>
-            </div>
-            <div class="quest-list" id="specialQuests"></div>
-        </div>
-    </div>
-</div>
-
-<!-- AVATAR CUSTOMIZATION VIEW -->
-<div class="view" id="avatarView">
-    <div class="view-header">
-        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
-        <span class="view-title">🎨 Customize Avatar</span>
-        <div class="coins-display" id="avatarViewCoins">
-            <span style="font-size:16px">🪙</span>
-            <span>0</span>
-        </div>
-    </div>
-    <div class="view-body view-body-padded">
-        <div class="avatar-preview-section">
-            <h3>Preview</h3>
-            <div class="avatar-preview-large" id="avatarPreviewLarge">
-                <div class="avatar-preview-frame" id="avatarPreviewFrame"></div>
-                <div class="avatar-preview-avatar" id="avatarPreviewAvatar">?</div>
-                <div class="avatar-preview-effects" id="avatarPreviewEffects"></div>
-            </div>
-        </div>
-
-        <div class="cosmetic-tabs">
-            <button class="cosmetic-tab active" onclick="switchCosmeticTab('avatars')">👤 Avatars</button>
-            <button class="cosmetic-tab" onclick="switchCosmeticTab('frames')">🖼️ Frames</button>
-            <button class="cosmetic-tab" onclick="switchCosmeticTab('effects')">✨ Effects</button>
-            <button class="cosmetic-tab" onclick="switchCosmeticTab('titles')">📛 Titles</button>
-        </div>
-
-        <div class="cosmetic-grid" id="cosmeticGrid"></div>
-
-        <div class="gacha-section">
-            <div class="gacha-banner">
-                <h3>🎲 Mystery Roll</h3>
-                <p>Get random AI-themed cosmetics!</p>
-                <div class="gacha-costs">
-                    <button class="gacha-btn" onclick="rollGacha(1)">
-                        <span>Roll x1</span>
-                        <span>🪙 100</span>
-                    </button>
-                    <button class="gacha-btn gacha-btn-multi" onclick="rollGacha(10)">
-                        <span>Roll x10</span>
-                        <span>🪙 900</span>
-                        <span class="gacha-discount">10% OFF!</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- GACHA RESULTS MODAL -->
-<div class="modal" id="gachaResultModal" style="display:none">
-    <div class="modal-content gacha-result-content">
-        <div class="gacha-result-header">
-            <h2>🎉 You Got:</h2>
-            <button class="modal-close" onclick="closeGachaResult()">✕</button>
-        </div>
-        <div class="gacha-results-grid" id="gachaResultsGrid"></div>
-        <div class="gacha-result-actions">
-            <button class="btn-primary" onclick="closeGachaResult()">Awesome!</button>
-            <button class="btn-secondary" onclick="closeGachaResult(); rollGacha(1)">Roll Again</button>
-        </div>
-    </div>
 </div>
 
 <!-- LOGIN VIEW -->
@@ -3375,8 +2485,8 @@
 
             <!-- CTA -->
             <div class="outbreak-ctas">
-                <button class="cta-btn" onclick="startTankShooter()" style="background:linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);color:#000;font-size:18px;font-weight:800;box-shadow:0 6px 20px rgba(26,188,156,0.4);animation:pulse 2s ease-in-out infinite">
-                    🎮 PLAY TANK SHOOTER
+                <button class="cta-btn" onclick="startTruthCannon()" style="background:linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);color:#000;font-size:18px;font-weight:800;box-shadow:0 6px 20px rgba(26,188,156,0.4);animation:pulse 2s ease-in-out infinite">
+                    🎮 PLAY TRUTH CANNON
                 </button>
                 <button class="cta-btn-secondary" onclick="openView('huntView')">
                     🎯 Hunt Submissions
@@ -3422,10 +2532,10 @@
         </div>
     </div>
 
-    <!-- Health Bar -->
+    <!-- Credibility Bar -->
     <div class="credibility-bar-container">
         <div class="credibility-label">
-            <span>TANK HEALTH</span>
+            <span>CREDIBILITY</span>
             <span id="credibilityPercent">100%</span>
         </div>
         <div class="credibility-bar">
@@ -3436,49 +2546,20 @@
     <!-- Game Canvas -->
     <canvas id="gameCanvas"></canvas>
 
-    <!-- Power-Ups Bar -->
-    <div class="powerups-bar" id="powerupsBar" style="display:flex;justify-content:center;gap:8px;padding:12px;background:rgba(0,0,0,0.3)">
-        <button class="powerup-btn" id="powerup1" onclick="activatePowerUp('slowMo')" data-cooldown="0">
-            <div class="powerup-icon">⏰</div>
-            <div class="powerup-name">Slow-Mo</div>
-            <div class="powerup-cooldown" style="display:none">0s</div>
-        </button>
-        <button class="powerup-btn" id="powerup2" onclick="activatePowerUp('scatterShot')" data-cooldown="0">
-            <div class="powerup-icon">💥</div>
-            <div class="powerup-name">Scatter</div>
-            <div class="powerup-cooldown" style="display:none">0s</div>
-        </button>
-        <button class="powerup-btn" id="powerup3" onclick="activatePowerUp('xRay')" data-cooldown="0">
-            <div class="powerup-icon">👁️</div>
-            <div class="powerup-name">X-Ray</div>
-            <div class="powerup-cooldown" style="display:none">0s</div>
-        </button>
-        <button class="powerup-btn" id="powerup4" onclick="activatePowerUp('shield')" data-cooldown="0">
-            <div class="powerup-icon">🛡️</div>
-            <div class="powerup-name">Shield</div>
-            <div class="powerup-cooldown" style="display:none">0s</div>
-        </button>
-        <button class="powerup-btn" id="powerup5" onclick="activatePowerUp('emp')" data-cooldown="0">
-            <div class="powerup-icon">⚡</div>
-            <div class="powerup-name">EMP</div>
-            <div class="powerup-cooldown" style="display:none">0s</div>
-        </button>
-    </div>
-
-    <!-- Mobile Controls Overlay -->
-    <div id="mobileControls" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none">
-        <div id="joystickZone" style="position:absolute;bottom:80px;left:20px;width:120px;height:120px;pointer-events:all"></div>
-        <button id="fireBtn" style="position:absolute;bottom:100px;right:20px;width:80px;height:80px;border-radius:50%;background:rgba(255,68,120,0.8);border:3px solid #fff;font-size:32px;display:flex;align-items:center;justify-content:center;pointer-events:all">🔥</button>
+    <!-- Touch Control Overlay (for aim trajectory) -->
+    <div class="aim-overlay" id="aimOverlay" style="display:none">
+        <div class="aim-power-bar">
+            <div class="aim-power-fill" id="aimPowerFill" style="width:0%"></div>
+        </div>
     </div>
 
     <!-- Game Over Screen -->
     <div class="game-over-screen" id="gameOverScreen" style="display:none">
         <div class="game-over-content">
-            <h1>MISSION COMPLETE</h1>
-            <div class="game-over-grade" id="gameOverGrade" style="font-size:48px;font-weight:900;margin-bottom:16px;color:var(--primary)">S</div>
+            <h1>OUTBREAK CONTAINED</h1>
             <div class="game-over-stats">
                 <div class="game-over-stat">
-                    <div class="game-over-stat-label">Wave</div>
+                    <div class="game-over-stat-label">Final Wave</div>
                     <div class="game-over-stat-value" id="finalWave">--</div>
                 </div>
                 <div class="game-over-stat">
@@ -3486,7 +2567,7 @@
                     <div class="game-over-stat-value" id="finalScore">--</div>
                 </div>
                 <div class="game-over-stat">
-                    <div class="game-over-stat-label">Enemies</div>
+                    <div class="game-over-stat-label">Fakes Destroyed</div>
                     <div class="game-over-stat-value" id="finalFakes">--</div>
                 </div>
             </div>
@@ -3497,10 +2578,10 @@
                 </div>
             </div>
             <div class="game-over-buttons">
-                <button class="game-retry-btn" onclick="retryTankShooter()">
+                <button class="game-retry-btn" onclick="retryTruthCannon()">
                     🔄 PLAY AGAIN
                 </button>
-                <button class="game-quit-btn" onclick="closeTankShooter()">
+                <button class="game-quit-btn" onclick="closeTruthCannon()">
                     ← Back to Outbreaks
                 </button>
             </div>
@@ -3532,10 +2613,6 @@
         <div class="game-nav-icon">🏆</div>
         <div class="game-nav-label">Ranks</div>
     </button>
-    <button class="game-nav-btn" data-view="shopView" onclick="openView('shopView')">
-        <div class="game-nav-icon">💰</div>
-        <div class="game-nav-label">Shop</div>
-    </button>
 </div>
 
 <!-- HELP VIEW -->
@@ -3548,153 +2625,19 @@
     <div class="view-body view-body-padded">
         <div class="help-section">
             <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">📲 How to Install</div><span class="help-toggle">▼</span></div>
-            <div class="help-content"><div class="help-text"><p><strong>Android:</strong> Tap install banner or menu → Install app</p><p><strong>iOS:</strong> Tap Share → Add to Home Screen → Add</p><p>Install for fastest performance and offline access!</p></div></div>
+            <div class="help-content"><div class="help-text"><p><strong>Android:</strong> Tap install banner or menu → Install app</p><p><strong>iOS:</strong> Tap Share → Add to Home Screen → Add</p></div></div>
         </div>
         <div class="help-section">
-            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🔍 Detection Modes</div><span class="help-toggle">▼</span></div>
-            <div class="help-content"><div class="help-text">
-                <p><strong>Quick Scan:</strong> Fast heuristic check - metadata, basic patterns (~85% accuracy)</p>
-                <p><strong>Deep Scan:</strong> Full AI ensemble analysis - 12 detection modules (~95% accuracy)</p>
-                <p><strong>Forensics Mode:</strong> Maximum detail - spectral analysis, noise patterns, compression artifacts (~98% accuracy)</p>
-                <p><em>Our ensemble system combines FFT analysis, GAN detection, UGAD spectral, texture coherence, and 8 more modules for industry-leading accuracy!</em></p>
-            </div></div>
+            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🔍 Scan Modes</div><span class="help-toggle">▼</span></div>
+            <div class="help-content"><div class="help-text"><p><strong>Quick Scan:</strong> Fast heuristic check (~70%)</p><p><strong>Deep Scan:</strong> AI model analysis (~90%+)</p><p><strong>Forensics:</strong> Maximum accuracy mode</p></div></div>
         </div>
         <div class="help-section">
-            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🪙 Truth Coins & Progression</div><span class="help-toggle">▼</span></div>
-            <div class="help-content"><div class="help-text">
-                <p><strong>Earn Coins:</strong> Scan images (+10-50), complete quests (+30-500), win games (+50-300), vote on submissions (+10)</p>
-                <p><strong>Spend Coins:</strong> Shop items, gacha rolls (100-900 coins), exclusive cosmetics</p>
-                <p><strong>Level Up:</strong> Gain XP from scans and quests to unlock new badges and features!</p>
-            </div></div>
+            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🏆 Leaderboard & Rewards</div><span class="help-toggle">▼</span></div>
+            <div class="help-content"><div class="help-text"><p>Earn points by scanning images and finding AI!</p><p><strong>Points:</strong> +1 Quick, +3 Deep, +5 AI Found</p><p><strong>Weekly KING</strong> gets featured profile!</p></div></div>
         </div>
         <div class="help-section">
-            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">⚡ Quest System</div><span class="help-toggle">▼</span></div>
-            <div class="help-content"><div class="help-text">
-                <p><strong>Daily Quests:</strong> Reset every 24 hours - scan images, vote, play games (30-60 coins each)</p>
-                <p><strong>Weekly Challenges:</strong> Reset every 7 days - longer goals, bigger rewards (200-500 coins + exclusive cosmetics)</p>
-                <p><strong>Special Quests:</strong> One-time achievements - reach milestones, earn rare avatars and frames!</p>
-                <p>Access quests from your profile menu!</p>
-            </div></div>
-        </div>
-        <div class="help-section">
-            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🎨 Avatar Customization</div><span class="help-toggle">▼</span></div>
-            <div class="help-content"><div class="help-text">
-                <p><strong>Avatars:</strong> 50+ AI-themed characters - robots, cyborgs, holograms, glitch effects</p>
-                <p><strong>Frames:</strong> 30+ decorative borders - neon circuits, quantum fields, hologram rings</p>
-                <p><strong>Effects:</strong> 20+ particle effects - sparkles, lightning, flames, vortex</p>
-                <p><strong>Titles:</strong> 40+ prestigious titles displayed under your name</p>
-                <p><strong>Rarity Tiers:</strong> Common (gray), Rare (blue), Epic (purple), Legendary (gold)</p>
-                <p>Your equipped avatar appears in the leaderboard, profile, AND sticks out of your tank in the game!</p>
-            </div></div>
-        </div>
-        <div class="help-section">
-            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🎲 Gacha / Mystery Rolls</div><span class="help-toggle">▼</span></div>
-            <div class="help-content"><div class="help-text">
-                <p><strong>Single Roll:</strong> 100 coins - 1 random cosmetic item</p>
-                <p><strong>10-Roll:</strong> 900 coins (10% discount!) - 10 random items with guaranteed rare+</p>
-                <p><strong>Drop Rates:</strong> 60% Common, 25% Rare, 12% Epic, 3% Legendary</p>
-                <p>Collect them all! Duplicate protection increases your luck over time.</p>
-            </div></div>
-        </div>
-        <div class="help-section">
-            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🎮 Tank Shooter Game</div><span class="help-toggle">▼</span></div>
-            <div class="help-content"><div class="help-text">
-                <p><strong>Access:</strong> Click the 🎮 button in the header</p>
-                <p><strong>Controls:</strong> Arrow keys / WASD / Touch joystick to move, Space / Tap to shoot</p>
-                <p><strong>Power-Ups:</strong> Use number keys 1-5 or tap power-up buttons - Shield, Slow-Mo, Scatter Shot, Laser, Missiles, and more!</p>
-                <p><strong>Waves:</strong> 30+ waves of increasing difficulty, boss every 5 waves</p>
-                <p><strong>Enemies:</strong> Spam Bots, Fake News Drones, Deepfake Tanks, Bot Swarms, Elite AI Bosses, and more!</p>
-                <p><strong>Rewards:</strong> Earn coins based on waves cleared, bonus for perfect runs!</p>
-                <p>Your equipped avatar and cosmetics appear in your tank!</p>
-            </div></div>
-        </div>
-        <div class="help-section">
-            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🏆 Truth Hunters Mode</div><span class="help-toggle">▼</span></div>
-            <div class="help-content"><div class="help-text">
-                <p><strong>Submit Images:</strong> Upload suspicious AI images for community voting (+50 coins)</p>
-                <p><strong>Vote & Verify:</strong> Vote on others' submissions - Real or AI? (+10 coins per vote)</p>
-                <p><strong>Outbreak Events:</strong> Limited-time challenges with 3x rewards!</p>
-                <p><strong>Leaderboard:</strong> Compete for top ranks - King, Viceroy, Archduke, and more! Top 3 get special animations!</p>
-            </div></div>
-        </div>
-        <div class="help-section">
-            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🛒 Shop System</div><span class="help-toggle">▼</span></div>
-            <div class="help-content"><div class="help-text">
-                <p><strong>Cosmetics:</strong> Exclusive skins, backgrounds, badge styles</p>
-                <p><strong>Power-Ups:</strong> Game boosts, scan enhancers, XP multipliers</p>
-                <p><strong>Exclusive Badges:</strong> Premium badges not available elsewhere</p>
-                <p><strong>Boosters:</strong> Temporary buffs for coins, XP, or accuracy</p>
-                <p>20+ items available, more added regularly!</p>
-            </div></div>
-        </div>
-        <div class="help-section">
-            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🎖️ Badges & Achievements</div><span class="help-toggle">▼</span></div>
-            <div class="help-content"><div class="help-text">
-                <p>Earn badges by completing achievements:</p>
-                <p>• <strong>First Scan:</strong> Complete your first image analysis</p>
-                <p>• <strong>AI Hunter:</strong> Find 100 AI-generated images</p>
-                <p>• <strong>Voting Champion:</strong> Vote on 1000 submissions</p>
-                <p>• <strong>Level Milestones:</strong> Reach levels 5, 10, 20, 50, 100</p>
-                <p>• <strong>Perfect Scanner:</strong> 10 scans with 100% accuracy</p>
-                <p>And 30+ more badges to collect! Each badge awards coins on first unlock.</p>
-            </div></div>
-        </div>
-        <div class="help-section">
-            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🔒 Privacy & Security</div><span class="help-toggle">▼</span></div>
-            <div class="help-content"><div class="help-text">
-                <p><strong>Your Data:</strong> Scan history is private. Images analyzed client-side in your browser.</p>
-                <p><strong>Public Info:</strong> Only your username, level, badges, and leaderboard rank are visible to others.</p>
-                <p><strong>Security:</strong> Enterprise-grade encryption, rate limiting, and abuse prevention active.</p>
-                <p><strong>No Tracking:</strong> We don't sell your data or track your activity outside the app.</p>
-            </div></div>
-        </div>
-        <div class="help-section">
-            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">💡 Tips & Tricks</div><span class="help-toggle">▼</span></div>
-            <div class="help-content"><div class="help-text">
-                <p>🎯 <strong>Complete daily quests</strong> for consistent coin income!</p>
-                <p>⚡ <strong>Use Deep Scan</strong> on suspicious images for best accuracy</p>
-                <p>🎮 <strong>Play Tank Shooter</strong> during quest cooldowns to earn extra coins</p>
-                <p>🎲 <strong>Save 900 coins</strong> for 10-roll gacha (better value than singles)</p>
-                <p>🏆 <strong>Vote actively</strong> in Truth Hunters for easy coins and badges</p>
-                <p>✨ <strong>Equip legendary cosmetics</strong> to stand out on the leaderboard!</p>
-            </div></div>
-        </div>
-    </div>
-</div>
-
-<!-- SHOP VIEW -->
-<div class="view" id="shopView">
-    <div class="view-header">
-        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
-        <span class="view-title">💰 Shop</span>
-        <div style="display:flex;align-items:center;gap:8px;padding:4px 12px;background:var(--surface2);border-radius:8px;font-size:12px;font-weight:700">
-            <span style="font-size:16px">🪙</span>
-            <span id="shopCoinsDisplay">0</span>
-        </div>
-    </div>
-    <div class="view-body view-body-padded">
-        <!-- COSMETICS CATEGORY -->
-        <div class="shop-category">
-            <h3 class="shop-category-title">✨ Cosmetics</h3>
-            <div class="shop-grid" id="cosmeticsShop"></div>
-        </div>
-
-        <!-- POWER-UPS CATEGORY -->
-        <div class="shop-category">
-            <h3 class="shop-category-title">⚡ Power-Ups</h3>
-            <div class="shop-grid" id="powerupsShop"></div>
-        </div>
-
-        <!-- EXCLUSIVE BADGES CATEGORY -->
-        <div class="shop-category">
-            <h3 class="shop-category-title">👑 Exclusive Badges</h3>
-            <div class="shop-grid" id="badgesShop"></div>
-        </div>
-
-        <!-- BOOSTERS CATEGORY -->
-        <div class="shop-category">
-            <h3 class="shop-category-title">🔥 Boosters</h3>
-            <div class="shop-grid" id="boostersShop"></div>
+            <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🔒 Privacy</div><span class="help-toggle">▼</span></div>
+            <div class="help-content"><div class="help-text"><p>Your history is private. Images analyzed locally. Others only see your name, badges & stats.</p></div></div>
         </div>
     </div>
 </div>
@@ -3719,18 +2662,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
-<script src="tank-shooter-enhanced.js"></script>
-<script src="avatar-cosmetics-system.js"></script>
-
-<script>
-// Initialize cosmetics system on page load
-document.addEventListener('DOMContentLoaded', () => {
-    if (typeof initCosmeticsSystem === 'function') {
-        console.log('[Init] Starting cosmetics system...');
-        initCosmeticsSystem();
-    }
-});
-</script>
 
 <script type="module">
 // ============================================================
@@ -3753,7 +2684,6 @@ let currentFile = null, currentDataUrl = null, currentResult = null;
 let analysisAborted = false;
 let isLoginMode = false, scanCount = 0, sessionScanCount = 0;
 let forensicsMode = false;
-let activeOutbreak = null;
 
 // AI Detection Models - WE USE REAL AI DETECTORS NOW
 let aiDetectorPipeline = null;
@@ -3830,197 +2760,6 @@ const BADGES = {
     month_master: { id: 'month_master', name: 'Month Master', desc: 'Scan 30 days', icon: '🗓️', req: 30, type: 'daily_streak', rarity: 'legendary', points: 500 },
     elite_detector: { id: 'elite_detector', name: 'Elite Detector', desc: '95%+ accuracy (50+ scans)', icon: '🏆', req: 95, type: 'accuracy', rarity: 'legendary', points: 750 },
     founding_member: { id: 'founding_member', name: 'Founding Member', desc: 'Beta tester', icon: '💎', req: 1, type: 'special', rarity: 'legendary', points: 1000 }
-};
-
-// ==================== SHOP ITEMS (20 items across 4 categories) ====================
-const SHOP_ITEMS = {
-    // COSMETICS (5 items: 100-500 coins)
-    avatar_border_gold: {
-        id: 'avatar_border_gold',
-        name: 'Golden Border',
-        desc: 'Premium avatar border',
-        category: 'cosmetics',
-        cost: 250,
-        icon: '✨',
-        rarity: 'rare'
-    },
-    avatar_border_neon: {
-        id: 'avatar_border_neon',
-        name: 'Neon Border',
-        desc: 'Glowing cyan border',
-        category: 'cosmetics',
-        cost: 300,
-        icon: '💫',
-        rarity: 'rare'
-    },
-    bg_nebula: {
-        id: 'bg_nebula',
-        name: 'Nebula BG',
-        desc: 'Space background',
-        category: 'cosmetics',
-        cost: 200,
-        icon: '🌌',
-        rarity: 'common'
-    },
-    bg_synthwave: {
-        id: 'bg_synthwave',
-        name: 'Synthwave BG',
-        desc: 'Retro neon vibe',
-        category: 'cosmetics',
-        cost: 150,
-        icon: '🌅',
-        rarity: 'common'
-    },
-    badge_frame_platinum: {
-        id: 'badge_frame_platinum',
-        name: 'Platinum Frame',
-        desc: 'Elite badge frame',
-        category: 'cosmetics',
-        cost: 500,
-        icon: '💎',
-        rarity: 'epic'
-    },
-
-    // POWER-UPS (5 items: 200-1000 coins)
-    scan_boost_2x: {
-        id: 'scan_boost_2x',
-        name: '2x Scan Boost',
-        desc: 'Double detection speed',
-        category: 'powerups',
-        cost: 400,
-        icon: '⚡',
-        rarity: 'rare'
-    },
-    xp_multiplier_3x: {
-        id: 'xp_multiplier_3x',
-        name: '3x XP Multiplier',
-        desc: 'Triple XP for 24h',
-        category: 'powerups',
-        cost: 600,
-        icon: '📈',
-        rarity: 'epic'
-    },
-    accuracy_boost: {
-        id: 'accuracy_boost',
-        name: 'Accuracy Boost',
-        desc: '+15% detection boost',
-        category: 'powerups',
-        cost: 500,
-        icon: '🎯',
-        rarity: 'rare'
-    },
-    daily_bonus_coins: {
-        id: 'daily_bonus_coins',
-        name: 'Daily Bonus +100',
-        desc: '+100 coins/day (7d)',
-        category: 'powerups',
-        cost: 700,
-        icon: '💰',
-        rarity: 'epic'
-    },
-    priority_queue: {
-        id: 'priority_queue',
-        name: 'Priority Queue',
-        desc: 'Fast-track scanning',
-        category: 'powerups',
-        cost: 1000,
-        icon: '⏱️',
-        rarity: 'epic'
-    },
-
-    // EXCLUSIVE BADGES (5 items: 500-2000 coins)
-    collector_badge: {
-        id: 'collector_badge',
-        name: 'Collector',
-        desc: 'Own 10 cosmetics',
-        category: 'badges',
-        cost: 800,
-        icon: '🏛️',
-        rarity: 'epic'
-    },
-    whale_badge: {
-        id: 'whale_badge',
-        name: 'Big Spender',
-        desc: 'Spent 5000+ coins',
-        category: 'badges',
-        cost: 1500,
-        icon: '🐋',
-        rarity: 'epic'
-    },
-    streaker_badge: {
-        id: 'streaker_badge',
-        name: 'Streaker Badge',
-        desc: 'Earned via 7-day streak',
-        category: 'badges',
-        cost: 500,
-        icon: '🔥',
-        rarity: 'rare'
-    },
-    legendary_hunter: {
-        id: 'legendary_hunter',
-        name: 'Legendary Hunter',
-        desc: 'Ultimate AI detective',
-        category: 'badges',
-        cost: 2000,
-        icon: '🎖️',
-        rarity: 'legendary'
-    },
-    vip_member: {
-        id: 'vip_member',
-        name: 'VIP Member',
-        desc: 'Exclusive access',
-        category: 'badges',
-        cost: 1200,
-        icon: '👑',
-        rarity: 'epic'
-    },
-
-    // BOOSTERS (5 items: 300-800 coins)
-    truth_cannon_ammo: {
-        id: 'truth_cannon_ammo',
-        name: 'Cannon Ammo x50',
-        desc: '50 truth cannon rounds',
-        category: 'boosters',
-        cost: 400,
-        icon: '🔫',
-        rarity: 'rare'
-    },
-    outbreak_defense: {
-        id: 'outbreak_defense',
-        name: 'Outbreak Defense',
-        desc: '+50% outbreak rewards',
-        category: 'boosters',
-        cost: 600,
-        icon: '🛡️',
-        rarity: 'epic'
-    },
-    critical_hit: {
-        id: 'critical_hit',
-        name: 'Critical Hit Boost',
-        desc: '+20% detection bonus',
-        category: 'boosters',
-        cost: 500,
-        icon: '💥',
-        rarity: 'rare'
-    },
-    time_warp: {
-        id: 'time_warp',
-        name: 'Time Warp',
-        desc: 'Instant deep scan',
-        category: 'boosters',
-        cost: 800,
-        icon: '⏰',
-        rarity: 'epic'
-    },
-    immunity_shield: {
-        id: 'immunity_shield',
-        name: 'Immunity Shield',
-        desc: 'Protect 5 scans',
-        category: 'boosters',
-        cost: 700,
-        icon: '🛡️',
-        rarity: 'epic'
-    }
 };
 
 // ==================== TIER SYSTEM ====================
@@ -4275,7 +3014,7 @@ async function loadUser() {
                 const { data: p } = await supabase.from('profiles').select('display_name,avatar_url').eq('id', user.id).single();
                 if (p) { 
                     user.name = p.display_name || user.name; 
-                    user.avatar_url = p.avatar_url; 
+                    user.avatar = p.avatar_url; 
                 }
                 updateUserUI(); 
                 loadUserStats(); 
@@ -4302,10 +3041,10 @@ function updateUserUI() {
     if (user) {
         const initial = user.name ? user.name[0].toUpperCase() : user.email[0].toUpperCase();
         $('userInitial').textContent = initial;
-        $('userBtn').innerHTML = user.avatar_url ? `<img src="${user.avatar_url}">` : `<span id="userInitial">${initial}</span>`;
+        $('userBtn').innerHTML = user.avatar ? `<img src="${user.avatar}">` : `<span id="userInitial">${initial}</span>`;
         $('profileName').textContent = user.name || user.email.split('@')[0];
         $('profileEmail').textContent = user.email;
-        $('profileAvatar').innerHTML = user.avatar_url ? `<img src="${user.avatar_url}">` : initial;
+        $('profileAvatar').innerHTML = user.avatar ? `<img src="${user.avatar}">` : initial;
         $('loginLogoutText').textContent = 'Sign Out'; 
         $('loginLogoutIcon').textContent = '🚪';
     } else {
@@ -4578,7 +3317,7 @@ function showLoginError(msg) {
 }
 
 // Award a specific badge to user
-async function awardBadge(badgeId, coinReward = 0) {
+async function awardBadge(badgeId) {
     if (!user) return;
 
     const badge = BADGES[badgeId];
@@ -4587,53 +3326,34 @@ async function awardBadge(badgeId, coinReward = 0) {
         return;
     }
 
-    try {
-        // Use atomic badge award function (idempotent + coin reward)
-        const { data, error } = await supabase.rpc('award_badge_atomic', {
-            p_user_id: user.id,
-            p_badge_id: badgeId,
-            p_coin_reward: coinReward
-        });
+    // Check if already unlocked
+    const unlockedBadges = getStorage('unlocked_badges', []);
+    if (unlockedBadges.includes(badgeId)) {
+        console.log('[Badge] Already unlocked:', badgeId);
+        return;
+    }
 
-        if (error) throw error;
+    // Unlock the badge
+    unlockedBadges.push(badgeId);
+    setStorage('unlocked_badges', unlockedBadges);
 
-        if (data && data.length > 0) {
-            const result = data[0];
+    // Show notification
+    showBadgeUnlock(badge);
 
-            if (result.awarded) {
-                // Badge was newly awarded
-                const unlockedBadges = getStorage('unlocked_badges', []);
-                unlockedBadges.push(badgeId);
-                setStorage('unlocked_badges', unlockedBadges);
-
-                // Show notification
-                showBadgeUnlock(badge);
-
-                // Update coins if rewarded
-                if (result.new_coins > 0) {
-                    userProgression.truth_coins = result.new_coins;
-                    updateCoinsDisplay();
-                }
-
-                // Update quest progress for badge earned
-                updateQuestProgress('badge_earned');
-
-                console.log(`[Badge] Awarded: ${badgeId} ${coinReward > 0 ? `(+${coinReward} coins)` : ''}`);
-            } else if (result.already_had) {
-                console.log('[Badge] Already unlocked:', badgeId);
-            }
-        }
-    } catch (err) {
-        console.error('[Badge] Failed to award badge:', err);
-
-        // Fallback to local-only unlock (no coin reward)
-        const unlockedBadges = getStorage('unlocked_badges', []);
-        if (!unlockedBadges.includes(badgeId)) {
-            unlockedBadges.push(badgeId);
-            setStorage('unlocked_badges', unlockedBadges);
-            showBadgeUnlock(badge);
+    // Save to Supabase if connected
+    if (!useLocalFallback && supabase) {
+        try {
+            await supabase.from('user_badges').upsert({
+                user_id: user.id,
+                badge_id: badgeId,
+                unlocked_at: new Date().toISOString()
+            });
+        } catch (e) {
+            console.error('[Badge] Failed to save to database:', e);
         }
     }
+
+    console.log('[Badge] Awarded:', badgeId);
 }
 
 window.continueAsGuest = () => { showView('homeView'); toast('Continuing as guest'); };
@@ -4665,12 +3385,12 @@ window.closeLoginRequired = () => {
 // ==================== INIT ====================
 async function init() {
     console.log(`[AuthenticaDetector] v${APP_VERSION} starting...`);
-
+    
     initSupabase();
     initLogos();
     initFacts();
     checkInstallState();
-
+    
     await loadUser();
     renderBadgesPreview();
     updateGating();
@@ -4678,9 +3398,6 @@ async function init() {
 
     // Initialize Truth Hunters game
     await initTruthHunters();
-
-    // Initialize cosmetics system
-    initCosmetics();
 
     // Register service worker
     if ('serviceWorker' in navigator) {
@@ -4724,13 +3441,16 @@ async function init() {
 // ============================================================
 
 // ==================== GAME STATE ====================
-// BACK BUTTON FIX - Replace openView and closeView functions
-
-// View stack for proper navigation
-let viewStack = ['homeView'];
 let currentView = null;
+let currentCardIndex = 0;
+let pendingSubmissions = [];
+let userProgression = null;
+let activeOutbreak = null;
+let userSquad = null;
 
-const GAME_VIEWS = ['huntView', 'verifyView', 'outbreaksView', 'squadsView', 'leaderboardView', 'shopView'];
+// ==================== VIEW MANAGEMENT ====================
+// Game views that show the game navigation bar
+const GAME_VIEWS = ['huntView', 'verifyView', 'outbreaksView', 'squadsView', 'leaderboardView'];
 
 window.openView = function(viewId) {
     console.log('[View] Opening view:', viewId);
@@ -4741,6 +3461,7 @@ window.openView = function(viewId) {
     // Close ALL views first for clean transition
     document.querySelectorAll('.view').forEach(v => {
         v.classList.remove('active');
+        // Add fade-out transition
         v.style.opacity = '0';
     });
 
@@ -4752,13 +3473,6 @@ window.openView = function(viewId) {
             view.classList.add('active');
             view.style.opacity = '1';
             currentView = viewId;
-
-            // Add to view stack and push to browser history
-            if (viewStack[viewStack.length - 1] !== viewId) {
-                viewStack.push(viewId);
-                // Push state to enable back button
-                history.pushState({ view: viewId }, '', '#' + viewId);
-            }
 
             // Handle game navigation bar
             const gameNav = $('gameNav');
@@ -4780,25 +3494,20 @@ window.openView = function(viewId) {
             else if (viewId === 'outbreaksView') loadOutbreaksView();
             else if (viewId === 'squadsView') loadSquadsView();
             else if (viewId === 'leaderboardView') loadLeaderboardView();
-            else if (viewId === 'shopView') loadShopView();
         } else {
             console.warn('[View] View not found:', viewId);
             // Fallback to home
-            openView('homeView');
+            const homeView = $('homeView');
+            if (homeView) {
+                homeView.classList.add('active');
+                homeView.style.opacity = '1';
+            }
         }
     }, 50);
 };
 
 window.closeView = function() {
     console.log('[View] Closing current view:', currentView);
-
-    // Pop from view stack
-    if (viewStack.length > 1) {
-        viewStack.pop();
-    }
-
-    // Go back to previous view (or home if stack is empty)
-    const previousView = viewStack[viewStack.length - 1] || 'homeView';
 
     // Close current view with transition
     if (currentView) {
@@ -4807,76 +3516,29 @@ window.closeView = function() {
             view.style.opacity = '0';
             setTimeout(() => {
                 view.classList.remove('active');
-                // Open previous view
-                openView(previousView);
             }, 50);
         }
-    } else {
-        // No current view, just go home
-        openView('homeView');
     }
-};
 
-// Handle browser back button (Android physical back button)
-window.addEventListener('popstate', function(event) {
-    console.log('[View] Popstate event:', event.state);
-    
-    if (event.state && event.state.view) {
-        // Navigate to the view in history
-        const targetView = event.state.view;
-        
-        // Remove from stack without adding to history again
-        if (viewStack.length > 1) {
-            viewStack.pop();
+    // Hide game nav
+    const gameNav = $('gameNav');
+    if (gameNav) gameNav.style.display = 'none';
+
+    // Clear nav button active states
+    document.querySelectorAll('.game-nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // Return to home
+    currentView = null;
+    setTimeout(() => {
+        const homeView = $('homeView');
+        if (homeView) {
+            homeView.classList.add('active');
+            homeView.style.opacity = '1';
         }
-        
-        // Close all views
-        document.querySelectorAll('.view').forEach(v => {
-            v.classList.remove('active');
-            v.style.opacity = '0';
-        });
-        
-        // Open target view
-        setTimeout(() => {
-            const view = $(targetView);
-            if (view) {
-                view.classList.add('active');
-                view.style.opacity = '1';
-                currentView = targetView;
-                
-                // Update game nav
-                const isGameView = GAME_VIEWS.includes(targetView);
-                const gameNav = $('gameNav');
-                if (gameNav) {
-                    gameNav.style.display = isGameView ? 'flex' : 'none';
-                    if (isGameView) {
-                        document.querySelectorAll('.game-nav-btn').forEach(btn => {
-                            btn.classList.toggle('active', btn.dataset.view === targetView);
-                        });
-                    }
-                }
-            } else {
-                // Fallback to home
-                openView('homeView');
-            }
-        }, 50);
-    } else {
-        // No state, go to home
-        openView('homeView');
-    }
-});
-
-// Initialize: Set initial state for home view
-if (window.location.hash) {
-    const initialView = window.location.hash.substring(1);
-    if (initialView && $(initialView)) {
-        openView(initialView);
-    } else {
-        history.replaceState({ view: 'homeView' }, '', '#homeView');
-    }
-} else {
-    history.replaceState({ view: 'homeView' }, '', '#homeView');
-}
+    }, 100);
+};
 
 // ==================== HUNT MODE ====================
 let huntImageUrl = null;
@@ -5098,9 +3760,6 @@ window.submitHunt = async function() {
             // Award coins for submission
             await awardCoins(50, 'Submission');
             await addXP(25);
-
-            // Update quest progress for image submission
-            updateQuestProgress('image_submitted');
         }
 
         // Show success
@@ -5245,9 +3904,6 @@ window.vote = async function(choice) {
         const points = 10;
         await awardCoins(points, 'Vote');
         await addXP(5);
-
-        // Update quest progress for voting
-        updateQuestProgress('vote_submitted');
 
         // Show feedback
         await showVoteFeedback(choice, points);
@@ -5560,9 +4216,6 @@ async function addXP(amount) {
         userProgression.xp -= userProgression.xp_to_next_level;
         userProgression.xp_to_next_level = Math.floor(userProgression.xp_to_next_level * 1.5);
 
-        // Update quest progress for level reached
-        updateQuestProgress('level_reached', userProgression.level);
-
         // Show level up notification
         showLevelUpNotification(userProgression.level);
     }
@@ -5575,34 +4228,13 @@ async function addXP(amount) {
 async function awardCoins(amount, reason) {
     if (!user || !userProgression) return;
 
-    try {
-        // Use atomic coin award function (prevents race conditions)
-        const { data, error } = await supabase.rpc('award_coins_atomic', {
-            p_user_id: user.id,
-            p_amount: amount
-        });
+    userProgression.truth_coins += amount;
+    userProgression.lifetime_coins_earned = (userProgression.lifetime_coins_earned || 0) + amount;
 
-        if (error) throw error;
+    await saveUserProgression();
+    updateCoinsDisplay();
 
-        if (data && data.length > 0) {
-            // Update local state with server response
-            userProgression.truth_coins = data[0].truth_coins;
-            userProgression.lifetime_coins_earned = data[0].lifetime_coins_earned;
-            updateCoinsDisplay();
-
-            // Update quest progress for total coins earned
-            updateQuestProgress('coins_earned_total', data[0].lifetime_coins_earned);
-
-            console.log(`[Progression] Awarded ${amount} coins for ${reason} (New total: ${data[0].truth_coins})`);
-        }
-    } catch (err) {
-        console.error('[Progression] Failed to award coins:', err);
-        // Fallback to local update
-        userProgression.truth_coins += amount;
-        userProgression.lifetime_coins_earned = (userProgression.lifetime_coins_earned || 0) + amount;
-        await saveUserProgression();
-        updateCoinsDisplay();
-    }
+    console.log(`[Progression] Awarded ${amount} coins for ${reason}`);
 }
 
 async function saveUserProgression() {
@@ -5638,7 +4270,7 @@ function updateProgressionUI() {
 
 function updateCoinsDisplay() {
     const coins = userProgression?.truth_coins || 0;
-    const displays = ['coinsCount', 'headerCoins', 'userCoins', 'historyViewCoins', 'leaderboardViewCoins', 'profileViewCoins', 'badgesViewCoins', 'questsViewCoins'];
+    const displays = ['coinsCount', 'headerCoins', 'userCoins'];
     displays.forEach(id => {
         const el = $(id);
         if (el) {
@@ -5725,7 +4357,7 @@ async function loadActiveOutbreak() {
 
         if (activeOutbreak) {
             showOutbreakBanner();
-            updateOutbreakTimers();
+            updateOutbreakTimer();
         } else {
             hideOutbreakBanner();
         }
@@ -5755,11 +4387,11 @@ function hideOutbreakBanner() {
     if (pulse) pulse.style.display = 'none';
 }
 
-function updateOutbreakTimers() {
+function updateOutbreakTimer() {
     if (!activeOutbreak) return;
 
-    const timerSmall = $('outbreakTimer'); // Banner timer
-    const timerBig = $('outbreakTimerBig'); // View timer
+    const timer = $('outbreakTimer');
+    if (!timer) return;
 
     const updateTime = () => {
         const now = new Date();
@@ -5767,8 +4399,7 @@ function updateOutbreakTimers() {
         const diff = end - now;
 
         if (diff <= 0) {
-            if (timerSmall) timerSmall.textContent = 'Ended';
-            if (timerBig) timerBig.textContent = 'Event Ended';
+            timer.textContent = 'Ended';
             hideOutbreakBanner();
             return;
         }
@@ -5777,10 +4408,7 @@ function updateOutbreakTimers() {
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-        const timeStr = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-        if (timerSmall) timerSmall.textContent = `Ends in ${timeStr}`;
-        if (timerBig) timerBig.textContent = timeStr;
+        timer.textContent = `Ends in ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
 
     updateTime();
@@ -5790,43 +4418,7 @@ function updateOutbreakTimers() {
 async function loadOutbreaksView() {
     console.log('[Outbreak] Loading Outbreaks view');
     await loadActiveOutbreak();
-    renderOutbreakView();
     // TODO: Load upcoming and past outbreaks
-}
-
-function renderOutbreakView() {
-    if (!activeOutbreak) {
-        console.log('[Outbreak] No active outbreak');
-        const card = $('activeOutbreak');
-        if (card) card.style.display = 'none';
-        return;
-    }
-
-    // Show outbreak card
-    const card = $('activeOutbreak');
-    if (card) card.style.display = 'block';
-
-    // Update title and description
-    const title = $('outbreakCardTitle');
-    const desc = $('outbreakDescription');
-    if (title) title.textContent = activeOutbreak.title || 'Active Outbreak';
-    if (desc) desc.textContent = activeOutbreak.description || '';
-
-    // Update difficulty (1-5 fire emojis)
-    const difficultyEl = $('outbreakDifficulty');
-    if (difficultyEl && activeOutbreak.difficulty) {
-        const fires = '🔥'.repeat(activeOutbreak.difficulty);
-        difficultyEl.innerHTML = fires.split('').map(f => `<span>${f}</span>`).join('');
-    }
-
-    // Update goals
-    const subGoal = $('submissionsGoal');
-    const voteGoal = $('votesGoal');
-    if (subGoal) subGoal.textContent = activeOutbreak.target_submissions || 50;
-    if (voteGoal) voteGoal.textContent = activeOutbreak.target_votes || 200;
-
-    // Start timer
-    updateOutbreakTimers();
 }
 
 // ==================== SQUADS ====================
@@ -6161,219 +4753,29 @@ function renderLeaderboard(leaderboard) {
     });
     html += `</div>`;
 
-    // Group remaining players by tier with visual separation
+    // Render rest of leaderboard
     if (rest.length > 0) {
-        // Define tier groups with their display info
-        const tierGroups = [
-            { name: 'LEGEND', class: 'tier-legend', range: [4, 10], bracket: '⭐ LEGEND TIER ⭐' },
-            { name: 'ELITE', class: 'tier-elite', range: [11, 25], bracket: '★ ELITE TIER ★' },
-            { name: 'VETERAN', class: 'tier-veteran', range: [26, 50], bracket: '◆ VETERAN TIER ◆' },
-            { name: 'RISING', class: 'tier-rising', range: [51, 100], bracket: '● RISING TIER ●' }
-        ];
-
-        // Group players by tier
-        const grouped = {};
+        html += `<div class="lb-list">`;
         rest.forEach((p, i) => {
             const rank = i + 4;
             const tier = getTier(rank);
-            if (!grouped[tier.name]) {
-                grouped[tier.name] = [];
-            }
-            grouped[tier.name].push({ ...p, rank: rank, tier: tier });
-        });
-
-        html += `<div class="lb-list">`;
-
-        // Render each tier group with header and bracketed separator
-        tierGroups.forEach(group => {
-            if (grouped[group.name] && grouped[group.name].length > 0) {
-                html += `
-                    <div class="tier-group-section tier-group-${group.name.toLowerCase()}">
-                        <div class="tier-group-header ${group.class}">
-                            <span class="tier-group-bracket">[</span>
-                            <span class="tier-group-label">${group.bracket}</span>
-                            <span class="tier-group-bracket">]</span>
-                        </div>
-                        <div class="tier-group-content">
-                `;
-
-                grouped[group.name].forEach((p) => {
-                    html += `
-                        <div class="lb-item">
-                            <div class="lb-rank ${p.rank <= 10 ? 'top10' : 'normal'}">${p.rank}</div>
-                            <div class="lb-avatar">${p.avatar_url ? `<img src="${p.avatar_url}">` : (p.display_name || 'A')[0].toUpperCase()}</div>
-                            <div class="lb-info">
-                                <div class="lb-name">${p.display_name || 'Anonymous'}</div>
-                                <div class="lb-stats">${p.total_scans || 0} scans</div>
-                            </div>
-                            <div class="lb-points">${p.total_points || 0}</div>
-                            <span class="lb-tier ${p.tier.class}">${p.tier.name}</span>
-                        </div>
-                    `;
-                });
-
-                html += `
-                        </div>
+            html += `
+                <div class="lb-item">
+                    <div class="lb-rank ${rank <= 10 ? 'top10' : 'normal'}">${rank}</div>
+                    <div class="lb-avatar">${p.avatar_url ? `<img src="${p.avatar_url}">` : (p.display_name || 'A')[0].toUpperCase()}</div>
+                    <div class="lb-info">
+                        <div class="lb-name">${p.display_name || 'Anonymous'}</div>
+                        <div class="lb-stats">${p.total_scans || 0} scans</div>
                     </div>
-                `;
-            }
+                    <div class="lb-points">${p.total_points || 0}</div>
+                    <span class="lb-tier ${tier.class}">${tier.name}</span>
+                </div>
+            `;
         });
-
         html += `</div>`;
     }
 
     container.innerHTML = html;
-}
-
-// ==================== SHOP ====================
-let userOwnedItems = new Set();
-
-async function loadShopView() {
-    console.log('[Shop] Loading Shop view');
-
-    // Update coins display in shop header
-    const shopCoinsDisplay = $('shopCoinsDisplay');
-    if (shopCoinsDisplay && userProgression) {
-        shopCoinsDisplay.textContent = userProgression.truth_coins || 0;
-    }
-
-    // Load user owned items from localStorage
-    loadOwnedItems();
-
-    // Render shop categories
-    renderShopCategory('cosmetics');
-    renderShopCategory('powerups');
-    renderShopCategory('badges');
-    renderShopCategory('boosters');
-}
-
-function loadOwnedItems() {
-    try {
-        const owned = getStorage('userOwnedItems', []);
-        userOwnedItems = new Set(owned);
-    } catch (err) {
-        console.error('[Shop] Failed to load owned items:', err);
-        userOwnedItems = new Set();
-    }
-}
-
-function saveOwnedItems() {
-    try {
-        setStorage('userOwnedItems', Array.from(userOwnedItems));
-    } catch (err) {
-        console.error('[Shop] Failed to save owned items:', err);
-    }
-}
-
-function renderShopCategory(category) {
-    const container = $(`${category}Shop`);
-    if (!container) return;
-
-    const items = Object.values(SHOP_ITEMS).filter(item => item.category === category);
-
-    let html = '';
-    items.forEach(item => {
-        const owned = userOwnedItems.has(item.id);
-        const currentCoins = userProgression?.truth_coins || 0;
-        const canAfford = currentCoins >= item.cost;
-
-        html += `
-            <div class="shop-item ${owned ? 'purchased' : ''} ${!canAfford && !owned ? 'locked' : ''}">
-                <div class="shop-item-rarity">${item.rarity}</div>
-                <div class="shop-item-icon">${item.icon}</div>
-                <div class="shop-item-name">${item.name}</div>
-                <div class="shop-item-desc">${item.desc}</div>
-                <div class="shop-item-cost">
-                    <span class="shop-item-cost-icon">🪙</span>
-                    <span>${item.cost}</span>
-                </div>
-                ${owned ?
-                    `<button class="shop-item-btn owned" disabled>Owned</button>` :
-                    `<button class="shop-item-btn purchase ${!canAfford ? 'insufficient' : ''}"
-                        onclick="purchaseItem('${item.id}')"
-                        ${!canAfford ? 'disabled' : ''}>
-                        Buy
-                    </button>`
-                }
-            </div>
-        `;
-    });
-
-    container.innerHTML = html;
-}
-
-async function purchaseItem(itemId) {
-    if (!user || !userProgression) {
-        toast('Please log in first');
-        return;
-    }
-
-    const item = SHOP_ITEMS[itemId];
-    if (!item) {
-        console.error('[Shop] Item not found:', itemId);
-        return;
-    }
-
-    if (userOwnedItems.has(itemId)) {
-        toast('You already own this item');
-        return;
-    }
-
-    const currentCoins = userProgression.truth_coins || 0;
-    if (currentCoins < item.cost) {
-        toast('Not enough coins');
-        return;
-    }
-
-    try {
-        // Deduct coins atomically using existing awardCoins function with negative amount
-        const { data, error } = await supabase.rpc('award_coins_atomic', {
-            p_user_id: user.id,
-            p_amount: -item.cost
-        });
-
-        if (error) {
-            console.error('[Shop] Purchase error:', error);
-            toast('Purchase failed. Try again.');
-            return;
-        }
-
-        if (data && data.length > 0) {
-            // Update local state
-            userProgression.truth_coins = data[0].truth_coins;
-
-            // Add to owned items
-            userOwnedItems.add(itemId);
-            saveOwnedItems();
-
-            // Update UI
-            updateCoinsDisplay();
-            updateShopDisplay();
-
-            toast(`Purchased ${item.name}!`);
-            console.log(`[Shop] Successfully purchased ${item.name} for ${item.cost} coins`);
-        }
-    } catch (err) {
-        console.error('[Shop] Purchase error:', err);
-        toast('Purchase failed. Try again.');
-    }
-}
-
-function updateShopDisplay() {
-    // Re-render all shop categories to reflect purchases
-    const activeView = currentView;
-    if (activeView === 'shopView') {
-        renderShopCategory('cosmetics');
-        renderShopCategory('powerups');
-        renderShopCategory('badges');
-        renderShopCategory('boosters');
-
-        // Update coins display
-        const shopCoinsDisplay = $('shopCoinsDisplay');
-        if (shopCoinsDisplay && userProgression) {
-            shopCoinsDisplay.textContent = userProgression.truth_coins || 0;
-        }
-    }
 }
 
 // ==================== MISSING CORE FUNCTIONS ====================
@@ -6754,275 +5156,6 @@ function fft2d(imageData, width, height) {
     return { magnitude, size };
 }
 
-// =====================================================
-// UGAD SPECTRAL ANALYSIS (CIKM 2024)
-// YCbCr Color Space + Integral Radial Operation
-// Expected: +12-28% accuracy on Stable Diffusion/Midjourney
-// =====================================================
-
-// Convert RGB to YCbCr color space
-function rgbToYCbCr(imageData, width, height) {
-    const pixelCount = width * height;
-    const y = new Float64Array(pixelCount);
-    const cb = new Float64Array(pixelCount);
-    const cr = new Float64Array(pixelCount);
-
-    for (let i = 0; i < pixelCount; i++) {
-        const idx = i * 4;
-        const r = imageData[idx];
-        const g = imageData[idx + 1];
-        const b = imageData[idx + 2];
-
-        // ITU-R BT.601 conversion (standard for digital images)
-        y[i] = 0.299 * r + 0.587 * g + 0.114 * b;
-        cb[i] = 128 - 0.168736 * r - 0.331264 * g + 0.5 * b;
-        cr[i] = 128 + 0.5 * r - 0.418688 * g - 0.081312 * b;
-    }
-
-    return { y, cb, cr };
-}
-
-// FFT for a single channel with specified size
-function fftChannel(channelData, width, height, targetSize) {
-    const real = new Float64Array(targetSize * targetSize);
-    const imag = new Float64Array(targetSize * targetSize);
-
-    // Fill with channel values
-    for (let y = 0; y < height && y < targetSize; y++) {
-        for (let x = 0; x < width && x < targetSize; x++) {
-            real[y * targetSize + x] = channelData[y * width + x];
-        }
-    }
-
-    // Row-wise FFT
-    for (let y = 0; y < targetSize; y++) {
-        const rowReal = real.slice(y * targetSize, (y + 1) * targetSize);
-        const rowImag = imag.slice(y * targetSize, (y + 1) * targetSize);
-        fft1d(rowReal, rowImag);
-        for (let x = 0; x < targetSize; x++) {
-            real[y * targetSize + x] = rowReal[x];
-            imag[y * targetSize + x] = rowImag[x];
-        }
-    }
-
-    // Column-wise FFT
-    for (let x = 0; x < targetSize; x++) {
-        const colReal = new Float64Array(targetSize);
-        const colImag = new Float64Array(targetSize);
-        for (let y = 0; y < targetSize; y++) {
-            colReal[y] = real[y * targetSize + x];
-            colImag[y] = imag[y * targetSize + x];
-        }
-        fft1d(colReal, colImag);
-        for (let y = 0; y < targetSize; y++) {
-            real[y * targetSize + x] = colReal[y];
-            imag[y * targetSize + x] = colImag[y];
-        }
-    }
-
-    // Calculate magnitude spectrum
-    const magnitude = new Float64Array(targetSize * targetSize);
-    for (let i = 0; i < targetSize * targetSize; i++) {
-        magnitude[i] = Math.sqrt(real[i] * real[i] + imag[i] * imag[i]);
-    }
-
-    return magnitude;
-}
-
-// Compute radial profile (Integral Radial Operation from UGAD)
-function computeRadialProfile(magnitude, size) {
-    const halfSize = size / 2;
-    const maxRadius = Math.min(halfSize - 1, 100);
-    const radialProfile = [];
-    const numSamples = 72; // Sample every 5 degrees
-
-    for (let r = 2; r < maxRadius; r += 2) {
-        let radiusSum = 0;
-        let radiusCount = 0;
-
-        for (let i = 0; i < numSamples; i++) {
-            const theta = (i / numSamples) * 2 * Math.PI;
-            const x = Math.round(halfSize + r * Math.cos(theta));
-            const y = Math.round(halfSize + r * Math.sin(theta));
-
-            if (x >= 0 && x < size && y >= 0 && y < size) {
-                radiusSum += magnitude[y * size + x];
-                radiusCount++;
-            }
-        }
-
-        if (radiusCount > 0) {
-            radialProfile.push(radiusSum / radiusCount);
-        }
-    }
-
-    return radialProfile;
-}
-
-// Extract discriminative features from radial profile
-function extractRadialFeatures(radialProfile) {
-    if (radialProfile.length < 5) {
-        return { mean: 0, variance: 0, cv: 0, entropy: 0 };
-    }
-
-    const mean = radialProfile.reduce((a, b) => a + b, 0) / radialProfile.length;
-    const variance = radialProfile.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0) / radialProfile.length;
-    const cv = Math.sqrt(variance) / (mean + 1e-10);
-
-    // Calculate entropy (measure of spectral complexity)
-    const normalized = radialProfile.map(v => v / (mean * radialProfile.length + 1e-10));
-    const entropy = -normalized.reduce((acc, p) => {
-        if (p > 1e-10) {
-            return acc + p * Math.log(p);
-        }
-        return acc;
-    }, 0);
-
-    return { mean, variance, cv, entropy };
-}
-
-// Score spectral fingerprint across all channels
-function scoreSpectralFingerprint(radialProfiles) {
-    const [radialY, radialCb, radialCr] = radialProfiles;
-
-    const featuresY = extractRadialFeatures(radialY);
-    const featuresCb = extractRadialFeatures(radialCb);
-    const featuresCr = extractRadialFeatures(radialCr);
-
-    // UGAD Key Insight: Diffusion models have distinct patterns in chrominance channels
-    // Real images: High CV in all channels, especially chrominance
-    // Diffusion AI: Low CV, especially in Cb/Cr channels (color smoothness)
-
-    const avgCV = (featuresY.cv + featuresCb.cv + featuresCr.cv) / 3;
-    const chromaCV = (featuresCb.cv + featuresCr.cv) / 2;
-    const lumaCV = featuresY.cv;
-
-    // Chrominance ratio - key discriminator for diffusion models
-    const chromaRatio = chromaCV / (lumaCV + 1e-10);
-
-    return {
-        avgCV,
-        chromaCV,
-        lumaCV,
-        chromaRatio,
-        entropy: (featuresY.entropy + featuresCb.entropy + featuresCr.entropy) / 3,
-        features: { Y: featuresY, Cb: featuresCb, Cr: featuresCr }
-    };
-}
-
-// Main UGAD spectral analysis function
-function ugadSpectralAnalysis(imageData, width, height) {
-    const aiIndicators = [];
-    const realIndicators = [];
-
-    // 1. RGB to YCbCr transformation
-    const ycbcr = rgbToYCbCr(imageData, width, height);
-
-    // 2. Determine FFT size (power of 2, max 256 for performance)
-    const size = Math.min(256, Math.pow(2, Math.ceil(Math.log2(Math.max(width, height)))));
-
-    // 3. FFT on each channel
-    const magnitudeY = fftChannel(ycbcr.y, width, height, size);
-    const magnitudeCb = fftChannel(ycbcr.cb, width, height, size);
-    const magnitudeCr = fftChannel(ycbcr.cr, width, height, size);
-
-    // 4. Radial profile extraction (Integral Radial Operation)
-    const radialY = computeRadialProfile(magnitudeY, size);
-    const radialCb = computeRadialProfile(magnitudeCb, size);
-    const radialCr = computeRadialProfile(magnitudeCr, size);
-
-    // 5. Score spectral fingerprint
-    const fingerprint = scoreSpectralFingerprint([radialY, radialCb, radialCr]);
-
-    // =========================================
-    // UGAD-BASED CLASSIFICATION
-    // Thresholds calibrated from CIKM 2024 paper benchmarks
-    // =========================================
-
-    // Detection 1: Overall spectral variance
-    // Diffusion models: avgCV typically < 0.28
-    // Real images: avgCV typically > 0.42
-    if (fingerprint.avgCV < 0.28) {
-        const confidence = Math.min(0.92, 0.6 + (0.28 - fingerprint.avgCV) * 2.5);
-        aiIndicators.push({
-            weight: 28, // Highest weight - UGAD is highly reliable
-            confidence: confidence,
-            reason: `UGAD: Low multi-channel spectral variance (${fingerprint.avgCV.toFixed(3)}) - diffusion model signature`,
-            icon: 'SPECTRUM'
-        });
-    } else if (fingerprint.avgCV > 0.42) {
-        const confidence = Math.min(0.88, 0.55 + (fingerprint.avgCV - 0.42) * 1.8);
-        realIndicators.push({
-            weight: 24,
-            confidence: confidence,
-            reason: `UGAD: High multi-channel spectral variance (${fingerprint.avgCV.toFixed(3)}) - natural image`,
-            icon: 'NATURAL'
-        });
-    }
-
-    // Detection 2: Chrominance-specific analysis
-    // Key UGAD finding: Diffusion models smooth color channels excessively
-    // chromaCV < 0.25 = strong AI indicator
-    // chromaCV > 0.40 = strong real indicator
-    if (fingerprint.chromaCV < 0.25) {
-        const confidence = Math.min(0.90, 0.62 + (0.25 - fingerprint.chromaCV) * 2.2);
-        aiIndicators.push({
-            weight: 26,
-            confidence: confidence,
-            reason: `UGAD: Smooth chrominance spectrum (${fingerprint.chromaCV.toFixed(3)}) - Stable Diffusion/Midjourney pattern`,
-            icon: 'COLOR'
-        });
-    } else if (fingerprint.chromaCV > 0.40) {
-        const confidence = Math.min(0.85, 0.58 + (fingerprint.chromaCV - 0.40) * 1.6);
-        realIndicators.push({
-            weight: 22,
-            confidence: confidence,
-            reason: `UGAD: Natural chrominance variance (${fingerprint.chromaCV.toFixed(3)}) - real photography`,
-            icon: 'DETAIL'
-        });
-    }
-
-    // Detection 3: Chroma-to-Luma ratio
-    // Diffusion models: ratio typically < 0.7 (over-smooth chroma)
-    // Real images: ratio typically > 0.9 (balanced variance)
-    if (fingerprint.chromaRatio < 0.7) {
-        aiIndicators.push({
-            weight: 22,
-            confidence: 0.78,
-            reason: `UGAD: Imbalanced color-luminance ratio (${fingerprint.chromaRatio.toFixed(2)}) - AI color generation`,
-            icon: 'FREQ'
-        });
-    } else if (fingerprint.chromaRatio > 0.95) {
-        realIndicators.push({
-            weight: 18,
-            confidence: 0.72,
-            reason: `UGAD: Balanced color-luminance ratio (${fingerprint.chromaRatio.toFixed(2)}) - natural capture`,
-            icon: 'DETAIL'
-        });
-    }
-
-    // Detection 4: Spectral entropy
-    // Low entropy = repetitive patterns (AI upsampling artifacts)
-    // High entropy = complex natural patterns
-    if (fingerprint.entropy < 2.5) {
-        aiIndicators.push({
-            weight: 18,
-            confidence: 0.70,
-            reason: `UGAD: Low spectral entropy (${fingerprint.entropy.toFixed(2)}) - repetitive AI patterns`,
-            icon: 'PATTERN'
-        });
-    } else if (fingerprint.entropy > 3.5) {
-        realIndicators.push({
-            weight: 16,
-            confidence: 0.68,
-            reason: `UGAD: High spectral entropy (${fingerprint.entropy.toFixed(2)}) - natural complexity`,
-            icon: 'NATURAL'
-        });
-    }
-
-    return { aiIndicators, realIndicators, fingerprint };
-}
-
 // Helper: Run a detector with timeout and error handling
 // FIXED: Use requestIdleCallback for non-blocking execution when available
 async function runDetectorSafe(name, fn, timeoutMs = 3000) {
@@ -7077,49 +5210,9 @@ function yieldToMain() {
     return new Promise(resolve => setTimeout(resolve, 10));
 }
 
-// FORENSICS: Helper function to downsample pixels for FFT on large images
-function downsamplePixelsSimple(pixelData, width, height, targetSize) {
-    if (width <= targetSize && height <= targetSize) {
-        return { data: pixelData, width: width, height: height };
-    }
-
-    const scale = Math.min(width, height) / targetSize;
-    const newWidth = Math.ceil(width / scale);
-    const newHeight = Math.ceil(height / scale);
-
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = width;
-    canvas.height = height;
-
-    // Reconstruct image from pixels
-    const imageData = new ImageData(new Uint8ClampedArray(pixelData), width, height);
-    ctx.putImageData(imageData, 0, 0);
-
-    // Draw downsampled version
-    const canvas2 = document.createElement('canvas');
-    const ctx2 = canvas2.getContext('2d');
-    canvas2.width = newWidth;
-    canvas2.height = newHeight;
-    ctx2.drawImage(canvas, 0, 0, newWidth, newHeight);
-
-    const downsampled = ctx2.getImageData(0, 0, newWidth, newHeight);
-    return {
-        data: downsampled.data,
-        width: newWidth,
-        height: newHeight
-    };
-}
-
 // Main Analysis Function - Completely Rewritten
 async function analyzeImage(dataUrl, mode) {
-    // FORENSICS FIX: mode can now be 'quick', 'deep', or 'forensics'
-    // Normalize mode - if 'forensics' passed as mode, use it
-    // If mode is 'deep' but forensicsMode is true, convert to 'forensics'
-    const normalizedMode = (mode === 'forensics' || (mode === 'deep' && forensicsMode)) ? 'forensics' : mode;
-    const finalMode = normalizedMode;
-
-    console.log(`[DeepScan] Starting ${finalMode} scan...`);
+    console.log(`[DeepScan] Starting ${mode} scan...`);
     const scanStartTime = performance.now();
 
     // Create image element for analysis
@@ -7134,21 +5227,9 @@ async function analyzeImage(dataUrl, mode) {
     // Max 512x512 even for deep scan to keep FFT computation fast
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-
-    // FORENSICS: Higher resolution analysis for forensics mode
-    let analysisSize = 256;
-    if (finalMode === 'forensics') {
-        analysisSize = 512;  // Forensics uses higher resolution
-    } else if (finalMode === 'deep') {
-        analysisSize = 256;  // Deep uses 256 (FFT safe size)
-    } else {
-        analysisSize = 128;  // Quick uses 128 (faster)
-    }
+    const analysisSize = mode === 'deep' ? 512 : 256;  // Reduced from 1024 to 512
     canvas.width = Math.min(img.width, analysisSize);
     canvas.height = Math.min(img.height, analysisSize);
-
-    console.log(`[Scan] Using ${analysisSize}x${analysisSize} for ${finalMode} mode`);
-
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -7163,9 +5244,6 @@ async function analyzeImage(dataUrl, mode) {
     let realIndicators = [];
     let compressionResult = { aiIndicators: [], realIndicators: [], isHeavilyCompressed: false };
 
-    // ENSEMBLE TRACKING: Store individual module results for weighted fusion
-    const moduleResults = {};
-
     // Helper to add results
     const addResults = (result) => {
         if (result && result.aiIndicators) {
@@ -7176,19 +5254,13 @@ async function analyzeImage(dataUrl, mode) {
         }
     };
 
-    // ENSEMBLE TRACKING: Helper to track module results
-    const trackModule = (moduleName, result) => {
-        moduleResults[moduleName] = result;
-        addResults(result);
-    };
-
     // =========================================
     // 1. METADATA & SIGNATURE DETECTION
     // =========================================
     try {
         console.log('[DeepScan] 1/12: Metadata analysis...');
         const metadataResult = analyzeMetadataAdvanced(currentFile, dataUrl);
-        trackModule('metadata', metadataResult);
+        addResults(metadataResult);
     } catch (err) {
         console.error('[DeepScan] Metadata analysis error:', err);
     }
@@ -7201,7 +5273,7 @@ async function analyzeImage(dataUrl, mode) {
     try {
         console.log('[DeepScan] 2/12: JPEG compression analysis...');
         compressionResult = analyzeJPEGCompressionProper(pixels, width, height);
-        trackModule('jpeg', compressionResult);
+        addResults(compressionResult);
     } catch (err) {
         console.error('[DeepScan] JPEG compression analysis error:', err);
     }
@@ -7212,39 +5284,17 @@ async function analyzeImage(dataUrl, mode) {
     // Detects spectral anomalies in AI images
     // OPTIMIZED: Skip FFT for very large images to prevent freeze
     // =========================================
-    if (finalMode === 'deep' || finalMode === 'forensics') {
-        const isForensics = finalMode === 'forensics';
-        console.log(`[Scan] 3/12: FFT frequency analysis (${isForensics ? 'Forensics' : 'Deep'})...`);
-
-        // FORENSICS: More aggressive FFT analysis
-        const fftMaxSize = isForensics ? 512 : 256;
-        const fftTimeout = isForensics ? 6000 : 3000;
-
-        if (width <= fftMaxSize && height <= fftMaxSize) {
+    if (mode === 'deep') {
+        console.log('[DeepScan] 3/12: FFT frequency analysis...');
+        // Only run FFT on reasonably sized images (max 512x512)
+        if (width <= 512 && height <= 512) {
             const frequencyResult = await runDetectorSafe('FFT Analysis',
                 () => analyzeFrequencyDomain(pixels, width, height),
-                fftTimeout
+                3000 // 3 second timeout for FFT
             );
-            trackModule('fft', frequencyResult);
-
-            // UGAD Spectral Analysis (CIKM 2024) - Superior diffusion model detection
-            console.log('[DeepScan] 3.5/12: UGAD multi-channel spectral analysis...');
-            const ugadResult = await runDetectorSafe('UGAD Analysis',
-                () => ugadSpectralAnalysis(pixels, width, height),
-                fftTimeout
-            );
-            trackModule('ugad', ugadResult);
-        } else if (isForensics && width > fftMaxSize) {
-            // FORENSICS: Try FFT on large images by downsampling
-            console.log('[Forensics] Image large, attempting FFT on downsampled version...');
-            const downsampled = downsamplePixelsSimple(pixels, width, height, fftMaxSize);
-            const frequencyResult = await runDetectorSafe('FFT Analysis (Downsampled)',
-                () => analyzeFrequencyDomain(downsampled.data, downsampled.width, downsampled.height),
-                8000  // Extended timeout
-            );
-            trackModule('fft', frequencyResult);
-        } else if (!isForensics) {
-            console.log('[DeepScan] Image too large for FFT/UGAD, skipping to prevent freeze');
+            addResults(frequencyResult);
+        } else {
+            console.log('[DeepScan] Image too large for FFT, skipping to prevent freeze');
         }
         await yieldToMain();
     }
@@ -7256,7 +5306,7 @@ async function analyzeImage(dataUrl, mode) {
     try {
         console.log('[DeepScan] 4/12: GAN fingerprint detection...');
         const fingerprintResult = analyzeGANFingerprints(pixels, width, height);
-        trackModule('gan', fingerprintResult);
+        addResults(fingerprintResult);
     } catch (err) {
         console.error('[DeepScan] GAN fingerprint error:', err);
     }
@@ -7269,7 +5319,7 @@ async function analyzeImage(dataUrl, mode) {
     try {
         console.log('[DeepScan] 5/12: Error level analysis...');
         const elaResult = analyzeErrorLevelsAware(pixels, width, height);
-        trackModule('ela', elaResult);
+        addResults(elaResult);
     } catch (err) {
         console.error('[DeepScan] ELA error:', err);
     }
@@ -7282,7 +5332,7 @@ async function analyzeImage(dataUrl, mode) {
     try {
         console.log('[DeepScan] 6/12: Statistical analysis...');
         const statsResult = analyzeStatisticalPatterns(pixels, width, height);
-        trackModule('noise', statsResult);
+        addResults(statsResult);
     } catch (err) {
         console.error('[DeepScan] Statistical analysis error:', err);
     }
@@ -7295,7 +5345,7 @@ async function analyzeImage(dataUrl, mode) {
     try {
         console.log('[DeepScan] 7/12: Texture coherence analysis...');
         const textureResult = analyzeTextureCoherence(pixels, width, height);
-        trackModule('texture', textureResult);
+        addResults(textureResult);
     } catch (err) {
         console.error('[DeepScan] Texture coherence error:', err);
     }
@@ -7305,15 +5355,13 @@ async function analyzeImage(dataUrl, mode) {
     // 8. AI MODEL-SPECIFIC FINGERPRINTS (DEEP SCAN)
     // SDXL, DALL-E 3, Midjourney v6, Flux
     // =========================================
-    if (finalMode === 'deep' || finalMode === 'forensics') {
+    if (mode === 'deep') {
         console.log('[DeepScan] 8/12: AI model fingerprint detection...');
-        // FORENSICS: Extended timeout for forensics mode
-        const timeout = finalMode === 'forensics' ? 6000 : 4000;
         const modelResult = await runDetectorSafe('Model Fingerprints',
             () => analyzeModelSpecificFingerprints(pixels, width, height),
-            timeout
+            4000
         );
-        trackModule('modelFingerprints', modelResult);
+        addResults(modelResult);
         await yieldToMain();
     }
 
@@ -7321,15 +5369,13 @@ async function analyzeImage(dataUrl, mode) {
     // 9. FACE AND ANATOMY ANALYSIS (DEEP SCAN)
     // Eyes, skin, hands, symmetry
     // =========================================
-    if (finalMode === 'deep' || finalMode === 'forensics') {
+    if (mode === 'deep') {
         console.log('[DeepScan] 9/12: Face and anatomy analysis...');
-        // FORENSICS: Extended timeout for forensics mode
-        const timeout = finalMode === 'forensics' ? 6000 : 4000;
         const anatomyResult = await runDetectorSafe('Face/Anatomy Analysis',
             () => analyzeFaceAndAnatomy(pixels, width, height),
-            timeout
+            4000
         );
-        trackModule('anatomy', anatomyResult);
+        addResults(anatomyResult);
         await yieldToMain();
     }
 
@@ -7337,15 +5383,13 @@ async function analyzeImage(dataUrl, mode) {
     // 10. SEMANTIC INCONSISTENCY DETECTION (DEEP SCAN)
     // Text artifacts, lighting, edge coherence
     // =========================================
-    if (finalMode === 'deep' || finalMode === 'forensics') {
+    if (mode === 'deep') {
         console.log('[DeepScan] 10/12: Semantic inconsistency detection...');
-        // FORENSICS: Extended timeout for forensics mode
-        const timeout = finalMode === 'forensics' ? 6000 : 4000;
         const semanticResult = await runDetectorSafe('Semantic Analysis',
             () => analyzeSemanticInconsistencies(pixels, width, height),
-            timeout
+            4000
         );
-        trackModule('semantics', semanticResult);
+        addResults(semanticResult);
         await yieldToMain();
     }
 
@@ -7353,15 +5397,13 @@ async function analyzeImage(dataUrl, mode) {
     // 11. ADVANCED TEXTURE ANALYSIS (DEEP SCAN)
     // Hair, fabric, background patterns
     // =========================================
-    if (finalMode === 'deep' || finalMode === 'forensics') {
+    if (mode === 'deep') {
         console.log('[DeepScan] 11/12: Advanced texture analysis...');
-        // FORENSICS: Extended timeout for forensics mode
-        const timeout = finalMode === 'forensics' ? 6000 : 4000;
         const advTextureResult = await runDetectorSafe('Advanced Textures',
             () => analyzeAdvancedTextures(pixels, width, height),
-            timeout
+            4000
         );
-        trackModule('advTextures', advTextureResult);
+        addResults(advTextureResult);
         await yieldToMain();
     }
 
@@ -7372,7 +5414,7 @@ async function analyzeImage(dataUrl, mode) {
     try {
         console.log('[DeepScan] 12/12: Deep metadata analysis...');
         const deepMetaResult = analyzeDeepMetadata(currentFile, dataUrl);
-        trackModule('deepMetadata', deepMetaResult);
+        addResults(deepMetaResult);
     } catch (err) {
         console.error('[DeepScan] Deep metadata error:', err);
     }
@@ -7474,44 +5516,21 @@ async function analyzeImage(dataUrl, mode) {
     rawScore -= Math.min(adjustedRealPoints, 40);
     rawScore = clamp(rawScore, 5, 95);
 
-    // =========================================
-    // ENSEMBLE ORCHESTRATOR INTEGRATION
-    // Use weighted voting system for improved accuracy
-    // =========================================
-    console.log('[Ensemble] Using ensemble orchestrator for final score fusion...');
-    const ensembleResult = ensembleOrchestrator.fuseScores(moduleResults, mode);
-    let aiScore = ensembleResult.aiScore;
-
-    // Add ensemble methodology info to explainers
-    explainers.push({
-        icon: 'ENSEMBLE',
-        text: `Ensemble voting: ${ensembleResult.methodology.modulesUsed} modules, ${ensembleResult.breakdown.length} contributing signals`,
-        type: 'info'
-    });
-
-    // Add detailed module breakdown for transparency
-    if (ensembleResult.breakdown && ensembleResult.breakdown.length > 0) {
-        explainers.push({
-            icon: 'BREAKDOWN',
-            text: `Top contributing modules: ${ensembleResult.breakdown.slice(0, 3).map(m => `${m.module} (${m.aiProbability}%)`).join(', ')}`,
-            type: 'info'
-        });
-    }
-
-    // Legacy Bayesian scoring (keep for comparison/fallback)
+    // Apply Bayesian ensemble scoring for deep scan
+    let aiScore;
     if (mode === 'deep') {
         const bayesianResult = calculateBayesianScore(indicators, realIndicators, mode);
-        const legacyScore = calibrateScore(bayesianResult, rawScore, mode);
-
-        // Log comparison for debugging
-        console.log(`[Ensemble] Ensemble score: ${aiScore}%, Legacy score: ${legacyScore}%`);
+        aiScore = calibrateScore(bayesianResult, rawScore, mode);
 
         // Add Bayesian info to explainers
         explainers.push({
             icon: 'BAYES',
-            text: `Bayesian analysis: ${bayesianResult.aiCategories} AI signal categories, ${bayesianResult.realCategories} authenticity categories (legacy comparison)`,
+            text: `Bayesian analysis: ${bayesianResult.aiCategories} AI signal categories, ${bayesianResult.realCategories} authenticity categories`,
             type: 'info'
         });
+    } else {
+        // Quick scan uses simpler scoring
+        aiScore = clamp(rawScore, 5, 95);
     }
 
     // Forensics mode in deep scan
@@ -7526,40 +5545,17 @@ async function analyzeImage(dataUrl, mode) {
     // Determine verdict based on calibrated score and indicator counts
     let verdict, confidence;
 
-    // Use ensemble confidence as baseline
-    confidence = ensembleResult.confidence;
-
-    // FORENSICS: Stricter thresholds for professional use
-    if (finalMode === 'forensics') {
-        // Forensics mode: Maximum accuracy, stricter thresholds
-        if (aiScore >= 78 && aiIndicatorCount >= minAIIndicators) {
+    // Deep scan has stricter thresholds but more reliable results
+    if (mode === 'deep') {
+        if (aiScore >= 75 && aiIndicatorCount >= minAIIndicators) {
             verdict = 'ai';
-            // Harder to reach 'high' confidence in forensics mode
-            confidence = aiScore >= 90 ? 'high' : 'medium';
-        } else if (aiScore <= 22 || realIndicators.length >= 4) {
+            confidence = aiScore >= 88 ? 'high' : 'medium';
+        } else if (aiScore <= 25 || realIndicators.length >= 3) {
             verdict = 'real';
-            confidence = aiScore <= 10 ? 'high' : 'medium';
+            confidence = aiScore <= 12 ? 'high' : 'medium';
         } else {
             verdict = 'uncertain';
             confidence = 'low';
-        }
-    } else if (finalMode === 'deep') {
-        // Deep scan has stricter thresholds but more reliable results
-        if (aiScore >= 75 && aiIndicatorCount >= minAIIndicators) {
-            verdict = 'ai';
-            // Boost confidence if ensemble also agrees
-            if (ensembleResult.confidence === 'high') confidence = 'high';
-            else if (aiScore >= 88) confidence = 'high';
-            else confidence = 'medium';
-        } else if (aiScore <= 25 || realIndicators.length >= 3) {
-            verdict = 'real';
-            // Boost confidence if ensemble also agrees
-            if (ensembleResult.confidence === 'high') confidence = 'high';
-            else if (aiScore <= 12) confidence = 'high';
-            else confidence = 'medium';
-        } else {
-            verdict = 'uncertain';
-            confidence = ensembleResult.confidence; // Use ensemble confidence for uncertain cases
         }
     } else {
         // Quick scan is more conservative
@@ -7571,64 +5567,31 @@ async function analyzeImage(dataUrl, mode) {
             confidence = aiScore <= 15 ? 'high' : 'medium';
         } else {
             verdict = 'uncertain';
-            confidence = ensembleResult.confidence; // Use ensemble confidence
+            confidence = 'low';
         }
-    }
-
-    // FORENSICS: Additional confidence boost for high indicator agreement
-    if (finalMode === 'forensics' && indicators.length >= 8) {
-        // If 8+ AI indicators strongly agree, boost to high confidence
-        if (verdict === 'ai') {
-            confidence = 'high';
-        }
-    }
-
-    // FORENSICS: Enhanced explainer for forensics mode
-    if (finalMode === 'forensics') {
-        explainers.push({
-            icon: 'SCAN',
-            text: `Forensics mode: Maximum accuracy analysis with ${indicators.length + realIndicators.length} detection signals across 12 modules (stricter thresholds, extended analysis)`,
-            type: 'info'
-        });
     }
 
     // Add summary explainer with scan type info
-    // FORENSICS: Include forensics in label
-    let scanTypeLabel = 'Quick';
-    let scanTypeInfo = '(5 quick modules)';
-    if (finalMode === 'forensics') {
-        scanTypeLabel = 'Forensics';
-        scanTypeInfo = '(12 forensics modules, stricter verification)';
-    } else if (finalMode === 'deep') {
-        scanTypeLabel = 'Deep';
-        scanTypeInfo = '(12 analysis modules)';
-    }
-
+    const scanTypeInfo = mode === 'deep' ? '(12 analysis modules)' : '(5 quick modules)';
     explainers.unshift({
         icon: 'INFO',
-        text: `${scanTypeLabel} scan found ${aiIndicatorCount} AI indicator(s) and ${realIndicators.length} authenticity indicator(s) ${scanTypeInfo}`,
+        text: `${mode === 'deep' ? 'Deep' : 'Quick'} scan found ${aiIndicatorCount} AI indicator(s) and ${realIndicators.length} authenticity indicator(s) ${scanTypeInfo}`,
         type: 'summary'
     });
 
     const totalScanTime = performance.now() - scanStartTime;
-    console.log(`[DeepScan] ${finalMode} scan complete! Score: ${round(aiScore)}%, Verdict: ${verdict}, Time: ${totalScanTime.toFixed(0)}ms`);
+    console.log(`[DeepScan] ${mode} scan complete! Score: ${round(aiScore)}%, Verdict: ${verdict}, Time: ${totalScanTime.toFixed(0)}ms`);
 
     return {
         verdict,
         aiScore: round(aiScore),
         confidence,
         explainers,
-        mode: finalMode,  // FORENSICS: Return correct mode (forensics, not deep)
+        mode,
         timestamp: Date.now(),
         indicatorCounts: {
             ai: aiIndicatorCount,
             real: realIndicators.length
-        },
-        // ENSEMBLE DATA: Include module-level breakdown for transparency
-        ensembleData: {
-            methodology: ensembleResult.methodology,
-            moduleBreakdown: ensembleResult.breakdown,
-            modulesUsed: ensembleResult.methodology.modulesUsed
         }
     };
 
@@ -9677,326 +7640,6 @@ function analyzeBackgroundTexture(pixels, width, height) {
                 const idx = (py * width + px) * 4;
                 const bright = (pixels[idx] + pixels[idx + 1] + pixels[idx + 2]) / 3;
                 sumBright += bright;
-// =====================================================
-// =====================================================
-// ENSEMBLE ORCHESTRATOR - WEIGHTED VOTING SYSTEM
-// Priority #1 Implementation: +15-20% accuracy boost
-// Fuses all 12 detection modules with calibrated weights
-// =====================================================
-
-class EnsembleOrchestrator {
-    constructor() {
-        // Module reliability weights (calibrated from research + empirical testing)
-        // Higher weight = more reliable/accurate module
-        this.moduleWeights = {
-            // TIER 1: High-reliability modules (1.2-1.5x weight)
-            fft: 1.5,              // Frequency domain analysis - gold standard (99% on uncompressed)
-            gan: 1.4,              // GAN fingerprints - spectral peaks, checkerboard
-            modelFingerprints: 1.3, // Model-specific signatures (SDXL, DALL-E, etc.)
-
-            // TIER 2: Medium-reliability modules (0.9-1.2x weight)
-            texture: 1.1,          // Texture coherence - AI smoothness detection
-            noise: 1.0,            // Statistical noise patterns
-            jpeg: 1.0,             // JPEG compression artifacts (DCT-based)
-            metadata: 0.95,        // File metadata and naming patterns
-
-            // TIER 3: Supporting modules (0.7-0.9x weight)
-            ela: 0.85,             // Error level analysis (compression-aware)
-            semantics: 0.8,        // Semantic inconsistencies (lighting, text)
-            anatomy: 0.75,         // Face/anatomy analysis (eyes, skin, hands)
-            advTextures: 0.7,      // Advanced textures (hair, fabric, background)
-            deepMetadata: 0.9      // Deep EXIF/GPS analysis
-        };
-
-        // Track module performance for adaptive weighting
-        this.modulePerformance = {};
-        this.initializePerformanceTracking();
-    }
-
-    initializePerformanceTracking() {
-        // Initialize performance tracking from localStorage
-        try {
-            const saved = localStorage.getItem('ensemble_module_performance');
-            if (saved) {
-                this.modulePerformance = JSON.parse(saved);
-            } else {
-                // Default performance scores (will adapt over time)
-                for (const module in this.moduleWeights) {
-                    this.modulePerformance[module] = {
-                        accuracy: 0.85,  // Default 85% accuracy
-                        samples: 0
-                    };
-                }
-            }
-        } catch (e) {
-            console.warn('[Ensemble] Performance tracking init failed:', e);
-        }
-    }
-
-    /**
-     * Fuse scores from all detection modules using weighted Bayesian voting
-     * @param {Object} moduleResults - Map of module name -> {aiIndicators[], realIndicators[]}
-     * @param {String} mode - 'quick' or 'deep'
-     * @returns {Object} - {aiScore, confidence, breakdown, methodology}
-     */
-    fuseScores(moduleResults, mode) {
-        console.log('[Ensemble] Fusing scores from', Object.keys(moduleResults).length, 'modules');
-
-        // Step 1: Calculate per-module scores
-        const moduleScores = this.calculateModuleScores(moduleResults);
-
-        // Step 2: Apply weighted voting
-        const weightedScore = this.applyWeightedVoting(moduleScores, mode);
-
-        // Step 3: Bayesian score fusion
-        const bayesianScore = this.bayesianFusion(moduleScores, mode);
-
-        // Step 4: Ensemble combination (blend weighted + Bayesian)
-        const ensembleWeight = mode === 'deep' ? 0.7 : 0.5; // Deep scan trusts Bayesian more
-        const finalScore = ensembleWeight * bayesianScore + (1 - ensembleWeight) * weightedScore;
-
-        // Step 5: Calculate confidence based on agreement
-        const confidence = this.calculateConfidence(moduleScores, finalScore);
-
-        // Step 6: Generate breakdown for transparency
-        const breakdown = this.generateBreakdown(moduleScores, moduleResults);
-
-        return {
-            aiScore: Math.round(Math.max(5, Math.min(95, finalScore * 100))), // Clamp to 5-95%
-            confidence,
-            breakdown,
-            methodology: {
-                weightedScore: Math.round(weightedScore * 100),
-                bayesianScore: Math.round(bayesianScore * 100),
-                ensembleWeight,
-                modulesUsed: Object.keys(moduleResults).length
-            }
-        };
-    }
-
-    /**
-     * Calculate individual module scores from indicators
-     */
-    calculateModuleScores(moduleResults) {
-        const scores = {};
-
-        for (const [moduleName, result] of Object.entries(moduleResults)) {
-            if (!result) continue;
-
-            const aiIndicators = result.aiIndicators || [];
-            const realIndicators = result.realIndicators || [];
-
-            // Calculate weighted sum for AI vs Real
-            let aiPoints = 0;
-            let realPoints = 0;
-
-            for (const ind of aiIndicators) {
-                aiPoints += (ind.weight || 1) * (ind.confidence || 1.0);
-            }
-
-            for (const ind of realIndicators) {
-                realPoints += (ind.weight || 1) * (ind.confidence || 1.0);
-            }
-
-            // Normalize to 0-1 probability
-            const totalPoints = aiPoints + realPoints;
-            const aiProb = totalPoints > 0 ? aiPoints / totalPoints : 0.5; // Neutral if no signals
-
-            scores[moduleName] = {
-                aiProbability: aiProb,
-                aiPoints,
-                realPoints,
-                indicatorCount: aiIndicators.length + realIndicators.length,
-                aiIndicatorCount: aiIndicators.length,
-                realIndicatorCount: realIndicators.length
-            };
-        }
-
-        return scores;
-    }
-
-    /**
-     * Apply weighted voting across all modules
-     */
-    applyWeightedVoting(moduleScores, mode) {
-        let weightedSum = 0;
-        let totalWeight = 0;
-
-        for (const [moduleName, score] of Object.entries(moduleScores)) {
-            const baseWeight = this.moduleWeights[moduleName] || 1.0;
-
-            // Adaptive weighting based on performance tracking
-            const perfScore = this.modulePerformance[moduleName]?.accuracy || 0.85;
-            const adaptiveWeight = baseWeight * perfScore;
-
-            // Penalize modules with no indicators (reduce their influence)
-            const indicatorPenalty = score.indicatorCount > 0 ? 1.0 : 0.3;
-            const finalWeight = adaptiveWeight * indicatorPenalty;
-
-            weightedSum += score.aiProbability * finalWeight;
-            totalWeight += finalWeight;
-        }
-
-        return totalWeight > 0 ? weightedSum / totalWeight : 0.5;
-    }
-
-    /**
-     * Bayesian score fusion - probabilistic multi-hypothesis testing
-     */
-    bayesianFusion(moduleScores, mode) {
-        // Prior probability of AI (research-informed)
-        let priorAI = mode === 'deep' ? 0.35 : 0.30;
-
-        // Likelihood ratios for strong AI signals
-        const strongAIModules = ['fft', 'gan', 'modelFingerprints'];
-        const hasStrongSignal = strongAIModules.some(m => {
-            const score = moduleScores[m];
-            return score && score.aiProbability > 0.7 && score.aiIndicatorCount >= 2;
-        });
-
-        if (hasStrongSignal) {
-            priorAI = 0.6; // Increase prior if strong modules agree
-        }
-
-        // Bayesian update: posterior = likelihood * prior / evidence
-        let posteriorAI = priorAI;
-        let posteriorReal = 1 - priorAI;
-
-        for (const [moduleName, score] of Object.entries(moduleScores)) {
-            if (score.indicatorCount === 0) continue; // Skip modules with no evidence
-
-            const weight = this.moduleWeights[moduleName] || 1.0;
-
-            // Likelihood ratios (how much more likely this evidence is under AI vs Real hypothesis)
-            const aiLikelihood = score.aiProbability * weight;
-            const realLikelihood = (1 - score.aiProbability) * weight;
-
-            // Bayesian update (corrected formula - no +1 bias)
-            posteriorAI *= aiLikelihood;
-            posteriorReal *= realLikelihood;
-        }
-
-        // Normalize
-        const total = posteriorAI + posteriorReal;
-        return posteriorAI / total;
-    }
-
-    /**
-     * Calculate confidence based on module agreement
-     */
-    calculateConfidence(moduleScores, finalScore) {
-        const scores = Object.values(moduleScores).map(s => s.aiProbability);
-
-        if (scores.length === 0) return 'low';
-
-        // Calculate variance (agreement metric)
-        const mean = scores.reduce((a, b) => a + b, 0) / scores.length;
-        const variance = scores.reduce((sum, s) => sum + Math.pow(s - mean, 2), 0) / scores.length;
-        const stdDev = Math.sqrt(variance);
-
-        // High agreement = low variance
-        // Also consider score extremeness (high/low scores are more confident)
-        const isExtreme = finalScore < 0.25 || finalScore > 0.75;
-        const isLowVariance = stdDev < 0.15;
-
-        if (isExtreme && isLowVariance) {
-            return 'high';
-        } else if (isLowVariance || isExtreme) {
-            return 'medium';
-        } else {
-            return 'low';
-        }
-    }
-
-    /**
-     * Generate detailed breakdown for transparency
-     */
-    generateBreakdown(moduleScores, moduleResults) {
-        const breakdown = [];
-
-        // Sort modules by contribution (strongest signals first)
-        const sorted = Object.entries(moduleScores).sort((a, b) => {
-            const weightA = this.moduleWeights[a[0]] || 1.0;
-            const weightB = this.moduleWeights[b[0]] || 1.0;
-            const contribA = Math.abs(a[1].aiProbability - 0.5) * weightA;
-            const contribB = Math.abs(b[1].aiProbability - 0.5) * weightB;
-            return contribB - contribA;
-        });
-
-        for (const [moduleName, score] of sorted) {
-            const weight = this.moduleWeights[moduleName] || 1.0;
-            const result = moduleResults[moduleName];
-
-            if (!result || score.indicatorCount === 0) continue;
-
-            const aiPct = Math.round(score.aiProbability * 100);
-            const contribution = Math.abs(score.aiProbability - 0.5) * weight;
-
-            breakdown.push({
-                module: this.getModuleFriendlyName(moduleName),
-                aiProbability: aiPct,
-                weight: weight.toFixed(2),
-                contribution: contribution.toFixed(3),
-                aiIndicators: score.aiIndicatorCount,
-                realIndicators: score.realIndicatorCount,
-                verdict: aiPct > 60 ? 'AI-leaning' : aiPct < 40 ? 'Real-leaning' : 'Neutral'
-            });
-        }
-
-        return breakdown;
-    }
-
-    /**
-     * Get user-friendly module names
-     */
-    getModuleFriendlyName(moduleName) {
-        const names = {
-            fft: 'Frequency Analysis (FFT)',
-            gan: 'GAN Fingerprints',
-            modelFingerprints: 'AI Model Signatures',
-            texture: 'Texture Coherence',
-            noise: 'Noise Patterns',
-            jpeg: 'JPEG Artifacts',
-            metadata: 'File Metadata',
-            ela: 'Error Level Analysis',
-            semantics: 'Semantic Consistency',
-            anatomy: 'Face/Anatomy Analysis',
-            advTextures: 'Advanced Textures',
-            deepMetadata: 'Deep Metadata'
-        };
-        return names[moduleName] || moduleName;
-    }
-
-    /**
-     * Update module performance based on user feedback
-     * (For future learning loop integration)
-     */
-    updatePerformance(moduleName, wasCorrect) {
-        if (!this.modulePerformance[moduleName]) {
-            this.modulePerformance[moduleName] = { accuracy: 0.85, samples: 0 };
-        }
-
-        const perf = this.modulePerformance[moduleName];
-        const newSamples = perf.samples + 1;
-        const newAccuracy = (perf.accuracy * perf.samples + (wasCorrect ? 1 : 0)) / newSamples;
-
-        this.modulePerformance[moduleName] = {
-            accuracy: newAccuracy,
-            samples: newSamples
-        };
-
-        // Save to localStorage
-        try {
-            localStorage.setItem('ensemble_module_performance', JSON.stringify(this.modulePerformance));
-        } catch (e) {
-            console.warn('[Ensemble] Failed to save performance data:', e);
-        }
-    }
-}
-
-// Global ensemble orchestrator instance
-const ensembleOrchestrator = new EnsembleOrchestrator();
-
                 samples++;
             }
         }
@@ -10730,12 +8373,6 @@ async function updateUserScanStats(mode, result) {
 
     // Check badges
     checkBadgeUnlocks(stats);
-
-    // Update quest progress
-    updateQuestProgress('scan_completed');
-    if (mode === 'quick') updateQuestProgress('quick_scan_completed');
-    if (mode === 'deep' || mode === 'forensics') updateQuestProgress('deep_scan_completed');
-    if (result.verdict === 'ai') updateQuestProgress('ai_detected');
 }
 
 // Badge checking
@@ -10815,472 +8452,6 @@ window.openAllBadges = function() {
     renderAllBadges();
 };
 
-// ==================== QUEST SYSTEM ====================
-
-// Quest Definitions
-const QUEST_DEFINITIONS = {
-    daily: [
-        {
-            id: 'scan_master',
-            icon: '🔍',
-            title: 'Scan Master',
-            description: 'Scan 5 images',
-            target: 5,
-            reward: { coins: 50 },
-            trackedEvent: 'scan_completed'
-        },
-        {
-            id: 'quick_detector',
-            icon: '⚡',
-            title: 'Quick Detector',
-            description: 'Complete 3 quick scans',
-            target: 3,
-            reward: { coins: 30 },
-            trackedEvent: 'quick_scan_completed'
-        },
-        {
-            id: 'deep_diver',
-            icon: '🔬',
-            title: 'Deep Diver',
-            description: 'Complete 1 deep scan',
-            target: 1,
-            reward: { coins: 40 },
-            trackedEvent: 'deep_scan_completed'
-        },
-        {
-            id: 'vote_vigilante',
-            icon: '🗳️',
-            title: 'Vote Vigilante',
-            description: 'Vote on 10 submissions',
-            target: 10,
-            reward: { coins: 60 },
-            trackedEvent: 'vote_submitted'
-        },
-        {
-            id: 'truth_hunter',
-            icon: '🎯',
-            title: 'Truth Hunter',
-            description: 'Submit 1 suspicious image',
-            target: 1,
-            reward: { coins: 50 },
-            trackedEvent: 'image_submitted'
-        }
-    ],
-    weekly: [
-        {
-            id: 'scan_champion',
-            icon: '🏆',
-            title: 'Scan Champion',
-            description: 'Scan 50 images',
-            target: 50,
-            reward: { coins: 300 },
-            trackedEvent: 'scan_completed'
-        },
-        {
-            id: 'ai_finder',
-            icon: '🤖',
-            title: 'AI Finder',
-            description: 'Find 10 AI images',
-            target: 10,
-            reward: { coins: 200 },
-            trackedEvent: 'ai_detected'
-        },
-        {
-            id: 'voting_marathon',
-            icon: '📊',
-            title: 'Voting Marathon',
-            description: 'Vote on 100 submissions',
-            target: 100,
-            reward: { coins: 500 },
-            trackedEvent: 'vote_submitted'
-        },
-        {
-            id: 'badge_collector',
-            icon: '🎖️',
-            title: 'Badge Collector',
-            description: 'Earn 3 new badges',
-            target: 3,
-            reward: { cosmetic: 'Special Avatar Border' },
-            trackedEvent: 'badge_earned'
-        },
-        {
-            id: 'coin_hoarder',
-            icon: '🪙',
-            title: 'Coin Hoarder',
-            description: 'Earn 1000 coins total',
-            target: 1000,
-            reward: { cosmetic: 'Legendary Avatar Frame' },
-            trackedEvent: 'coins_earned_total'
-        }
-    ],
-    special: [
-        {
-            id: 'first_steps',
-            icon: '👣',
-            title: 'First Steps',
-            description: 'Complete your first scan',
-            target: 1,
-            reward: { coins: 100 },
-            trackedEvent: 'scan_completed'
-        },
-        {
-            id: 'getting_started',
-            icon: '🌱',
-            title: 'Getting Started',
-            description: 'Reach level 5',
-            target: 5,
-            reward: { cosmetic: 'Rare Avatar' },
-            trackedEvent: 'level_reached'
-        },
-        {
-            id: 'ai_expert',
-            icon: '🎓',
-            title: 'AI Expert',
-            description: 'Reach level 20',
-            target: 20,
-            reward: { cosmetic: 'Epic Avatar + Frame' },
-            trackedEvent: 'level_reached'
-        }
-    ]
-};
-
-// Initialize quest system
-function initializeQuests() {
-    let userQuests = getStorage('userQuests', null);
-
-    if (!userQuests) {
-        // Create default quest structure
-        userQuests = {
-            daily: {
-                lastReset: Date.now(),
-                quests: QUEST_DEFINITIONS.daily.map(q => ({
-                    id: q.id,
-                    progress: 0,
-                    completed: false,
-                    claimed: false
-                }))
-            },
-            weekly: {
-                lastReset: Date.now(),
-                quests: QUEST_DEFINITIONS.weekly.map(q => ({
-                    id: q.id,
-                    progress: 0,
-                    completed: false,
-                    claimed: false
-                }))
-            },
-            special: {
-                quests: QUEST_DEFINITIONS.special.map(q => ({
-                    id: q.id,
-                    progress: 0,
-                    completed: false,
-                    claimed: false
-                }))
-            }
-        };
-        setStorage('userQuests', userQuests);
-    }
-
-    // Check if resets are needed
-    checkQuestResets();
-
-    return userQuests;
-}
-
-// Check and reset daily/weekly quests if needed
-function checkQuestResets() {
-    const userQuests = getStorage('userQuests', null);
-    if (!userQuests) return;
-
-    const now = Date.now();
-    let needsSave = false;
-
-    // Check daily reset (24 hours)
-    const dayInMs = 24 * 60 * 60 * 1000;
-    if (now - userQuests.daily.lastReset > dayInMs) {
-        userQuests.daily.lastReset = now;
-        userQuests.daily.quests = QUEST_DEFINITIONS.daily.map(q => ({
-            id: q.id,
-            progress: 0,
-            completed: false,
-            claimed: false
-        }));
-        needsSave = true;
-    }
-
-    // Check weekly reset (7 days)
-    const weekInMs = 7 * dayInMs;
-    if (now - userQuests.weekly.lastReset > weekInMs) {
-        userQuests.weekly.lastReset = now;
-        userQuests.weekly.quests = QUEST_DEFINITIONS.weekly.map(q => ({
-            id: q.id,
-            progress: 0,
-            completed: false,
-            claimed: false
-        }));
-        needsSave = true;
-    }
-
-    if (needsSave) {
-        setStorage('userQuests', userQuests);
-    }
-}
-
-// Update quest progress
-function updateQuestProgress(eventType, amount = 1) {
-    const userQuests = getStorage('userQuests', null);
-    if (!userQuests) return;
-
-    let updated = false;
-
-    // Update daily quests
-    userQuests.daily.quests.forEach(quest => {
-        const def = QUEST_DEFINITIONS.daily.find(q => q.id === quest.id);
-        if (def && def.trackedEvent === eventType && !quest.completed) {
-            quest.progress = Math.min(quest.progress + amount, def.target);
-            if (quest.progress >= def.target) {
-                quest.completed = true;
-                showQuestCompleted(def, 'daily');
-            }
-            updated = true;
-        }
-    });
-
-    // Update weekly quests
-    userQuests.weekly.quests.forEach(quest => {
-        const def = QUEST_DEFINITIONS.weekly.find(q => q.id === quest.id);
-        if (def && def.trackedEvent === eventType && !quest.completed) {
-            quest.progress = Math.min(quest.progress + amount, def.target);
-            if (quest.progress >= def.target) {
-                quest.completed = true;
-                showQuestCompleted(def, 'weekly');
-            }
-            updated = true;
-        }
-    });
-
-    // Update special quests
-    userQuests.special.quests.forEach(quest => {
-        const def = QUEST_DEFINITIONS.special.find(q => q.id === quest.id);
-        if (def && def.trackedEvent === eventType && !quest.completed) {
-            // For level quests, set progress to the amount (level value)
-            if (eventType === 'level_reached') {
-                quest.progress = amount;
-            } else if (eventType === 'coins_earned_total') {
-                quest.progress = amount;
-            } else {
-                quest.progress = Math.min(quest.progress + amount, def.target);
-            }
-
-            if (quest.progress >= def.target) {
-                quest.completed = true;
-                showQuestCompleted(def, 'special');
-            }
-            updated = true;
-        }
-    });
-
-    if (updated) {
-        setStorage('userQuests', userQuests);
-    }
-}
-
-// Show quest completed notification
-function showQuestCompleted(questDef, questType) {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed; top: 80px; right: 16px;
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        padding: 16px 20px; border-radius: 12px; z-index: 9999;
-        box-shadow: 0 8px 32px rgba(0,212,170,0.3);
-        animation: slideInRight 0.3s ease-out;
-        max-width: 300px;
-    `;
-
-    const rewardText = questDef.reward.coins
-        ? `+${questDef.reward.coins} coins`
-        : questDef.reward.cosmetic;
-
-    notification.innerHTML = `
-        <div style="display:flex;align-items:center;gap:12px">
-            <div style="font-size:32px">${questDef.icon}</div>
-            <div style="flex:1">
-                <div style="font-size:12px;color:rgba(255,255,255,0.8);margin-bottom:2px">QUEST COMPLETED!</div>
-                <div style="font-size:14px;font-weight:700;color:white">${questDef.title}</div>
-                <div style="font-size:11px;color:rgba(255,255,255,0.9);margin-top:4px">Reward: ${rewardText}</div>
-            </div>
-        </div>
-    `;
-
-    document.body.appendChild(notification);
-    notification.addEventListener('click', () => notification.remove());
-    setTimeout(() => notification.remove(), 4000);
-}
-
-// Claim quest reward
-async function claimQuestReward(questId, questType) {
-    const userQuests = getStorage('userQuests', null);
-    if (!userQuests) return;
-
-    const questList = userQuests[questType].quests;
-    const quest = questList.find(q => q.id === questId);
-
-    if (!quest || !quest.completed || quest.claimed) return;
-
-    const def = QUEST_DEFINITIONS[questType].find(q => q.id === questId);
-    if (!def) return;
-
-    // Award reward
-    if (def.reward.coins) {
-        await awardCoins(def.reward.coins, `Quest: ${def.title}`);
-    } else if (def.reward.cosmetic) {
-        // Store cosmetic reward
-        const cosmetics = getStorage('cosmetic_rewards', []);
-        if (!cosmetics.includes(def.reward.cosmetic)) {
-            cosmetics.push(def.reward.cosmetic);
-            setStorage('cosmetic_rewards', cosmetics);
-        }
-
-        showNotification(`Unlocked: ${def.reward.cosmetic}!`, 'success');
-    }
-
-    // Mark as claimed
-    quest.claimed = true;
-    setStorage('userQuests', userQuests);
-
-    // Re-render quests
-    renderQuests();
-}
-
-// Render quests in UI
-function renderQuests() {
-    const userQuests = getStorage('userQuests', null);
-    if (!userQuests) return;
-
-    // Render daily quests
-    const dailyContainer = $('dailyQuests');
-    if (dailyContainer) {
-        dailyContainer.innerHTML = userQuests.daily.quests.map(quest => {
-            const def = QUEST_DEFINITIONS.daily.find(q => q.id === quest.id);
-            return renderQuestCard(quest, def, 'daily');
-        }).join('');
-    }
-
-    // Render weekly quests
-    const weeklyContainer = $('weeklyQuests');
-    if (weeklyContainer) {
-        weeklyContainer.innerHTML = userQuests.weekly.quests.map(quest => {
-            const def = QUEST_DEFINITIONS.weekly.find(q => q.id === quest.id);
-            return renderQuestCard(quest, def, 'weekly');
-        }).join('');
-    }
-
-    // Render special quests
-    const specialContainer = $('specialQuests');
-    if (specialContainer) {
-        specialContainer.innerHTML = userQuests.special.quests.map(quest => {
-            const def = QUEST_DEFINITIONS.special.find(q => q.id === quest.id);
-            return renderQuestCard(quest, def, 'special');
-        }).join('');
-    }
-}
-
-// Render individual quest card
-function renderQuestCard(quest, def, questType) {
-    if (!def) return '';
-
-    const progress = Math.min(quest.progress, def.target);
-    const percentage = (progress / def.target) * 100;
-    const isCompleted = quest.completed;
-    const isClaimed = quest.claimed;
-
-    const rewardText = def.reward.coins
-        ? `${def.reward.coins} coins`
-        : def.reward.cosmetic;
-
-    let buttonHtml = '';
-    if (isClaimed) {
-        buttonHtml = '<button class="quest-claim-btn claimed" disabled>Claimed</button>';
-    } else if (isCompleted) {
-        buttonHtml = `<button class="quest-claim-btn" onclick="claimQuestReward('${quest.id}', '${questType}')">Claim Reward</button>`;
-    } else {
-        buttonHtml = `<button class="quest-claim-btn disabled" disabled>${progress}/${def.target}</button>`;
-    }
-
-    return `
-        <div class="quest-card ${isCompleted ? 'completed' : ''} ${isClaimed ? 'claimed' : ''}">
-            <div class="quest-icon">${def.icon}</div>
-            <div class="quest-info">
-                <div class="quest-title">${def.title}</div>
-                <div class="quest-description">${def.description}</div>
-                <div class="quest-progress-bar">
-                    <div class="quest-progress-fill" style="width: ${percentage}%"></div>
-                </div>
-                <div class="quest-stats">
-                    <span class="quest-progress-text">${progress}/${def.target}</span>
-                    <span class="quest-reward">🎁 ${rewardText}</span>
-                </div>
-            </div>
-            ${buttonHtml}
-        </div>
-    `;
-}
-
-// Update quest timers
-function updateQuestTimers() {
-    const userQuests = getStorage('userQuests', null);
-    if (!userQuests) return;
-
-    const now = Date.now();
-
-    // Daily timer
-    const dailyTimer = $('dailyTimer');
-    if (dailyTimer) {
-        const dailyRemaining = 24 * 60 * 60 * 1000 - (now - userQuests.daily.lastReset);
-        if (dailyRemaining > 0) {
-            const hours = Math.floor(dailyRemaining / (60 * 60 * 1000));
-            const minutes = Math.floor((dailyRemaining % (60 * 60 * 1000)) / (60 * 1000));
-            const seconds = Math.floor((dailyRemaining % (60 * 1000)) / 1000);
-            dailyTimer.textContent = `Resets in: ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        } else {
-            dailyTimer.textContent = 'Ready to reset!';
-        }
-    }
-
-    // Weekly timer
-    const weeklyTimer = $('weeklyTimer');
-    if (weeklyTimer) {
-        const weeklyRemaining = 7 * 24 * 60 * 60 * 1000 - (now - userQuests.weekly.lastReset);
-        if (weeklyRemaining > 0) {
-            const days = Math.floor(weeklyRemaining / (24 * 60 * 60 * 1000));
-            const hours = Math.floor((weeklyRemaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-            weeklyTimer.textContent = `Resets in: ${days}d ${hours}h`;
-        } else {
-            weeklyTimer.textContent = 'Ready to reset!';
-        }
-    }
-}
-
-// Open quests view
-window.openQuestsView = function() {
-    checkQuestResets();
-    initializeQuests();
-    showView('questsView');
-    renderQuests();
-    updateQuestTimers();
-
-    // Update timers every second
-    if (window.questTimerInterval) {
-        clearInterval(window.questTimerInterval);
-    }
-    window.questTimerInterval = setInterval(updateQuestTimers, 1000);
-};
-
-// Initialize quest system on app load
-document.addEventListener('DOMContentLoaded', () => {
-    initializeQuests();
-});
-
 // Profile stats
 function loadProfileStats() {
     const stats = getStorage('user_stats', {});
@@ -11319,49 +8490,27 @@ function renderHistory() {
     `).join('');
 }
 
-// Render badges preview (for profile page) with enhanced design
+// Render badges preview (for profile page)
 function renderBadgesPreview() {
     const grid = $('badgesPreview');
     if (!grid) return;
 
     const unlockedBadges = getStorage('unlocked_badges', []);
-    const allBadges = Object.values(BADGES);
-    const badgeKeys = allBadges.slice(0, 6);
-    const unlockedCount = badgeKeys.filter(b => unlockedBadges.includes(b.id)).length;
+    const badgeKeys = Object.keys(BADGES).slice(0, 6);
 
-    grid.innerHTML = badgeKeys.map(badge => {
+    grid.innerHTML = badgeKeys.map(key => {
+        const badge = BADGES[key];
         const isUnlocked = unlockedBadges.includes(badge.id);
         return `
-            <div class="badge-item" style="position:relative;transition:transform 0.2s ease"
-                 onmouseover="this.style.transform='scale(1.1)'"
-                 onmouseout="this.style.transform='scale(1)'">
-                <div class="badge-icon ${isUnlocked ? badge.rarity : 'locked'}"
-                     style="box-shadow:${isUnlocked ? '0 4px 12px rgba(0,0,0,0.3)' : 'none'};
-                             transition:all 0.2s ease">${badge.icon}</div>
-                <div class="badge-name" title="${badge.name}: ${badge.desc}">${badge.name}</div>
-                <div style="position:absolute;top:0;right:-4px;width:18px;height:18px;
-                           border-radius:50%;background:${isUnlocked ? 'var(--primary)' : 'var(--surface2)'};
-                           color:white;display:flex;align-items:center;justify-content:center;
-                           font-size:10px;font-weight:700;box-shadow:0 2px 4px rgba(0,0,0,0.2)">
-                    ${isUnlocked ? '✓' : ''}
-                </div>
+            <div class="badge-item">
+                <div class="badge-icon ${isUnlocked ? badge.rarity : 'locked'}">${badge.icon}</div>
+                <div class="badge-name">${badge.name}</div>
             </div>
         `;
     }).join('');
-
-    // Add footer showing progress
-    const container = grid.parentElement;
-    if (container && !container.querySelector('.badges-footer')) {
-        const footer = document.createElement('div');
-        footer.className = 'badges-footer';
-        footer.style.cssText = 'padding-top:8px;border-top:1px solid var(--border);' +
-            'text-align:center;font-size:11px;color:var(--text3);margin-top:8px';
-        footer.innerHTML = `${unlockedCount}/${badgeKeys.length} badges earned`;
-        container.appendChild(footer);
-    }
 }
 
-// Render all badges with enhanced design
+// Render all badges
 function renderAllBadges() {
     const container = $('allBadgesContent');
     if (!container) return;
@@ -11372,27 +8521,18 @@ function renderAllBadges() {
     let html = '';
     rarities.forEach(rarity => {
         const badges = Object.values(BADGES).filter(b => b.rarity === rarity);
-        const rarityEmojis = { common: '🔷', rare: '🔹', epic: '💜', legendary: '✨' };
-
         html += `
-            <div style="margin-bottom:32px">
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
-                    <span style="font-size:20px">${rarityEmojis[rarity]}</span>
-                    <div style="font-size:16px;font-weight:800;text-transform:capitalize;color:var(--text);
-                        text-shadow:0 2px 8px rgba(0,0,0,.1)">${rarity} Badges</div>
-                    <span style="font-size:12px;color:var(--text3);margin-left:auto">${badges.length} total</span>
-                </div>
-                <div class="enhanced-badges-grid">
+            <div style="margin-bottom:20px">
+                <div style="font-size:14px;font-weight:700;margin-bottom:10px;text-transform:capitalize;color:var(--text2)">${rarity} Badges</div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
                     ${badges.map(badge => {
                         const isUnlocked = unlockedBadges.includes(badge.id);
                         return `
-                            <div class="badge-card ${isUnlocked ? 'unlocked' : 'locked'}">
-                                <div class="badge-tooltip">${badge.name}</div>
-                                <div class="badge-status-indicator ${isUnlocked ? '' : 'locked'}">${isUnlocked ? '✓' : '🔒'}</div>
-                                <div class="badge-card-icon ${isUnlocked ? badge.rarity : 'locked'}">${badge.icon}</div>
-                                <div class="badge-card-title">${badge.name}</div>
-                                <div class="badge-card-desc">${badge.desc}</div>
-                                <div class="badge-card-points">${badge.points} pts</div>
+                            <div style="text-align:center;padding:12px;background:var(--surface);border-radius:12px;${isUnlocked ? '' : 'opacity:0.5'}">
+                                <div class="badge-icon ${isUnlocked ? badge.rarity : 'locked'}" style="margin:0 auto 8px">${badge.icon}</div>
+                                <div style="font-size:11px;font-weight:600">${badge.name}</div>
+                                <div style="font-size:9px;color:var(--text3);margin-top:2px">${badge.desc}</div>
+                                <div style="font-size:10px;color:var(--gold);margin-top:4px">${badge.points} pts</div>
                             </div>
                         `;
                     }).join('')}
@@ -11425,7 +8565,7 @@ window.handleProfilePic = async function(event) {
 
         // Save locally
         if (user) {
-            user.avatar_url = dataUrl;
+            user.avatar = dataUrl;
             saveUser();
         }
 
