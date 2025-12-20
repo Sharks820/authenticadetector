@@ -11,6 +11,7 @@ class EnsembleOrchestrator {
         // Higher weight = more reliable/accurate module
         this.moduleWeights = {
             // TIER 1: High-reliability modules (1.2-1.5x weight)
+            ugad: 1.6,             // UGAD spectral analysis - SOTA for diffusion models (CIKM 2024)
             fft: 1.5,              // Frequency domain analysis - gold standard (99% on uncompressed)
             gan: 1.4,              // GAN fingerprints - spectral peaks, checkerboard
             modelFingerprints: 1.3, // Model-specific signatures (SDXL, DALL-E, etc.)
