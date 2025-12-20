@@ -1,0 +1,646 @@
+/* ============================================================
+   AI COSMETICS GACHA SYSTEM - STYLES
+   ============================================================ */
+
+/* Gacha Shop Modal */
+.gacha-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gacha-modal.active {
+    opacity: 1;
+}
+
+.gacha-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.gacha-modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 900px;
+    max-height: 85vh;
+    overflow-y: auto;
+    margin: 20px;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.gacha-modal.active .gacha-modal-content {
+    transform: scale(1);
+}
+
+.gacha-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.gacha-modal-title {
+    font-size: 28px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fa709a, #fee140);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.gacha-close-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.gacha-close-btn:hover {
+    background: rgba(255, 71, 87, 0.3);
+    transform: rotate(90deg);
+}
+
+/* Box Grid */
+.gacha-boxes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.gacha-box-card {
+    background: linear-gradient(135deg, rgba(26, 188, 156, 0.08), rgba(22, 160, 133, 0.04));
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(26, 188, 156, 0.2);
+    border-radius: 24px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.gacha-box-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.gacha-box-card:hover {
+    transform: translateY(-12px) scale(1.05);
+    border-color: rgba(26, 188, 156, 0.5);
+    box-shadow: 0 20px 60px rgba(26, 188, 156, 0.3);
+}
+
+.gacha-box-card:hover::before {
+    left: 100%;
+}
+
+.gacha-box-icon {
+    font-size: 72px;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+}
+
+.gacha-box-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.gacha-box-cost {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 16px;
+}
+
+.gacha-box-odds {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+}
+
+.rarity-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rarity-badge.common {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.rarity-badge.uncommon {
+    background: linear-gradient(135deg, #48dbfb, #0abde3);
+    color: white;
+}
+
+.rarity-badge.rare {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    color: white;
+}
+
+.rarity-badge.epic {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: white;
+}
+
+.rarity-badge.legendary {
+    background: linear-gradient(135deg, #fa709a, #fee140);
+    color: #000;
+    animation: rarity-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes rarity-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+/* Box Opening Animation */
+.box-opening-animation {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box-opening-content {
+    text-align: center;
+}
+
+.box-shaking {
+    font-size: 120px;
+    animation: shake 0.5s ease-in-out infinite;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    25% { transform: translateX(-10px) rotate(-5deg); }
+    75% { transform: translateX(10px) rotate(5deg); }
+}
+
+.box-opening-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-top: 20px;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* Item Reveal Modal */
+.item-reveal-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.item-reveal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(0,0,0,0.7), rgba(0,0,0,0.95));
+}
+
+.item-reveal-content {
+    position: relative;
+    background: linear-gradient(135deg, rgba(26, 188, 156, 0.15), rgba(22, 160, 133, 0.08));
+    backdrop-filter: blur(30px);
+    border-radius: 32px;
+    padding: 48px 32px;
+    text-align: center;
+    max-width: 500px;
+    animation: revealPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes revealPop {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotateY(-180deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotateY(0deg);
+    }
+}
+
+.item-reveal-content.epic-reveal {
+    border: 3px solid #4facfe;
+    box-shadow:
+        0 0 40px rgba(79, 172, 254, 0.5),
+        0 0 80px rgba(79, 172, 254, 0.3),
+        inset 0 0 60px rgba(79, 172, 254, 0.1);
+    animation: revealEpic 1s ease-out;
+}
+
+@keyframes revealEpic {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+        filter: blur(20px);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+}
+
+.item-reveal-content.legendary-explosion {
+    border: 4px solid #fee140;
+    box-shadow:
+        0 0 60px rgba(254, 225, 64, 0.8),
+        0 0 120px rgba(254, 225, 64, 0.5),
+        0 0 180px rgba(250, 112, 154, 0.4),
+        inset 0 0 80px rgba(254, 225, 64, 0.2);
+    animation: revealLegendary 1.5s ease-out;
+}
+
+@keyframes revealLegendary {
+    0% {
+        opacity: 0;
+        transform: scale(0.1) rotate(-720deg);
+        filter: blur(40px) brightness(3);
+    }
+    40% {
+        transform: scale(1.3) rotate(0deg);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+        filter: blur(0) brightness(1);
+    }
+}
+
+.item-reveal-particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    border-radius: 32px;
+}
+
+.item-reveal-rarity {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    opacity: 0.8;
+}
+
+.item-reveal-icon {
+    font-size: 96px;
+    margin: 24px 0;
+    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.4));
+}
+
+.item-reveal-icon img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    border-radius: 16px;
+}
+
+.item-reveal-name {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.item-reveal-bodypart {
+    font-size: 16px;
+    color: var(--text2);
+    margin-bottom: 24px;
+}
+
+.item-reveal-new {
+    display: inline-block;
+    background: linear-gradient(135deg, #2ed573, #7bed9f);
+    color: #000;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 24px;
+    animation: newBadgePulse 1s ease-in-out infinite;
+}
+
+@keyframes newBadgePulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 20px rgba(46, 213, 115, 0.5);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 30px rgba(46, 213, 115, 0.8);
+    }
+}
+
+.item-reveal-duplicate {
+    display: inline-block;
+    background: rgba(255, 165, 2, 0.2);
+    color: var(--warning);
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+/* Rarity-specific backgrounds */
+.item-reveal-modal.rarity-legendary .item-reveal-content {
+    background: linear-gradient(135deg, rgba(254, 225, 64, 0.15), rgba(250, 112, 154, 0.15));
+}
+
+.item-reveal-modal.rarity-epic .item-reveal-content {
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.15), rgba(0, 242, 254, 0.15));
+}
+
+.item-reveal-modal.rarity-rare .item-reveal-content {
+    background: linear-gradient(135deg, rgba(240, 147, 251, 0.15), rgba(245, 87, 108, 0.15));
+}
+
+/* Editable Inventory System */
+.inventory-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.inventory-modal.active {
+    opacity: 1;
+}
+
+.inventory-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+}
+
+.inventory-modal-content {
+    position: relative;
+    width: 95%;
+    max-width: 1200px;
+    max-height: 90vh;
+    overflow-y: auto;
+    margin: 20px;
+}
+
+.inventory-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.inventory-title {
+    font-size: 24px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.inventory-body {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 24px;
+}
+
+@media (max-width: 768px) {
+    .inventory-body {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Equipped Slots Display */
+.equipped-slots {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.equipped-slot {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+}
+
+.equipped-slot:hover {
+    background: rgba(26, 188, 156, 0.08);
+    transform: translateX(4px);
+}
+
+.equipped-slot-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.equipped-slot-icon.empty {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+}
+
+.equipped-slot-info {
+    flex: 1;
+}
+
+.equipped-slot-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.equipped-slot-item {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 2px;
+}
+
+.equipped-slot-empty {
+    font-size: 13px;
+    color: var(--text3);
+    font-style: italic;
+}
+
+.equipped-slot-unequip {
+    padding: 6px 12px;
+    background: rgba(255, 71, 87, 0.2);
+    border: 1px solid rgba(255, 71, 87, 0.3);
+    border-radius: 8px;
+    color: var(--danger);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.equipped-slot-unequip:hover {
+    background: rgba(255, 71, 87, 0.3);
+    transform: scale(1.05);
+}
+
+/* Items Collection */
+.items-collection {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.items-filter {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: var(--text2);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn.active {
+    background: var(--primary);
+    color: #000;
+    border-color: var(--primary);
+}
+
+.filter-btn:hover {
+    background: rgba(26, 188, 156, 0.15);
+    border-color: rgba(26, 188, 156, 0.3);
+}
+
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 16px;
+}
+
+.inventory-item-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.inventory-item-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary);
+    box-shadow: 0 8px 24px rgba(26, 188, 156, 0.3);
+}
+
+.inventory-item-card.equipped {
+    border-color: var(--primary);
+    background: rgba(26, 188, 156, 0.1);
+}
+
+.inventory-item-icon {
+    font-size: 48px;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+}
+
+.inventory-item-icon img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.inventory-item-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+
+.inventory-item-rarity {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.inventory-item-equipped-badge {
+    display: inline-block;
+    background: var(--primary);
+    color: #000;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-top: 4px;
+}
