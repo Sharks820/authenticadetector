@@ -2744,7 +2744,7 @@
             <button class="icon-btn" onclick="openHistory()" data-tooltip="Scan History">📋</button>
             <button class="icon-btn" onclick="openLeaderboard()" data-tooltip="Leaderboard">🏆</button>
             <button class="icon-btn highlight" onclick="openAvatarSelector()" data-tooltip="Shop & Avatars">🎭</button>
-            <button class="user-btn" id="userBtn" onclick="openProfile()" title="Profile"><span id="userInitial">?</span></button>
+            <button class="user-btn" id="userBtn" onclick="openProfile()" title="Profile"><span id="userInitial">👤</span></button>
         </div>
     </div>
     
@@ -4435,8 +4435,8 @@ function updateUserUI() {
         $('loginLogoutText').textContent = 'Sign Out'; 
         $('loginLogoutIcon').textContent = '🚪';
     } else {
-        $('userInitial').textContent = '?'; 
-        $('userBtn').innerHTML = '<span id="userInitial">?</span>';
+        $('userInitial').textContent = '👤';
+        $('userBtn').innerHTML = '<span id="userInitial">👤</span>';
         $('profileName').textContent = 'Guest'; 
         $('profileEmail').textContent = 'Sign in to save progress';
         $('profileAvatar').innerHTML = '?';
