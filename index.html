@@ -8662,7 +8662,11 @@ const GAME_CONFIG = {
     BUBBLE_SPAWN_INTERVAL: 2000,
     CREDIBILITY_LOSS_REAL_HIT: 20,
     CREDIBILITY_LOSS_FAKE_REACH_BOTTOM: 10,
-    POINTS_PER_FAKE: 100
+    POINTS_PER_FAKE: 100,
+    MAX_BUBBLES: 20,           // Cap max bubbles to prevent lag
+    MAX_PARTICLES: 100,        // Cap max particles to prevent lag
+    MAX_WAVE_SPEED_MULT: 3.0,  // Cap speed multiplier at wave 20+
+    MIN_SPAWN_INTERVAL: 500    // Fastest spawn rate (at wave 15+)
 };
 
 class TruthBomb {
@@ -8740,7 +8744,9 @@ class Bubble {
     update(canvas) {
         if (!this.active) return;
 
-        this.y += this.vy * (1 + gameState.wave * 0.1); // Speed increases with wave
+        // Speed increases with wave but caps at MAX_WAVE_SPEED_MULT to prevent impossible difficulty
+        const speedMultiplier = Math.min(1 + gameState.wave * 0.1, GAME_CONFIG.MAX_WAVE_SPEED_MULT);
+        this.y += this.vy * speedMultiplier;
         this.wobble += this.wobbleSpeed;
         this.x += Math.sin(this.wobble) * 0.5;
 
@@ -8961,41 +8967,53 @@ function releasePull() {
 function gameLoop() {
     if (!gameState.running) return;
 
-    const canvas = $('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    const now = Date.now();
-    const deltaTime = now - gameState.lastTime;
-    gameState.lastTime = now;
+    try {
+        const canvas = $('gameCanvas');
+        if (!canvas) {
+            console.error('[TruthCannon] Canvas not found, stopping game');
+            gameState.running = false;
+            return;
+        }
 
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const ctx = canvas.getContext('2d');
+        const now = Date.now();
+        const deltaTime = Math.min(now - gameState.lastTime, 100); // Cap deltaTime to prevent huge jumps
+        gameState.lastTime = now;
 
-    // Update game state
-    updateBubbles(canvas, deltaTime);
-    updateTruthBomb(canvas);
-    updateParticles();
-    checkCollisions();
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw everything
-    drawBubbles(ctx);
-    drawTruthBomb(ctx);
-    drawCannon(ctx);
-    drawTrajectory(ctx);
-    drawParticles(ctx);
+        // Update game state
+        updateBubbles(canvas, deltaTime);
+        updateTruthBomb(canvas);
+        updateParticles();
+        checkCollisions();
 
-    requestAnimationFrame(gameLoop);
+        // Draw everything
+        drawBubbles(ctx);
+        drawTruthBomb(ctx);
+        drawCannon(ctx);
+        drawTrajectory(ctx);
+        drawParticles(ctx);
+
+        requestAnimationFrame(gameLoop);
+    } catch (error) {
+        console.error('[TruthCannon] Error in game loop:', error);
+        // Try to continue anyway
+        requestAnimationFrame(gameLoop);
+    }
 }
 
 function updateBubbles(canvas, deltaTime) {
     gameState.bubbleSpawnTimer += deltaTime;
 
-    // Spawn new bubbles
-    const spawnInterval = Math.max(1000, GAME_CONFIG.BUBBLE_SPAWN_INTERVAL - gameState.wave * 100);
-    if (gameState.bubbleSpawnTimer > spawnInterval) {
+    // Spawn new bubbles (with cap to prevent lag)
+    const spawnInterval = Math.max(GAME_CONFIG.MIN_SPAWN_INTERVAL, GAME_CONFIG.BUBBLE_SPAWN_INTERVAL - gameState.wave * 100);
+    if (gameState.bubbleSpawnTimer > spawnInterval && gameState.bubbles.length < GAME_CONFIG.MAX_BUBBLES) {
         gameState.bubbleSpawnTimer = 0;
 
         const x = GAME_CONFIG.BUBBLE_RADIUS + Math.random() * (canvas.width - GAME_CONFIG.BUBBLE_RADIUS * 2);
-        const isFake = Math.random() < (0.3 + gameState.wave * 0.05); // More fakes on higher waves
+        const isFake = Math.random() < Math.min(0.7, 0.3 + gameState.wave * 0.05); // More fakes on higher waves, caps at 70%
 
         gameState.bubbles.push(new Bubble(x, -GAME_CONFIG.BUBBLE_RADIUS, isFake));
     }
@@ -9003,7 +9021,7 @@ function updateBubbles(canvas, deltaTime) {
     // Update all bubbles
     gameState.bubbles.forEach(bubble => bubble.update(canvas));
 
-    // Remove inactive bubbles
+    // Remove inactive bubbles (cleanup for performance)
     gameState.bubbles = gameState.bubbles.filter(b => b.active);
 }
 
@@ -9018,7 +9036,11 @@ function updateTruthBomb(canvas) {
 
 function updateParticles() {
     gameState.particles.forEach(p => p.update());
+    // Remove dead particles AND cap total count for performance
     gameState.particles = gameState.particles.filter(p => p.life > 0);
+    if (gameState.particles.length > GAME_CONFIG.MAX_PARTICLES) {
+        gameState.particles = gameState.particles.slice(-GAME_CONFIG.MAX_PARTICLES);
+    }
 }
 
 function checkCollisions() {
