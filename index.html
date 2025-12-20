@@ -4660,8 +4660,10 @@ async function init() {
     // Initialize Truth Hunters game
     await initTruthHunters();
 
-    // Initialize cosmetics system
-    initCosmetics();
+    // Initialize cosmetics system (if not already initialized)
+    if (typeof initCosmeticsSystem === 'function') {
+        initCosmeticsSystem();
+    }
 
     // Register service worker
     if ('serviceWorker' in navigator) {
