@@ -1,1 +1,18 @@
+# Private project memory (contains API keys)
 CLAUDE.md
+
+# Environment variables (contains secrets)
+.env
+.env.local
+.env.*.local
+
+# Node modules
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
