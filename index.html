@@ -595,8 +595,17 @@
             border-radius:16px;padding:24px 16px;text-align:center;
             cursor:pointer;transition:all .2s;margin-bottom:12px;
         }
+        .dropzone:hover{
+            border-color:var(--primary);transform:scale(1.02);
+        }
         .dropzone:active,.dropzone.dragover{
             border-color:var(--primary);background:rgba(0,212,170,.08);
+            transform:scale(0.98);animation:tap-pulse 0.3s ease-out;
+        }
+        @keyframes tap-pulse {
+            0% { transform:scale(0.95); }
+            50% { transform:scale(1.02); box-shadow:0 0 20px rgba(0,212,170,0.3); }
+            100% { transform:scale(0.98); }
         }
         .dropzone.has-file{border-color:var(--success);border-style:solid}
         .dropzone-preview{max-width:100%;max-height:150px;border-radius:10px;object-fit:contain}
@@ -2196,6 +2205,407 @@
                 padding: 4px 0;
             }
         }
+
+        /* ====================================
+           QUEST SYSTEM STYLES
+           ==================================== */
+        .quest-section {
+            margin-bottom: 24px;
+        }
+        .quest-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .quest-section-header h3 {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text1);
+        }
+        .quest-timer {
+            font-size: 12px;
+            color: var(--text3);
+            font-weight: 600;
+        }
+        .quest-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .quest-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s;
+        }
+        .quest-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,212,170,0.1);
+        }
+        .quest-card.completed {
+            opacity: 0.6;
+            background: var(--surface2);
+        }
+        .quest-icon {
+            font-size: 32px;
+            min-width: 40px;
+            text-align: center;
+        }
+        .quest-info {
+            flex: 1;
+        }
+        .quest-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text1);
+            margin-bottom: 4px;
+        }
+        .quest-desc {
+            font-size: 11px;
+            color: var(--text3);
+            margin-bottom: 6px;
+        }
+        .quest-progress {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .quest-progress-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--surface2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .quest-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #00E5B8);
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+        .quest-progress-text {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text2);
+            min-width: 50px;
+            text-align: right;
+        }
+        .quest-reward {
+            text-align: center;
+            min-width: 60px;
+        }
+        .quest-reward-value {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .quest-reward-label {
+            font-size: 9px;
+            color: var(--text3);
+            text-transform: uppercase;
+        }
+        .quest-claim-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quest-claim-btn:hover {
+            background: #00B88C;
+            transform: scale(1.05);
+        }
+        .quest-claim-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ====================================
+           AVATAR CUSTOMIZATION STYLES
+           ==================================== */
+        .avatar-preview-section {
+            margin-bottom: 24px;
+        }
+        .avatar-preview-section h3 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text1);
+        }
+        .avatar-preview-large {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+            position: relative;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--surface), var(--surface2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--text1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .avatar-preview-frame {
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .avatar-preview-effects {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .cosmetic-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .cosmetic-tab {
+            flex: 1;
+            min-width: 80px;
+            padding: 10px 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text2);
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .cosmetic-tab:hover {
+            border-color: var(--primary);
+        }
+        .cosmetic-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .cosmetic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .cosmetic-item {
+            aspect-ratio: 1;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .cosmetic-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,212,170,0.2);
+        }
+        .cosmetic-item.equipped {
+            border-color: var(--primary);
+            background: rgba(0,212,170,0.1);
+        }
+        .cosmetic-item.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .cosmetic-item-icon {
+            font-size: 32px;
+            margin-bottom: 4px;
+        }
+        .cosmetic-item-name {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text2);
+            text-align: center;
+        }
+        .cosmetic-item-rarity {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .rarity-common { background: #95a5a6; }
+        .rarity-rare { background: #3498db; }
+        .rarity-epic { background: #9b59b6; }
+        .rarity-legendary { background: #f1c40f; }
+
+        .cosmetic-item-badge {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            background: var(--primary);
+            color: white;
+            font-size: 8px;
+            font-weight: 700;
+            padding: 2px 4px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        /* ====================================
+           GACHA SYSTEM STYLES
+           ==================================== */
+        .gacha-section {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 2px solid var(--border);
+        }
+        .gacha-banner {
+            background: linear-gradient(135deg, rgba(0,212,170,0.1), rgba(0,229,184,0.05));
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+        .gacha-banner h3 {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--text1);
+            margin-bottom: 4px;
+        }
+        .gacha-banner p {
+            font-size: 12px;
+            color: var(--text3);
+            margin-bottom: 16px;
+        }
+        .gacha-costs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        .gacha-btn {
+            flex: 1;
+            max-width: 150px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .gacha-btn:hover {
+            background: #00B88C;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,212,170,0.3);
+        }
+        .gacha-btn-multi {
+            background: linear-gradient(135deg, var(--primary), #00E5B8);
+        }
+        .gacha-discount {
+            font-size: 10px;
+            background: #FFD700;
+            color: #000;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 900;
+        }
+
+        .gacha-result-content {
+            max-width: 500px;
+        }
+        .gacha-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .gacha-result-header h2 {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--text1);
+        }
+        .gacha-results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .gacha-result-item {
+            background: var(--surface2);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            position: relative;
+            animation: gacha-reveal 0.5s ease-out;
+        }
+        .gacha-result-item-icon {
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+        .gacha-result-item-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text1);
+            margin-bottom: 4px;
+        }
+        .gacha-result-item-rarity {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .gacha-result-item.new::before {
+            content: "NEW!";
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #FFD700;
+            color: #000;
+            font-size: 8px;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        @keyframes gacha-reveal {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(-180deg);
+            }
+            60% {
+                transform: scale(1.1) rotate(10deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+        .gacha-result-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .gacha-result-actions button {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
@@ -2203,7 +2613,7 @@
 <!-- HOME VIEW -->
 <div class="view active" id="homeView">
     <div class="home-header">
-        <div class="logo">
+        <div class="logo" onclick="showView('homeView')" style="cursor: pointer;">
             <div class="logo-icon" id="mainLogo"></div>
             <span class="logo-text">AuthenticaDetector</span>
         </div>
@@ -2484,6 +2894,104 @@
         </div>
     </div>
     <div class="view-body view-body-padded" id="allBadgesContent"></div>
+</div>
+
+<!-- QUESTS VIEW -->
+<div class="view" id="questsView">
+    <div class="view-header">
+        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
+        <span class="view-title">⚡ Quests & Challenges</span>
+        <div class="coins-display" id="questsViewCoins">
+            <span style="font-size:16px">🪙</span>
+            <span>0</span>
+        </div>
+    </div>
+    <div class="view-body view-body-padded">
+        <div class="quest-section">
+            <div class="quest-section-header">
+                <h3>📅 Daily Quests</h3>
+                <div class="quest-timer" id="dailyTimer">Resets in: --:--:--</div>
+            </div>
+            <div class="quest-list" id="dailyQuests"></div>
+        </div>
+        <div class="quest-section">
+            <div class="quest-section-header">
+                <h3>🌟 Weekly Challenges</h3>
+                <div class="quest-timer" id="weeklyTimer">Resets in: -- days</div>
+            </div>
+            <div class="quest-list" id="weeklyQuests"></div>
+        </div>
+        <div class="quest-section">
+            <div class="quest-section-header">
+                <h3>🏆 Special Events</h3>
+            </div>
+            <div class="quest-list" id="specialQuests"></div>
+        </div>
+    </div>
+</div>
+
+<!-- AVATAR CUSTOMIZATION VIEW -->
+<div class="view" id="avatarView">
+    <div class="view-header">
+        <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
+        <span class="view-title">🎨 Customize Avatar</span>
+        <div class="coins-display" id="avatarViewCoins">
+            <span style="font-size:16px">🪙</span>
+            <span>0</span>
+        </div>
+    </div>
+    <div class="view-body view-body-padded">
+        <div class="avatar-preview-section">
+            <h3>Preview</h3>
+            <div class="avatar-preview-large" id="avatarPreviewLarge">
+                <div class="avatar-preview-frame" id="avatarPreviewFrame"></div>
+                <div class="avatar-preview-avatar" id="avatarPreviewAvatar">?</div>
+                <div class="avatar-preview-effects" id="avatarPreviewEffects"></div>
+            </div>
+        </div>
+
+        <div class="cosmetic-tabs">
+            <button class="cosmetic-tab active" onclick="switchCosmeticTab('avatars')">👤 Avatars</button>
+            <button class="cosmetic-tab" onclick="switchCosmeticTab('frames')">🖼️ Frames</button>
+            <button class="cosmetic-tab" onclick="switchCosmeticTab('effects')">✨ Effects</button>
+            <button class="cosmetic-tab" onclick="switchCosmeticTab('titles')">📛 Titles</button>
+        </div>
+
+        <div class="cosmetic-grid" id="cosmeticGrid"></div>
+
+        <div class="gacha-section">
+            <div class="gacha-banner">
+                <h3>🎲 Mystery Roll</h3>
+                <p>Get random AI-themed cosmetics!</p>
+                <div class="gacha-costs">
+                    <button class="gacha-btn" onclick="rollGacha(1)">
+                        <span>Roll x1</span>
+                        <span>🪙 100</span>
+                    </button>
+                    <button class="gacha-btn gacha-btn-multi" onclick="rollGacha(10)">
+                        <span>Roll x10</span>
+                        <span>🪙 900</span>
+                        <span class="gacha-discount">10% OFF!</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- GACHA RESULTS MODAL -->
+<div class="modal" id="gachaResultModal" style="display:none">
+    <div class="modal-content gacha-result-content">
+        <div class="gacha-result-header">
+            <h2>🎉 You Got:</h2>
+            <button class="modal-close" onclick="closeGachaResult()">✕</button>
+        </div>
+        <div class="gacha-results-grid" id="gachaResultsGrid"></div>
+        <div class="gacha-result-actions">
+            <button class="btn-primary" onclick="closeGachaResult()">Awesome!</button>
+            <button class="btn-secondary" onclick="closeGachaResult(); rollGacha(1)">Roll Again</button>
+        </div>
+    </div>
 </div>
 
 <!-- LOGIN VIEW -->
@@ -9233,9 +9741,9 @@ class EnsembleOrchestrator {
             const aiLikelihood = score.aiProbability * weight;
             const realLikelihood = (1 - score.aiProbability) * weight;
 
-            // Bayesian update
-            posteriorAI *= (1 + aiLikelihood);
-            posteriorReal *= (1 + realLikelihood);
+            // Bayesian update (corrected formula - no +1 bias)
+            posteriorAI *= aiLikelihood;
+            posteriorReal *= realLikelihood;
         }
 
         // Normalize
