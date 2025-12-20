@@ -10026,26 +10026,41 @@ class EnsembleOrchestrator {
             priorAI = 0.6; // Increase prior if strong modules agree
         }
 
-        // Bayesian update: posterior = likelihood * prior / evidence
-        let posteriorAI = priorAI;
-        let posteriorReal = 1 - priorAI;
+        // Use log-likelihood to prevent underflow/NaN issues
+        let logPosteriorAI = Math.log(priorAI);
+        let logPosteriorReal = Math.log(1 - priorAI);
+        let hasEvidence = false;
 
         for (const [moduleName, score] of Object.entries(moduleScores)) {
             if (score.indicatorCount === 0) continue; // Skip modules with no evidence
+            hasEvidence = true;
 
             const weight = this.moduleWeights[moduleName] || 1.0;
 
-            // Likelihood ratios (how much more likely this evidence is under AI vs Real hypothesis)
-            const aiLikelihood = score.aiProbability * weight;
-            const realLikelihood = (1 - score.aiProbability) * weight;
+            // Clamp probabilities to avoid log(0) - minimum 0.01, maximum 0.99
+            const clampedAI = Math.max(0.01, Math.min(0.99, score.aiProbability));
+            const clampedReal = 1 - clampedAI;
 
-            // Bayesian update (corrected formula - no +1 bias)
-            posteriorAI *= aiLikelihood;
-            posteriorReal *= realLikelihood;
+            // Likelihood ratios with weighting
+            const aiLikelihood = clampedAI * weight;
+            const realLikelihood = clampedReal * weight;
+
+            // Log-space Bayesian update (add instead of multiply)
+            logPosteriorAI += Math.log(Math.max(0.001, aiLikelihood));
+            logPosteriorReal += Math.log(Math.max(0.001, realLikelihood));
         }
 
-        // Normalize
+        // If no evidence, return prior
+        if (!hasEvidence) return priorAI;
+
+        // Convert back from log space and normalize
+        const maxLog = Math.max(logPosteriorAI, logPosteriorReal);
+        const posteriorAI = Math.exp(logPosteriorAI - maxLog);
+        const posteriorReal = Math.exp(logPosteriorReal - maxLog);
         const total = posteriorAI + posteriorReal;
+
+        // Safeguard against NaN
+        if (isNaN(total) || total === 0) return priorAI;
         return posteriorAI / total;
     }
 
