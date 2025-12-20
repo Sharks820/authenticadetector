@@ -749,11 +749,392 @@
         .inventory-item.active{border-color:var(--success);box-shadow:0 0 15px var(--success-glow)}
         .inventory-empty{text-align:center;padding:40px;color:var(--text3);font-size:13px}
 
-        /* ANIMATIONS */
-        .scan-ring{animation:scan-rotate 3s linear infinite;transform-origin:center}
-        @keyframes scan-rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-        .pulse-core{animation:pulse-glow 2s ease-in-out infinite}
-        @keyframes pulse-glow{0%,100%{opacity:.4}50%{opacity:1}}
+        /* ==================== COMPREHENSIVE ANIMATION SYSTEM ==================== */
+
+        /* REDUCED MOTION SUPPORT */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ==================== PAGE TRANSITIONS ==================== */
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOutDown {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOutLeft {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .view.active {
+            animation: fadeInUp 300ms ease-out forwards;
+        }
+
+        /* ==================== SKELETON LOADING ==================== */
+
+        @keyframes skeletonShimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, var(--surface2) 25%, var(--surface3) 50%, var(--surface2) 75%);
+            background-size: 1000px 100%;
+            animation: skeletonShimmer 2s infinite;
+            border-radius: 8px;
+        }
+
+        .skeleton-bar { height: 12px; margin-bottom: 8px; border-radius: 4px; }
+        .skeleton-text { height: 16px; margin-bottom: 6px; }
+        .skeleton-circle { width: 40px; height: 40px; border-radius: 50%; display: inline-block; }
+
+        /* ==================== BUTTON INTERACTIONS ==================== */
+
+        @keyframes buttonHover { from { transform: scale(1); } to { transform: scale(1.02); } }
+        @keyframes buttonActive { from { transform: scale(1); } to { transform: scale(0.98); } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes checkmark { 0% { stroke-dashoffset: 50; } 100% { stroke-dashoffset: 0; } }
+
+        button {
+            transition: transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 150ms ease-out, background-color 150ms ease-out, color 150ms ease-out;
+            position: relative;
+        }
+
+        button:hover:not(:disabled) {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-glow);
+        }
+
+        button:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .btn-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 600ms linear infinite;
+        }
+
+        .btn-loading { display: flex; align-items: center; gap: 8px; }
+        .btn-success .checkmark { animation: checkmark 600ms ease-out forwards; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .btn-error { animation: shake 400ms ease-in-out; }
+
+        /* ==================== SCAN PROGRESS ANIMATIONS ==================== */
+
+        @keyframes progressFlow {
+            0% { background-position: -100% 0; }
+            100% { background-position: 100% 0; }
+        }
+
+        .progress-bar {
+            background: var(--primary-gradient);
+            background-size: 200% 100%;
+            animation: progressFlow 1.5s ease-in-out infinite;
+            transition: width 300ms ease-out;
+        }
+
+        @keyframes pulseScale {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+        }
+
+        .scan-indicator { animation: pulseScale 1.5s ease-in-out infinite; }
+        .scan-indicator-ring { animation: pulseScale 1.5s ease-in-out infinite; animation-delay: 0.3s; }
+
+        @keyframes slideInCheckmark {
+            from { opacity: 0; transform: scaleX(0); }
+            to { opacity: 1; transform: scaleX(1); }
+        }
+
+        .module-checkmark { animation: slideInCheckmark 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards; }
+
+        @keyframes countUpScore {
+            from { opacity: 0; transform: scale(0.8) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .score-reveal { animation: countUpScore 600ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+        /* ==================== LIST/CARD ANIMATIONS ==================== */
+
+        @keyframes cascadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-cascade { animation: cascadeIn 400ms ease-out forwards; }
+        .card-cascade:nth-child(1) { animation-delay: 0ms; }
+        .card-cascade:nth-child(2) { animation-delay: 60ms; }
+        .card-cascade:nth-child(3) { animation-delay: 120ms; }
+        .card-cascade:nth-child(4) { animation-delay: 180ms; }
+        .card-cascade:nth-child(5) { animation-delay: 240ms; }
+        .card-cascade:nth-child(n+6) { animation-delay: 300ms; }
+
+        @keyframes cardLift { from { transform: translateY(0); } to { transform: translateY(-4px); } }
+
+        .card-lift {
+            transition: transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 250ms ease-out;
+        }
+
+        .card-lift:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg), var(--shadow-glow);
+        }
+
+        @keyframes expandDown {
+            from { opacity: 0; max-height: 0; overflow: hidden; }
+            to { opacity: 1; max-height: 1000px; overflow: hidden; }
+        }
+
+        @keyframes collapseUp {
+            from { opacity: 1; max-height: 1000px; overflow: hidden; }
+            to { opacity: 0; max-height: 0; overflow: hidden; }
+        }
+
+        .collapse-enter { animation: expandDown 300ms ease-out forwards; }
+        .collapse-exit { animation: collapseUp 300ms ease-in forwards; }
+
+        @keyframes slideOutRemove {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100%); }
+        }
+
+        @keyframes fadeScaleOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.8); }
+        }
+
+        .item-remove { animation: slideOutRemove 300ms ease-in forwards; }
+        .item-delete-fade { animation: fadeScaleOut 300ms ease-in forwards; }
+
+        /* ==================== CELEBRATORY MOMENTS ==================== */
+
+        @keyframes confetti {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) rotate(360deg); opacity: 0; }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: confetti 800ms ease-out forwards;
+        }
+
+        @keyframes badgeUnlock {
+            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .badge-unlock { animation: badgeUnlock 600ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+        @keyframes levelUpPulse {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .level-up { animation: levelUpPulse 600ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+        @keyframes burstOut {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .success-burst { animation: burstOut 500ms ease-out forwards; }
+
+        @keyframes rankUpGlow {
+            0%, 100% { box-shadow: 0 0 0 0 var(--primary-glow); }
+            50% { box-shadow: 0 0 20px 10px var(--primary-glow); }
+        }
+
+        .rank-up { animation: rankUpGlow 800ms ease-out; }
+
+        /* ==================== SUBTLE DETAILS ==================== */
+
+        @keyframes tooltipFadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tooltip { animation: tooltipFadeIn 200ms ease-out forwards; opacity: 0; }
+        .tooltip.show { animation: tooltipFadeIn 200ms ease-out forwards; }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        .icon-hover {
+            transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1), filter 200ms ease-out;
+        }
+
+        .icon-hover:hover {
+            animation: iconBounce 400ms ease-in-out;
+            filter: drop-shadow(0 0 8px rgba(0, 212, 170, 0.5));
+        }
+
+        @keyframes focusGlow {
+            from { box-shadow: 0 0 0 0 var(--primary-glow); }
+            to { box-shadow: 0 0 0 8px rgba(0, 212, 170, 0); }
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--primary-glow) !important;
+            animation: focusGlow 300ms ease-out;
+            border-color: var(--primary) !important;
+            transition: box-shadow 150ms ease-out, border-color 150ms ease-out;
+        }
+
+        @keyframes notificationSlideIn {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes notificationSlideOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100%); }
+        }
+
+        .notification { animation: notificationSlideIn 300ms ease-out forwards; }
+        .notification.exit { animation: notificationSlideOut 300ms ease-in forwards; }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 800ms linear infinite;
+        }
+
+        .spinner-sm {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-top-color: var(--primary);
+        }
+
+        .spinner-lg {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top-color: var(--primary);
+        }
+
+        /* ==================== UTILITY ANIMATIONS ==================== */
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .float { animation: float 3s ease-in-out infinite; }
+
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 0 0 var(--success-glow); }
+            50% { box-shadow: 0 0 0 8px rgba(46, 213, 115, 0); }
+        }
+
+        .success-glow { animation: glowPulse 2s ease-out; }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+        }
+
+        .heartbeat { animation: heartbeat 600ms ease-in-out; }
+
+        @keyframes textReveal {
+            from { opacity: 0; clip-path: inset(0 100% 0 0); }
+            to { opacity: 1; clip-path: inset(0 0 0 0); }
+        }
+
+        .text-reveal { animation: textReveal 400ms ease-out forwards; }
+
+        @keyframes pop {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .pop-in { animation: pop 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+        .smooth-transition { transition: all 200ms ease-out; }
+
+        .delay-1 { animation-delay: 100ms; }
+        .delay-2 { animation-delay: 200ms; }
+        .delay-3 { animation-delay: 300ms; }
+        .delay-4 { animation-delay: 400ms; }
+        .delay-5 { animation-delay: 500ms; }
+
     </style>
 </head>
 <body>
@@ -766,6 +1147,7 @@
             <span class="logo-text">AuthenticaDetector</span>
         </div>
         <div class="header-btns">
+            <button class="icon-btn" onclick="openTankShooter()" title="Tank Shooter Game">🎮</button>
             <button class="icon-btn" onclick="openHelp()">❓</button>
             <button class="icon-btn quest-btn" onclick="openQuests()" title="Daily Quests">
                 <span>🎯</span>
@@ -1106,6 +1488,122 @@
     </div>
 </div>
 
+<!-- TANK SHOOTER GAME VIEW -->
+<div class="view" id="tankShooterView" style="background: #000;">
+    <div class="view-header" style="background: rgba(0,0,0,0.9);">
+        <button class="view-close" onclick="closeTankShooter()">←</button>
+        <span class="view-title">🎮 Tank Shooter</span>
+        <div style="width:44px"></div>
+    </div>
+    <div id="truthCannonGame" style="display:none;flex-direction:column;height:100vh;background:#000;">
+        <!-- Game Stats HUD -->
+        <div style="display:flex;justify-content:space-between;padding:12px;background:rgba(0,0,0,0.8);color:#fff;font-size:14px;">
+            <div>Wave: <span id="gameWave">1</span></div>
+            <div>Score: <span id="gameScore">0</span></div>
+            <div>Combo: <span id="gameCombo">x1.0</span></div>
+        </div>
+
+        <!-- HP Bar -->
+        <div style="padding:0 12px 12px;background:rgba(0,0,0,0.8);">
+            <div style="font-size:12px;color:#fff;margin-bottom:4px;">
+                HP: <span id="credibilityPercent">100%</span>
+            </div>
+            <div style="background:rgba(255,255,255,0.2);height:8px;border-radius:4px;overflow:hidden;">
+                <div id="credibilityFill" style="background:#00ff88;height:100%;width:100%;transition:width 0.3s;"></div>
+            </div>
+        </div>
+
+        <!-- Game Canvas -->
+        <canvas id="gameCanvas" style="flex:1;display:block;"></canvas>
+
+        <!-- Power-ups -->
+        <div style="display:flex;gap:8px;padding:12px;background:rgba(0,0,0,0.8);justify-content:center;flex-wrap:wrap;">
+            <button id="powerup1" onclick="activatePowerUp('slowMo')" style="background:#6c5ce7;color:#fff;border:none;padding:10px 16px;border-radius:8px;font-size:12px;cursor:pointer;position:relative;">
+                ⏱️ Slow-Mo
+                <div class="powerup-cooldown" style="display:none;position:absolute;top:2px;right:2px;background:#ff4444;border-radius:50%;width:20px;height:20px;font-size:10px;line-height:20px;text-align:center;"></div>
+            </button>
+            <button id="powerup2" onclick="activatePowerUp('scatterShot')" style="background:#e17055;color:#fff;border:none;padding:10px 16px;border-radius:8px;font-size:12px;cursor:pointer;position:relative;">
+                💥 Scatter
+                <div class="powerup-cooldown" style="display:none;position:absolute;top:2px;right:2px;background:#ff4444;border-radius:50%;width:20px;height:20px;font-size:10px;line-height:20px;text-align:center;"></div>
+            </button>
+            <button id="powerup3" onclick="activatePowerUp('xRay')" style="background:#00b894;color:#fff;border:none;padding:10px 16px;border-radius:8px;font-size:12px;cursor:pointer;position:relative;">
+                👁️ X-Ray
+                <div class="powerup-cooldown" style="display:none;position:absolute;top:2px;right:2px;background:#ff4444;border-radius:50%;width:20px;height:20px;font-size:10px;line-height:20px;text-align:center;"></div>
+            </button>
+            <button id="powerup4" onclick="activatePowerUp('shield')" style="background:#0984e3;color:#fff;border:none;padding:10px 16px;border-radius:8px;font-size:12px;cursor:pointer;position:relative;">
+                🛡️ Shield
+                <div class="powerup-cooldown" style="display:none;position:absolute;top:2px;right:2px;background:#ff4444;border-radius:50%;width:20px;height:20px;font-size:10px;line-height:20px;text-align:center;"></div>
+            </button>
+            <button id="powerup5" onclick="activatePowerUp('emp')" style="background:#9b59b6;color:#fff;border:none;padding:10px 16px;border-radius:8px;font-size:12px;cursor:pointer;position:relative;">
+                ⚡ EMP
+                <div class="powerup-cooldown" style="display:none;position:absolute;top:2px;right:2px;background:#ff4444;border-radius:50%;width:20px;height:20px;font-size:10px;line-height:20px;text-align:center;"></div>
+            </button>
+        </div>
+
+        <!-- Mobile Controls -->
+        <div id="mobileControls" style="display:none;position:fixed;bottom:120px;left:0;right:0;padding:20px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+                <div id="joystickZone" style="width:120px;height:120px;background:rgba(255,255,255,0.1);border-radius:50%;border:2px solid rgba(255,255,255,0.3);"></div>
+                <button id="fireBtn" style="width:80px;height:80px;background:rgba(255,68,68,0.8);border:none;border-radius:50%;color:#fff;font-size:32px;cursor:pointer;">🔫</button>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameOverScreen" style="display:none;position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);flex-direction:column;justify-content:center;align-items:center;padding:20px;color:#fff;">
+            <div style="font-size:48px;margin-bottom:20px;">💀</div>
+            <div style="font-size:32px;font-weight:bold;margin-bottom:30px;">GAME OVER</div>
+            <div style="background:rgba(255,255,255,0.1);padding:20px;border-radius:12px;margin-bottom:30px;width:100%;max-width:400px;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:16px;">
+                    <div>
+                        <div style="color:#999;font-size:12px;">Wave</div>
+                        <div style="font-size:24px;font-weight:bold;" id="finalWave">0</div>
+                    </div>
+                    <div>
+                        <div style="color:#999;font-size:12px;">Score</div>
+                        <div style="font-size:24px;font-weight:bold;" id="finalScore">0</div>
+                    </div>
+                    <div>
+                        <div style="color:#999;font-size:12px;">Fakes Destroyed</div>
+                        <div style="font-size:24px;font-weight:bold;" id="finalFakes">0</div>
+                    </div>
+                    <div>
+                        <div style="color:#999;font-size:12px;">Grade</div>
+                        <div style="font-size:24px;font-weight:bold;color:#00ff88;" id="gameOverGrade">D</div>
+                    </div>
+                </div>
+            </div>
+            <div style="font-size:20px;color:#00ff88;margin-bottom:30px;">
+                💰 <span id="coinsEarned">+0</span> Coins
+            </div>
+            <div style="display:flex;gap:12px;">
+                <button onclick="retryTankShooter()" style="background:#00ff88;color:#000;border:none;padding:14px 28px;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer;">🔄 Retry</button>
+                <button onclick="closeTankShooter()" style="background:rgba(255,255,255,0.1);color:#fff;border:none;padding:14px 28px;border-radius:8px;font-size:16px;cursor:pointer;">← Back</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Start Screen -->
+    <div id="tankShooterStart" style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;padding:20px;color:#fff;">
+        <div style="font-size:64px;margin-bottom:20px;">🎮</div>
+        <div style="font-size:32px;font-weight:bold;margin-bottom:12px;">Tank Shooter</div>
+        <div style="color:#999;text-align:center;margin-bottom:40px;max-width:400px;">
+            Defend against waves of AI-generated fakes! Survive as long as you can and climb the leaderboard.
+        </div>
+        <div style="background:rgba(255,255,255,0.05);padding:20px;border-radius:12px;margin-bottom:30px;max-width:400px;">
+            <div style="font-size:16px;font-weight:bold;margin-bottom:12px;">How to Play:</div>
+            <div style="font-size:14px;line-height:1.8;color:#ccc;">
+                🖱️ <strong>Desktop:</strong> WASD to move, Mouse to aim & shoot<br>
+                📱 <strong>Mobile:</strong> Joystick to move, Fire button to shoot<br>
+                🎯 Destroy enemies to earn points<br>
+                💎 Use power-ups strategically<br>
+                🏆 Survive waves to earn coins
+            </div>
+        </div>
+        <button onclick="startTankShooter()" style="background:#00ff88;color:#000;border:none;padding:16px 40px;border-radius:8px;font-size:18px;font-weight:bold;cursor:pointer;margin-bottom:12px;">▶️ Start Game</button>
+        <button onclick="closeTankShooter()" style="background:rgba(255,255,255,0.1);color:#fff;border:none;padding:12px 32px;border-radius:8px;font-size:14px;cursor:pointer;">← Back to Home</button>
+    </div>
+</div>
+
 <!-- PUBLIC PROFILE MODAL -->
 <div class="modal-overlay" id="publicProfileModal">
     <div class="modal"><button class="modal-close" onclick="closePublicProfile()">✕</button><div id="publicProfileContent"></div></div>
@@ -1123,6 +1621,12 @@
 </div>
 
 <input type="file" id="profilePicInput" accept="image/*" style="display:none" onchange="handleProfilePic(event)">
+
+<!-- Security Hardening Module - Load FIRST -->
+<script src="security-hardening.js"></script>
+
+<!-- Tank Shooter Game Module -->
+<script src="tank-shooter.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
@@ -4408,6 +4912,25 @@ function loadQuests() {
     updateQuestStreak();
 }
 
+// Tank Shooter Game Functions
+window.openTankShooter = function() {
+    console.log('[TankShooter] Opening Tank Shooter game...');
+    showView('tankShooterView');
+    document.getElementById('tankShooterStart').style.display = 'flex';
+    document.getElementById('truthCannonGame').style.display = 'none';
+};
+
+window.closeTankShooter = function() {
+    console.log('[TankShooter] Closing Tank Shooter game...');
+    if (typeof tankGame !== 'undefined' && tankGame.running) {
+        tankGame.running = false;
+    }
+    document.getElementById('truthCannonGame').style.display = 'none';
+    document.getElementById('tankShooterStart').style.display = 'flex';
+    document.getElementById('mobileControls').style.display = 'none';
+    showView('homeView');
+};
+
 function renderQuests() {
     renderQuestList('dailyQuests', gameState.dailyQuests);
     renderQuestList('weeklyQuests', gameState.weeklyQuests);
@@ -4485,6 +5008,506 @@ window.handleScanComplete = function(...args) {
 };
 
 init();
+
+// ==================== ANIMATION UTILITIES ====================
+// Comprehensive animation helper functions for delightful micro-interactions
+
+const AnimationUtils = {
+    // ==================== PAGE TRANSITIONS ====================
+
+    // Fade in view with animation
+    fadeInView: function(viewElement) {
+        if (!viewElement) return;
+        viewElement.style.opacity = '0';
+        viewElement.style.transform = 'translateY(20px)';
+
+        // Trigger reflow
+        void viewElement.offsetHeight;
+
+        viewElement.style.transition = 'opacity 300ms ease-out, transform 300ms ease-out';
+        viewElement.style.opacity = '1';
+        viewElement.style.transform = 'translateY(0)';
+    },
+
+    // Fade out view
+    fadeOutView: function(viewElement) {
+        if (!viewElement) return;
+        viewElement.style.transition = 'opacity 300ms ease-out, transform 300ms ease-out';
+        viewElement.style.opacity = '0';
+        viewElement.style.transform = 'translateY(20px)';
+    },
+
+    // ==================== LOADING SKELETONS ====================
+
+    // Create skeleton loader
+    createSkeleton: function(width = '100%', height = '16px') {
+        const skeleton = document.createElement('div');
+        skeleton.className = 'skeleton skeleton-text';
+        skeleton.style.width = width;
+        skeleton.style.height = height;
+        return skeleton;
+    },
+
+    // Create skeleton bar (progress-like)
+    createSkeletonBar: function(width = '100%', height = '12px') {
+        const skeleton = document.createElement('div');
+        skeleton.className = 'skeleton skeleton-bar';
+        skeleton.style.width = width;
+        skeleton.style.height = height;
+        return skeleton;
+    },
+
+    // ==================== BUTTON INTERACTIONS ====================
+
+    // Add loading state to button
+    setButtonLoading: function(button, isLoading = true) {
+        if (!button) return;
+
+        if (isLoading) {
+            button.disabled = true;
+            button.dataset.originalText = button.innerHTML;
+            button.innerHTML = '<span class="btn-spinner"></span> Loading...';
+            button.classList.add('btn-loading');
+        } else {
+            button.disabled = false;
+            button.innerHTML = button.dataset.originalText || 'Done';
+            button.classList.remove('btn-loading');
+        }
+    },
+
+    // Show success state on button
+    setButtonSuccess: function(button, message = 'Success!') {
+        if (!button) return;
+
+        button.disabled = true;
+        button.classList.add('btn-success');
+        button.innerHTML = '✓ ' + message;
+        button.style.backgroundColor = 'var(--success)';
+
+        setTimeout(() => {
+            button.classList.remove('btn-success');
+            button.disabled = false;
+            button.style.backgroundColor = '';
+        }, 2000);
+    },
+
+    // Show error state on button
+    setButtonError: function(button, message = 'Error!') {
+        if (!button) return;
+
+        button.classList.add('btn-error');
+        button.innerHTML = '✗ ' + message;
+        button.style.backgroundColor = 'var(--danger)';
+
+        setTimeout(() => {
+            button.classList.remove('btn-error');
+            button.style.backgroundColor = '';
+        }, 2500);
+    },
+
+    // ==================== SCAN PROGRESS ====================
+
+    // Create animated progress bar
+    createProgressBar: function(container) {
+        if (!container) return null;
+        const bar = document.createElement('div');
+        bar.className = 'progress-bar';
+        bar.style.width = '0%';
+        container.appendChild(bar);
+        return bar;
+    },
+
+    // Update progress with animation
+    updateProgress: function(progressElement, percentage) {
+        if (!progressElement) return;
+        progressElement.style.width = percentage + '%';
+    },
+
+    // Add pulsing scan indicator
+    addScanIndicator: function(container) {
+        if (!container) return null;
+        const indicator = document.createElement('div');
+        indicator.className = 'scan-indicator';
+        indicator.innerHTML = '🔍';
+        indicator.style.fontSize = '24px';
+        indicator.style.display = 'inline-block';
+        container.appendChild(indicator);
+        return indicator;
+    },
+
+    // Animate checkmark for completed module
+    animateCheckmark: function(element) {
+        if (!element) return;
+        element.classList.add('module-checkmark');
+        element.innerHTML = '✓';
+    },
+
+    // Reveal score with count-up animation
+    revealScore: function(scoreElement, finalScore) {
+        if (!scoreElement) return;
+
+        scoreElement.classList.add('score-reveal');
+
+        let currentScore = 0;
+        const increment = finalScore / 20; // Divide into 20 steps
+        const interval = 600 / 20; // Total animation is 600ms
+
+        const counter = setInterval(() => {
+            currentScore += increment;
+            if (currentScore >= finalScore) {
+                currentScore = finalScore;
+                clearInterval(counter);
+            }
+            scoreElement.textContent = Math.round(currentScore) + '%';
+        }, interval);
+    },
+
+    // ==================== LIST/CARD ANIMATIONS ====================
+
+    // Add cascade effect to cards
+    cascadeCards: function(cardElements) {
+        if (!cardElements || cardElements.length === 0) return;
+
+        cardElements.forEach((card, index) => {
+            card.classList.add('card-cascade');
+            card.style.setProperty('--card-index', index);
+        });
+    },
+
+    // Add lift effect to card on hover
+    addCardLift: function(card) {
+        if (!card) return;
+        card.classList.add('card-lift');
+    },
+
+    // Smooth expand animation
+    expandElement: function(element) {
+        if (!element) return;
+        element.classList.remove('collapse-exit');
+        element.classList.add('collapse-enter');
+        element.style.display = 'block';
+    },
+
+    // Smooth collapse animation
+    collapseElement: function(element) {
+        if (!element) return;
+        element.classList.remove('collapse-enter');
+        element.classList.add('collapse-exit');
+
+        setTimeout(() => {
+            element.style.display = 'none';
+        }, 300);
+    },
+
+    // Remove item with animation
+    removeItemAnimated: function(element, callback) {
+        if (!element) return;
+        element.classList.add('item-remove');
+
+        setTimeout(() => {
+            element.remove();
+            if (callback) callback();
+        }, 300);
+    },
+
+    // ==================== CELEBRATORY MOMENTS ====================
+
+    // Create confetti burst
+    createConfetti: function(count = 30, originX = 0.5, originY = 0.5) {
+        const colors = ['var(--primary)', 'var(--secondary)', 'var(--warning)', 'var(--success)'];
+
+        for (let i = 0; i < count; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+
+            const angle = (Math.PI * 2 * i) / count;
+            const velocity = 3 + Math.random() * 4;
+            const tx = Math.cos(angle) * velocity * 100;
+            const ty = Math.sin(angle) * velocity * 100 - 100;
+
+            confetti.style.setProperty('--tx', tx + 'px');
+            confetti.style.setProperty('--ty', ty + 'px');
+            confetti.style.left = (originX * 100) + '%';
+            confetti.style.top = (originY * 100) + '%';
+            confetti.style.background = colors[i % colors.length];
+
+            document.body.appendChild(confetti);
+
+            setTimeout(() => confetti.remove(), 800);
+        }
+    },
+
+    // Badge unlock animation
+    animateBadgeUnlock: function(badgeElement) {
+        if (!badgeElement) return;
+        badgeElement.classList.add('badge-unlock');
+
+        // Create confetti on unlock
+        const rect = badgeElement.getBoundingClientRect();
+        this.createConfetti(20, rect.left / window.innerWidth, rect.top / window.innerHeight);
+    },
+
+    // Level up animation
+    animateLevelUp: function(container) {
+        if (!container) return;
+        const element = document.createElement('div');
+        element.className = 'level-up';
+        element.style.fontSize = '32px';
+        element.innerHTML = '⬆️ Level Up!';
+        element.style.textAlign = 'center';
+        element.style.color = 'var(--primary)';
+        container.appendChild(element);
+
+        setTimeout(() => element.remove(), 600);
+    },
+
+    // Success burst effect
+    createSuccessBurst: function(element) {
+        if (!element) return;
+        const burst = document.createElement('div');
+        burst.className = 'success-burst';
+        burst.innerHTML = '✓';
+        burst.style.position = 'absolute';
+        burst.style.fontSize = '32px';
+        burst.style.color = 'var(--success)';
+        burst.style.top = '50%';
+        burst.style.left = '50%';
+        burst.style.transform = 'translate(-50%, -50%)';
+        element.appendChild(burst);
+
+        setTimeout(() => burst.remove(), 500);
+    },
+
+    // Leaderboard rank up glow
+    animateRankUp: function(element) {
+        if (!element) return;
+        element.classList.add('rank-up');
+        setTimeout(() => element.classList.remove('rank-up'), 800);
+    },
+
+    // ==================== SUBTLE DETAILS ====================
+
+    // Show tooltip with animation
+    showTooltip: function(text, element = null) {
+        let tooltip = document.querySelector('.tooltip');
+        if (!tooltip) {
+            tooltip = document.createElement('div');
+            tooltip.className = 'tooltip';
+            tooltip.style.position = 'fixed';
+            tooltip.style.backgroundColor = 'var(--surface)';
+            tooltip.style.color = 'var(--text)';
+            tooltip.style.padding = '8px 12px';
+            tooltip.style.borderRadius = '6px';
+            tooltip.style.fontSize = '12px';
+            tooltip.style.zIndex = '9999';
+            tooltip.style.pointerEvents = 'none';
+            document.body.appendChild(tooltip);
+        }
+
+        tooltip.textContent = text;
+        tooltip.classList.add('show');
+
+        if (element) {
+            const rect = element.getBoundingClientRect();
+            tooltip.style.left = (rect.left + rect.width / 2 - tooltip.offsetWidth / 2) + 'px';
+            tooltip.style.top = (rect.top - 40) + 'px';
+        }
+
+        return tooltip;
+    },
+
+    // Hide tooltip
+    hideTooltip: function() {
+        const tooltip = document.querySelector('.tooltip.show');
+        if (tooltip) {
+            tooltip.classList.remove('show');
+        }
+    },
+
+    // Icon bounce effect
+    bounceIcon: function(element) {
+        if (!element) return;
+        element.classList.add('icon-hover');
+        setTimeout(() => element.classList.remove('icon-hover'), 400);
+    },
+
+    // Float animation for icons
+    addFloatingIcon: function(element) {
+        if (!element) return;
+        element.classList.add('float');
+    },
+
+    // Create notification
+    showNotification: function(message, duration = 3000, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.style.position = 'fixed';
+        notification.style.top = 'var(--safe-top, 0)';
+        notification.style.right = '0';
+        notification.style.margin = '10px';
+        notification.style.padding = '12px 16px';
+        notification.style.borderRadius = '8px';
+        notification.style.zIndex = '10000';
+        notification.style.maxWidth = '300px';
+
+        // Set type styling
+        const styles = {
+            success: { background: 'var(--success)', color: 'white' },
+            error: { background: 'var(--danger)', color: 'white' },
+            warning: { background: 'var(--warning)', color: 'black' },
+            info: { background: 'var(--secondary)', color: 'white' }
+        };
+
+        const style = styles[type] || styles.info;
+        Object.assign(notification.style, style);
+
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.classList.add('exit');
+            setTimeout(() => notification.remove(), 300);
+        }, duration);
+
+        return notification;
+    },
+
+    // ==================== SPINNER HELPERS ====================
+
+    // Create spinner element
+    createSpinner: function(size = 'md') {
+        const spinner = document.createElement('div');
+        if (size === 'sm') {
+            spinner.className = 'spinner spinner-sm';
+        } else if (size === 'lg') {
+            spinner.className = 'spinner spinner-lg';
+        } else {
+            spinner.className = 'spinner';
+        }
+        return spinner;
+    },
+
+    // ==================== UTILITY ANIMATIONS ====================
+
+    // Add float animation
+    addFloat: function(element) {
+        if (!element) return;
+        element.classList.add('float');
+    },
+
+    // Add heartbeat effect
+    addHeartbeat: function(element) {
+        if (!element) return;
+        element.classList.add('heartbeat');
+        setTimeout(() => element.classList.remove('heartbeat'), 600);
+    },
+
+    // Text reveal animation
+    revealText: function(element, text) {
+        if (!element) return;
+        element.classList.add('text-reveal');
+        element.textContent = text;
+    },
+
+    // Pop in animation
+    popIn: function(element) {
+        if (!element) return;
+        element.classList.add('pop-in');
+    },
+
+    // Apply smooth transitions
+    smoothTransition: function(element) {
+        if (!element) return;
+        element.classList.add('smooth-transition');
+    }
+};
+
+// ==================== ANIMATION HELPER FUNCTION ====================
+
+// Universal helper to trigger animations on elements
+function animate(element, animationName, duration = 300) {
+    if (!element) return Promise.resolve();
+
+    return new Promise((resolve) => {
+        element.style.animation = `${animationName} ${duration}ms ease-out forwards`;
+
+        setTimeout(() => {
+            element.style.animation = '';
+            resolve();
+        }, duration);
+    });
+}
+
+// Delay utility for chaining animations
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Chain multiple animations
+async function animateSequence(elements, animationName, duration = 300, staggerDelay = 100) {
+    for (let i = 0; i < elements.length; i++) {
+        animate(elements[i], animationName, duration);
+        await delay(staggerDelay);
+    }
+}
+
+// ==================== AUTO-INITIALIZE ANIMATIONS ====================
+
+// Initialize button animations on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth transitions to all interactive elements
+    const interactiveElements = document.querySelectorAll('button, a, input, select');
+    interactiveElements.forEach(el => {
+        AnimationUtils.smoothTransition(el);
+    });
+
+    // Add card lift to existing cards
+    const cards = document.querySelectorAll('.shop-item, .quest-card, .inventory-item');
+    cards.forEach(card => {
+        AnimationUtils.addCardLift(card);
+    });
+});
+
+// Extend showView to include animations with debouncing to prevent navigation loops
+if (typeof showView !== 'undefined') {
+    const originalShowView = showView;
+    let isNavigating = false;
+    let navigationTimeout = null;
+
+    window.showView = function(id) {
+        // Prevent rapid navigation causing loops
+        if (isNavigating) {
+            console.log('[Navigation] Debouncing navigation to', id);
+            return;
+        }
+
+        isNavigating = true;
+
+        // Clear any pending navigation timeout
+        if (navigationTimeout) {
+            clearTimeout(navigationTimeout);
+        }
+
+        // Execute navigation
+        originalShowView(id);
+        const element = document.getElementById(id);
+        if (element) {
+            AnimationUtils.fadeInView(element);
+        }
+
+        // Reset navigation lock after animation completes
+        navigationTimeout = setTimeout(() => {
+            isNavigating = false;
+        }, 300); // Match animation duration
+    };
+}
+
+// Export AnimationUtils globally
+window.AnimationUtils = AnimationUtils;
+window.animate = animate;
+window.delay = delay;
+window.animateSequence = animateSequence;
+
 </script>
 </body>
 </html>
