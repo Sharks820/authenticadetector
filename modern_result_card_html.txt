@@ -1,0 +1,147 @@
+            <!-- MODERN RESULT CARD -->
+            <div class="result-card hidden" id="resultCard">
+                <div class="result-glow" id="resultGlow"></div>
+
+                <!-- VERDICT HEADER -->
+                <div class="result-header">
+                    <div class="result-icon" id="resultIcon">🤖</div>
+                    <div class="result-info">
+                        <div class="result-label" id="resultLabel">Likely AI Generated</div>
+                        <div class="result-sublabel" id="resultSublabel">Deep Scan</div>
+                    </div>
+                </div>
+
+                <!-- CONFIDENCE METER -->
+                <div class="confidence-section">
+                    <div class="confidence-gauge">
+                        <div class="gauge-bg"></div>
+                        <div class="gauge-fill ai-generated" id="gaugeFill"></div>
+                        <div class="gauge-inner">
+                            <div class="gauge-value" id="gaugeValue">87%</div>
+                            <div class="gauge-label" id="gaugeLabel">AI</div>
+                        </div>
+                    </div>
+                    <div class="confidence-info">
+                        <h3>High Confidence</h3>
+                        <p>Multiple detection signals align with 87% certainty.</p>
+                        <div class="confidence-badge confidence-high" id="confidenceBadge">
+                            <span>●</span><span id="confidenceText">High</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DETECTION SCORE SPECTRUM -->
+                <div class="score-spectrum">
+                    <div class="spectrum-label">
+                        <span>100% Authentic</span>
+                        <span>100% AI-Generated</span>
+                    </div>
+                    <div class="spectrum-bar">
+                        <div class="spectrum-fill" style="--fill-width:87%;"></div>
+                        <div class="spectrum-marker" style="--marker-pos:87%;"></div>
+                    </div>
+                    <div class="spectrum-hint">Score: 87/100 • Trend: Strong AI signals</div>
+                </div>
+
+                <!-- MODULE BREAKDOWN -->
+                <div class="modules-section">
+                    <div class="modules-title">🔬 Detection Modules</div>
+                    <div class="modules-grid">
+                        <!-- Modules will be populated by JavaScript -->
+                        <div class="module-card">
+                            <div class="module-icon">🧬</div>
+                            <div class="module-name">Artifacts</div>
+                            <div class="module-score">
+                                <span>92%</span>
+                                <div class="module-indicator triggered"></div>
+                            </div>
+                            <div class="module-details">
+                                <div class="module-detail-row">
+                                    <span class="module-detail-label">Noise:</span>
+                                    <span class="module-detail-value">94%</span>
+                                </div>
+                                <div class="module-detail-row">
+                                    <span class="module-detail-label">Compression:</span>
+                                    <span class="module-detail-value">89%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="module-card">
+                            <div class="module-icon">🎨</div>
+                            <div class="module-name">Color Balance</div>
+                            <div class="module-score">
+                                <span>78%</span>
+                                <div class="module-indicator triggered"></div>
+                            </div>
+                            <div class="module-details">
+                                <div class="module-detail-row">
+                                    <span class="module-detail-label">Saturation:</span>
+                                    <span class="module-detail-value">81%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="module-card">
+                            <div class="module-icon">🧠</div>
+                            <div class="module-name">AI Model</div>
+                            <div class="module-score">
+                                <span>91%</span>
+                                <div class="module-indicator triggered"></div>
+                            </div>
+                            <div class="module-details">
+                                <div class="module-detail-row">
+                                    <span class="module-detail-label">ViT Score:</span>
+                                    <span class="module-detail-value">94%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="module-card">
+                            <div class="module-icon">🔊</div>
+                            <div class="module-name">Frequency</div>
+                            <div class="module-score">
+                                <span>68%</span>
+                                <div class="module-indicator caution"></div>
+                            </div>
+                            <div class="module-details">
+                                <div class="module-detail-row">
+                                    <span class="module-detail-label">FFT Entropy:</span>
+                                    <span class="module-detail-value">71%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LEGACY SCORE BAR (Keep for compatibility) -->
+                <div class="result-score" style="display:none;">
+                    <div class="score-bar"><div class="score-fill" id="scoreFill" style="width:50%"></div></div>
+                    <div class="score-labels"><span>Real</span><span>AI</span></div>
+                    <div class="score-value" id="scoreValue">AI Probability: 50%</div>
+                </div>
+
+                <!-- EXPLAINERS (Keep existing) -->
+                <div class="explainers" id="explainersCard">
+                    <div class="explainers-header" onclick="toggleExplainers()">
+                        <div class="explainers-title">🔍 Why we think this</div>
+                        <span class="explainers-toggle" id="explainersToggle">▼</span>
+                    </div>
+                    <div class="explainers-content" id="explainersContent"></div>
+                </div>
+
+                <!-- FEEDBACK (Keep existing) -->
+                <div class="feedback-section">
+                    <div class="feedback-title">📝 Was this accurate?</div>
+                    <div class="feedback-btns">
+                        <button class="feedback-btn" onclick="submitFeedback('correct')">✓ Correct</button>
+                        <button class="feedback-btn" onclick="submitFeedback('incorrect')">✗ Incorrect</button>
+                    </div>
+                </div>
+
+                <!-- RESULT ACTIONS -->
+                <div class="result-actions">
+                    <button class="result-action action-share" onclick="shareResult()">📤 Share</button>
+                    <button class="result-action action-new" onclick="newScan()">🔄 New Scan</button>
+                </div>
+            </div>

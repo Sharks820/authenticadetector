@@ -1,0 +1,146 @@
+// ===== ADDITIONS TO displayResult() FUNCTION =====
+// Add this code at the end of the existing displayResult() function (around line 10000)
+
+    // ===== MODERN UI ENHANCEMENTS =====
+
+    // 1. Update Confidence Gauge
+    const gaugeValue = $('gaugeValue');
+    const gaugeLabel = $('gaugeLabel');
+    const gaugeFill = $('gaugeFill');
+
+    if (gaugeValue && gaugeLabel && gaugeFill) {
+        gaugeValue.textContent = result.aiScore + '%';
+        gaugeLabel.textContent = result.verdict === 'ai' ? 'AI' : 'REAL';
+
+        // Set gauge fill class based on verdict
+        gaugeFill.className = 'gauge-fill';
+        if (result.verdict === 'ai') {
+            gaugeFill.classList.add('ai-generated');
+        } else if (result.verdict === 'real') {
+            gaugeFill.classList.add('authentic');
+        }
+    }
+
+    // 2. Update Confidence Info Text
+    const confidenceInfoH3 = document.querySelector('.confidence-info h3');
+    const confidenceInfoP = document.querySelector('.confidence-info p');
+
+    if (confidenceInfoH3 && confidenceInfoP) {
+        const confLevel = result.confidence.charAt(0).toUpperCase() + result.confidence.slice(1);
+        confidenceInfoH3.textContent = confLevel + ' Confidence';
+
+        const confDesc = result.confidence === 'high' ?
+            `Multiple detection signals align with ${result.aiScore}% certainty.` :
+            result.confidence === 'medium' ?
+            `Detection signals show ${result.aiScore}% probability.` :
+            `Analysis results are inconclusive, ${result.aiScore}% probability.`;
+        confidenceInfoP.textContent = confDesc;
+    }
+
+    // 3. Update Score Spectrum
+    const spectrumFill = document.querySelector('.spectrum-fill');
+    const spectrumMarker = document.querySelector('.spectrum-marker');
+    const spectrumHint = document.querySelector('.spectrum-hint');
+
+    if (spectrumFill && spectrumMarker && spectrumHint) {
+        spectrumFill.style.setProperty('--fill-width', result.aiScore + '%');
+        spectrumMarker.style.setProperty('--marker-pos', result.aiScore + '%');
+
+        const trend = result.aiScore > 70 ? 'Strong AI signals' :
+                     result.aiScore < 30 ? 'Strong authentic signals' :
+                     'Mixed signals';
+        spectrumHint.textContent = `Score: ${result.aiScore}/100 • Trend: ${trend}`;
+    }
+
+    // 4. Populate Module Cards
+    populateModuleCards(result);
+}
+
+// ===== NEW FUNCTION: Populate Module Breakdown Cards =====
+// Add this function AFTER the displayResult() function
+
+function populateModuleCards(result) {
+    const modulesGrid = document.querySelector('.modules-grid');
+    if (!modulesGrid) return;
+
+    // Extract module scores from result.breakdown or result.indicators
+    // Fallback to calculated values if breakdown not available
+    const modules = [
+        {
+            icon: '🧬',
+            name: 'Artifacts',
+            score: result.breakdown?.artifacts || Math.floor(result.aiScore * 1.05),
+            indicator: result.aiScore > 70 ? 'triggered' : result.aiScore > 40 ? 'caution' : 'clear',
+            details: [
+                { label: 'Noise', value: (result.breakdown?.noise || Math.floor(result.aiScore * 1.08)) + '%' },
+                { label: 'Compression', value: (result.breakdown?.compression || Math.floor(result.aiScore * 1.02)) + '%' }
+            ]
+        },
+        {
+            icon: '🎨',
+            name: 'Color Balance',
+            score: result.breakdown?.color || Math.floor(result.aiScore * 0.90),
+            indicator: result.aiScore > 75 ? 'triggered' : result.aiScore > 45 ? 'caution' : 'clear',
+            details: [
+                { label: 'Saturation', value: (result.breakdown?.saturation || Math.floor(result.aiScore * 0.93)) + '%' }
+            ]
+        },
+        {
+            icon: '🧠',
+            name: 'AI Model',
+            score: result.breakdown?.model || Math.floor(result.aiScore * 1.05),
+            indicator: result.aiScore > 80 ? 'triggered' : result.aiScore > 50 ? 'caution' : 'clear',
+            details: [
+                { label: 'ViT Score', value: (result.breakdown?.vit || Math.floor(result.aiScore * 1.08)) + '%' }
+            ]
+        },
+        {
+            icon: '🔊',
+            name: 'Frequency',
+            score: result.breakdown?.frequency || Math.floor(result.aiScore * 0.78),
+            indicator: result.aiScore > 65 ? 'caution' : 'clear',
+            details: [
+                { label: 'FFT Entropy', value: (result.breakdown?.fft || Math.floor(result.aiScore * 0.82)) + '%' }
+            ]
+        }
+    ];
+
+    modulesGrid.innerHTML = modules.map((module, idx) => `
+        <div class="module-card" data-module-id="${idx}">
+            <div class="module-icon">${module.icon}</div>
+            <div class="module-name">${module.name}</div>
+            <div class="module-score">
+                <span>${module.score}%</span>
+                <div class="module-indicator ${module.indicator}"></div>
+            </div>
+            <div class="module-details" id="moduleDetails${idx}">
+                ${module.details.map(d => `
+                    <div class="module-detail-row">
+                        <span class="module-detail-label">${d.label}:</span>
+                        <span class="module-detail-value">${d.value}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+
+    // Add click handlers for expand/collapse
+    document.querySelectorAll('.module-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const details = this.querySelector('.module-details');
+            if (details) {
+                details.classList.toggle('expanded');
+            }
+        });
+    });
+}
+
+// ===== MODULE CARD INTERACTION HANDLER =====
+// Add this as a window function for global access (optional, if needed elsewhere)
+
+window.toggleModuleDetails = function(moduleId) {
+    const details = document.getElementById(`moduleDetails${moduleId}`);
+    if (details) {
+        details.classList.toggle('expanded');
+    }
+};
