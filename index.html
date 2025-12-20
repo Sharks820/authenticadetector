@@ -11287,11 +11287,11 @@ function renderHistory() {
     }
 
     container.innerHTML = history.map(item => `
-        <div class="history-item">
-            <div class="history-thumb">${item.verdict === 'ai' ? '🤖' : item.verdict === 'real' ? '✅' : '❓'}</div>
-            <div class="history-info">
-                <div class="history-result">${item.verdict === 'ai' ? 'AI Generated' : item.verdict === 'real' ? 'Real Image' : 'Uncertain'}</div>
-                <div class="history-meta">${item.mode} scan - ${new Date(item.timestamp).toLocaleDateString()}</div>
+        <div class="pro-list-item fade-in-up">
+            <div class="pro-list-icon">${item.verdict === 'ai' ? '🤖' : item.verdict === 'real' ? '✅' : '❓'}</div>
+            <div class="pro-list-content">
+                <div class="pro-list-title">${item.verdict === 'ai' ? 'AI Generated' : item.verdict === 'real' ? 'Real Image' : 'Uncertain'}</div>
+                <div class="pro-list-subtitle">${item.mode} scan • ${new Date(item.timestamp).toLocaleDateString()}</div>
             </div>
             <div class="history-score ${item.verdict}">${item.aiScore}%</div>
         </div>
