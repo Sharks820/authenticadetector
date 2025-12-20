@@ -2134,7 +2134,10 @@
     <div class="view-header">
         <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
         <span class="view-title">📋 History</span>
-        <div style="width:44px"></div>
+        <div class="coins-display" id="historyViewCoins">
+            <span style="font-size:16px">🪙</span>
+            <span>0</span>
+        </div>
     </div>
     <div class="view-body view-body-padded" id="historyContent">
         <div class="history-empty"><div style="font-size:40px;margin-bottom:8px">📋</div><p>No scans yet</p></div>
@@ -2146,7 +2149,10 @@
     <div class="view-header">
         <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
         <span class="view-title">🏆 Leaderboard</span>
-        <div style="width:44px"></div>
+        <div class="coins-display" id="leaderboardViewCoins">
+            <span style="font-size:16px">🪙</span>
+            <span>0</span>
+        </div>
     </div>
     <div class="view-body view-body-padded">
         <!-- REWARDS TEASER -->
@@ -2180,7 +2186,10 @@
     <div class="view-header">
         <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
         <span class="view-title">👤 Profile</span>
-        <div style="width:44px"></div>
+        <div class="coins-display" id="profileViewCoins">
+            <span style="font-size:16px">🪙</span>
+            <span>0</span>
+        </div>
     </div>
     <div class="view-body view-body-padded">
         <div class="profile-header">
@@ -2209,7 +2218,10 @@
     <div class="view-header">
         <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
         <span class="view-title">🎖️ All Badges</span>
-        <div style="width:44px"></div>
+        <div class="coins-display" id="badgesViewCoins">
+            <span style="font-size:16px">🪙</span>
+            <span>0</span>
+        </div>
     </div>
     <div class="view-body view-body-padded" id="allBadgesContent"></div>
 </div>
@@ -4465,7 +4477,7 @@ function updateProgressionUI() {
 
 function updateCoinsDisplay() {
     const coins = userProgression?.truth_coins || 0;
-    const displays = ['coinsCount', 'headerCoins', 'userCoins'];
+    const displays = ['coinsCount', 'headerCoins', 'userCoins', 'historyViewCoins', 'leaderboardViewCoins', 'profileViewCoins', 'badgesViewCoins'];
     displays.forEach(id => {
         const el = $(id);
         if (el) {
