@@ -5227,7 +5227,7 @@ async function analyzeImage(dataUrl, mode) {
     // Max 512x512 even for deep scan to keep FFT computation fast
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-    const analysisSize = mode === 'deep' ? 512 : 256;  // Reduced from 1024 to 512
+    const analysisSize = mode === 'deep' ? 256 : 256;  // Reduced from 512 to 256 - prevents FFT freeze
     canvas.width = Math.min(img.width, analysisSize);
     canvas.height = Math.min(img.height, analysisSize);
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -5286,8 +5286,8 @@ async function analyzeImage(dataUrl, mode) {
     // =========================================
     if (mode === 'deep') {
         console.log('[DeepScan] 3/12: FFT frequency analysis...');
-        // Only run FFT on reasonably sized images (max 512x512)
-        if (width <= 512 && height <= 512) {
+        // Only run FFT on reasonably sized images (max 256x256)
+        if (width <= 256 && height <= 256) {
             const frequencyResult = await runDetectorSafe('FFT Analysis',
                 () => analyzeFrequencyDomain(pixels, width, height),
                 3000 // 3 second timeout for FFT
