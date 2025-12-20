@@ -3441,15 +3441,12 @@ async function init() {
 // ============================================================
 
 // ==================== GAME STATE ====================
-let currentView = null;
-let currentCardIndex = 0;
-let pendingSubmissions = [];
-let userProgression = null;
-let activeOutbreak = null;
-let userSquad = null;
+// BACK BUTTON FIX - Replace openView and closeView functions
 
-// ==================== VIEW MANAGEMENT ====================
-// Game views that show the game navigation bar
+// View stack for proper navigation
+let viewStack = ['homeView'];
+let currentView = null;
+
 const GAME_VIEWS = ['huntView', 'verifyView', 'outbreaksView', 'squadsView', 'leaderboardView'];
 
 window.openView = function(viewId) {
@@ -3461,7 +3458,6 @@ window.openView = function(viewId) {
     // Close ALL views first for clean transition
     document.querySelectorAll('.view').forEach(v => {
         v.classList.remove('active');
-        // Add fade-out transition
         v.style.opacity = '0';
     });
 
@@ -3473,6 +3469,13 @@ window.openView = function(viewId) {
             view.classList.add('active');
             view.style.opacity = '1';
             currentView = viewId;
+
+            // Add to view stack and push to browser history
+            if (viewStack[viewStack.length - 1] !== viewId) {
+                viewStack.push(viewId);
+                // Push state to enable back button
+                history.pushState({ view: viewId }, '', '#' + viewId);
+            }
 
             // Handle game navigation bar
             const gameNav = $('gameNav');
@@ -3497,17 +3500,21 @@ window.openView = function(viewId) {
         } else {
             console.warn('[View] View not found:', viewId);
             // Fallback to home
-            const homeView = $('homeView');
-            if (homeView) {
-                homeView.classList.add('active');
-                homeView.style.opacity = '1';
-            }
+            openView('homeView');
         }
     }, 50);
 };
 
 window.closeView = function() {
     console.log('[View] Closing current view:', currentView);
+
+    // Pop from view stack
+    if (viewStack.length > 1) {
+        viewStack.pop();
+    }
+
+    // Go back to previous view (or home if stack is empty)
+    const previousView = viewStack[viewStack.length - 1] || 'homeView';
 
     // Close current view with transition
     if (currentView) {
@@ -3516,29 +3523,76 @@ window.closeView = function() {
             view.style.opacity = '0';
             setTimeout(() => {
                 view.classList.remove('active');
+                // Open previous view
+                openView(previousView);
             }, 50);
         }
+    } else {
+        // No current view, just go home
+        openView('homeView');
     }
-
-    // Hide game nav
-    const gameNav = $('gameNav');
-    if (gameNav) gameNav.style.display = 'none';
-
-    // Clear nav button active states
-    document.querySelectorAll('.game-nav-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-
-    // Return to home
-    currentView = null;
-    setTimeout(() => {
-        const homeView = $('homeView');
-        if (homeView) {
-            homeView.classList.add('active');
-            homeView.style.opacity = '1';
-        }
-    }, 100);
 };
+
+// Handle browser back button (Android physical back button)
+window.addEventListener('popstate', function(event) {
+    console.log('[View] Popstate event:', event.state);
+    
+    if (event.state && event.state.view) {
+        // Navigate to the view in history
+        const targetView = event.state.view;
+        
+        // Remove from stack without adding to history again
+        if (viewStack.length > 1) {
+            viewStack.pop();
+        }
+        
+        // Close all views
+        document.querySelectorAll('.view').forEach(v => {
+            v.classList.remove('active');
+            v.style.opacity = '0';
+        });
+        
+        // Open target view
+        setTimeout(() => {
+            const view = $(targetView);
+            if (view) {
+                view.classList.add('active');
+                view.style.opacity = '1';
+                currentView = targetView;
+                
+                // Update game nav
+                const isGameView = GAME_VIEWS.includes(targetView);
+                const gameNav = $('gameNav');
+                if (gameNav) {
+                    gameNav.style.display = isGameView ? 'flex' : 'none';
+                    if (isGameView) {
+                        document.querySelectorAll('.game-nav-btn').forEach(btn => {
+                            btn.classList.toggle('active', btn.dataset.view === targetView);
+                        });
+                    }
+                }
+            } else {
+                // Fallback to home
+                openView('homeView');
+            }
+        }, 50);
+    } else {
+        // No state, go to home
+        openView('homeView');
+    }
+});
+
+// Initialize: Set initial state for home view
+if (window.location.hash) {
+    const initialView = window.location.hash.substring(1);
+    if (initialView && $(initialView)) {
+        openView(initialView);
+    } else {
+        history.replaceState({ view: 'homeView' }, '', '#homeView');
+    }
+} else {
+    history.replaceState({ view: 'homeView' }, '', '#homeView');
+}
 
 // ==================== HUNT MODE ====================
 let huntImageUrl = null;
