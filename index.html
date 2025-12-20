@@ -805,8 +805,8 @@
             background:linear-gradient(135deg,#cd7f32,#daa520);border:3px solid #cd7f32;
         }
         .podium-avatar img{width:100%;height:100%;object-fit:cover}
-        .podium-crown{position:absolute;top:-10px;font-size:14px}
-        .podium-item.first .podium-crown{font-size:18px;top:-12px}
+        .podium-crown{position:absolute;top:-10px;font-size:24px;z-index:10}
+        .podium-item.first .podium-crown{font-size:32px;top:-12px;z-index:10}
         .podium-name{font-size:10px;font-weight:700}
         .podium-item.first .podium-name{color:var(--gold)}
         .podium-points{font-size:9px;color:var(--text3)}
@@ -3061,7 +3061,7 @@ async function loadUser() {
                 const { data: p } = await supabase.from('profiles').select('display_name,avatar_url').eq('id', user.id).single();
                 if (p) { 
                     user.name = p.display_name || user.name; 
-                    user.avatar = p.avatar_url; 
+                    user.avatar_url = p.avatar_url; 
                 }
                 updateUserUI(); 
                 loadUserStats(); 
@@ -3088,10 +3088,10 @@ function updateUserUI() {
     if (user) {
         const initial = user.name ? user.name[0].toUpperCase() : user.email[0].toUpperCase();
         $('userInitial').textContent = initial;
-        $('userBtn').innerHTML = user.avatar ? `<img src="${user.avatar}">` : `<span id="userInitial">${initial}</span>`;
+        $('userBtn').innerHTML = user.avatar_url ? `<img src="${user.avatar_url}">` : `<span id="userInitial">${initial}</span>`;
         $('profileName').textContent = user.name || user.email.split('@')[0];
         $('profileEmail').textContent = user.email;
-        $('profileAvatar').innerHTML = user.avatar ? `<img src="${user.avatar}">` : initial;
+        $('profileAvatar').innerHTML = user.avatar_url ? `<img src="${user.avatar_url}">` : initial;
         $('loginLogoutText').textContent = 'Sign Out'; 
         $('loginLogoutIcon').textContent = '🚪';
     } else {
@@ -8699,7 +8699,7 @@ window.handleProfilePic = async function(event) {
 
         // Save locally
         if (user) {
-            user.avatar = dataUrl;
+            user.avatar_url = dataUrl;
             saveUser();
         }
 
