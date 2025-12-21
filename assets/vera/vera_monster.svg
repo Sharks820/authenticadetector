@@ -19,23 +19,29 @@
     .rune { stroke: #7c4dff; stroke-width: 5; stroke-linecap: round; }
   </style>
 
-  <path class="wing line" d="M60 260c64-140 234-190 300-80-70 24-126 86-156 150-26 56-64 86-130 82-34-2-60-38-46-74 12-30 22-46 32-78z"/>
-  <path class="wing line" d="M452 260c-64-140-234-190-300-80 70 24 126 86 156 150 26 56 64 86 130 82 34-2 60-38 46-74-12-30-22-46-32-78z"/>
+  <!-- Corrupted wings -->
+  <path class="wing line" d="M56 268c66-150 250-200 320-86-78 28-140 98-176 170-28 58-70 92-142 88-36-2-62-38-48-76 12-32 26-52 46-96z"/>
+  <path class="wing line" d="M456 268c-66-150-250-200-320-86 78 28 140 98 176 170 28 58 70 92 142 88 36-2 62-38 48-76-12-32-26-52-46-96z"/>
 
-  <circle class="skin line" cx="256" cy="176" r="60"/>
-  <path class="line" d="M210 122l-26-28 40 8z"/>
-  <path class="line" d="M302 122l26-28-40 8z"/>
-  <circle class="eye" cx="234" cy="176" r="9"/>
-  <circle class="eye" cx="278" cy="176" r="9"/>
-  <path class="line" d="M230 206c16-12 34-12 52 0"/>
-  <path class="line" d="M242 210l-10 12"/>
-  <path class="line" d="M270 210l10 12"/>
+  <!-- Head + horns -->
+  <circle class="skin line" cx="256" cy="176" r="62"/>
+  <path class="line" d="M208 118l-30-32 46 10z"/>
+  <path class="line" d="M304 118l30-32-46 10z"/>
 
-  <path class="body line" d="M204 244c34-26 98-26 120 0-10 78-28 146-60 196-32-50-46-118-60-196z"/>
-  <circle class="glow" cx="256" cy="104" r="10"/>
+  <!-- Face -->
+  <circle class="eye" cx="232" cy="176" r="9"/>
+  <circle class="eye" cx="280" cy="176" r="9"/>
+  <path class="line" d="M228 206c18-12 38-12 56 0"/>
+  <path class="line" d="M238 210l-12 14"/>
+  <path class="line" d="M274 210l12 14"/>
 
-  <path class="rune" d="M182 318l-26 26"/>
-  <path class="rune" d="M330 318l26 26"/>
-  <path class="rune" d="M214 350l16-16"/>
-  <path class="rune" d="M282 350l16-16"/>
+  <!-- Body -->
+  <path class="body line" d="M204 244c36-26 100-26 120 0-12 84-30 156-62 206-32-52-46-126-58-206z"/>
+  <circle class="glow" cx="256" cy="102" r="10"/>
+
+  <!-- Corruption runes -->
+  <path class="rune" d="M176 320l-28 28"/>
+  <path class="rune" d="M336 320l28 28"/>
+  <path class="rune" d="M212 356l18-18"/>
+  <path class="rune" d="M282 356l18-18"/>
 </svg>
