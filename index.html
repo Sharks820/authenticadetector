@@ -4755,7 +4755,8 @@
                 <span class="advanced-toggle" id="advancedToggle">▼</span>
             </div>
             <div class="advanced-content" id="advancedContent">
-                <div class="advanced-row">
+                <!-- HIDDEN: Forensics mode disabled - was causing crashes -->
+                <div class="advanced-row" style="display:none;">
                     <div class="advanced-label">
                         <span class="advanced-icon">🔬</span>
                         <div><div class="advanced-name">Forensics Mode</div><div class="advanced-desc">Maximum accuracy</div></div>
@@ -9897,11 +9898,15 @@ function downsamplePixelsSimple(pixelData, width, height, targetSize) {
 
 // Main Analysis Function - Completely Rewritten
 async function analyzeImage(dataUrl, mode) {
-    // FORENSICS FIX: mode can now be 'quick', 'deep', or 'forensics'
-    // Normalize mode - if 'forensics' passed as mode, use it
-    // If mode is 'deep' but forensicsMode is true, convert to 'forensics'
-    const normalizedMode = (mode === 'forensics' || (mode === 'deep' && forensicsMode)) ? 'forensics' : mode;
-    const finalMode = normalizedMode;
+    // FIXED: Deep scan should ALWAYS be deep scan, never auto-convert to forensics
+    // Forensics mode was causing crashes and hangs on mobile
+    // Users must explicitly run forensics if they want it (not implemented in UI)
+    const finalMode = mode === 'forensics' ? 'forensics' : mode;
+
+    // Log if forensics was requested but we're keeping it simple
+    if (mode === 'deep' && forensicsMode) {
+        console.log('[DeepScan] Note: Forensics toggle is ON but running stable deep scan instead');
+    }
 
     console.log(`[DeepScan] Starting ${finalMode} scan...`);
     const scanStartTime = performance.now();
@@ -9919,15 +9924,15 @@ async function analyzeImage(dataUrl, mode) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
 
-    // FORENSICS: Higher resolution analysis for forensics mode
-    // P1-A FIX: Aggressive size reduction to prevent browser crash
-    let analysisSize = 256;
+    // Analysis size settings - balanced for accuracy vs performance
+    // Larger = more accurate but slower, smaller = faster but less accurate
+    let analysisSize = 128;
     if (finalMode === 'forensics') {
-        analysisSize = 256;  // Forensics uses medium resolution (was 512)
+        analysisSize = 256;  // Forensics uses higher resolution
     } else if (finalMode === 'deep') {
-        analysisSize = 64;   // P1-A FIX: Deep uses 64 (aggressive crash prevention)
+        analysisSize = 192;  // Deep uses balanced resolution (was 64, too small for accuracy)
     } else {
-        analysisSize = 64;   // Quick uses 64 (very fast)
+        analysisSize = 96;   // Quick uses smaller for speed
     }
     canvas.width = Math.min(img.width, analysisSize);
     canvas.height = Math.min(img.height, analysisSize);
@@ -10003,9 +10008,9 @@ async function analyzeImage(dataUrl, mode) {
         const isForensics = finalMode === 'forensics';
         console.log(`[Scan] 3/12: FFT frequency analysis (${isForensics ? 'Forensics' : 'Deep'})...`);
 
-        // P1-A FIX: Aggressive FFT size reduction to prevent crash
-        const fftMaxSize = isForensics ? 256 : 64;
-        const fftTimeout = isForensics ? 4000 : 1500;
+        // FFT size limits and timeouts
+        const fftMaxSize = isForensics ? 256 : 192;
+        const fftTimeout = isForensics ? 5000 : 3000;
 
         if (width <= fftMaxSize && height <= fftMaxSize) {
             const frequencyResult = await runDetectorSafe('FFT Analysis',
