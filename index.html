@@ -5318,6 +5318,8 @@ window.closeView = function() {
 
 // Handle browser back button (Android physical back button)
 let isHandlingPopstate = false; // Guard against rapid popstate events
+let lastBackTime = 0; // Track timing for double-back-to-home
+const DOUBLE_BACK_THRESHOLD = 500; // ms - double tap within this time goes to home
 
 window.addEventListener('popstate', function(event) {
     // Debounce popstate events
@@ -5327,7 +5329,11 @@ window.addEventListener('popstate', function(event) {
     }
     isHandlingPopstate = true;
 
-    console.log('[View] Popstate event:', event.state);
+    const now = Date.now();
+    const timeSinceLastBack = now - lastBackTime;
+    lastBackTime = now;
+
+    console.log('[View] Popstate event:', event.state, 'timeSinceLastBack:', timeSinceLastBack);
 
     // Helper to directly show view WITHOUT pushing to history (prevents loops)
     function showViewDirect(viewId) {
@@ -5358,6 +5364,17 @@ window.addEventListener('popstate', function(event) {
             }
             isHandlingPopstate = false;
         }, 50);
+    }
+
+    // DOUBLE-BACK-TO-HOME: If user presses back twice quickly, go straight to home
+    if (timeSinceLastBack < DOUBLE_BACK_THRESHOLD && currentView !== 'homeView') {
+        console.log('[View] DOUBLE-BACK detected! Going directly to home');
+        // Clear the entire stack and go home
+        viewStack = ['homeView'];
+        history.replaceState({ view: 'homeView', isBase: true }, '', '#homeView');
+        history.pushState({ view: 'homeView' }, '', '#homeView');
+        showViewDirect('homeView');
+        return;
     }
 
     if (event.state && event.state.view) {
