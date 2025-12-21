@@ -7233,9 +7233,14 @@ async function runDetectorSafe(name, fn, timeoutMs = 3000) {
     });
 }
 
-// Helper: Yield to event loop - FIXED with longer delay for UI responsiveness
+// Helper: Yield to event loop - P1-A FIX: Longer delay for mobile browsers
 function yieldToMain() {
-    return new Promise(resolve => setTimeout(resolve, 10));
+    return new Promise(resolve => setTimeout(resolve, 16)); // ~1 frame at 60fps
+}
+
+// P1-A FIX: Heavy yield for after intensive operations
+function heavyYield() {
+    return new Promise(resolve => setTimeout(resolve, 50)); // Longer pause for UI catch-up
 }
 
 // FORENSICS: Helper function to downsample pixels for FFT on large images
@@ -7297,11 +7302,12 @@ async function analyzeImage(dataUrl, mode) {
     const ctx = canvas.getContext('2d');
 
     // FORENSICS: Higher resolution analysis for forensics mode
+    // P1-A FIX: Reduced Deep Scan size from 256 to 128 to prevent browser crash
     let analysisSize = 256;
     if (finalMode === 'forensics') {
         analysisSize = 512;  // Forensics uses higher resolution
     } else if (finalMode === 'deep') {
-        analysisSize = 256;  // Deep uses 256 (FFT safe size)
+        analysisSize = 128;  // P1-A FIX: Deep uses 128 (prevents mobile crash)
     } else {
         analysisSize = 128;  // Quick uses 128 (faster)
     }
@@ -7377,9 +7383,9 @@ async function analyzeImage(dataUrl, mode) {
         const isForensics = finalMode === 'forensics';
         console.log(`[Scan] 3/12: FFT frequency analysis (${isForensics ? 'Forensics' : 'Deep'})...`);
 
-        // FORENSICS: More aggressive FFT analysis
-        const fftMaxSize = isForensics ? 512 : 256;
-        const fftTimeout = isForensics ? 6000 : 3000;
+        // P1-A FIX: Reduced FFT max size for Deep Scan to prevent crash
+        const fftMaxSize = isForensics ? 512 : 128;
+        const fftTimeout = isForensics ? 6000 : 2000;
 
         if (width <= fftMaxSize && height <= fftMaxSize) {
             const frequencyResult = await runDetectorSafe('FFT Analysis',
@@ -7387,14 +7393,20 @@ async function analyzeImage(dataUrl, mode) {
                 fftTimeout
             );
             trackModule('fft', frequencyResult);
+            await heavyYield(); // P1-A FIX: Heavy yield after FFT to prevent UI freeze
 
             // UGAD Spectral Analysis (CIKM 2024) - Superior diffusion model detection
-            console.log('[DeepScan] 3.5/12: UGAD multi-channel spectral analysis...');
-            const ugadResult = await runDetectorSafe('UGAD Analysis',
-                () => ugadSpectralAnalysis(pixels, width, height),
-                fftTimeout
-            );
-            trackModule('ugad', ugadResult);
+            // P1-A FIX: Only run UGAD for Forensics mode (too heavy for Deep Scan on mobile)
+            if (isForensics) {
+                console.log('[Forensics] 3.5/12: UGAD multi-channel spectral analysis...');
+                const ugadResult = await runDetectorSafe('UGAD Analysis',
+                    () => ugadSpectralAnalysis(pixels, width, height),
+                    fftTimeout
+                );
+                trackModule('ugad', ugadResult);
+            } else {
+                console.log('[DeepScan] Skipping UGAD (Forensics-only) for faster mobile performance');
+            }
         } else if (isForensics && width > fftMaxSize) {
             // FORENSICS: Try FFT on large images by downsampling
             console.log('[Forensics] Image large, attempting FFT on downsampled version...');
