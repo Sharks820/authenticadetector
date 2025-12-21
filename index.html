@@ -6279,10 +6279,7 @@
         </div>
 
         <!-- BADGES CATEGORY -->
-        <div class="shop-category">
-            <h3 class="shop-category-title"><span class="ad-icon-slot" data-ad-icon="badges" data-ad-size="16"></span> Badges</h3>
-            <div class="shop-grid" id="badgesShop"></div>
-        </div>
+        <!-- Badges section removed: Badges are achievement-only, never purchasable -->
 
         <!-- POWER-UPS CATEGORY -->
         <div class="shop-category">
@@ -6871,62 +6868,11 @@ const SHOP_ITEMS = {
         rarity: 'epic'
     },
 
-    // BADGES (SHOP-ONLY COSMETICS)
-    badge_veilbreaker: {
-        id: 'badge_veilbreaker',
-        name: 'Veilbreaker Crest',
-        desc: 'Cosmetic badge for your profile',
-        category: 'badges',
-        cost: 300,
-        icon: 'badges',
-        rarity: 'common'
-    },
-    badge_truth_titan: {
-        id: 'badge_truth_titan',
-        name: 'Truth Titan',
-        desc: 'Cosmetic badge for your profile',
-        category: 'badges',
-        cost: 600,
-        icon: 'trophy',
-        rarity: 'rare'
-    },
-    badge_signal_sage: {
-        id: 'badge_signal_sage',
-        name: 'Signal Sage',
-        desc: 'Cosmetic badge for your profile',
-        category: 'badges',
-        cost: 450,
-        icon: 'info',
-        rarity: 'rare'
-    },
-    badge_voidwatcher: {
-        id: 'badge_voidwatcher',
-        name: 'Voidwatcher',
-        desc: 'Cosmetic badge for your profile',
-        category: 'badges',
-        cost: 800,
-        icon: 'corruption',
-        rarity: 'epic'
-    },
-    badge_auric_guard: {
-        id: 'badge_auric_guard',
-        name: 'Auric Guard',
-        desc: 'Cosmetic badge for your profile',
-        category: 'badges',
-        cost: 550,
-        icon: 'shield',
-        rarity: 'rare'
-    },
-    badge_neon_ace: {
-        id: 'badge_neon_ace',
-        name: 'Neon Ace',
-        desc: 'Cosmetic badge for your profile',
-        category: 'badges',
-        cost: 400,
-        icon: 'sparkles',
-        rarity: 'common'
-    }
+    // BADGES - REMOVED: Badges are achievement-only, never purchasable
+    // All badge purchases have been removed per game design requirements
 };
+
+// Badge definitions moved to achievement system - see BADGE_DEFINITIONS below
 
 // ==================== TIER SYSTEM ====================
 const TIERS = {
@@ -9684,11 +9630,11 @@ async function loadShopView() {
     // Load user owned items from localStorage
     loadOwnedItems();
 
-    // Render shop categories
+    // Render shop categories (badges removed - achievement-only)
     renderShopCategory('cosmetics');
     renderShopCategory('powerups');
     renderShopCategory('tank_upgrades');
-    renderShopCategory('badges');
+    // renderShopCategory('badges'); // REMOVED: Badges are achievement-only
     renderShopCategory('boosters');
 }
 
