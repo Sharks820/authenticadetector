@@ -809,6 +809,8 @@
         }
         .progress-bar-wrap{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:8px}
         .progress-bar{height:100%;background:linear-gradient(90deg,var(--primary),#00ff88);border-radius:3px;transition:width .3s}
+        .progress-bar.analyzing{animation:progress-pulse 1.5s ease-in-out infinite;background:linear-gradient(90deg,var(--primary),#00ff88,var(--primary));background-size:200% 100%}
+        @keyframes progress-pulse{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
         .progress-status{font-size:11px;color:var(--text2);text-align:center}
         .progress-fact{
             margin-top:12px;padding:10px;background:var(--surface2);
@@ -6659,35 +6661,48 @@ window.startScan = async function(mode) {
     $('progressTitle').textContent = mode === 'deep' ? '🔬 Deep Scanning...' : '⚡ Quick Scanning...';
     $('progressStatus').textContent = 'Initializing analysis...';
 
-    const steps = mode === 'deep' ? [
+    // FIXED: Only show initial progress steps, then show analysis-in-progress state
+    // Progress steps stop at 40% - actual analysis updates progress from there
+    const initSteps = mode === 'deep' ? [
         { progress: 10, status: 'Loading image data...' },
-        { progress: 20, status: 'Extracting metadata...' },
-        { progress: 35, status: 'Analyzing pixel patterns...' },
-        { progress: 50, status: 'Checking frequency domain...' },
-        { progress: 65, status: 'Detecting AI signatures...' },
-        { progress: 80, status: 'Running neural network analysis...' },
-        { progress: 90, status: 'Cross-referencing patterns...' },
-        { progress: 100, status: 'Finalizing results...' }
+        { progress: 25, status: 'Preparing analysis modules...' },
+        { progress: 40, status: 'Starting AI detection...' }
     ] : [
-        { progress: 20, status: 'Loading image...' },
-        { progress: 50, status: 'Quick pattern check...' },
-        { progress: 80, status: 'Analyzing signatures...' },
-        { progress: 100, status: 'Complete!' }
+        { progress: 15, status: 'Loading image...' },
+        { progress: 35, status: 'Starting analysis...' }
     ];
 
     try {
-        for (const step of steps) {
+        // Show initial progress steps quickly
+        for (const step of initSteps) {
             if (analysisAborted) {
                 showUploadState();
                 toast('Scan cancelled');
                 return;
             }
-
-            await sleep(mode === 'deep' ? 400 : 200);
+            await sleep(150);
             $('progressBar').style.width = step.progress + '%';
             $('progressStatus').textContent = step.status;
-            updateFact();
         }
+
+        // Now show animated progress during actual analysis
+        $('progressBar').classList.add('analyzing');
+        $('progressStatus').textContent = mode === 'deep' ? 'Running 12 detection modules...' : 'Analyzing patterns...';
+
+        // Progress heartbeat: slowly increment during analysis for visual feedback
+        let currentProgress = mode === 'deep' ? 40 : 35;
+        const maxProgress = 90;
+        const progressInterval = setInterval(() => {
+            if (currentProgress < maxProgress) {
+                currentProgress += mode === 'deep' ? 3 : 5;
+                $('progressBar').style.width = currentProgress + '%';
+                // Update status messages during analysis
+                if (mode === 'deep') {
+                    if (currentProgress >= 70) $('progressStatus').textContent = 'Finalizing detection...';
+                    else if (currentProgress >= 55) $('progressStatus').textContent = 'Cross-referencing signals...';
+                }
+            }
+        }, 800);
 
         // Perform actual analysis with AGGRESSIVE timeout protection
         console.log(`[Scan] Starting ${mode} analysis...`);
@@ -6697,6 +6712,7 @@ window.startScan = async function(mode) {
         // EMERGENCY TIMEOUT: Force show result after 15 seconds (deep) or 8 seconds (quick)
         // This ensures we ALWAYS show a result even if analysis hangs
         const emergencyTimeout = setTimeout(() => {
+            clearInterval(progressInterval);
             if (!analysisCompleted) {
                 console.warn('[Scan] EMERGENCY TIMEOUT - Forcing result display');
                 result = {
@@ -6726,10 +6742,12 @@ window.startScan = async function(mode) {
 
             result = await Promise.race([analysisPromise, timeoutPromise]);
             analysisCompleted = true;
+            clearInterval(progressInterval);
             clearTimeout(emergencyTimeout);
             console.log('[Scan] Analysis completed successfully');
         } catch (analysisError) {
             console.error('[Scan] Analysis error:', analysisError);
+            clearInterval(progressInterval);
             clearTimeout(emergencyTimeout);
             // Create a fallback result so we always show something
             if (!analysisCompleted) {
@@ -6751,6 +6769,7 @@ window.startScan = async function(mode) {
         }
 
         if (analysisAborted) {
+            clearInterval(progressInterval);
             clearTimeout(emergencyTimeout);
             showUploadState();
             return;
@@ -10604,6 +10623,9 @@ function sigmoidCalibrate(score) {
 
 // Display scan result
 function displayResult(result, mode) {
+    // Clean up progress animation
+    $('progressBar').classList.remove('analyzing');
+    $('progressBar').style.width = '100%';
     $('progressCard').classList.add('hidden');
     $('resultCard').classList.remove('hidden');
 
