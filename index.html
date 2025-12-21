@@ -7228,19 +7228,23 @@ async function runDetectorSafe(name, fn, timeoutMs = 3000) {
             }
         };
 
-        // Schedule with minimal delay to yield to event loop
-        setTimeout(runDetector, 1);
+        // P1-A FIX: Use requestIdleCallback for better responsiveness
+        if (window.requestIdleCallback) {
+            requestIdleCallback(runDetector, { timeout: 100 });
+        } else {
+            setTimeout(runDetector, 16);
+        }
     });
 }
 
-// Helper: Yield to event loop - P1-A FIX: Longer delay for mobile browsers
+// Helper: Yield to event loop - P1-A FIX: Much longer delay to prevent browser crash
 function yieldToMain() {
-    return new Promise(resolve => setTimeout(resolve, 16)); // ~1 frame at 60fps
+    return new Promise(resolve => setTimeout(resolve, 50)); // Was 16ms - now 50ms to prevent watchdog kill
 }
 
-// P1-A FIX: Heavy yield for after intensive operations
+// P1-A FIX: Heavy yield with browser breathing room
 function heavyYield() {
-    return new Promise(resolve => setTimeout(resolve, 50)); // Longer pause for UI catch-up
+    return new Promise(resolve => setTimeout(resolve, 150)); // Was 50ms - now 150ms for heavy ops
 }
 
 // FORENSICS: Helper function to downsample pixels for FFT on large images
@@ -7473,6 +7477,7 @@ async function analyzeImage(dataUrl, mode) {
         console.error('[DeepScan] Texture coherence error:', err);
     }
     await yieldToMain();
+    if (analysisAborted) return { verdict: 'cancelled', aiScore: 0, confidence: 'low', explainers: [], mode: finalMode, timestamp: Date.now(), indicatorCounts: { ai: 0, real: 0 } };
 
     // =========================================
     // 8. AI MODEL-SPECIFIC FINGERPRINTS (DEEP SCAN)
@@ -7487,7 +7492,8 @@ async function analyzeImage(dataUrl, mode) {
             timeout
         );
         trackModule('modelFingerprints', modelResult);
-        await yieldToMain();
+        await heavyYield(); // P1-A: Heavy yield after model fingerprints
+        if (analysisAborted) return { verdict: 'cancelled', aiScore: 0, confidence: 'low', explainers: [], mode: finalMode, timestamp: Date.now(), indicatorCounts: { ai: 0, real: 0 } };
     }
 
     // =========================================
@@ -7503,7 +7509,8 @@ async function analyzeImage(dataUrl, mode) {
             timeout
         );
         trackModule('anatomy', anatomyResult);
-        await yieldToMain();
+        await heavyYield(); // P1-A: Heavy yield after anatomy
+        if (analysisAborted) return { verdict: 'cancelled', aiScore: 0, confidence: 'low', explainers: [], mode: finalMode, timestamp: Date.now(), indicatorCounts: { ai: 0, real: 0 } };
     }
 
     // =========================================
@@ -7519,7 +7526,8 @@ async function analyzeImage(dataUrl, mode) {
             timeout
         );
         trackModule('semantics', semanticResult);
-        await yieldToMain();
+        await heavyYield(); // P1-A: Heavy yield after semantics
+        if (analysisAborted) return { verdict: 'cancelled', aiScore: 0, confidence: 'low', explainers: [], mode: finalMode, timestamp: Date.now(), indicatorCounts: { ai: 0, real: 0 } };
     }
 
     // =========================================
@@ -7535,7 +7543,8 @@ async function analyzeImage(dataUrl, mode) {
             timeout
         );
         trackModule('advTextures', advTextureResult);
-        await yieldToMain();
+        await heavyYield(); // P1-A: Heavy yield after advanced textures
+        if (analysisAborted) return { verdict: 'cancelled', aiScore: 0, confidence: 'low', explainers: [], mode: finalMode, timestamp: Date.now(), indicatorCounts: { ai: 0, real: 0 } };
     }
 
     // =========================================
