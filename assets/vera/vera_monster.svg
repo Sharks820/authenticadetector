@@ -1,47 +1,77 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
+    <radialGradient id="auraDark" cx="0.5" cy="0.45" r="0.6">
+      <stop offset="0" stop-color="#ff6b6b" stop-opacity="0.4"/>
+      <stop offset="0.45" stop-color="#7c4dff" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#0b0f18" stop-opacity="0"/>
+    </radialGradient>
     <linearGradient id="wingDark" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#7c4dff"/>
       <stop offset="1" stop-color="#ef4444"/>
     </linearGradient>
     <linearGradient id="coreGlow" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ef4444"/>
+      <stop offset="0" stop-color="#ff4757"/>
       <stop offset="1" stop-color="#7c4dff"/>
     </linearGradient>
   </defs>
   <style>
     .line { stroke: #0b0f18; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
-    .skin { fill: #7b5151; }
-    .body { fill: #2a1f2f; }
+    .skin { fill: #6a4343; }
+    .body { fill: #221925; }
+    .muscle { fill: #2f2334; }
     .wing { fill: url(#wingDark); }
     .eye { fill: #ffd1d1; }
+    .eye-glow { fill: #ff6b6b; }
     .glow { fill: url(#coreGlow); }
     .rune { stroke: #7c4dff; stroke-width: 5; stroke-linecap: round; }
+    .horn { fill: #3b2b2b; }
   </style>
 
+  <!-- Dark aura -->
+  <circle cx="256" cy="270" r="200" fill="url(#auraDark)"/>
+
   <!-- Corrupted wings -->
-  <path class="wing line" d="M56 268c66-150 250-200 320-86-78 28-140 98-176 170-28 58-70 92-142 88-36-2-62-38-48-76 12-32 26-52 46-96z"/>
-  <path class="wing line" d="M456 268c-66-150-250-200-320-86 78 28 140 98 176 170 28 58 70 92 142 88 36-2 62-38 48-76-12-32-26-52-46-96z"/>
+  <path class="wing line" d="M44 280c70-170 268-220 344-90-90 30-164 116-202 200-30 66-82 104-160 96-40-4-64-44-48-88 16-40 30-64 66-118z"/>
+  <path class="wing line" d="M468 280c-70-170-268-220-344-90 90 30 164 116 202 200 30 66 82 104 160 96 40-4 64-44 48-88-16-40-30-64-66-118z"/>
 
-  <!-- Head + horns -->
-  <circle class="skin line" cx="256" cy="176" r="62"/>
-  <path class="line" d="M208 118l-30-32 46 10z"/>
-  <path class="line" d="M304 118l30-32-46 10z"/>
+  <!-- Horns -->
+  <path class="horn line" d="M180 128l-42-40 60 6z"/>
+  <path class="horn line" d="M332 128l42-40-60 6z"/>
+  <path class="horn line" d="M212 116l-16-40 38 18z"/>
+  <path class="horn line" d="M300 116l16-40-38 18z"/>
 
-  <!-- Face -->
-  <circle class="eye" cx="232" cy="176" r="9"/>
-  <circle class="eye" cx="280" cy="176" r="9"/>
-  <path class="line" d="M228 206c18-12 38-12 56 0"/>
-  <path class="line" d="M238 210l-12 14"/>
-  <path class="line" d="M274 210l12 14"/>
+  <!-- Head -->
+  <circle class="skin line" cx="256" cy="176" r="72"/>
+  <path class="line" d="M210 210c26-18 66-18 92 0"/>
+  <path class="line" d="M216 214l-16 18"/>
+  <path class="line" d="M296 214l16 18"/>
+  <path class="line" d="M230 226l12 10"/>
+  <path class="line" d="M282 226l-12 10"/>
 
-  <!-- Body -->
-  <path class="body line" d="M204 244c36-26 100-26 120 0-12 84-30 156-62 206-32-52-46-126-58-206z"/>
-  <circle class="glow" cx="256" cy="102" r="10"/>
+  <!-- Eyes -->
+  <ellipse class="eye" cx="230" cy="176" rx="11" ry="14"/>
+  <ellipse class="eye" cx="282" cy="176" rx="11" ry="14"/>
+  <circle class="eye-glow" cx="230" cy="176" r="5"/>
+  <circle class="eye-glow" cx="282" cy="176" r="5"/>
+
+  <!-- Hulking torso -->
+  <path class="body line" d="M170 244c44-34 128-34 172 0 30 86 10 174-44 234-18 20-36 32-42 32-6 0-24-12-42-32-54-60-74-148-44-234z"/>
+  <path class="muscle line" d="M200 252c22 18 90 18 112 0 8 50 6 92-10 136-22 14-70 14-92 0-16-44-18-86-10-136z"/>
+
+  <!-- Massive arms -->
+  <path class="muscle line" d="M146 280c-30 48-34 98-12 130l32-8c-10-30-6-64 12-96z"/>
+  <path class="muscle line" d="M366 280c30 48 34 98 12 130l-32-8c10-30 6-64-12-96z"/>
+
+  <!-- Claws -->
+  <path class="line" d="M132 408l-18 22 30-8z"/>
+  <path class="line" d="M380 408l18 22-30-8z"/>
+
+  <!-- Chest core -->
+  <circle class="glow" cx="256" cy="318" r="16"/>
 
   <!-- Corruption runes -->
-  <path class="rune" d="M176 320l-28 28"/>
-  <path class="rune" d="M336 320l28 28"/>
-  <path class="rune" d="M212 356l18-18"/>
-  <path class="rune" d="M282 356l18-18"/>
+  <path class="rune" d="M176 360l-30 30"/>
+  <path class="rune" d="M336 360l30 30"/>
+  <path class="rune" d="M216 392l22-22"/>
+  <path class="rune" d="M296 392l-22-22"/>
 </svg>
