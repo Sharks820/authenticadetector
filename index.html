@@ -4621,7 +4621,7 @@
 <!-- HOME VIEW -->
 <div class="view active" id="homeView">
     <div class="home-header">
-        <div class="logo" onclick="window.location.reload()" style="cursor: pointer;" title="Tap to refresh">
+        <div class="logo" onclick="window.location.hash='homeView'; window.location.reload()" style="cursor: pointer;" title="Tap to refresh">
             <div class="logo-icon" id="mainLogo"></div>
             <span class="logo-text">AuthenticaDetector Hub</span>
         </div>
@@ -5908,11 +5908,8 @@
             <div class="shop-grid" id="powerupsShop"></div>
         </div>
 
-        <!-- EXCLUSIVE BADGES CATEGORY -->
-        <div class="shop-category">
-            <h3 class="shop-category-title">👑 Exclusive Badges</h3>
-            <div class="shop-grid" id="badgesShop"></div>
-        </div>
+        <!-- BADGES ARE EARNED THROUGH GAMEPLAY - Not purchasable -->
+        <!-- Visit Achievements to see how to unlock badges! -->
 
         <!-- BOOSTERS CATEGORY -->
         <div class="shop-category">
@@ -6201,52 +6198,8 @@ const SHOP_ITEMS = {
         rarity: 'epic'
     },
 
-    // EXCLUSIVE BADGES (5 items: 500-2000 coins)
-    collector_badge: {
-        id: 'collector_badge',
-        name: 'Collector',
-        desc: 'Own 10 cosmetics',
-        category: 'badges',
-        cost: 800,
-        icon: '🏛️',
-        rarity: 'epic'
-    },
-    whale_badge: {
-        id: 'whale_badge',
-        name: 'Big Spender',
-        desc: 'Spent 5000+ coins',
-        category: 'badges',
-        cost: 1500,
-        icon: '🐋',
-        rarity: 'epic'
-    },
-    streaker_badge: {
-        id: 'streaker_badge',
-        name: 'Streaker Badge',
-        desc: 'Earned via 7-day streak',
-        category: 'badges',
-        cost: 500,
-        icon: '🔥',
-        rarity: 'rare'
-    },
-    legendary_hunter: {
-        id: 'legendary_hunter',
-        name: 'Legendary Hunter',
-        desc: 'Ultimate AI detective',
-        category: 'badges',
-        cost: 2000,
-        icon: '🎖️',
-        rarity: 'legendary'
-    },
-    vip_member: {
-        id: 'vip_member',
-        name: 'VIP Member',
-        desc: 'Exclusive access',
-        category: 'badges',
-        cost: 1200,
-        icon: '👑',
-        rarity: 'epic'
-    },
+    // BADGES ARE EARNED, NOT PURCHASED - Removed from shop
+    // Users unlock badges through gameplay achievements, quests, and progression
 
     // BOOSTERS (5 items: 300-800 coins)
     truth_cannon_ammo: {
