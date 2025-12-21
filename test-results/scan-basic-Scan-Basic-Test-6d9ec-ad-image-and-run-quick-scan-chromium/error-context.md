@@ -1,0 +1,78 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4] [cursor=pointer]:
+        - img [ref=e6]
+        - generic [ref=e12]: AuthenticaDetector
+      - generic [ref=e13]:
+        - button "❓" [ref=e14] [cursor=pointer]
+        - button "📋" [ref=e15] [cursor=pointer]
+        - button "🏆" [ref=e16] [cursor=pointer]
+        - button "🎭" [ref=e17] [cursor=pointer]
+        - button "👤" [ref=e18] [cursor=pointer]:
+          - generic [ref=e19]: 👤
+    - generic [ref=e20]:
+      - button "📲 Install" [ref=e21] [cursor=pointer]:
+        - generic [ref=e22]: 📲
+        - text: Install
+      - button "✨ Sign Up" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: ✨
+        - text: Sign Up
+      - button "🔑 Sign In" [ref=e25] [cursor=pointer]:
+        - generic [ref=e26]: 🔑
+        - text: Sign In
+    - generic [ref=e27]:
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: 💡
+          - text: AI FACT
+        - generic [ref=e31]:
+          - generic [ref=e32]: 🗳️
+          - generic [ref=e33]: In 2024, AI-generated political deepfakes were detected in elections across 40+ countries.
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - heading "Detect AI Images" [level=1] [ref=e36]
+          - paragraph [ref=e37]: Upload any image to check if it's AI-generated
+        - img [ref=e39] [cursor=pointer]
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - generic [ref=e42]: ✅
+            - generic [ref=e43]:
+              - generic [ref=e44]: Likely Real
+              - generic [ref=e45]: Quick Scan
+          - generic [ref=e46]:
+            - generic [ref=e47]: ●
+            - generic [ref=e48]: Medium Confidence
+          - generic [ref=e49]:
+            - generic [ref=e52]:
+              - generic [ref=e53]: Real
+              - generic [ref=e54]: AI
+            - generic [ref=e55]: "AI Probability: 20%"
+          - generic [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]: 🔍 Why we think this
+            - generic [ref=e59]: ▼
+          - generic [ref=e60]:
+            - generic [ref=e61]: 📝 Was this accurate?
+            - generic [ref=e62]:
+              - button "✓ Correct" [ref=e63] [cursor=pointer]
+              - button "✗ Incorrect" [ref=e64] [cursor=pointer]
+          - generic [ref=e65]:
+            - button "📤 Share" [ref=e66] [cursor=pointer]
+            - button "🔄 New Scan" [ref=e67] [cursor=pointer]
+    - generic [ref=e68]:
+      - generic [ref=e70] [cursor=pointer]:
+        - generic [ref=e71]: ⚙️ Advanced
+        - generic [ref=e72]: ▼
+      - generic [ref=e73]:
+        - button "⚡ Quick Scan Fast basic check" [ref=e74] [cursor=pointer]:
+          - generic [ref=e75]: ⚡ Quick Scan
+          - generic [ref=e76]: Fast basic check
+        - button "🔬 Deep Scan AI-powered • 90%+ 🔒" [disabled] [ref=e77]:
+          - generic [ref=e78]: 🔬 Deep Scan
+          - generic [ref=e79]: AI-powered • 90%+
+          - generic [ref=e80]: 🔒
+  - text: 🔒 🔒 🔒 🔒 🔒 🔒
+```

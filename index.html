@@ -59,6 +59,12 @@
             background:var(--surface);
             border-bottom:1px solid var(--border);
             min-height:56px;
+            /* Extend background into safe area to prevent Chrome bleed-through */
+            position:relative;
+        }
+        .view-header::before{
+            content:'';position:absolute;top:calc(-1 * var(--safe-top));left:0;right:0;
+            height:var(--safe-top);background:var(--surface);
         }
         .view-title{font-size:18px;font-weight:700}
         .view-close{
@@ -97,9 +103,14 @@
             display:flex;align-items:center;justify-content:space-between;
             padding:12px 16px;
             padding-top:calc(12px + var(--safe-top));
-            background:linear-gradient(180deg, var(--surface), var(--bg));
+            background:var(--surface);
             min-height:64px;
-            border-bottom:1px solid rgba(0,212,170,0.1);
+            border-bottom:1px solid rgba(139,92,246,0.2);
+            position:relative;
+        }
+        .home-header::before{
+            content:'';position:absolute;top:calc(-1 * var(--safe-top));left:0;right:0;
+            height:var(--safe-top);background:var(--surface);
         }
         .logo{display:flex;align-items:center;gap:10px;cursor:pointer;transition:transform 0.2s}
         .logo:hover{transform:scale(1.02)}
@@ -1334,10 +1345,15 @@
             color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;
         }
         .login-error{
-            background:rgba(255,71,87,.1);border:1px solid var(--danger);color:var(--danger);
-            padding:8px;border-radius:6px;font-size:11px;text-align:center;display:none;margin-bottom:12px;
+            background:rgba(255,71,87,.15);border:2px solid var(--danger);color:#ff6b7a;
+            padding:12px;border-radius:8px;font-size:13px;font-weight:500;text-align:center;display:none;margin-bottom:12px;
+            animation:shake 0.4s ease-in-out;
         }
         .login-error.show{display:block}
+        @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+        .forgot-password{text-align:right;margin:-4px 0 12px;font-size:12px}
+        .forgot-password a{color:var(--primary);cursor:pointer;text-decoration:none}
+        .forgot-password a:hover{text-decoration:underline}
         
         /* MODALS - PREMIUM DESIGN */
         .modal-overlay{
@@ -3143,6 +3159,7 @@
                 <div class="input-group hidden" id="nameGroup"><label>Display Name</label><input type="text" id="nameInput" placeholder="Your name"></div>
                 <div class="input-group"><label>Email</label><input type="email" id="emailInput" placeholder="you@example.com"></div>
                 <div class="input-group"><label>Password</label><input type="password" id="passwordInput" placeholder="••••••••"></div>
+                <div class="forgot-password" id="forgotPasswordLink"><a onclick="showForgotPassword()">Forgot your password?</a></div>
                 <button class="login-submit" id="loginSubmit" onclick="submitLogin()">Sign In</button>
             </div>
             <div class="login-toggle" id="loginToggle">Don't have an account? <a onclick="toggleLoginMode()">Sign Up</a></div>
@@ -4745,9 +4762,70 @@ function hideLoginError() {
 }
 
 function showLoginError(msg) {
-    $('loginError').textContent = msg;
-    $('loginError').classList.add('show');
+    const errorEl = $('loginError');
+    if (errorEl) {
+        // Make error messages more user-friendly
+        let friendlyMsg = msg;
+        if (msg.includes('Invalid login credentials')) {
+            friendlyMsg = 'Invalid email or password. Please try again.';
+        } else if (msg.includes('Email not confirmed')) {
+            friendlyMsg = 'Please check your email and confirm your account first.';
+        } else if (msg.includes('User already registered')) {
+            friendlyMsg = 'This email is already registered. Try signing in instead.';
+        } else if (msg.includes('Password should be')) {
+            friendlyMsg = 'Password must be at least 6 characters long.';
+        } else if (msg.includes('rate limit') || msg.includes('too many')) {
+            friendlyMsg = 'Too many attempts. Please wait a moment and try again.';
+        }
+        errorEl.textContent = friendlyMsg;
+        errorEl.classList.add('show');
+    }
 }
+
+// Forgot password functionality
+window.showForgotPassword = async function() {
+    const emailInput = $('emailInput');
+    const email = emailInput ? emailInput.value.trim() : '';
+
+    if (!email) {
+        showLoginError('Please enter your email address first, then click "Forgot password"');
+        return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showLoginError('Please enter a valid email address');
+        return;
+    }
+
+    hideLoginError();
+
+    try {
+        if (!supabase) {
+            showLoginError('Unable to connect. Please try again later.');
+            return;
+        }
+
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + '/#resetPassword'
+        });
+
+        if (error) throw error;
+
+        toast('Password reset email sent! Check your inbox.');
+        showLoginError('Check your email for password reset instructions.');
+        // Change the error styling to success for this message
+        const errorEl = $('loginError');
+        if (errorEl) {
+            errorEl.style.background = 'rgba(46, 213, 115, 0.15)';
+            errorEl.style.borderColor = 'var(--success)';
+            errorEl.style.color = '#2ed573';
+        }
+    } catch (e) {
+        console.error('[Auth] Password reset failed:', e);
+        showLoginError(e.message || 'Failed to send reset email. Please try again.');
+    }
+};
 
 // Award a specific badge to user
 async function awardBadge(badgeId, coinReward = 0) {
@@ -5073,8 +5151,16 @@ window.addEventListener('popstate', function(event) {
     }
 
     if (event.state && event.state.view) {
-        // Navigate to the view in history
         const targetView = event.state.view;
+
+        // If trying to go back from home (base entry), stay in app
+        if (event.state.isBase && currentView === 'homeView') {
+            // Re-push entry to prevent app exit
+            history.pushState({ view: 'homeView' }, '', '#homeView');
+            console.log('[View] Prevented app exit - staying on homeView');
+            isHandlingPopstate = false;
+            return;
+        }
 
         // Remove from stack without adding to history again
         if (viewStack.length > 1) {
@@ -5083,23 +5169,43 @@ window.addEventListener('popstate', function(event) {
 
         showViewDirect(targetView);
     } else {
-        // No state, go to home (without pushing to history)
+        // No state - this shouldn't happen, but handle gracefully
+        // Re-push home state to prevent exit
+        history.pushState({ view: 'homeView' }, '', '#homeView');
         viewStack = ['homeView'];
         showViewDirect('homeView');
     }
 });
 
 // Initialize: Set initial state for home view
+// Push TWO history entries so first back press stays in app
 if (window.location.hash) {
     const initialView = window.location.hash.substring(1);
     if (initialView && $(initialView)) {
+        // First, set a base entry
+        history.replaceState({ view: 'homeView', isBase: true }, '', '#homeView');
+        // Then open the requested view
         openView(initialView);
     } else {
-        history.replaceState({ view: 'homeView' }, '', '#homeView');
+        history.replaceState({ view: 'homeView', isBase: true }, '', '#homeView');
+        // Push another entry so back button works
+        history.pushState({ view: 'homeView' }, '', '#homeView');
     }
 } else {
-    history.replaceState({ view: 'homeView' }, '', '#homeView');
+    // Create base entry
+    history.replaceState({ view: 'homeView', isBase: true }, '', '#homeView');
+    // Push another entry so back button doesn't exit immediately
+    history.pushState({ view: 'homeView' }, '', '#homeView');
 }
+
+// Prevent app exit on back button when on home view
+window.addEventListener('beforeunload', (e) => {
+    // Only show warning if user has unsaved work (e.g., mid-scan)
+    if (typeof isScanning !== 'undefined' && isScanning) {
+        e.preventDefault();
+        e.returnValue = 'A scan is in progress. Are you sure you want to leave?';
+    }
+});
 
 // ==================== HUNT MODE ====================
 let huntImageUrl = null;
