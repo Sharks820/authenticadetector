@@ -1948,38 +1948,73 @@
             position: fixed;
             bottom: 100px;
             right: 20px;
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%);
+            width: 75px;
+            height: 75px;
+            background: radial-gradient(circle at 30% 30%, rgba(138, 43, 226, 0.3), rgba(0, 212, 170, 0.2) 50%, rgba(255, 107, 53, 0.1));
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
+            font-size: 42px;
             cursor: pointer;
-            animation: botWiggle 2.5s ease-in-out infinite, botGlowPulse 2s ease-in-out infinite;
+            animation: veraFloat 3s ease-in-out infinite, veraGlowPulse 2s ease-in-out infinite;
             z-index: 100;
-            border: 3px solid transparent;
-            background-clip: padding-box;
-            transition: transform 0.3s ease;
+            border: 3px solid rgba(0, 212, 170, 0.5);
+            box-shadow: 0 0 20px rgba(0, 212, 170, 0.4),
+                        0 0 40px rgba(138, 43, 226, 0.2),
+                        inset 0 0 15px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        /* Magical sparkle ring around VERA */
         .help-bot::before {
-            content: '';
+            content: '✨';
             position: absolute;
-            inset: -3px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ff6b35, #ffb800, #00d4aa, #0984e3);
-            background-size: 300% 300%;
-            animation: botBorderRotate 3s linear infinite;
-            z-index: -1;
+            width: 100%;
+            height: 100%;
+            font-size: 14px;
+            animation: veraSparkleOrbit 4s linear infinite;
+            pointer-events: none;
         }
-        @keyframes botBorderRotate {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .help-bot::after {
+            content: '✨';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            font-size: 12px;
+            animation: veraSparkleOrbit 4s linear infinite reverse;
+            animation-delay: -2s;
+            pointer-events: none;
+        }
+        @keyframes veraFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(-3deg); }
+            50% { transform: translateY(-4px) rotate(0deg); }
+            75% { transform: translateY(-10px) rotate(3deg); }
+        }
+        @keyframes veraGlowPulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(0, 212, 170, 0.4),
+                            0 0 40px rgba(138, 43, 226, 0.2);
+                border-color: rgba(0, 212, 170, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(0, 212, 170, 0.6),
+                            0 0 60px rgba(138, 43, 226, 0.4),
+                            0 0 80px rgba(255, 107, 53, 0.2);
+                border-color: rgba(138, 43, 226, 0.6);
+            }
+        }
+        @keyframes veraSparkleOrbit {
+            0% { transform: rotate(0deg) translateX(45px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(45px) rotate(-360deg); }
         }
         .help-bot:hover {
-            transform: scale(1.2) rotate(15deg) !important;
+            transform: scale(1.15) rotate(10deg) !important;
+            box-shadow: 0 0 40px rgba(0, 212, 170, 0.8),
+                        0 0 80px rgba(138, 43, 226, 0.5);
+        }
+        .help-bot:active {
+            transform: scale(0.95) !important;
         }
         .help-bot, .help-bot * {
             user-select: none;
@@ -5908,8 +5943,11 @@
             <div class="shop-grid" id="powerupsShop"></div>
         </div>
 
-        <!-- BADGES ARE EARNED THROUGH GAMEPLAY - Not purchasable -->
-        <!-- Visit Achievements to see how to unlock badges! -->
+        <!-- TANK UPGRADES CATEGORY -->
+        <div class="shop-category">
+            <h3 class="shop-category-title">🎮 Tank Upgrades</h3>
+            <div class="shop-grid" id="tank_upgradesShop"></div>
+        </div>
 
         <!-- BOOSTERS CATEGORY -->
         <div class="shop-category">
@@ -6198,8 +6236,97 @@ const SHOP_ITEMS = {
         rarity: 'epic'
     },
 
-    // BADGES ARE EARNED, NOT PURCHASED - Removed from shop
-    // Users unlock badges through gameplay achievements, quests, and progression
+    // TANK UPGRADES (Replaces badges - 500-5000 coins)
+    tank_armor_light: {
+        id: 'tank_armor_light',
+        name: 'Light Armor',
+        desc: '+25% tank HP',
+        category: 'tank_upgrades',
+        cost: 500,
+        icon: '🛡️',
+        rarity: 'common',
+        effect: { hp_boost: 0.25 }
+    },
+    tank_armor_heavy: {
+        id: 'tank_armor_heavy',
+        name: 'Heavy Armor',
+        desc: '+50% tank HP, -10% speed',
+        category: 'tank_upgrades',
+        cost: 1200,
+        icon: '🔰',
+        rarity: 'rare',
+        effect: { hp_boost: 0.50, speed_penalty: 0.10 }
+    },
+    tank_treads_speed: {
+        id: 'tank_treads_speed',
+        name: 'Speed Treads',
+        desc: '+30% movement speed',
+        category: 'tank_upgrades',
+        cost: 800,
+        icon: '⚡',
+        rarity: 'common',
+        effect: { speed_boost: 0.30 }
+    },
+    tank_treads_allterrain: {
+        id: 'tank_treads_allterrain',
+        name: 'All-Terrain Treads',
+        desc: '+20% speed, ignore slowdown',
+        category: 'tank_upgrades',
+        cost: 1500,
+        icon: '🏔️',
+        rarity: 'rare',
+        effect: { speed_boost: 0.20, ignore_slow: true }
+    },
+    tank_ammo_blast: {
+        id: 'tank_ammo_blast',
+        name: 'Blast Radius Ammo',
+        desc: '+40% explosion radius',
+        category: 'tank_upgrades',
+        cost: 1000,
+        icon: '💥',
+        rarity: 'rare',
+        effect: { blast_radius: 0.40 }
+    },
+    tank_ammo_pierce: {
+        id: 'tank_ammo_pierce',
+        name: 'Piercing Rounds',
+        desc: 'Shots pierce 2 enemies',
+        category: 'tank_upgrades',
+        cost: 1800,
+        icon: '🎯',
+        rarity: 'epic',
+        effect: { pierce_count: 2 }
+    },
+    tank_model_stealth: {
+        id: 'tank_model_stealth',
+        name: 'Stealth Tank',
+        desc: 'Invisible when stationary',
+        category: 'tank_upgrades',
+        cost: 3500,
+        icon: '👻',
+        rarity: 'epic',
+        effect: { stealth_mode: true }
+    },
+    tank_model_destroyer: {
+        id: 'tank_model_destroyer',
+        name: 'Destroyer Tank',
+        desc: '2x damage, 2x fire rate',
+        category: 'tank_upgrades',
+        cost: 5000,
+        icon: '💀',
+        rarity: 'legendary',
+        effect: { damage_mult: 2, fire_rate_mult: 2 }
+    },
+    tank_model_titan: {
+        id: 'tank_model_titan',
+        name: 'TITAN Tank',
+        desc: 'Ultimate: 3x HP, 2x damage, shield',
+        category: 'tank_upgrades',
+        cost: 10000,
+        icon: '🏆',
+        rarity: 'legendary',
+        effect: { hp_mult: 3, damage_mult: 2, has_shield: true }
+    },
 
     // BOOSTERS (5 items: 300-800 coins)
     truth_cannon_ammo: {
