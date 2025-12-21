@@ -3718,8 +3718,575 @@
         }
 
         /* ====================================
-           AVATAR CUSTOMIZATION STYLES
+           CHARACTER DESIGNER SYSTEM
+           Full piece-by-piece avatar builder
            ==================================== */
+
+        /* Character Stage - The main preview area */
+        .character-stage {
+            position: relative;
+            width: 100%;
+            max-width: 360px;
+            height: 320px;
+            margin: 0 auto 24px;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            border-radius: 20px;
+            border: 3px solid #1abc9c;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(26, 188, 156, 0.3), inset 0 0 60px rgba(26, 188, 156, 0.1);
+        }
+
+        /* Animated background grid */
+        .character-stage::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(26, 188, 156, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(26, 188, 156, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: gridScroll 20s linear infinite;
+        }
+        @keyframes gridScroll {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 30px); }
+        }
+
+        /* Spotlight effect */
+        .character-stage::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(26, 188, 156, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        /* Character Container */
+        .character-container {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 220px;
+            z-index: 10;
+        }
+
+        /* Character Body Parts - Layered system */
+        .character-part {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            z-index: 5;
+        }
+        .character-part:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+        .character-part.selected {
+            animation: partGlow 1s ease-in-out infinite;
+        }
+        @keyframes partGlow {
+            0%, 100% { filter: drop-shadow(0 0 8px #1abc9c); }
+            50% { filter: drop-shadow(0 0 20px #1abc9c); }
+        }
+
+        /* Head slot */
+        .char-head {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 70px;
+            font-size: 50px;
+            z-index: 10;
+        }
+
+        /* Hat slot (above head) */
+        .char-hat {
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            font-size: 36px;
+            z-index: 11;
+        }
+
+        /* Glasses slot (on face) */
+        .char-glasses {
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 20px;
+            font-size: 28px;
+            z-index: 12;
+        }
+
+        /* Torso slot */
+        .char-torso {
+            top: 65px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 70px;
+            font-size: 52px;
+            z-index: 8;
+        }
+
+        /* Left Arm */
+        .char-left-arm {
+            top: 70px;
+            left: 5px;
+            width: 35px;
+            height: 60px;
+            font-size: 32px;
+            z-index: 7;
+        }
+
+        /* Right Arm */
+        .char-right-arm {
+            top: 70px;
+            right: 5px;
+            width: 35px;
+            height: 60px;
+            font-size: 32px;
+            z-index: 7;
+        }
+
+        /* Weapon (in right hand) */
+        .char-weapon {
+            top: 85px;
+            right: -15px;
+            width: 45px;
+            height: 45px;
+            font-size: 36px;
+            z-index: 9;
+            transform: rotate(-20deg);
+        }
+
+        /* Legs slot */
+        .char-legs {
+            top: 130px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 70px;
+            font-size: 42px;
+            z-index: 6;
+        }
+
+        /* Back item (cape, wings, etc) */
+        .char-back {
+            top: 55px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 90px;
+            font-size: 60px;
+            z-index: 4;
+            opacity: 0.9;
+        }
+
+        /* Pet companion */
+        .char-pet {
+            bottom: 10px;
+            right: -30px;
+            width: 50px;
+            height: 50px;
+            font-size: 36px;
+            z-index: 15;
+            animation: petBounce 1.5s ease-in-out infinite;
+        }
+        @keyframes petBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Effect/Aura layer */
+        .char-effect {
+            position: absolute;
+            inset: -20px;
+            pointer-events: none;
+            z-index: 3;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .effect-particles {
+            position: absolute;
+            inset: 0;
+        }
+
+        /* Tank Riding Mode */
+        .tank-ride-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 160px;
+            height: 100px;
+            z-index: 2;
+            display: none;
+        }
+        .tank-ride-container.active {
+            display: block;
+            animation: tankIdle 2s ease-in-out infinite;
+        }
+        @keyframes tankIdle {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-3px); }
+        }
+
+        .tank-body {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ASCII Tank Art */
+        .tank-hull {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1;
+            color: #2ecc71;
+            text-shadow: 0 0 10px #2ecc71;
+            white-space: pre;
+            letter-spacing: 0;
+        }
+
+        .tank-turret {
+            position: absolute;
+            bottom: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: monospace;
+            font-size: 12px;
+            line-height: 1;
+            color: #27ae60;
+            text-shadow: 0 0 8px #27ae60;
+            white-space: pre;
+        }
+
+        .tank-treads {
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: monospace;
+            font-size: 10px;
+            line-height: 1;
+            color: #16a085;
+            white-space: pre;
+            animation: treadMove 0.3s linear infinite;
+        }
+        @keyframes treadMove {
+            0% { letter-spacing: 0; }
+            50% { letter-spacing: 1px; }
+            100% { letter-spacing: 0; }
+        }
+
+        /* Rider position on tank */
+        .character-container.riding {
+            bottom: 85px;
+            transform: translateX(-50%) scale(0.75);
+        }
+
+        /* Ground shadow */
+        .character-shadow {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 15px;
+            background: radial-gradient(ellipse, rgba(0,0,0,0.4) 0%, transparent 70%);
+            z-index: 1;
+        }
+
+        /* Mode Toggle Buttons */
+        .character-mode-toggle {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+            z-index: 20;
+        }
+        .mode-btn {
+            padding: 8px 12px;
+            background: rgba(26, 188, 156, 0.2);
+            border: 2px solid #1abc9c;
+            border-radius: 8px;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .mode-btn:hover, .mode-btn.active {
+            background: #1abc9c;
+            transform: scale(1.05);
+        }
+
+        /* Character Name Display */
+        .character-name-display {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid #1abc9c;
+            z-index: 20;
+        }
+        .character-name-display span {
+            color: #1abc9c;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* Equipment Slots Panel */
+        .equipment-slots {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(26, 188, 156, 0.1), rgba(22, 160, 133, 0.05));
+            border-radius: 16px;
+            border: 2px solid rgba(26, 188, 156, 0.3);
+        }
+
+        .equip-slot {
+            aspect-ratio: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            min-height: 70px;
+        }
+        .equip-slot:hover {
+            border-color: #1abc9c;
+            background: rgba(26, 188, 156, 0.2);
+            transform: translateY(-2px);
+        }
+        .equip-slot.filled {
+            border-style: solid;
+            border-color: #1abc9c;
+            background: linear-gradient(135deg, rgba(26, 188, 156, 0.2), rgba(22, 160, 133, 0.1));
+        }
+
+        .equip-slot-icon {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+        .equip-slot-label {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .equip-slot .unequip-btn {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: #e74c3c;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .equip-slot.filled:hover .unequip-btn {
+            display: flex;
+        }
+
+        /* Rarity borders for equipped items */
+        .equip-slot.rarity-common { border-color: #95a5a6; }
+        .equip-slot.rarity-uncommon { border-color: #3498db; }
+        .equip-slot.rarity-rare { border-color: #9b59b6; }
+        .equip-slot.rarity-epic { border-color: #f39c12; box-shadow: 0 0 15px rgba(243, 156, 18, 0.3); }
+        .equip-slot.rarity-legendary {
+            border-color: #e74c3c;
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.4);
+            animation: legendarySlotGlow 2s ease-in-out infinite;
+        }
+        @keyframes legendarySlotGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(231, 76, 60, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(231, 76, 60, 0.7); }
+        }
+
+        /* Body Part Tabs */
+        .body-part-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .body-part-tab {
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #bbb;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .body-part-tab:hover {
+            background: rgba(26, 188, 156, 0.2);
+            border-color: #1abc9c;
+            color: white;
+        }
+        .body-part-tab.active {
+            background: linear-gradient(135deg, #1abc9c, #16a085);
+            border-color: #0d7a5f;
+            color: white;
+        }
+
+        /* Items Grid for selection */
+        .items-selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 4px;
+        }
+
+        .item-card {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            padding: 8px;
+        }
+        .item-card:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        .item-card.equipped {
+            border-color: #f39c12;
+            background: rgba(243, 156, 18, 0.15);
+        }
+        .item-card.equipped::after {
+            content: '✓';
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 18px;
+            height: 18px;
+            background: #f39c12;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+        }
+        .item-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .item-card.locked::before {
+            content: '🔒';
+            position: absolute;
+            font-size: 20px;
+        }
+
+        .item-card-icon {
+            font-size: 36px;
+            margin-bottom: 4px;
+        }
+        .item-card-name {
+            font-size: 10px;
+            color: white;
+            text-align: center;
+            line-height: 1.2;
+        }
+        .item-card-price {
+            font-size: 10px;
+            color: #f39c12;
+            margin-top: 2px;
+        }
+
+        /* Rarity colors for item cards */
+        .item-card.rarity-common { border-color: #95a5a6; }
+        .item-card.rarity-uncommon { border-color: #3498db; }
+        .item-card.rarity-rare { border-color: #9b59b6; }
+        .item-card.rarity-epic {
+            border-color: #f39c12;
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.2);
+        }
+        .item-card.rarity-legendary {
+            border-color: #e74c3c;
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.3);
+            animation: cardGlow 2s ease-in-out infinite;
+        }
+        @keyframes cardGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(231, 76, 60, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(231, 76, 60, 0.6); }
+        }
+
+        /* Section headers */
+        .designer-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .designer-section-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1abc9c;
+            margin: 0;
+        }
+        .designer-section-header .item-count {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Legacy support for old preview */
         .avatar-preview-section {
             margin-bottom: 24px;
         }
@@ -4373,44 +4940,162 @@
             <button class="back-btn" onclick="closeView()">←</button>
             <button class="home-btn" onclick="openView('homeView')" title="Home">🏡</button>
         </div>
-        <span class="view-title">🎨 Customize Avatar</span>
+        <span class="view-title">🎨 Character Designer</span>
         <div class="coins-display" id="avatarViewCoins">
             <span style="font-size:16px">🪙</span>
-            <span>0</span>
+            <span id="designerCoinsCount">0</span>
         </div>
     </div>
     <div class="view-body view-body-padded">
-        <div class="avatar-preview-section">
-            <h3>Preview</h3>
-            <div class="avatar-preview-large" id="avatarPreviewLarge">
-                <div class="avatar-preview-frame" id="avatarPreviewFrame"></div>
-                <div class="avatar-preview-avatar" id="avatarPreviewAvatar">?</div>
-                <div class="avatar-preview-effects" id="avatarPreviewEffects"></div>
+
+        <!-- Character Stage - Visual Preview -->
+        <div class="character-stage" id="characterStage">
+            <!-- Mode Toggle -->
+            <div class="character-mode-toggle">
+                <button class="mode-btn active" id="standModeBtn" onclick="setCharacterMode('stand')">🧍 Stand</button>
+                <button class="mode-btn" id="tankModeBtn" onclick="setCharacterMode('tank')">🎮 Tank</button>
+            </div>
+
+            <!-- Tank Riding Container -->
+            <div class="tank-ride-container" id="tankRideContainer">
+                <div class="tank-body">
+                    <div class="tank-turret" id="tankTurret">  ╔══╗
+ ═╣▓▓╠══════</div>
+                    <div class="tank-hull" id="tankHull">╔════════════╗
+║ ▓▓▓▓▓▓▓▓▓▓ ║
+╠════════════╣
+║ ████████████║</div>
+                    <div class="tank-treads" id="tankTreads">◄●●●●●●●●●●●►</div>
+                </div>
+            </div>
+
+            <!-- Character Container with body parts -->
+            <div class="character-container" id="characterContainer">
+                <!-- Back item layer -->
+                <div class="character-part char-back" id="charBack" onclick="selectBodyPart('back')" title="Back Item"></div>
+
+                <!-- Hat layer -->
+                <div class="character-part char-hat" id="charHat" onclick="selectBodyPart('hat')" title="Hat">🎩</div>
+
+                <!-- Head layer -->
+                <div class="character-part char-head" id="charHead" onclick="selectBodyPart('head')" title="Head">👤</div>
+
+                <!-- Glasses layer -->
+                <div class="character-part char-glasses" id="charGlasses" onclick="selectBodyPart('glasses')" title="Glasses"></div>
+
+                <!-- Left Arm -->
+                <div class="character-part char-left-arm" id="charLeftArm" onclick="selectBodyPart('leftArm')" title="Left Arm">💪</div>
+
+                <!-- Torso layer -->
+                <div class="character-part char-torso" id="charTorso" onclick="selectBodyPart('torso')" title="Torso">👕</div>
+
+                <!-- Right Arm -->
+                <div class="character-part char-right-arm" id="charRightArm" onclick="selectBodyPart('rightArm')" title="Right Arm">🦾</div>
+
+                <!-- Weapon layer -->
+                <div class="character-part char-weapon" id="charWeapon" onclick="selectBodyPart('weapon')" title="Weapon">⚔️</div>
+
+                <!-- Legs layer -->
+                <div class="character-part char-legs" id="charLegs" onclick="selectBodyPart('legs')" title="Legs">👖</div>
+
+                <!-- Pet layer -->
+                <div class="character-part char-pet" id="charPet" onclick="selectBodyPart('pet')" title="Pet">🐱</div>
+
+                <!-- Effect/Aura layer -->
+                <div class="char-effect" id="charEffect">
+                    <div class="effect-particles" id="effectParticles"></div>
+                </div>
+            </div>
+
+            <!-- Ground shadow -->
+            <div class="character-shadow" id="characterShadow"></div>
+
+            <!-- Character Name -->
+            <div class="character-name-display">
+                <span id="characterNameLabel">Truth Seeker</span>
             </div>
         </div>
 
-        <div class="cosmetic-tabs">
-            <button class="cosmetic-tab active" onclick="switchCosmeticTab('avatars')">👤 Avatars</button>
-            <button class="cosmetic-tab" onclick="switchCosmeticTab('frames')">🖼️ Frames</button>
-            <button class="cosmetic-tab" onclick="switchCosmeticTab('effects')">✨ Effects</button>
-            <button class="cosmetic-tab" onclick="switchCosmeticTab('titles')">📛 Titles</button>
+        <!-- Equipment Slots Overview -->
+        <div class="designer-section-header">
+            <h3>⚡ Equipped Items</h3>
+            <span class="item-count" id="equippedCount">0/10</span>
+        </div>
+        <div class="equipment-slots" id="equipmentSlots">
+            <div class="equip-slot" data-slot="head" onclick="selectBodyPart('head')">
+                <span class="equip-slot-icon" id="slotHeadIcon">👤</span>
+                <span class="equip-slot-label">Head</span>
+            </div>
+            <div class="equip-slot" data-slot="torso" onclick="selectBodyPart('torso')">
+                <span class="equip-slot-icon" id="slotTorsoIcon">👕</span>
+                <span class="equip-slot-label">Torso</span>
+            </div>
+            <div class="equip-slot" data-slot="legs" onclick="selectBodyPart('legs')">
+                <span class="equip-slot-icon" id="slotLegsIcon">👖</span>
+                <span class="equip-slot-label">Legs</span>
+            </div>
+            <div class="equip-slot" data-slot="weapon" onclick="selectBodyPart('weapon')">
+                <span class="equip-slot-icon" id="slotWeaponIcon">⚔️</span>
+                <span class="equip-slot-label">Weapon</span>
+            </div>
+            <div class="equip-slot" data-slot="hat" onclick="selectBodyPart('hat')">
+                <span class="equip-slot-icon" id="slotHatIcon">🎩</span>
+                <span class="equip-slot-label">Hat</span>
+            </div>
+            <div class="equip-slot" data-slot="glasses" onclick="selectBodyPart('glasses')">
+                <span class="equip-slot-icon" id="slotGlassesIcon">👓</span>
+                <span class="equip-slot-label">Glasses</span>
+            </div>
+            <div class="equip-slot" data-slot="back" onclick="selectBodyPart('back')">
+                <span class="equip-slot-icon" id="slotBackIcon">🦸</span>
+                <span class="equip-slot-label">Back</span>
+            </div>
+            <div class="equip-slot" data-slot="pet" onclick="selectBodyPart('pet')">
+                <span class="equip-slot-icon" id="slotPetIcon">🐱</span>
+                <span class="equip-slot-label">Pet</span>
+            </div>
         </div>
 
-        <div class="cosmetic-grid" id="cosmeticGrid"></div>
+        <!-- Body Part Selection Tabs -->
+        <div class="designer-section-header">
+            <h3>🎭 Select Items</h3>
+        </div>
+        <div class="body-part-tabs" id="bodyPartTabs">
+            <button class="body-part-tab active" data-part="all" onclick="filterDesignerItems('all', this)">🌟 All</button>
+            <button class="body-part-tab" data-part="head" onclick="filterDesignerItems('head', this)">👤 Heads</button>
+            <button class="body-part-tab" data-part="torso" onclick="filterDesignerItems('torso', this)">👕 Torso</button>
+            <button class="body-part-tab" data-part="legs" onclick="filterDesignerItems('legs', this)">👖 Legs</button>
+            <button class="body-part-tab" data-part="weapon" onclick="filterDesignerItems('weapon', this)">⚔️ Weapons</button>
+            <button class="body-part-tab" data-part="hat" onclick="filterDesignerItems('hat', this)">🎩 Hats</button>
+            <button class="body-part-tab" data-part="glasses" onclick="filterDesignerItems('glasses', this)">👓 Glasses</button>
+            <button class="body-part-tab" data-part="back" onclick="filterDesignerItems('back', this)">🦸 Back</button>
+            <button class="body-part-tab" data-part="pet" onclick="filterDesignerItems('pet', this)">🐱 Pets</button>
+        </div>
 
-        <div class="gacha-section">
-            <div class="gacha-banner">
-                <h3>🎲 Mystery Roll</h3>
-                <p>Get random AI-themed cosmetics!</p>
-                <div class="gacha-costs">
-                    <button class="gacha-btn" onclick="rollGacha(1)">
-                        <span>Roll x1</span>
-                        <span>🪙 100</span>
+        <!-- Items Selection Grid -->
+        <div class="items-selection-grid" id="itemsSelectionGrid">
+            <!-- Items will be populated by JavaScript -->
+        </div>
+
+        <!-- Gacha Section -->
+        <div class="gacha-section" style="margin-top: 24px;">
+            <div class="gacha-banner" style="background: linear-gradient(135deg, #8e44ad, #9b59b6); border-radius: 16px; padding: 20px; border: 2px solid #6c3483;">
+                <h3 style="margin: 0 0 8px; color: white;">🎰 Mystery Cosmetics</h3>
+                <p style="color: rgba(255,255,255,0.8); margin: 0 0 16px; font-size: 14px;">Roll for rare AI-themed items!</p>
+                <div class="gacha-costs" style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <button class="gacha-btn" onclick="rollDesignerGacha('basic')" style="flex: 1; min-width: 120px; padding: 12px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; color: white; cursor: pointer; transition: all 0.3s;">
+                        <div style="font-weight: 700;">Basic Roll</div>
+                        <div style="color: #f39c12; font-size: 16px;">🪙 100</div>
                     </button>
-                    <button class="gacha-btn gacha-btn-multi" onclick="rollGacha(10)">
-                        <span>Roll x10</span>
-                        <span>🪙 900</span>
-                        <span class="gacha-discount">10% OFF!</span>
+                    <button class="gacha-btn" onclick="rollDesignerGacha('premium')" style="flex: 1; min-width: 120px; padding: 12px; background: linear-gradient(135deg, rgba(243, 156, 18, 0.3), rgba(230, 126, 34, 0.3)); border: 2px solid #f39c12; border-radius: 10px; color: white; cursor: pointer; transition: all 0.3s;">
+                        <div style="font-weight: 700;">Premium Roll</div>
+                        <div style="color: #f39c12; font-size: 16px;">🪙 400</div>
+                        <div style="font-size: 10px; color: #2ecc71;">Better odds!</div>
+                    </button>
+                    <button class="gacha-btn" onclick="rollDesignerGacha('legendary')" style="flex: 1; min-width: 120px; padding: 12px; background: linear-gradient(135deg, rgba(231, 76, 60, 0.3), rgba(192, 57, 43, 0.3)); border: 2px solid #e74c3c; border-radius: 10px; color: white; cursor: pointer; transition: all 0.3s;">
+                        <div style="font-weight: 700;">Legendary</div>
+                        <div style="color: #e74c3c; font-size: 16px;">🪙 1000</div>
+                        <div style="font-size: 10px; color: #e74c3c;">Epic+ guaranteed!</div>
                     </button>
                 </div>
             </div>
@@ -12966,10 +13651,527 @@ window.openAvatarView = function() {
     showView('avatarView');
     if (typeof initCosmeticsSystem === 'function') {
         initCosmeticsSystem();
-    } else if (typeof switchCosmeticTab === 'function') {
-        switchCosmeticTab('avatars');
+    }
+    // Initialize character designer
+    if (typeof initCharacterDesigner === 'function') {
+        initCharacterDesigner();
     }
 };
+
+// ==================== CHARACTER DESIGNER SYSTEM ====================
+// Full piece-by-piece avatar customization with tank riding mode
+
+// Character Designer State
+let characterDesignerState = {
+    mode: 'stand', // 'stand' or 'tank'
+    selectedPart: null,
+    equipped: {
+        head: { id: 'default', emoji: '👤', name: 'Default Face' },
+        torso: { id: 'shirt', emoji: '👕', name: 'Basic Shirt' },
+        legs: { id: 'pants', emoji: '👖', name: 'Basic Pants' },
+        weapon: { id: 'sword', emoji: '⚔️', name: 'Pixel Sword' },
+        hat: null,
+        glasses: null,
+        back: null,
+        pet: { id: 'cat', emoji: '🐱', name: 'Cyber Cat' },
+        leftArm: { id: 'arm', emoji: '💪', name: 'Strong Arm' },
+        rightArm: { id: 'arm', emoji: '🦾', name: 'Cyber Arm' }
+    }
+};
+
+// Character Designer Items Database
+const CHARACTER_ITEMS = {
+    head: [
+        { id: 'default', emoji: '👤', name: 'Default Face', rarity: 'common', price: 0 },
+        { id: 'detective', emoji: '🕵️', name: 'Detective', rarity: 'common', price: 50 },
+        { id: 'scientist', emoji: '👨‍🔬', name: 'Scientist', rarity: 'common', price: 60 },
+        { id: 'hacker', emoji: '👨‍💻', name: 'Hacker', rarity: 'uncommon', price: 120 },
+        { id: 'cyborg', emoji: '🤖', name: 'Cyborg', rarity: 'uncommon', price: 150 },
+        { id: 'alien', emoji: '👽', name: 'Alien', rarity: 'rare', price: 300 },
+        { id: 'ghost', emoji: '👻', name: 'Ghost', rarity: 'rare', price: 350 },
+        { id: 'demon', emoji: '👹', name: 'Demon', rarity: 'epic', price: 600 },
+        { id: 'dragon', emoji: '🐉', name: 'Dragon', rarity: 'epic', price: 800 },
+        { id: 'skull', emoji: '💀', name: 'Skull King', rarity: 'legendary', price: 1500 },
+        { id: 'neural', emoji: '🧠', name: 'Neural Net', rarity: 'legendary', price: 2000 }
+    ],
+    torso: [
+        { id: 'shirt', emoji: '👕', name: 'Basic Shirt', rarity: 'common', price: 0 },
+        { id: 'hoodie', emoji: '🧥', name: 'Hacker Hoodie', rarity: 'common', price: 80 },
+        { id: 'suit', emoji: '🤵', name: 'Executive Suit', rarity: 'uncommon', price: 200 },
+        { id: 'armor', emoji: '🛡️', name: 'Pixel Armor', rarity: 'rare', price: 400 },
+        { id: 'robe', emoji: '🧙', name: 'Wizard Robe', rarity: 'rare', price: 450 },
+        { id: 'cape', emoji: '🦸', name: 'Hero Cape', rarity: 'epic', price: 700 },
+        { id: 'cyber', emoji: '🦾', name: 'Cyber Suit', rarity: 'epic', price: 900 },
+        { id: 'golden', emoji: '👑', name: 'Golden Armor', rarity: 'legendary', price: 1800 }
+    ],
+    legs: [
+        { id: 'pants', emoji: '👖', name: 'Basic Pants', rarity: 'common', price: 0 },
+        { id: 'shorts', emoji: '🩳', name: 'Pixel Shorts', rarity: 'common', price: 50 },
+        { id: 'jeans', emoji: '👖', name: 'Data Jeans', rarity: 'uncommon', price: 120 },
+        { id: 'boots', emoji: '👢', name: 'Combat Boots', rarity: 'rare', price: 350 },
+        { id: 'hover', emoji: '🛹', name: 'Hover Boots', rarity: 'epic', price: 750 },
+        { id: 'flames', emoji: '🔥', name: 'Flame Legs', rarity: 'legendary', price: 1600 }
+    ],
+    weapon: [
+        { id: 'magnify', emoji: '🔍', name: 'Truth Magnifier', rarity: 'common', price: 100, bonus: '+5% accuracy' },
+        { id: 'scanner', emoji: '📡', name: 'Quantum Scanner', rarity: 'uncommon', price: 200, bonus: '+10% accuracy' },
+        { id: 'sword', emoji: '⚔️', name: 'Pixel Sword', rarity: 'rare', price: 350 },
+        { id: 'hammer', emoji: '🔨', name: 'Ban Hammer', rarity: 'rare', price: 400 },
+        { id: 'wand', emoji: '🪄', name: 'Detection Wand', rarity: 'epic', price: 600, bonus: '+20% accuracy' },
+        { id: 'laser', emoji: '🔫', name: 'Truth Laser', rarity: 'epic', price: 750 },
+        { id: 'staff', emoji: '🏹', name: 'Algorithm Staff', rarity: 'legendary', price: 1200, bonus: '+30% accuracy' },
+        { id: 'trident', emoji: '🔱', name: 'Data Trident', rarity: 'legendary', price: 2000, bonus: '+35% accuracy' }
+    ],
+    hat: [
+        { id: 'cap', emoji: '🧢', name: 'Hacker Cap', rarity: 'common', price: 80 },
+        { id: 'fedora', emoji: '🎩', name: 'Detective Hat', rarity: 'common', price: 100 },
+        { id: 'helmet', emoji: '⛑️', name: 'VR Helmet', rarity: 'uncommon', price: 180 },
+        { id: 'wizard', emoji: '🧙‍♂️', name: 'Wizard Hat', rarity: 'rare', price: 350 },
+        { id: 'crown', emoji: '👑', name: 'Gold Crown', rarity: 'epic', price: 800 },
+        { id: 'halo', emoji: '😇', name: 'Truth Halo', rarity: 'legendary', price: 1500 }
+    ],
+    glasses: [
+        { id: 'shades', emoji: '🕶️', name: 'AI Shades', rarity: 'common', price: 100 },
+        { id: 'goggles', emoji: '🥽', name: 'Tech Goggles', rarity: 'uncommon', price: 180 },
+        { id: 'monocle', emoji: '🧐', name: 'Sherlock Monocle', rarity: 'rare', price: 300 },
+        { id: 'visor', emoji: '📺', name: 'Cyber Visor', rarity: 'epic', price: 650 },
+        { id: 'laser_eyes', emoji: '👁️', name: 'Laser Eyes', rarity: 'legendary', price: 1400 }
+    ],
+    back: [
+        { id: 'cape', emoji: '🦸', name: 'Hero Cape', rarity: 'uncommon', price: 250 },
+        { id: 'wings', emoji: '🪽', name: 'Angel Wings', rarity: 'rare', price: 500 },
+        { id: 'demon_wings', emoji: '🦇', name: 'Demon Wings', rarity: 'epic', price: 800 },
+        { id: 'dragon_wings', emoji: '🐲', name: 'Dragon Wings', rarity: 'legendary', price: 1800 },
+        { id: 'jetpack', emoji: '🚀', name: 'Jetpack', rarity: 'legendary', price: 2000 }
+    ],
+    pet: [
+        { id: 'cat', emoji: '🐱', name: 'Cyber Cat', rarity: 'common', price: 150 },
+        { id: 'dog', emoji: '🐕', name: 'Truth Dog', rarity: 'common', price: 180 },
+        { id: 'bird', emoji: '🦅', name: 'Scout Bird', rarity: 'uncommon', price: 250 },
+        { id: 'robot', emoji: '🤖', name: 'Mini Bot', rarity: 'rare', price: 400 },
+        { id: 'dragon_pet', emoji: '🐲', name: 'Mini Dragon', rarity: 'epic', price: 700 },
+        { id: 'phoenix', emoji: '🔥', name: 'Phoenix', rarity: 'legendary', price: 1600 }
+    ]
+};
+
+// Initialize Character Designer
+function initCharacterDesigner() {
+    console.log('[Character Designer] Initializing...');
+
+    // Load saved state
+    loadCharacterDesignerState();
+
+    // Update coins display
+    updateDesignerCoins();
+
+    // Render items grid
+    renderDesignerItems('all');
+
+    // Apply equipped items to character
+    updateCharacterPreview();
+
+    // Update equipped count
+    updateEquippedCount();
+}
+
+// Load saved character state from localStorage
+function loadCharacterDesignerState() {
+    try {
+        const saved = localStorage.getItem('character_designer_state');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            characterDesignerState = { ...characterDesignerState, ...parsed };
+        }
+    } catch (e) {
+        console.error('[Character Designer] Failed to load state:', e);
+    }
+}
+
+// Save character state
+function saveCharacterDesignerState() {
+    try {
+        localStorage.setItem('character_designer_state', JSON.stringify(characterDesignerState));
+    } catch (e) {
+        console.error('[Character Designer] Failed to save state:', e);
+    }
+}
+
+// Update coins display in designer
+function updateDesignerCoins() {
+    const coinsEl = document.getElementById('designerCoinsCount');
+    if (coinsEl && typeof userProgression !== 'undefined') {
+        coinsEl.textContent = userProgression.truth_coins.toLocaleString();
+    }
+}
+
+// Set character mode (stand or tank)
+function setCharacterMode(mode) {
+    characterDesignerState.mode = mode;
+
+    const standBtn = document.getElementById('standModeBtn');
+    const tankBtn = document.getElementById('tankModeBtn');
+    const tankContainer = document.getElementById('tankRideContainer');
+    const charContainer = document.getElementById('characterContainer');
+
+    if (mode === 'tank') {
+        standBtn?.classList.remove('active');
+        tankBtn?.classList.add('active');
+        tankContainer?.classList.add('active');
+        charContainer?.classList.add('riding');
+    } else {
+        standBtn?.classList.add('active');
+        tankBtn?.classList.remove('active');
+        tankContainer?.classList.remove('active');
+        charContainer?.classList.remove('riding');
+    }
+
+    saveCharacterDesignerState();
+}
+window.setCharacterMode = setCharacterMode;
+
+// Select a body part for customization
+function selectBodyPart(part) {
+    // Remove selected from all parts
+    document.querySelectorAll('.character-part').forEach(el => {
+        el.classList.remove('selected');
+    });
+
+    // Add selected to clicked part
+    const partId = 'char' + part.charAt(0).toUpperCase() + part.slice(1);
+    const partEl = document.getElementById(partId) || document.querySelector(`[data-part="${part}"]`);
+    if (partEl) {
+        partEl.classList.add('selected');
+    }
+
+    characterDesignerState.selectedPart = part;
+
+    // Filter items to show only this part
+    filterDesignerItems(part);
+
+    // Update tab
+    document.querySelectorAll('.body-part-tab').forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.dataset.part === part) {
+            tab.classList.add('active');
+        }
+    });
+}
+window.selectBodyPart = selectBodyPart;
+
+// Filter items by body part
+function filterDesignerItems(part, clickedBtn) {
+    // Update active tab
+    document.querySelectorAll('.body-part-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    if (clickedBtn) {
+        clickedBtn.classList.add('active');
+    }
+
+    renderDesignerItems(part);
+}
+window.filterDesignerItems = filterDesignerItems;
+
+// Render items in selection grid
+function renderDesignerItems(part) {
+    const grid = document.getElementById('itemsSelectionGrid');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+
+    // Get items to show
+    let itemsToShow = [];
+    if (part === 'all') {
+        // Show all items from all categories
+        Object.keys(CHARACTER_ITEMS).forEach(category => {
+            CHARACTER_ITEMS[category].forEach(item => {
+                itemsToShow.push({ ...item, slot: category });
+            });
+        });
+    } else {
+        // Show items from specific category
+        const items = CHARACTER_ITEMS[part] || [];
+        items.forEach(item => {
+            itemsToShow.push({ ...item, slot: part });
+        });
+    }
+
+    // Sort by rarity
+    const rarityOrder = { common: 1, uncommon: 2, rare: 3, epic: 4, legendary: 5 };
+    itemsToShow.sort((a, b) => rarityOrder[a.rarity] - rarityOrder[b.rarity]);
+
+    // Render each item
+    itemsToShow.forEach(item => {
+        const isEquipped = characterDesignerState.equipped[item.slot]?.id === item.id;
+        const isOwned = item.price === 0 || isItemOwned(item.slot, item.id);
+
+        const card = document.createElement('div');
+        card.className = `item-card rarity-${item.rarity} ${isEquipped ? 'equipped' : ''} ${!isOwned ? 'locked' : ''}`;
+        card.innerHTML = `
+            <span class="item-card-icon">${item.emoji}</span>
+            <span class="item-card-name">${item.name}</span>
+            ${!isOwned ? `<span class="item-card-price">🪙 ${item.price}</span>` : ''}
+            ${item.bonus ? `<span style="font-size:9px;color:#2ecc71;">${item.bonus}</span>` : ''}
+        `;
+
+        if (isOwned) {
+            card.onclick = () => equipDesignerItem(item.slot, item);
+        } else {
+            card.onclick = () => purchaseDesignerItem(item.slot, item);
+        }
+
+        grid.appendChild(card);
+    });
+}
+
+// Check if item is owned
+function isItemOwned(slot, itemId) {
+    try {
+        const owned = JSON.parse(localStorage.getItem('owned_character_items') || '{}');
+        return owned[slot]?.includes(itemId) || false;
+    } catch (e) {
+        return false;
+    }
+}
+
+// Purchase an item
+async function purchaseDesignerItem(slot, item) {
+    const coins = typeof userProgression !== 'undefined' ? userProgression.truth_coins : 0;
+
+    if (coins < item.price) {
+        toast(`Not enough coins! Need ${item.price} 🪙`, 'error');
+        return;
+    }
+
+    // Deduct coins
+    if (typeof userProgression !== 'undefined') {
+        userProgression.truth_coins -= item.price;
+        updateDesignerCoins();
+        if (typeof updateCoinsDisplay === 'function') updateCoinsDisplay();
+    }
+
+    // Add to owned items
+    try {
+        const owned = JSON.parse(localStorage.getItem('owned_character_items') || '{}');
+        if (!owned[slot]) owned[slot] = [];
+        owned[slot].push(item.id);
+        localStorage.setItem('owned_character_items', JSON.stringify(owned));
+    } catch (e) {
+        console.error('[Character Designer] Failed to save owned item:', e);
+    }
+
+    toast(`Purchased ${item.name}! 🎉`, 'success');
+
+    // Auto-equip
+    equipDesignerItem(slot, item);
+
+    // Refresh grid
+    renderDesignerItems(characterDesignerState.selectedPart || 'all');
+}
+
+// Equip an item
+function equipDesignerItem(slot, item) {
+    characterDesignerState.equipped[slot] = item;
+    saveCharacterDesignerState();
+    updateCharacterPreview();
+    updateEquippedCount();
+
+    // Refresh grid
+    renderDesignerItems(characterDesignerState.selectedPart || 'all');
+
+    toast(`Equipped ${item.name}!`, 'success');
+}
+
+// Update character preview with equipped items
+function updateCharacterPreview() {
+    const equipped = characterDesignerState.equipped;
+
+    // Update each body part
+    const updatePart = (partId, item) => {
+        const el = document.getElementById(partId);
+        if (el && item) {
+            el.textContent = item.emoji;
+        } else if (el) {
+            el.textContent = '';
+        }
+    };
+
+    updatePart('charHead', equipped.head);
+    updatePart('charTorso', equipped.torso);
+    updatePart('charLegs', equipped.legs);
+    updatePart('charWeapon', equipped.weapon);
+    updatePart('charHat', equipped.hat);
+    updatePart('charGlasses', equipped.glasses);
+    updatePart('charBack', equipped.back);
+    updatePart('charPet', equipped.pet);
+    updatePart('charLeftArm', equipped.leftArm);
+    updatePart('charRightArm', equipped.rightArm);
+
+    // Update equipment slot icons
+    const updateSlot = (slotId, item) => {
+        const el = document.getElementById(slotId);
+        const slotEl = el?.closest('.equip-slot');
+        if (el && item) {
+            el.textContent = item.emoji;
+            slotEl?.classList.add('filled', `rarity-${item.rarity}`);
+        } else if (el) {
+            el.textContent = getDefaultSlotIcon(slotId);
+            slotEl?.classList.remove('filled', 'rarity-common', 'rarity-uncommon', 'rarity-rare', 'rarity-epic', 'rarity-legendary');
+        }
+    };
+
+    updateSlot('slotHeadIcon', equipped.head);
+    updateSlot('slotTorsoIcon', equipped.torso);
+    updateSlot('slotLegsIcon', equipped.legs);
+    updateSlot('slotWeaponIcon', equipped.weapon);
+    updateSlot('slotHatIcon', equipped.hat);
+    updateSlot('slotGlassesIcon', equipped.glasses);
+    updateSlot('slotBackIcon', equipped.back);
+    updateSlot('slotPetIcon', equipped.pet);
+
+    // Update character name based on equipped items
+    updateCharacterName();
+}
+
+// Get default icon for empty slot
+function getDefaultSlotIcon(slotId) {
+    const defaults = {
+        slotHeadIcon: '👤',
+        slotTorsoIcon: '👕',
+        slotLegsIcon: '👖',
+        slotWeaponIcon: '⚔️',
+        slotHatIcon: '🎩',
+        slotGlassesIcon: '👓',
+        slotBackIcon: '🦸',
+        slotPetIcon: '🐱'
+    };
+    return defaults[slotId] || '?';
+}
+
+// Update equipped count display
+function updateEquippedCount() {
+    const countEl = document.getElementById('equippedCount');
+    if (!countEl) return;
+
+    const equipped = characterDesignerState.equipped;
+    let count = 0;
+    Object.values(equipped).forEach(item => {
+        if (item) count++;
+    });
+    countEl.textContent = `${count}/10`;
+}
+
+// Update character name based on equipped items
+function updateCharacterName() {
+    const nameEl = document.getElementById('characterNameLabel');
+    if (!nameEl) return;
+
+    const equipped = characterDesignerState.equipped;
+
+    // Generate cool title based on equipped legendary/epic items
+    let title = 'Truth Seeker';
+
+    if (equipped.head?.rarity === 'legendary') {
+        title = equipped.head.name + ' Master';
+    } else if (equipped.weapon?.rarity === 'legendary') {
+        title = equipped.weapon.name + ' Wielder';
+    } else if (equipped.back?.rarity === 'legendary') {
+        title = 'Winged ' + (equipped.head?.name || 'Hunter');
+    } else if (equipped.head?.rarity === 'epic') {
+        title = 'Epic ' + equipped.head.name;
+    }
+
+    nameEl.textContent = title;
+}
+
+// Gacha roll for character designer
+async function rollDesignerGacha(tier) {
+    const costs = { basic: 100, premium: 400, legendary: 1000 };
+    const cost = costs[tier];
+
+    const coins = typeof userProgression !== 'undefined' ? userProgression.truth_coins : 0;
+
+    if (coins < cost) {
+        toast(`Not enough coins! Need ${cost} 🪙`, 'error');
+        return;
+    }
+
+    // Deduct coins
+    if (typeof userProgression !== 'undefined') {
+        userProgression.truth_coins -= cost;
+        updateDesignerCoins();
+        if (typeof updateCoinsDisplay === 'function') updateCoinsDisplay();
+    }
+
+    // Determine rarity
+    const rand = Math.random() * 100;
+    let rarity;
+    if (tier === 'basic') {
+        if (rand < 70) rarity = 'common';
+        else if (rand < 95) rarity = 'uncommon';
+        else rarity = 'rare';
+    } else if (tier === 'premium') {
+        if (rand < 40) rarity = 'uncommon';
+        else if (rand < 75) rarity = 'rare';
+        else if (rand < 95) rarity = 'epic';
+        else rarity = 'legendary';
+    } else {
+        if (rand < 30) rarity = 'rare';
+        else if (rand < 70) rarity = 'epic';
+        else rarity = 'legendary';
+    }
+
+    // Find random item of that rarity
+    const allItems = [];
+    Object.keys(CHARACTER_ITEMS).forEach(slot => {
+        CHARACTER_ITEMS[slot].forEach(item => {
+            if (item.rarity === rarity) {
+                allItems.push({ ...item, slot });
+            }
+        });
+    });
+
+    if (allItems.length === 0) {
+        toast('Roll failed! Refunding...', 'error');
+        if (typeof userProgression !== 'undefined') {
+            userProgression.truth_coins += cost;
+            updateDesignerCoins();
+        }
+        return;
+    }
+
+    const wonItem = allItems[Math.floor(Math.random() * allItems.length)];
+
+    // Add to owned
+    try {
+        const owned = JSON.parse(localStorage.getItem('owned_character_items') || '{}');
+        if (!owned[wonItem.slot]) owned[wonItem.slot] = [];
+        if (!owned[wonItem.slot].includes(wonItem.id)) {
+            owned[wonItem.slot].push(wonItem.id);
+        }
+        localStorage.setItem('owned_character_items', JSON.stringify(owned));
+    } catch (e) {
+        console.error('[Character Designer] Failed to save won item:', e);
+    }
+
+    // Show result
+    const rarityColors = {
+        common: '#95a5a6',
+        uncommon: '#3498db',
+        rare: '#9b59b6',
+        epic: '#f39c12',
+        legendary: '#e74c3c'
+    };
+
+    toast(`🎉 You won: ${wonItem.emoji} ${wonItem.name} (${rarity.toUpperCase()})!`, 'success');
+
+    // Refresh grid
+    renderDesignerItems(characterDesignerState.selectedPart || 'all');
+}
+window.rollDesignerGacha = rollDesignerGacha;
+
+// Initialize on load
+window.initCharacterDesigner = initCharacterDesigner;
 
 window.openQuestsView = function() {
     showView('helpView'); // Quests are in help for now
