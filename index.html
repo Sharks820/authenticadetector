@@ -1936,67 +1936,183 @@
         .help-bot:hover {
             transform: scale(1.2) rotate(15deg) !important;
         }
+        .help-bot, .help-bot * {
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* VERA's Help Badge - Animated with her */
         .help-bot-badge {
             position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 24px;
-            height: 24px;
-            background: linear-gradient(135deg, #00d4aa, #0984e3);
+            top: -10px;
+            right: -10px;
+            width: 32px;
+            height: 32px;
+            background: radial-gradient(circle at 30% 30%, #00d4aa, #0984e3);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 16px;
             cursor: pointer;
-            border: 2px solid var(--bg);
-            box-shadow: 0 2px 8px rgba(0,212,170,0.5);
-            animation: badgePulse 2s ease-in-out infinite;
+            border: 3px solid var(--bg);
+            box-shadow: 0 2px 12px rgba(0,212,170,0.6),
+                        inset 0 -2px 4px rgba(0,0,0,0.2),
+                        0 0 20px rgba(0,212,170,0.3);
             z-index: 10;
+            animation: badgeBounce 2s ease-in-out infinite, badgeGlow 3s ease-in-out infinite;
+            transform-origin: center center;
+        }
+        @keyframes badgeBounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-4px) rotate(-5deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-2px) rotate(5deg); }
+        }
+        @keyframes badgeGlow {
+            0%, 100% { box-shadow: 0 2px 12px rgba(0,212,170,0.6), 0 0 10px rgba(0,212,170,0.3); }
+            50% { box-shadow: 0 4px 20px rgba(0,212,170,0.9), 0 0 25px rgba(0,212,170,0.6); }
+        }
+        .help-bot-badge::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 2px dashed rgba(0,212,170,0.5);
+            animation: badgeOrbit 3s linear infinite;
+        }
+        .help-bot-badge::after {
+            content: '✨';
+            position: absolute;
+            top: -12px;
+            right: -8px;
+            font-size: 10px;
+            animation: badgeSparkle 1.5s ease-in-out infinite;
+            opacity: 0.8;
+        }
+        @keyframes badgeOrbit {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes badgeSparkle {
+            0%, 100% { opacity: 0.4; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
         .help-bot-badge:hover {
-            transform: scale(1.3);
-            box-shadow: 0 4px 12px rgba(0,212,170,0.8);
+            animation: badgeExcite 0.3s ease-out;
+            box-shadow: 0 6px 25px rgba(0,212,170,1);
         }
-        @keyframes badgePulse {
-            0%, 100% { box-shadow: 0 2px 8px rgba(0,212,170,0.5); }
-            50% { box-shadow: 0 4px 16px rgba(0,212,170,0.9); }
+        @keyframes badgeExcite {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3) rotate(10deg); }
+            100% { transform: scale(1.1); }
+        }
+        .help-bot-badge:active {
+            transform: scale(0.9);
+        }
+        /* Monster mode badge - angry red */
+        .help-bot.monster-mode .help-bot-badge {
+            background: radial-gradient(circle at 30% 30%, #ff4757, #8b0000);
+            animation: badgeAngry 0.2s ease-in-out infinite;
+        }
+        @keyframes badgeAngry {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-2px) rotate(-3deg); }
+            75% { transform: translateX(2px) rotate(3deg); }
         }
         .help-bot-face {
             display: flex;
             flex-direction: column;
             align-items: center;
             animation: eyeGlow 1.5s ease-in-out infinite;
+            transition: all 0.3s ease;
         }
+        /* VERA Pop Animations */
+        @keyframes veraPop {
+            0% { transform: scale(1); }
+            20% { transform: scale(1.3); }
+            40% { transform: scale(0.8); }
+            60% { transform: scale(1.1); }
+            80% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+        @keyframes veraSquish {
+            0% { transform: scale(1, 1); }
+            30% { transform: scale(1.2, 0.8); }
+            60% { transform: scale(0.9, 1.1); }
+            100% { transform: scale(1, 1); }
+        }
+        @keyframes veraSpiral {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(0.5) rotate(360deg); opacity: 0.5; }
+            100% { transform: scale(0) rotate(720deg); opacity: 0; }
+        }
+        @keyframes veraAppear {
+            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+            50% { transform: scale(1.3) rotate(10deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        @keyframes veraMonsterGlow {
+            0%, 100% { filter: drop-shadow(0 0 8px #ff4757); }
+            50% { filter: drop-shadow(0 0 20px #ff4757) drop-shadow(0 0 30px #ff0000); }
+        }
+        .help-bot.monster-mode {
+            animation: veraMonsterGlow 0.5s ease-in-out infinite !important;
+        }
+        .help-bot.monster-mode::before {
+            background: linear-gradient(135deg, #ff4757, #ff0000, #8b0000, #ff4757) !important;
+        }
+        /* Speech Bubble - Auto-positioning */
         .help-bot-tip {
             position: absolute;
-            bottom: 100%;
-            right: 0;
-            margin-bottom: 10px;
+            margin: 10px;
             background: linear-gradient(135deg, rgba(26,31,46,0.98), rgba(18,22,31,0.98));
-            border: 1px solid rgba(0,212,170,0.3);
-            border-radius: 12px;
-            padding: 12px 16px;
-            font-size: 12px;
+            border: 2px solid rgba(0,212,170,0.4);
+            border-radius: 16px;
+            padding: 14px 18px;
+            font-size: 13px;
             color: #fff;
-            width: 200px;
+            width: 220px;
+            max-width: 80vw;
             opacity: 0;
             pointer-events: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 20px rgba(0,212,170,0.2);
+            z-index: 200;
         }
-        .help-bot:hover .help-bot-tip {
+        /* Position tip based on VERA's location */
+        .help-bot.pos-bottom-right .help-bot-tip { bottom: 100%; right: 0; }
+        .help-bot.pos-bottom-left .help-bot-tip { bottom: 100%; left: 0; }
+        .help-bot.pos-top-right .help-bot-tip { top: 100%; right: 0; }
+        .help-bot.pos-top-left .help-bot-tip { top: 100%; left: 0; }
+        .help-bot:hover .help-bot-tip,
+        .help-bot.showing-tip .help-bot-tip {
             opacity: 1;
             transform: translateY(-5px);
+        }
+        .help-bot.pos-top-right:hover .help-bot-tip,
+        .help-bot.pos-top-left:hover .help-bot-tip {
+            transform: translateY(5px);
         }
         .help-bot-tip::after {
             content: '';
             position: absolute;
-            bottom: -8px;
-            right: 20px;
-            border: 8px solid transparent;
-            border-top-color: rgba(0,212,170,0.3);
+            border: 10px solid transparent;
         }
+        .help-bot.pos-bottom-right .help-bot-tip::after,
+        .help-bot.pos-bottom-left .help-bot-tip::after {
+            bottom: -18px;
+            border-top-color: rgba(0,212,170,0.4);
+        }
+        .help-bot.pos-bottom-right .help-bot-tip::after { right: 20px; }
+        .help-bot.pos-bottom-left .help-bot-tip::after { left: 20px; }
+        .help-bot.pos-top-right .help-bot-tip::after,
+        .help-bot.pos-top-left .help-bot-tip::after {
+            top: -18px;
+            border-bottom-color: rgba(0,212,170,0.4);
+        }
+        .help-bot.pos-top-right .help-bot-tip::after { right: 20px; }
+        .help-bot.pos-top-left .help-bot-tip::after { left: 20px; }
 
         .help-section{
             background:linear-gradient(145deg, rgba(26,31,46,0.9) 0%, rgba(18,22,31,0.95) 100%);
@@ -2520,7 +2636,7 @@
             top: 20px;
             left: 20px;
             right: 20px;
-            bottom: 90px;
+            bottom: calc(150px + var(--safe-bottom)); /* Space for vote buttons + footer */
             background: linear-gradient(145deg, rgba(26,31,46,0.98) 0%, rgba(18,22,31,1) 100%);
             border-radius: 24px;
             border: 2px solid rgba(255,255,255,0.08);
@@ -2598,17 +2714,19 @@
             color:var(--warning);
         }
 
-        /* Vote Controls - Premium */
+        /* Vote Controls - Premium - Fixed to stay above footer */
         .vote-controls {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
             padding: 20px;
+            padding-bottom: calc(80px + var(--safe-bottom)); /* Account for game-nav footer */
             display: flex;
             justify-content: center;
             gap: 16px;
-            background: linear-gradient(transparent 0%, var(--bg) 60%);
+            background: linear-gradient(transparent 0%, var(--bg) 30%, var(--bg) 100%);
+            z-index: 50;
         }
 
         .vote-btn {
@@ -3102,6 +3220,15 @@
             0%, 100% { transform: translateX(0) rotate(0deg); }
             25% { transform: translateX(3px) rotate(5deg); }
             75% { transform: translateX(-3px) rotate(-5deg); }
+        }
+        @keyframes treadSpin {
+            0% { background: #555; }
+            50% { background: #333; }
+            100% { background: #555; }
+        }
+        @keyframes bossThrob {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px #f39c12); }
+            50% { transform: scale(1.15); filter: drop-shadow(0 0 25px #e74c3c) drop-shadow(0 0 40px #ff0000); }
         }
         .enemy-label {
             font-size: 10px;
@@ -3936,15 +4063,15 @@
             </div>
         </div>
 
-        <!-- TRUTH HUNTERS GAME CTA - HIGHLY VISIBLE! -->
+        <!-- TANK BATTLE GAME CTA - EPIC DESIGN -->
         <div class="game-cta-card" id="gameCTA" style="display:none">
             <div class="game-cta-glow"></div>
             <div class="game-cta-content">
                 <div class="game-cta-header">
-                    <div class="game-cta-icon">🎮</div>
+                    <div class="game-cta-icon" style="font-size:40px;filter:drop-shadow(0 0 15px rgba(0,212,170,0.8))">🎮</div>
                     <div>
-                        <h2 style="margin:0;font-size:24px;font-weight:700">Truth Hunters</h2>
-                        <p style="margin:4px 0 0;color:var(--text2);font-size:14px">Hunt AI. Earn Coins. Compete.</p>
+                        <h2 style="margin:0;font-size:22px;font-weight:800;background:linear-gradient(135deg,#00d4aa,#0984e3);-webkit-background-clip:text;-webkit-text-fill-color:transparent">TANK BATTLE</h2>
+                        <p style="margin:4px 0 0;color:var(--text2);font-size:13px">🤖 Destroy AI Fakes • 💰 Earn Coins • 🏆 Top the Ranks</p>
                     </div>
                 </div>
                 <div class="game-cta-stats">
@@ -3961,11 +4088,21 @@
                         <div class="game-cta-stat-label">Rank</div>
                     </div>
                 </div>
-                <button class="game-cta-btn" onclick="openView('huntView')">
-                    <span style="font-size:20px">🎯</span>
-                    <span style="font-weight:700">PLAY NOW</span>
-                    <span style="font-size:10px;opacity:0.8">→</span>
+                <button class="game-cta-btn" onclick="openView('outbreaksView')" style="background:linear-gradient(135deg,#ff4757,#ff6b6b)">
+                    <span style="font-size:24px">🎮</span>
+                    <span style="font-weight:800;font-size:16px">PLAY TANK BATTLE</span>
+                    <span style="font-size:12px;opacity:0.9">⚔️</span>
                 </button>
+                <div style="display:flex;gap:8px;margin-top:12px">
+                    <button onclick="openView('huntView')" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(0,212,170,0.3);background:rgba(0,212,170,0.1);color:var(--primary);font-weight:600;font-size:12px;cursor:pointer;position:relative">
+                        🎯 Hunt Mode
+                        <span class="game-badge" style="position:absolute;top:-6px;right:-6px;background:#ff4757;color:#fff;font-size:8px;padding:2px 5px;border-radius:10px;font-weight:700">GAME</span>
+                    </button>
+                    <button onclick="openView('verifyView')" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(99,102,241,0.3);background:rgba(99,102,241,0.1);color:#a78bfa;font-weight:600;font-size:12px;cursor:pointer;position:relative">
+                        ✅ Verify Mode
+                        <span class="game-badge" style="position:absolute;top:-6px;right:-6px;background:#ff4757;color:#fff;font-size:8px;padding:2px 5px;border-radius:10px;font-weight:700">GAME</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -4100,31 +4237,37 @@
             <button class="back-btn" onclick="closeView()">←</button>
             <button class="home-btn" onclick="openView('homeView')" title="Home">🏡</button>
         </div>
-        <span class="view-title">🏆 Leaderboard</span>
+        <span class="view-title">🎮 Tank Commanders</span>
         <div class="coins-display" id="leaderboardViewCoins">
             <span style="font-size:16px">🪙</span>
             <span>0</span>
         </div>
     </div>
     <div class="view-body view-body-padded">
+        <!-- Epic Header -->
+        <div style="text-align:center;margin-bottom:20px;padding:20px;background:linear-gradient(135deg,rgba(255,71,87,0.1),rgba(0,212,170,0.05));border-radius:16px;border:1px solid rgba(255,71,87,0.2)">
+            <h2 style="margin:0;font-size:22px;font-weight:900;background:linear-gradient(135deg,#ff4757,#ffa502);-webkit-background-clip:text;-webkit-text-fill-color:transparent">⚔️ TOP TANK COMMANDERS ⚔️</h2>
+            <p style="margin:8px 0 0;color:var(--text3);font-size:12px">Legends who destroy the most AI fakes</p>
+        </div>
+
         <!-- REWARDS TEASER -->
-        <div class="rewards-card">
-            <div class="rewards-title">🏆 Weekly Rewards</div>
-            <div class="rewards-list">
-                <div class="reward-item">
-                    <span class="reward-icon">👑</span>
-                    <span class="reward-text">KING: Custom badge + Featured profile</span>
-                    <span class="reward-tier tier-king">#1</span>
+        <div class="rewards-card" style="background:linear-gradient(145deg,rgba(26,31,46,0.95),rgba(18,22,31,0.98));border:1px solid rgba(0,212,170,0.2);border-radius:16px;padding:16px;margin-bottom:20px">
+            <div class="rewards-title" style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--primary)">🏆 Weekly Battle Rewards</div>
+            <div class="rewards-list" style="display:flex;flex-direction:column;gap:8px">
+                <div class="reward-item" style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,215,0,0.1);border-radius:10px;border-left:3px solid gold">
+                    <span class="reward-icon" style="font-size:20px">👑</span>
+                    <span class="reward-text" style="flex:1;font-size:12px;color:var(--text2)">SUPREME COMMANDER: 500 coins + Custom tank skin</span>
+                    <span class="reward-tier" style="background:linear-gradient(135deg,#ffd700,#ff8c00);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;color:#000">#1</span>
                 </div>
-                <div class="reward-item">
-                    <span class="reward-icon">⭐</span>
-                    <span class="reward-text">Top 3: Exclusive tier badges</span>
-                    <span class="reward-tier tier-legend">Top 3</span>
+                <div class="reward-item" style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(192,192,192,0.1);border-radius:10px;border-left:3px solid silver">
+                    <span class="reward-icon" style="font-size:20px">⭐</span>
+                    <span class="reward-text" style="flex:1;font-size:12px;color:var(--text2)">ELITE: 200 coins + Exclusive badge</span>
+                    <span class="reward-tier" style="background:linear-gradient(135deg,#c0c0c0,#8b8989);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;color:#000">Top 3</span>
                 </div>
-                <div class="reward-item">
-                    <span class="reward-icon">🎖️</span>
-                    <span class="reward-text">Top 10: 2x points next week</span>
-                    <span class="reward-tier tier-elite">Top 10</span>
+                <div class="reward-item" style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(0,212,170,0.1);border-radius:10px;border-left:3px solid var(--primary)">
+                    <span class="reward-icon" style="font-size:20px">🎖️</span>
+                    <span class="reward-text" style="flex:1;font-size:12px;color:var(--text2)">VETERAN: 50 coins + 2x XP boost</span>
+                    <span class="reward-tier" style="background:linear-gradient(135deg,#00d4aa,#0984e3);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;color:#000">Top 10</span>
                 </div>
             </div>
         </div>
@@ -4617,27 +4760,46 @@
         <div style="width:44px"></div>
     </div>
     <div class="view-body view-body-padded">
-        <!-- HERO BATTLE SCENE -->
-        <div class="battle-hero">
-            <div class="battle-scene">
-                <!-- Tank (left side) -->
-                <div class="battle-tank">
-                    <div class="tank-body">🛡️</div>
-                    <div class="tank-cannon">▶</div>
-                    <div class="tank-label">YOU</div>
+        <!-- HERO BATTLE SCENE - Epic Tank vs AI Monsters -->
+        <div class="battle-hero" style="background:linear-gradient(180deg, rgba(255,71,87,0.05) 0%, transparent 100%);border-radius:20px;padding:28px 20px">
+            <div class="battle-scene" style="gap:30px">
+                <!-- Your Tank (left side) - ASCII Art Style -->
+                <div class="battle-tank" style="position:relative">
+                    <div style="display:flex;flex-direction:column;align-items:center">
+                        <!-- Tank Turret -->
+                        <div style="font-size:12px;color:var(--primary);margin-bottom:-6px;animation:cannonPulse 0.5s ease-in-out infinite">━━━▶💥</div>
+                        <!-- Tank Body -->
+                        <div style="background:linear-gradient(180deg,#2d3436,#1a1a1a);padding:8px 16px;border-radius:8px;border:2px solid var(--primary);box-shadow:0 4px 20px rgba(0,212,170,0.4)">
+                            <div style="font-size:10px;color:var(--primary);font-weight:900;letter-spacing:2px">⊕ TANK ⊕</div>
+                        </div>
+                        <!-- Treads -->
+                        <div style="display:flex;gap:4px;margin-top:-3px">
+                            <div style="width:14px;height:10px;background:#444;border-radius:3px;animation:treadSpin 0.3s linear infinite"></div>
+                            <div style="width:14px;height:10px;background:#444;border-radius:3px;animation:treadSpin 0.3s linear infinite 0.1s"></div>
+                            <div style="width:14px;height:10px;background:#444;border-radius:3px;animation:treadSpin 0.3s linear infinite 0.2s"></div>
+                        </div>
+                    </div>
+                    <div class="tank-label" style="margin-top:8px">COMMANDER</div>
                 </div>
-                <!-- VS -->
-                <div class="battle-vs">⚔️</div>
-                <!-- AI Monsters (right side) -->
-                <div class="battle-enemies">
-                    <div class="enemy-monster enemy-1">🤖</div>
-                    <div class="enemy-monster enemy-2">👾</div>
-                    <div class="enemy-monster enemy-3">🧠</div>
-                    <div class="enemy-label">AI FAKES</div>
+
+                <!-- VS Symbol -->
+                <div class="battle-vs" style="font-size:28px;text-shadow:0 0 20px rgba(255,71,87,0.6)">⚡VS⚡</div>
+
+                <!-- AI Monsters (right side) - Scary & Anime-Styled -->
+                <div class="battle-enemies" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;max-width:180px">
+                    <!-- Glitch Monster -->
+                    <div class="enemy-monster enemy-1" style="filter:drop-shadow(0 0 10px #ff4757);font-size:42px" title="GLITCH - Corrupts your aim">👹</div>
+                    <!-- Deepfake Phantom -->
+                    <div class="enemy-monster enemy-2" style="filter:drop-shadow(0 0 10px #9b59b6);font-size:32px" title="PHANTOM - Hard to detect">👻</div>
+                    <!-- Neural Virus -->
+                    <div class="enemy-monster enemy-3" style="filter:drop-shadow(0 0 10px #e74c3c);font-size:28px" title="VIRUS - Spreads fast">🦠</div>
+                    <!-- Boss Teaser -->
+                    <div class="enemy-monster" style="filter:drop-shadow(0 0 15px #f39c12);font-size:24px;animation:bossThrob 1s ease-in-out infinite" title="??? BOSS ???">💀</div>
+                    <div class="enemy-label" style="width:100%;text-align:center;font-size:11px;margin-top:6px;color:#ff4757;text-shadow:0 0 10px rgba(255,71,87,0.5)">⚠️ AI THREATS ⚠️</div>
                 </div>
             </div>
-            <h1 class="battle-title">OUTBREAK DETECTED!</h1>
-            <p class="battle-subtitle">AI-generated images are spreading. Take them down!</p>
+            <h1 class="battle-title" style="font-size:26px;margin-top:20px">🚨 OUTBREAK DETECTED! 🚨</h1>
+            <p class="battle-subtitle" style="font-size:13px">AI-generated threats are invading. Pilot your tank and destroy them all!</p>
         </div>
 
         <!-- Active Outbreak Card -->
@@ -6974,6 +7136,15 @@ window.vote = async function(choice) {
     }
 
     try {
+        // Handle test submissions (demo mode)
+        if (currentSubmission.is_test) {
+            const points = 10;
+            toast('Demo vote recorded! Sign in for real rewards.', 'info');
+            await showVoteFeedback(choice, points);
+            setTimeout(() => loadNextSubmission(), 1000);
+            return;
+        }
+
         // Check if Supabase is available
         if (useLocalFallback || !supabase) {
             // Store vote locally
@@ -7079,6 +7250,55 @@ async function loadVerifyView() {
     updateVerifyBadge();
 }
 
+// Test submissions for demo when database is empty
+const TEST_SUBMISSIONS = [
+    {
+        id: 'test-1',
+        image_url: 'https://picsum.photos/seed/ai1/400/400',
+        context_description: 'Found this photo on Twitter claiming to show a celebrity at an event',
+        claimed_context: 'Real photograph from award ceremony',
+        source_platform: 'Twitter',
+        total_votes: 42,
+        is_test: true
+    },
+    {
+        id: 'test-2',
+        image_url: 'https://picsum.photos/seed/ai2/400/400',
+        context_description: 'This image was shared on Instagram claiming to be a rare animal',
+        claimed_context: 'Rare rainbow-colored frog discovered',
+        source_platform: 'Instagram',
+        total_votes: 28,
+        is_test: true
+    },
+    {
+        id: 'test-3',
+        image_url: 'https://picsum.photos/seed/ai3/400/400',
+        context_description: 'News article used this as evidence of a political event',
+        claimed_context: 'Photo from recent press conference',
+        source_platform: 'Facebook',
+        total_votes: 15,
+        is_test: true
+    },
+    {
+        id: 'test-4',
+        image_url: 'https://picsum.photos/seed/ai4/400/400',
+        context_description: 'Profile picture that seems suspiciously perfect',
+        claimed_context: 'Real person - dating profile',
+        source_platform: 'Tinder',
+        total_votes: 67,
+        is_test: true
+    },
+    {
+        id: 'test-5',
+        image_url: 'https://picsum.photos/seed/ai5/400/400',
+        context_description: 'Viral image claiming to show UFO sighting',
+        claimed_context: 'Authentic photo taken over city',
+        source_platform: 'Reddit',
+        total_votes: 103,
+        is_test: true
+    }
+];
+
 async function loadPendingSubmissions() {
     try {
         const { data, error } = await supabase
@@ -7099,11 +7319,18 @@ async function loadPendingSubmissions() {
         const votedIds = new Set((userVotes || []).map(v => v.submission_id));
         pendingSubmissions = (data || []).filter(s => !votedIds.has(s.id));
 
+        // If no real submissions, use test submissions for demo
+        if (pendingSubmissions.length === 0) {
+            console.log('[Verify] No submissions in database, using test content');
+            pendingSubmissions = [...TEST_SUBMISSIONS];
+        }
+
         console.log('[Verify] Loaded', pendingSubmissions.length, 'pending submissions');
 
     } catch (err) {
         console.error('[Verify] Failed to load submissions:', err);
-        pendingSubmissions = [];
+        // Fallback to test submissions on error
+        pendingSubmissions = [...TEST_SUBMISSIONS];
     }
 }
 
@@ -7921,6 +8148,20 @@ window.joinSquad = async function(squadId) {
 };
 
 // ==================== LEADERBOARD ====================
+// Demo leaderboard data for when database is empty
+const DEMO_LEADERBOARD = [
+    { display_name: 'TankMaster2024', avatar_url: null, total_points: 15420, total_scans: 342, level: 28 },
+    { display_name: 'AIHunterPro', avatar_url: null, total_points: 12850, total_scans: 298, level: 24 },
+    { display_name: 'DeepfakeSlayer', avatar_url: null, total_points: 11200, total_scans: 265, level: 22 },
+    { display_name: 'TruthSeeker99', avatar_url: null, total_points: 9750, total_scans: 231, level: 19 },
+    { display_name: 'PixelDetective', avatar_url: null, total_points: 8400, total_scans: 198, level: 17 },
+    { display_name: 'FakeBreaker', avatar_url: null, total_points: 7200, total_scans: 172, level: 15 },
+    { display_name: 'ScanMachine', avatar_url: null, total_points: 6100, total_scans: 145, level: 13 },
+    { display_name: 'AIBuster', avatar_url: null, total_points: 5200, total_scans: 124, level: 11 },
+    { display_name: 'TruthTank', avatar_url: null, total_points: 4500, total_scans: 108, level: 10 },
+    { display_name: 'DetectorBot', avatar_url: null, total_points: 3800, total_scans: 92, level: 9 }
+];
+
 async function loadLeaderboardView() {
     console.log('[Leaderboard] Loading leaderboard');
 
@@ -7932,10 +8173,14 @@ async function loadLeaderboardView() {
 
         if (error) throw error;
 
-        renderLeaderboard(data || []);
+        // Use demo data if database is empty
+        const leaderboardData = (data && data.length > 0) ? data : DEMO_LEADERBOARD;
+        renderLeaderboard(leaderboardData);
 
     } catch (err) {
         console.error('[Leaderboard] Failed to load:', err);
+        // Fallback to demo data on error
+        renderLeaderboard(DEMO_LEADERBOARD);
     }
 }
 
@@ -8478,6 +8723,9 @@ window.startScan = async function(mode) {
         try {
             saveToHistory(result, mode);
             if (user) updateUserScanStats(mode, result);
+
+            // Check if user should be prompted to submit to verify mode
+            checkVerifySubmitPrompt(result);
         } catch (saveError) {
             console.error('[Scan] Error saving results:', saveError);
         }
@@ -14017,6 +14265,285 @@ function drawParticles(ctx) {
 init();
 </script>
 
+<!-- Verify Submit Prompt Modal -->
+<div id="verifySubmitModal" class="modal-overlay" style="display:none">
+    <div class="modal-content verify-submit-modal">
+        <div class="modal-header">
+            <h2>🎯 Submit to Verify Mode?</h2>
+            <button class="modal-close" onclick="closeVerifySubmitModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="submit-preview">
+                <img id="submitPreviewImage" src="" alt="Scan preview" style="max-width:100%;max-height:150px;border-radius:12px;margin-bottom:16px">
+            </div>
+            <p style="color:var(--text2);margin-bottom:16px;line-height:1.6">
+                Would you like to submit this scan for other Truth Hunters to verify?<br>
+                <strong style="color:var(--primary)">Earn <span id="submitRewardAmount">3</span> 🪙 coins</strong> if your submission gets enough votes!
+            </p>
+            <div class="submit-warning" style="background:rgba(255,165,2,0.15);border:1px solid rgba(255,165,2,0.3);border-radius:12px;padding:12px;margin-bottom:16px;font-size:12px;color:var(--warning)">
+                ⚠️ Note: Submissions are moderated. No nudity, hate content, or personally identifying images.
+            </div>
+            <div class="submit-context" style="margin-bottom:16px">
+                <label style="display:block;font-size:12px;color:var(--text3);margin-bottom:6px">Add context (optional):</label>
+                <input type="text" id="submitContextInput" placeholder="Where did you find this image?"
+                    style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:14px">
+            </div>
+        </div>
+        <div class="modal-footer" style="display:flex;gap:12px">
+            <button class="cta-btn-secondary" onclick="closeVerifySubmitModal()" style="flex:1">
+                Not Now
+            </button>
+            <button class="cta-btn" onclick="showSubmitConfirmation()" style="flex:1">
+                Submit for Coins! 🪙
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Submit Confirmation Modal -->
+<div id="submitConfirmModal" class="modal-overlay" style="display:none">
+    <div class="modal-content" style="text-align:center;max-width:340px">
+        <div style="font-size:60px;margin-bottom:16px">🤔</div>
+        <h2 style="margin-bottom:12px">Are you SURE?</h2>
+        <p style="color:var(--text2);margin-bottom:24px;font-size:14px">
+            By submitting, you confirm this image doesn't contain inappropriate content.
+        </p>
+        <div style="display:flex;gap:12px">
+            <button class="cta-btn-secondary" onclick="closeSubmitConfirmModal()" style="flex:1">
+                Cancel
+            </button>
+            <button class="cta-btn" onclick="confirmVerifySubmission()" style="flex:1;background:linear-gradient(135deg,#2ed573,#26de81)">
+                SURE! ✓
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// =========================================
+// VERIFY SUBMIT PROMPT SYSTEM
+// Prompts users to submit scans every 3 scans
+// =========================================
+
+let sessionScanCount = 0;
+let pendingSubmitResult = null;
+let pendingSubmitDataUrl = null;
+
+// Initialize session scan count safely
+try {
+    sessionScanCount = parseInt(localStorage.getItem('session_scan_count') || '0', 10) || 0;
+} catch (e) {
+    sessionScanCount = 0;
+}
+
+function checkVerifySubmitPrompt(result) {
+    // Defensive: ensure this never crashes the scan
+    try {
+        // Increment scan count
+        sessionScanCount++;
+        try {
+            localStorage.setItem('session_scan_count', sessionScanCount.toString());
+        } catch (e) { /* localStorage might fail, that's ok */ }
+
+        // Show prompt every 3 scans (3, 6, 9, 12, etc.)
+        if (sessionScanCount % 3 === 0) {
+            // Small delay to let user see their result first
+            setTimeout(() => {
+                try {
+                    showVerifySubmitModal(result);
+                } catch (e) {
+                    console.error('[VerifySubmit] Modal error:', e);
+                }
+            }, 2000);
+        }
+    } catch (e) {
+        console.error('[VerifySubmit] Error in checkVerifySubmitPrompt:', e);
+        // Never let this function crash the scan
+    }
+}
+
+function showVerifySubmitModal(result) {
+    pendingSubmitResult = result;
+    pendingSubmitDataUrl = currentDataUrl;
+
+    // Calculate reward (2-5 coins based on confidence)
+    const baseReward = result.confidence === 'high' ? 5 :
+                       result.confidence === 'medium' ? 4 : 3;
+    $('submitRewardAmount').textContent = baseReward;
+
+    // Show preview
+    if (currentDataUrl) {
+        $('submitPreviewImage').src = currentDataUrl;
+        $('submitPreviewImage').style.display = 'block';
+    } else {
+        $('submitPreviewImage').style.display = 'none';
+    }
+
+    // Reset context input
+    $('submitContextInput').value = '';
+
+    // Show modal
+    $('verifySubmitModal').style.display = 'flex';
+}
+
+function closeVerifySubmitModal() {
+    $('verifySubmitModal').style.display = 'none';
+    pendingSubmitResult = null;
+    pendingSubmitDataUrl = null;
+}
+
+function showSubmitConfirmation() {
+    // Hide first modal, show confirmation
+    $('verifySubmitModal').style.display = 'none';
+    $('submitConfirmModal').style.display = 'flex';
+}
+
+function closeSubmitConfirmModal() {
+    $('submitConfirmModal').style.display = 'none';
+    // Re-show first modal
+    $('verifySubmitModal').style.display = 'flex';
+}
+
+async function confirmVerifySubmission() {
+    $('submitConfirmModal').style.display = 'none';
+
+    if (!user) {
+        toast('Please sign in to submit images');
+        openLogin();
+        return;
+    }
+
+    if (!pendingSubmitResult || !pendingSubmitDataUrl) {
+        toast('No image to submit');
+        return;
+    }
+
+    const context = $('submitContextInput')?.value?.trim() || '';
+    const reward = parseInt($('submitRewardAmount').textContent) || 3;
+
+    try {
+        // Check if Supabase is available
+        if (useLocalFallback || !supabase) {
+            // Store locally for later sync
+            const localSubmissions = getStorage('pending_submissions', []);
+            localSubmissions.push({
+                image_data: pendingSubmitDataUrl.substring(0, 50000), // Truncate for storage
+                ai_score: pendingSubmitResult.aiScore,
+                context_description: context,
+                claimed_context: `User scan - ${pendingSubmitResult.verdict} (${pendingSubmitResult.confidence})`,
+                timestamp: Date.now()
+            });
+            setStorage('pending_submissions', localSubmissions.slice(-10));
+            toast('Submission saved! Will sync when online.', 'info');
+            return;
+        }
+
+        // Submit to Supabase
+        const { data, error } = await supabase
+            .from('submissions')
+            .insert({
+                user_id: user.id,
+                image_data: pendingSubmitDataUrl.substring(0, 100000), // Truncate to prevent huge payloads
+                ai_score: pendingSubmitResult.aiScore,
+                context_description: context || 'User submitted scan for community verification',
+                claimed_context: `Scan result: ${pendingSubmitResult.verdict} (${pendingSubmitResult.confidence} confidence)`,
+                source_platform: 'AuthenticaDetector Scan',
+                status: 'pending_moderation' // Requires moderation before going live
+            })
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        // Award coins for submission
+        await awardCoins(reward, 'Verify Submission');
+        toast(`Submitted! +${reward} 🪙 coins earned!`, 'success');
+
+        // Update quest progress
+        updateQuestProgress('submission_created');
+
+    } catch (err) {
+        console.error('[Submit] Failed:', err);
+        toast('Failed to submit. Please try again.');
+    }
+
+    pendingSubmitResult = null;
+    pendingSubmitDataUrl = null;
+}
+</script>
+
+<style>
+/* Verify Submit Modal Styles */
+.verify-submit-modal {
+    max-width: 380px;
+}
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 20px;
+}
+.modal-content {
+    background: linear-gradient(145deg, rgba(26,31,46,0.98), rgba(18,22,31,1));
+    border: 1px solid rgba(0,212,170,0.3);
+    border-radius: 20px;
+    padding: 24px;
+    max-width: 420px;
+    width: 100%;
+    animation: modalSlideIn 0.3s ease-out;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+@keyframes modalSlideIn {
+    from { transform: translateY(30px) scale(0.95); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.modal-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+}
+.modal-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--surface2);
+    color: var(--text2);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.modal-close:hover {
+    background: var(--surface3);
+    color: var(--text);
+}
+.cta-btn-secondary {
+    padding: 14px 24px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.cta-btn-secondary:hover {
+    background: var(--surface3);
+    border-color: var(--primary);
+}
+</style>
+
 <!-- Floating Helper - VERA the Pixel Fairy -->
 <div class="help-bot" id="helpBot" title="Click to pop, hold for help!">
     <span class="help-bot-face" id="veraFace">🧚</span>
@@ -14040,17 +14567,20 @@ init();
 
     // VERA's safe positions (corners and edges where she won't block buttons)
     const safePositions = [
-        { bottom: '100px', right: '20px', left: 'auto', top: 'auto' },  // Bottom-right (default)
-        { bottom: '100px', left: '20px', right: 'auto', top: 'auto' },  // Bottom-left
-        { top: '150px', right: '20px', bottom: 'auto', left: 'auto' },  // Top-right
-        { top: '150px', left: '20px', bottom: 'auto', right: 'auto' }   // Top-left
+        { bottom: '100px', right: '20px', left: 'auto', top: 'auto', posClass: 'pos-bottom-right' },
+        { bottom: '100px', left: '20px', right: 'auto', top: 'auto', posClass: 'pos-bottom-left' },
+        { top: '150px', right: '20px', bottom: 'auto', left: 'auto', posClass: 'pos-top-right' },
+        { top: '150px', left: '20px', bottom: 'auto', right: 'auto', posClass: 'pos-top-left' }
     ];
     let currentPosition = 0;
     let clickCount = 0;
     let lastClickTime = 0;
     let isTransformed = false;
+    let isMonsterMode = false;
+    let monsterClicksIgnored = 0;
     let longPressTimer = null;
-    let popCount = 0; // Track how many times she's been popped
+    let popCount = 0;
+    let idleTimer = null;
     const veraHint = document.getElementById('veraHint');
 
     // Hide bot during keyboard input
@@ -14061,7 +14591,15 @@ init();
         });
     }
 
-    // VERA's quirky personality tips - slower rotation (7 seconds)
+    // Update position class for speech bubble placement
+    function updatePositionClass(posClass) {
+        helpBot.classList.remove('pos-bottom-right', 'pos-bottom-left', 'pos-top-right', 'pos-top-left');
+        helpBot.classList.add(posClass);
+    }
+    // Set initial position class
+    updatePositionClass('pos-bottom-right');
+
+    // VERA's quirky personality tips
     const veraTips = [
         "Those fake images think they're SO smart... 🙄",
         "I'm an AI hunting AI. Yes, the irony isn't lost on me! 😤",
@@ -14090,7 +14628,6 @@ init();
         "Poke me again... I DARE you. 😈"
     ];
 
-    // Tips VERA says when you click her (frustrated/funny)
     const clickTips = [
         "Hey! I was standing there! 😤",
         "Fine, I'll move! Sheesh! 🙄",
@@ -14104,7 +14641,6 @@ init();
         "Stop poking me! I bite! 🦷"
     ];
 
-    // Tips when VERA transforms into beast mode
     const beastTips = [
         "YOU DARE DISTURB ME?! 👹",
         "RAAAWR! ...sorry, got carried away. 😅",
@@ -14113,33 +14649,172 @@ init();
         "My TRUE form! Just kidding, I'm cute. 🧚"
     ];
 
+    // Monster mode tips (when idle transforms her)
+    const monsterIgnoreTips = [
+        "...",
+        "*stares menacingly* 👹",
+        "I'm BUSY being evil right now."
+    ];
+
+    const monsterAngryTips = [
+        "FINE! You want HELP?! I'LL GIVE YOU HELP! 👹💢",
+        "YOU ASKED FOR IT! 😈🔥",
+        "WITNESS MY WRATH... I mean... assistance! 👹"
+    ];
+
+    const caughtInMonsterTips = [
+        "Oh! H-hey there! What monster? I'm just a cute fairy! 🧚✨",
+        "You... you didn't see anything, right? RIGHT?! 😅",
+        "That wasn't me! That was my... evil twin! Yeah! 🧚",
+        "*whistles innocently* What? I've been here the whole time! 💫",
+        "MONSTER?! Where?! ...Oh wait that was me. Oops! 🙈"
+    ];
+
     let tipIndex = 0;
     setInterval(() => {
-        if (!isTransformed) {
+        if (!isTransformed && !isMonsterMode) {
             tipIndex = (tipIndex + 1) % veraTips.length;
             veraTip.textContent = veraTips[tipIndex];
         }
-    }, 7000); // Slower: 7 seconds
+    }, 7000);
 
-    // Pop VERA to a new random position
+    // Idle timer - after 30 seconds of no interaction, might become monster
+    function resetIdleTimer() {
+        clearTimeout(idleTimer);
+        // Only set idle timer if not already transformed
+        if (!isTransformed && !isMonsterMode) {
+            idleTimer = setTimeout(() => {
+                // 30% chance to become monster when idle
+                if (Math.random() < 0.3) {
+                    enterMonsterMode();
+                }
+            }, 30000); // 30 seconds idle
+        }
+    }
+
+    // Enter sneaky monster mode
+    function enterMonsterMode() {
+        if (isTransformed || isMonsterMode) return;
+        isMonsterMode = true;
+        monsterClicksIgnored = 0;
+
+        // Slowly transform to monster
+        helpBot.style.transition = 'all 1s ease';
+        veraFace.textContent = '👹';
+        helpBot.classList.add('monster-mode');
+
+        // Evil idle tips
+        veraTip.textContent = "*evil plotting noises* 👹";
+
+        // Random glitchy head movements
+        const glitchInterval = setInterval(() => {
+            if (!isMonsterMode) {
+                clearInterval(glitchInterval);
+                return;
+            }
+            // Random head shake
+            helpBot.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
+            setTimeout(() => {
+                if (isMonsterMode) {
+                    helpBot.style.transform = '';
+                }
+            }, 100);
+        }, 2000);
+    }
+
+    // Handle monster mode click - ignore first 2, then rage to help
+    function handleMonsterClick() {
+        monsterClicksIgnored++;
+
+        if (monsterClicksIgnored <= 2) {
+            // Ignore click with menacing stare
+            const tip = monsterIgnoreTips[Math.min(monsterClicksIgnored - 1, monsterIgnoreTips.length - 1)];
+            veraTip.textContent = tip;
+
+            // Slight angry shake
+            helpBot.style.animation = 'badgeAngry 0.3s ease-in-out';
+            setTimeout(() => {
+                helpBot.style.animation = '';
+            }, 300);
+            return;
+        }
+
+        // 3rd click - RAGE MODE! Shake screen and go to help
+        const angryTip = monsterAngryTips[Math.floor(Math.random() * monsterAngryTips.length)];
+        veraTip.textContent = angryTip;
+
+        // Intense screen shake
+        document.body.style.animation = 'veraRageShake 0.5s ease';
+
+        // Make VERA grow and rage
+        helpBot.style.transform = 'scale(2) rotate(20deg)';
+        helpBot.style.transition = 'all 0.3s ease';
+
+        setTimeout(() => {
+            // Massive shake
+            document.body.style.animation = 'veraRageShake 0.3s ease';
+        }, 200);
+
+        setTimeout(() => {
+            // Spiral away animation
+            helpBot.style.transition = 'all 0.5s ease';
+            helpBot.style.transform = 'scale(0) rotate(720deg)';
+            helpBot.style.opacity = '0';
+
+            setTimeout(() => {
+                // Navigate to help section
+                openHelp();
+
+                // Reset VERA to innocent fairy mode
+                setTimeout(() => {
+                    isMonsterMode = false;
+                    veraFace.textContent = '🧚';
+                    helpBot.classList.remove('monster-mode');
+                    helpBot.style.transform = '';
+                    helpBot.style.opacity = '1';
+                    document.body.style.animation = '';
+
+                    // Act innocent
+                    const caughtTip = caughtInMonsterTips[Math.floor(Math.random() * caughtInMonsterTips.length)];
+                    veraTip.textContent = caughtTip;
+
+                    // Cute entrance
+                    helpBot.style.animation = 'veraAppear 0.5s ease-out';
+                    setTimeout(() => {
+                        helpBot.style.animation = '';
+                    }, 500);
+
+                    resetIdleTimer();
+                }, 300);
+            }, 500);
+        }, 400);
+    }
+
+    // Pop VERA to a new random position with position class update
     function popVera(showClickTip = true) {
-        // Pick a random different position
+        resetIdleTimer();
+
         let newPosition = currentPosition;
         while (newPosition === currentPosition) {
             newPosition = Math.floor(Math.random() * safePositions.length);
         }
         currentPosition = newPosition;
+        const posData = safePositions[currentPosition];
 
         // Animate the pop
         helpBot.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
         helpBot.style.transform = 'scale(0) rotate(360deg)';
 
         setTimeout(() => {
-            // Move to new position
-            const pos = safePositions[currentPosition];
-            Object.assign(helpBot.style, pos);
+            // Move to new position and update class
+            Object.assign(helpBot.style, {
+                bottom: posData.bottom,
+                right: posData.right,
+                left: posData.left,
+                top: posData.top
+            });
+            updatePositionClass(posData.posClass);
 
-            // Pop back in
             setTimeout(() => {
                 helpBot.style.transform = 'scale(1.2) rotate(-10deg)';
                 setTimeout(() => {
@@ -14149,13 +14824,11 @@ init();
             }, 50);
         }, 300);
 
-        // Show a click tip
         if (showClickTip) {
             const tip = clickTips[Math.floor(Math.random() * clickTips.length)];
             veraTip.textContent = tip;
         }
 
-        // After 2 pops, show the hint about how to access help
         popCount++;
         if (popCount === 2 && veraHint) {
             veraHint.style.display = 'block';
@@ -14165,28 +14838,27 @@ init();
         }
     }
 
-    // Transform into BEAST MODE!
+    // Transform into BEAST MODE (from rapid clicks)
     function transformToBeast() {
         if (isTransformed) return;
         isTransformed = true;
+        resetIdleTimer();
 
-        // BEAST MODE!
         veraFace.textContent = '👹';
         helpBot.style.transform = 'scale(1.5) rotate(15deg)';
         helpBot.style.background = 'linear-gradient(135deg, #ff4757 0%, #2f1a1a 100%)';
+        helpBot.classList.add('monster-mode');
 
-        // Beast tip
         const beastTip = beastTips[Math.floor(Math.random() * beastTips.length)];
         veraTip.textContent = beastTip;
 
-        // Screen shake effect
         document.body.style.animation = 'veraShake 0.3s ease';
 
-        // Return to normal after 1.5 seconds
         setTimeout(() => {
             veraFace.textContent = '🧚';
             helpBot.style.transform = 'scale(1.1)';
-            helpBot.style.background = 'linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%)';
+            helpBot.style.background = '';
+            helpBot.classList.remove('monster-mode');
 
             setTimeout(() => {
                 helpBot.style.transform = '';
@@ -14202,10 +14874,16 @@ init();
     helpBot.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
+        resetIdleTimer();
+
+        // If in monster mode, handle differently
+        if (isMonsterMode) {
+            handleMonsterClick();
+            return;
+        }
 
         const now = Date.now();
 
-        // Check for rapid clicks (5 clicks in 2 seconds = beast mode)
         if (now - lastClickTime < 400) {
             clickCount++;
             if (clickCount >= 4 && !isTransformed) {
@@ -14218,15 +14896,23 @@ init();
         }
         lastClickTime = now;
 
-        // Normal click: pop to new position
         if (!isTransformed) {
             popVera();
         }
     });
 
-    // Long press to open help (hold for 0.8 seconds)
+    // Long press to open help
     helpBot.addEventListener('touchstart', (e) => {
+        resetIdleTimer();
         longPressTimer = setTimeout(() => {
+            // If in monster mode, act caught
+            if (isMonsterMode) {
+                isMonsterMode = false;
+                veraFace.textContent = '🧚';
+                helpBot.classList.remove('monster-mode');
+                const caughtTip = caughtInMonsterTips[Math.floor(Math.random() * caughtInMonsterTips.length)];
+                veraTip.textContent = caughtTip;
+            }
             openHelp();
         }, 800);
     });
@@ -14242,6 +14928,14 @@ init();
     // Double-click opens help
     helpBot.addEventListener('dblclick', (e) => {
         e.preventDefault();
+        resetIdleTimer();
+        if (isMonsterMode) {
+            isMonsterMode = false;
+            veraFace.textContent = '🧚';
+            helpBot.classList.remove('monster-mode');
+            const caughtTip = caughtInMonsterTips[Math.floor(Math.random() * caughtInMonsterTips.length)];
+            veraTip.textContent = caughtTip;
+        }
         openHelp();
     });
 
@@ -14250,11 +14944,13 @@ init();
         helpBot.style.transform = 'scale(1.3) rotate(360deg)';
         setTimeout(() => {
             helpBot.style.transform = '';
+            resetIdleTimer(); // Start idle timer after entrance
         }, 500);
     }, 2000);
 
     // Make popVera globally available
     window.popVera = popVera;
+    window.enterMonsterMode = enterMonsterMode; // For testing
 })();
 </script>
 
@@ -14263,6 +14959,18 @@ init();
     0%, 100% { transform: translateX(0); }
     10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
     20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+@keyframes veraRageShake {
+    0%, 100% { transform: translateX(0) translateY(0); }
+    10% { transform: translateX(-15px) translateY(-5px) rotate(-2deg); }
+    20% { transform: translateX(15px) translateY(5px) rotate(2deg); }
+    30% { transform: translateX(-12px) translateY(-3px) rotate(-1deg); }
+    40% { transform: translateX(12px) translateY(3px) rotate(1deg); }
+    50% { transform: translateX(-10px) translateY(-2px); }
+    60% { transform: translateX(10px) translateY(2px); }
+    70% { transform: translateX(-8px) translateY(-1px); }
+    80% { transform: translateX(8px) translateY(1px); }
+    90% { transform: translateX(-5px); }
 }
 </style>
 </body>
