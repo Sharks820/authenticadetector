@@ -4735,8 +4735,8 @@
                 <div class="feedback-section">
                     <div class="feedback-title">📝 Was this accurate?</div>
                     <div class="feedback-btns">
-                        <button class="feedback-btn" onclick="submitFeedback('correct')">✓ Correct</button>
-                        <button class="feedback-btn" onclick="submitFeedback('incorrect')">✗ Incorrect</button>
+                        <button class="feedback-btn" onclick="submitFeedback('correct', this)">✓ Correct</button>
+                        <button class="feedback-btn" onclick="submitFeedback('incorrect', this)">✗ Incorrect</button>
                     </div>
                 </div>
                 <div class="result-actions">
@@ -9443,16 +9443,24 @@ function fft1d(real, imag) {
     const n = real.length;
     if (n <= 1) return;
 
-    // Bit reversal permutation
+    // Safety check: n must be power of 2
+    if ((n & (n - 1)) !== 0) {
+        console.error('[FFT] Input size must be power of 2, got:', n);
+        return;
+    }
+
+    // Bit reversal permutation with safety counter
     for (let i = 0, j = 0; i < n; i++) {
         if (i < j) {
             [real[i], real[j]] = [real[j], real[i]];
             [imag[i], imag[j]] = [imag[j], imag[i]];
         }
         let k = n >> 1;
-        while (k <= j) {
+        let safetyCounter = 0;
+        while (k <= j && k > 0 && safetyCounter < 32) {
             j -= k;
             k >>= 1;
+            safetyCounter++;
         }
         j += k;
     }
@@ -13387,14 +13395,16 @@ window.updateForensics = function() {
 };
 
 // Submit feedback - NOW WITH LEARNING SYSTEM
-window.submitFeedback = function(type) {
+window.submitFeedback = function(type, clickedBtn) {
     if (!currentResult) return;
 
     // Update button states
     document.querySelectorAll('.feedback-btn').forEach(btn => {
         btn.classList.remove('selected');
     });
-    event.target.classList.add('selected');
+    if (clickedBtn) {
+        clickedBtn.classList.add('selected');
+    }
 
     // Save feedback
     const feedback = {
