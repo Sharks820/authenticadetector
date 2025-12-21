@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<style>
+  .line { stroke: #0b0f18; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+  .eye { fill: #f8fafc; }
+</style>
+
+  <path class="line" fill="#3a2236" d="M120 300c0-140 120-210 210-210s160 70 160 210-70 180-160 180-210-40-210-180z"/>
+  <circle class="eye" cx="220" cy="250" r="12"/>
+  <circle class="eye" cx="300" cy="250" r="12"/>
+  <path class="line" d="M220 300c22 16 50 16 72 0"/>
+  <path class="line" stroke="#f1d07a" d="M180 190l-30-30 60 16"/>
+  <path class="line" stroke="#f1d07a" d="M332 190l30-30-60 16"/>
+  <circle fill="#f1d07a" cx="256" cy="140" r="6"/>
+</svg>

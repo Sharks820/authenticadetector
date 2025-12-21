@@ -1,0 +1,102 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--ad-font-sans);
+  background: var(--ad-bg);
+  color: var(--ad-text-1);
+}
+
+.ad-icon-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.ad-icon-slot svg {
+  width: 1em;
+  height: 1em;
+  display: block;
+}
+
+.quick-nav-icon {
+  color: var(--ad-accent-green);
+  text-shadow: 0 0 12px rgba(34, 211, 166, 0.35);
+}
+
+.home-header {
+  overflow: visible;
+}
+
+.logo {
+  min-width: 0;
+}
+
+.logo-text {
+  line-height: 1.1;
+}
+
+.install-banner,
+.outbreak-banner,
+.gacha-banner {
+  background: linear-gradient(135deg, rgba(124, 77, 255, 0.18), rgba(34, 211, 166, 0.18)) !important;
+  border: 1px solid rgba(124, 77, 255, 0.4) !important;
+  box-shadow: var(--ad-shadow-1);
+  backdrop-filter: blur(12px);
+}
+
+.install-banner-btn {
+  background: linear-gradient(135deg, var(--ad-accent-purple), var(--ad-accent-pink));
+  color: var(--ad-text-1);
+  border: none;
+  box-shadow: var(--ad-glow-purple);
+}
+
+.rotating-banner {
+  margin: 12px 16px 6px;
+  padding: 12px 14px;
+  border-radius: var(--ad-radius-3);
+  border: 1px solid rgba(244, 114, 182, 0.4);
+  background: linear-gradient(135deg, rgba(124, 77, 255, 0.22), rgba(34, 211, 166, 0.18));
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--ad-shadow-1);
+}
+
+.rotating-banner-label {
+  font-size: var(--ad-font-xs);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ad-text-2);
+}
+
+.rotating-banner-text {
+  font-size: var(--ad-font-sm);
+  font-weight: 600;
+  color: var(--ad-text-1);
+}
+
+.rotating-banner-glow {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ad-accent-green);
+  box-shadow: var(--ad-glow-green);
+}
+
+.vera-icon img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+
+.help-bot .vera-icon {
+  width: 46px;
+  height: 46px;
+}

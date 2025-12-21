@@ -1,0 +1,28 @@
+{
+  "name": "corruption_wisps",
+  "emitRate": 9,
+  "palette": [
+    "#ef4444",
+    "#7c4dff",
+    "#22d3a6"
+  ],
+  "particle": {
+    "shape": "shard",
+    "size": [
+      4,
+      10
+    ],
+    "life": [
+      0.5,
+      1.1
+    ],
+    "speed": [
+      10,
+      22
+    ],
+    "drift": [
+      -0.6,
+      0.6
+    ]
+  }
+}

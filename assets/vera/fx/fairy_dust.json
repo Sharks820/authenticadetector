@@ -1,0 +1,28 @@
+{
+  "name": "fairy_dust",
+  "emitRate": 12,
+  "palette": [
+    "#22d3a6",
+    "#f472b6",
+    "#7c4dff"
+  ],
+  "particle": {
+    "shape": "spark",
+    "size": [
+      2,
+      6
+    ],
+    "life": [
+      0.6,
+      1.4
+    ],
+    "speed": [
+      6,
+      16
+    ],
+    "drift": [
+      -0.4,
+      0.4
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<style>
+  .line { stroke: #0b0f18; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+  .body { fill: #1a1f2e; }
+  .accent { fill: #22d3a6; }
+  .glow { fill: #7c4dff; opacity: 0.6; }
+</style>
+
+  <rect class="body line" x="96" y="260" width="320" height="90" rx="20"/>
+  <rect class="accent line" x="170" y="210" width="180" height="60" rx="16"/>
+  <rect class="accent line" x="260" y="180" width="120" height="30" rx="14"/>
+  <circle class="glow" cx="160" cy="370" r="22"/>
+  <circle class="glow" cx="256" cy="370" r="22"/>
+  <circle class="glow" cx="352" cy="370" r="22"/>
+</svg>

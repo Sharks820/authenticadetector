@@ -1,0 +1,47 @@
+:root {
+  --ad-bg: #0a0d14;
+  --ad-surface-1: #12161f;
+  --ad-surface-2: #1a1f2e;
+  --ad-surface-3: #242b3d;
+  --ad-border: rgba(255, 255, 255, 0.1);
+
+  --ad-text-1: #f8fafc;
+  --ad-text-2: #b4bcd0;
+  --ad-text-3: #7c859f;
+
+  --ad-accent-purple: #7c4dff;
+  --ad-accent-green: #22d3a6;
+  --ad-accent-pink: #f472b6;
+  --ad-accent-blue: #4f8bff;
+
+  --ad-success: #22c55e;
+  --ad-warning: #f59e0b;
+  --ad-danger: #ef4444;
+
+  --ad-skin: #f6c7a2;
+  --ad-metal: #f1d07a;
+
+  --ad-radius-1: 6px;
+  --ad-radius-2: 10px;
+  --ad-radius-3: 14px;
+  --ad-radius-4: 20px;
+
+  --ad-space-1: 4px;
+  --ad-space-2: 8px;
+  --ad-space-3: 12px;
+  --ad-space-4: 16px;
+  --ad-space-5: 24px;
+  --ad-space-6: 32px;
+
+  --ad-shadow-1: 0 6px 16px rgba(0, 0, 0, 0.35);
+  --ad-shadow-2: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --ad-glow-green: 0 0 18px rgba(34, 211, 166, 0.35);
+  --ad-glow-purple: 0 0 18px rgba(124, 77, 255, 0.35);
+
+  --ad-font-sans: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --ad-font-xs: 12px;
+  --ad-font-sm: 14px;
+  --ad-font-md: 16px;
+  --ad-font-lg: 20px;
+  --ad-font-xl: 28px;
+}

@@ -1,0 +1,14 @@
+{
+  "gentle": {
+    "intensity": 2,
+    "durationMs": 250
+  },
+  "warning": {
+    "intensity": 4,
+    "durationMs": 350
+  },
+  "full": {
+    "intensity": 8,
+    "durationMs": 500
+  }
+}

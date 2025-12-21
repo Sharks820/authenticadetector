@@ -1,0 +1,23 @@
+{
+  "name": "corruption",
+  "emitRate": 10,
+  "palette": [
+    "#ef4444",
+    "#7c4dff"
+  ],
+  "particle": {
+    "shape": "shard",
+    "size": [
+      4,
+      12
+    ],
+    "life": [
+      0.4,
+      1.0
+    ],
+    "speed": [
+      12,
+      24
+    ]
+  }
+}

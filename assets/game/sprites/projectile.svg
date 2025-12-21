@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<style>
+  .line { stroke: #0b0f18; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+  .body { fill: #1a1f2e; }
+  .accent { fill: #22d3a6; }
+  .glow { fill: #7c4dff; opacity: 0.6; }
+</style>
+
+  <path class="accent line" d="M140 256h200"/>
+  <path class="line" d="M320 220l60 36-60 36z"/>
+</svg>

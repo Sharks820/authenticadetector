@@ -1,0 +1,23 @@
+{
+  "name": "impact",
+  "emitRate": 18,
+  "palette": [
+    "#22d3a6",
+    "#f1d07a"
+  ],
+  "particle": {
+    "shape": "burst",
+    "size": [
+      3,
+      8
+    ],
+    "life": [
+      0.2,
+      0.6
+    ],
+    "speed": [
+      10,
+      20
+    ]
+  }
+}

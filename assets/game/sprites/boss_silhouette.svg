@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<style>
+  .line { stroke: #0b0f18; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+  .body { fill: #1a1f2e; }
+  .accent { fill: #22d3a6; }
+  .glow { fill: #7c4dff; opacity: 0.6; }
+</style>
+
+  <path class="body line" d="M90 300c0-120 90-200 166-200s166 80 166 200-80 170-166 170-166-50-166-170z"/>
+  <path class="line" d="M170 140l-40-40 70 20z"/>
+  <path class="line" d="M342 140l40-40-70 20z"/>
+  <circle class="accent" cx="220" cy="260" r="18"/>
+  <circle class="accent" cx="292" cy="260" r="18"/>
+</svg>

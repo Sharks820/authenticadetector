@@ -2174,22 +2174,35 @@
             transition: all 0.3s ease;
         }
 
-        /* VERA Lucide Icon Styling */
+        /* VERA Inline SVG Icon Styling */
         .vera-icon {
-            width: 28px;
-            height: 28px;
-            stroke-width: 2;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
             transition: all 0.3s ease;
+        }
+        .vera-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke-width: 2;
         }
         .vera-fairy {
             color: #00d4aa;
-            filter: drop-shadow(0 0 6px rgba(0,212,170,0.8));
+            filter: drop-shadow(0 0 8px rgba(0,212,170,0.9));
             animation: veraFairyGlow 2s ease-in-out infinite;
+        }
+        .vera-fairy svg {
+            stroke: #00d4aa;
         }
         .vera-monster {
             color: #ff4757;
-            filter: drop-shadow(0 0 8px rgba(255,71,87,0.9));
-            animation: veraMonsterPulse 0.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 12px rgba(255,71,87,1));
+            animation: veraMonsterPulse 0.4s ease-in-out infinite;
+        }
+        .vera-monster svg {
+            stroke: #ff4757;
         }
         .vera-help-icon {
             width: 16px;
@@ -3474,23 +3487,31 @@
             letter-spacing: 0.5px;
         }
 
-        /* Big Tank Play Button */
+        /* Big Tank Play Button - DANGER THEMED for Outbreak */
         .tank-play-btn {
             width: 100%;
             padding: 24px;
             margin-top: 20px;
-            background: linear-gradient(135deg, #00d4aa 0%, #0984e3 50%, #6c5ce7 100%);
-            border: none;
+            background: linear-gradient(135deg, #ff4757 0%, #ff6348 50%, #ff4757 100%);
+            background-size: 200% 100%;
+            border: 2px solid rgba(255,255,255,0.1);
             border-radius: 20px;
             cursor: pointer;
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 32px rgba(0,212,170,0.4);
+            box-shadow: 0 8px 32px rgba(255,71,87,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+            animation: dangerPulse 3s ease-in-out infinite;
+        }
+        @keyframes dangerPulse {
+            0%, 100% { background-position: 0% 0; box-shadow: 0 8px 32px rgba(255,71,87,0.4); }
+            50% { background-position: 100% 0; box-shadow: 0 12px 48px rgba(255,99,72,0.6); }
         }
         .tank-play-btn:hover {
             transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 12px 40px rgba(0,212,170,0.5);
+            box-shadow: 0 16px 48px rgba(255,71,87,0.6);
+            animation: none;
+            background-position: 100% 0;
         }
         .tank-play-btn:active {
             transform: scale(0.98);
@@ -3498,7 +3519,7 @@
         .tank-btn-glow {
             position: absolute;
             inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
             transform: translateX(-100%);
             animation: btnShimmer 2s ease-in-out infinite;
         }
@@ -3512,23 +3533,29 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
         }
         .tank-btn-icon {
-            font-size: 32px;
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+            font-size: 36px;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+            animation: tankIconBounce 2s ease-in-out infinite;
+        }
+        @keyframes tankIconBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
         }
         .tank-btn-text {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 900;
             color: #fff;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            letter-spacing: 2px;
+            text-shadow: 0 3px 12px rgba(0,0,0,0.4);
+            letter-spacing: 3px;
         }
         .tank-btn-sub {
-            font-size: 12px;
-            color: rgba(255,255,255,0.8);
-            font-weight: 600;
+            font-size: 13px;
+            color: rgba(255,255,255,0.9);
+            font-weight: 700;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.3);
         }
 
         /* Battle History */
@@ -4752,6 +4779,9 @@
             flex: 1;
         }
     </style>
+<link rel="stylesheet" href="assets/style/design-tokens.css">
+<link rel="stylesheet" href="assets/style/theme.css">
+<script src="assets/icons/index.js" defer></script>
 </head>
 <body>
 
@@ -4768,31 +4798,37 @@
     <!-- QUICK NAV - Fun Animated Icons -->
     <div class="quick-nav">
         <button class="quick-nav-btn" onclick="openHistory()">
-            <span class="quick-nav-icon">📊</span>
+            <span class="quick-nav-icon ad-icon-slot" data-ad-icon="history"></span>
             <span class="quick-nav-label">History</span>
         </button>
         <button class="quick-nav-btn" onclick="openLeaderboard()">
-            <span class="quick-nav-icon">👑</span>
+            <span class="quick-nav-icon ad-icon-slot" data-ad-icon="leaderboard"></span>
             <span class="quick-nav-label">Ranks</span>
         </button>
         <button class="quick-nav-btn" onclick="openAvatarSelector()">
-            <span class="quick-nav-icon">💎</span>
+            <span class="quick-nav-icon ad-icon-slot" data-ad-icon="store"></span>
             <span class="quick-nav-label">Shop</span>
         </button>
         <button class="quick-nav-btn" onclick="openHelp()">
-            <span class="quick-nav-icon">🧚</span>
+            <span class="quick-nav-icon ad-icon-slot" data-ad-icon="sparkles"></span>
             <span class="quick-nav-label">VERA</span>
         </button>
     </div>
-    
-    <div class="status-bar" id="statusBar">
+
+    <div class="rotating-banner" id="rotatingBanner">
+        <span class="rotating-banner-glow"></span>
+        <span class="rotating-banner-label">Signal</span>
+        <span class="rotating-banner-text" id="rotatingBannerText">Loading updates...</span>
+    </div>
+
+<div class="status-bar" id="statusBar">
         <button class="status-chip pending" id="installChip" onclick="promptInstall()"><span>📲</span> Install</button>
         <button class="status-chip signup" id="signupChip" onclick="openLogin(true)"><span>✨</span> Sign Up</button>
         <button class="status-chip pending" id="loginChip" onclick="openLogin()"><span>🔑</span> Sign In</button>
     </div>
     
     <div class="install-banner" id="installBanner">
-        <span class="install-banner-icon">📲</span>
+        <span class="install-banner-icon ad-icon-slot" data-ad-icon="install" data-ad-size="20"></span>
         <div class="install-banner-text">
             <strong>Install AuthenticaDetector</strong>
             <span>Unlock Deep Scan & more!</span>
@@ -4852,7 +4888,7 @@
                     </div>
                 </div>
                 <button class="game-cta-btn" onclick="startTankShooter()">
-                    <i data-lucide="play" class="lucide-icon" style="width:24px;height:24px"></i>
+                    <span class="ad-icon-slot" data-ad-icon="play" data-ad-size="24"></span>
                     <span>PLAY NOW</span>
                     <i data-lucide="chevrons-right" class="lucide-icon-sm"></i>
                 </button>
@@ -4978,8 +5014,8 @@
 <div class="view" id="historyView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="back-btn" onclick="closeView()">←</button>
-            <button class="home-btn" onclick="openView('homeView')" title="Home">🏡</button>
+            <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
         <span class="view-title">📋 History</span>
         <div class="coins-display" id="historyViewCoins">
@@ -4996,12 +5032,12 @@
 <div class="view" id="leaderboardView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="back-btn" onclick="closeView()">←</button>
-            <button class="home-btn" onclick="openView('homeView')" title="Home">🏡</button>
+            <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">🎮 Tank Commanders</span>
+        <span class="view-title"><i data-lucide="trophy" class="lucide-icon-sm"></i> Tank Commanders</span>
         <div class="coins-display" id="leaderboardViewCoins">
-            <span style="font-size:16px">🪙</span>
+            <i data-lucide="coins" class="lucide-icon-sm" style="color:#ffd700"></i>
             <span>0</span>
         </div>
     </div>
@@ -5042,8 +5078,8 @@
 <div class="view" id="profileView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="back-btn" onclick="closeView()">←</button>
-            <button class="home-btn" onclick="openView('homeView')" title="Home">🏡</button>
+            <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
         <span class="view-title">👤 Profile</span>
         <div class="coins-display" id="profileViewCoins">
@@ -5079,10 +5115,10 @@
 <div class="view" id="allBadgesView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="back-btn" onclick="closeView()">←</button>
-            <button class="home-btn" onclick="openView('homeView')" title="Home">🏡</button>
+            <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">🎖️ All Badges</span>
+        <span class="view-title"><i data-lucide="award" class="lucide-icon-sm"></i> All Badges</span>
         <div class="coins-display" id="badgesViewCoins">
             <span style="font-size:16px">🪙</span>
             <span>0</span>
@@ -5095,10 +5131,10 @@
 <div class="view" id="questsView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="back-btn" onclick="closeView()">←</button>
-            <button class="home-btn" onclick="openView('homeView')" title="Home">🏡</button>
+            <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">⚡ Quests & Challenges</span>
+        <span class="view-title"><i data-lucide="zap" class="lucide-icon-sm"></i> Quests & Challenges</span>
         <div class="coins-display" id="questsViewCoins">
             <span style="font-size:16px">🪙</span>
             <span>0</span>
@@ -5132,8 +5168,8 @@
 <div class="view" id="avatarView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="back-btn" onclick="closeView()">←</button>
-            <button class="home-btn" onclick="openView('homeView')" title="Home">🏡</button>
+            <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
         <span class="view-title">🎨 Character Designer</span>
         <div class="coins-display" id="avatarViewCoins">
@@ -5349,10 +5385,10 @@
 <div class="view" id="huntView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="back-btn" onclick="closeView()">←</button>
-            <button class="home-btn" onclick="openView('homeView')" title="Home">🏡</button>
+            <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">🎯 Hunt Mode</span>
+        <span class="view-title"><i data-lucide="crosshair" class="lucide-icon-sm"></i> Hunt Mode</span>
         <div class="coins-display" id="headerCoins">
             <span style="font-size:16px">🪙</span>
             <span id="coinsCount">0</span>
@@ -5471,10 +5507,10 @@
 <div class="view" id="verifyView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="back-btn" onclick="closeView()">←</button>
-            <button class="home-btn" onclick="openView('homeView')" title="Home">🏡</button>
+            <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">✅ Verify Mode</span>
+        <span class="view-title"><i data-lucide="shield-check" class="lucide-icon-sm"></i> Verify Mode</span>
         <div class="streak-display" id="streakDisplay">
             <span>🔥</span>
             <span id="streakCount">0</span>
@@ -5551,10 +5587,10 @@
 <div class="view" id="squadsView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="back-btn" onclick="closeView()">←</button>
-            <button class="home-btn" onclick="openView('homeView')" title="Home">🏡</button>
+            <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">👥 Squads</span>
+        <span class="view-title"><i data-lucide="users" class="lucide-icon-sm"></i> Squads</span>
         <button class="icon-btn" onclick="showCreateSquad()">➕</button>
     </div>
     <div class="view-body view-body-padded">
@@ -5633,8 +5669,8 @@
 <div class="view" id="outbreaksView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="back-btn" onclick="closeView()">←</button>
-            <button class="home-btn" onclick="openView('homeView')" title="Home">🏡</button>
+            <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
         <span class="view-title">🎮 Tank Battle</span>
         <div style="width:44px"></div>
@@ -5869,29 +5905,29 @@
 <!-- Bottom Navigation for Truth Hunters - Professional Icons -->
 <div class="game-nav" id="gameNav" style="display:none">
     <button class="game-nav-btn" data-view="huntView" onclick="openView('huntView')">
-        <div class="game-nav-icon"><i data-lucide="crosshair" class="lucide-icon"></i></div>
+        <div class="game-nav-icon"><span class="ad-icon-slot" data-ad-icon="crosshair" data-ad-size="20"></span></div>
         <div class="game-nav-label">Hunt</div>
     </button>
     <button class="game-nav-btn" data-view="verifyView" onclick="openView('verifyView')">
-        <div class="game-nav-icon"><i data-lucide="check-circle" class="lucide-icon"></i></div>
+        <div class="game-nav-icon"><span class="ad-icon-slot" data-ad-icon="verify" data-ad-size="20"></span></div>
         <div class="game-nav-label">Verify</div>
         <div class="game-nav-badge" id="verifyBadge">0</div>
     </button>
     <button class="game-nav-btn" data-view="outbreaksView" onclick="openView('outbreaksView')">
-        <div class="game-nav-icon"><i data-lucide="alert-triangle" class="lucide-icon"></i></div>
+        <div class="game-nav-icon"><span class="ad-icon-slot" data-ad-icon="warning" data-ad-size="20"></span></div>
         <div class="game-nav-label">Outbreaks</div>
         <div class="game-nav-pulse" id="outbreakPulse" style="display:none"></div>
     </button>
     <button class="game-nav-btn" data-view="squadsView" onclick="openView('squadsView')">
-        <div class="game-nav-icon"><i data-lucide="users" class="lucide-icon"></i></div>
+        <div class="game-nav-icon"><span class="ad-icon-slot" data-ad-icon="friends" data-ad-size="20"></span></div>
         <div class="game-nav-label">Squad</div>
     </button>
     <button class="game-nav-btn" data-view="leaderboardView" onclick="openView('leaderboardView')">
-        <div class="game-nav-icon"><i data-lucide="trophy" class="lucide-icon"></i></div>
+        <div class="game-nav-icon"><span class="ad-icon-slot" data-ad-icon="trophy" data-ad-size="20"></span></div>
         <div class="game-nav-label">Ranks</div>
     </button>
     <button class="game-nav-btn" data-view="shopView" onclick="openView('shopView')">
-        <div class="game-nav-icon"><i data-lucide="coins" class="lucide-icon"></i></div>
+        <div class="game-nav-icon"><span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="20"></span></div>
         <div class="game-nav-label">Shop</div>
     </button>
 </div>
@@ -5900,8 +5936,8 @@
 <div class="view" id="helpView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="back-btn" onclick="closeView()">←</button>
-            <button class="home-btn" onclick="openView('homeView')" title="Home">🏡</button>
+            <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
         <span class="view-title">❓ Help</span>
         <div style="width:44px"></div>
@@ -6027,8 +6063,8 @@
 <div class="view" id="shopView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="back-btn" onclick="closeView()">←</button>
-            <button class="home-btn" onclick="openView('homeView')" title="Home">🏡</button>
+            <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
         <span class="view-title">💰 Shop</span>
         <div style="display:flex;align-items:center;gap:8px;padding:4px 12px;background:var(--surface2);border-radius:8px;font-size:12px;font-weight:700">
@@ -6096,12 +6132,18 @@ if (typeof lucide !== 'undefined') {
     lucide.createIcons();
     console.log('[Graphics] Lucide icons initialized');
 }
+if (window.IconLibrary) {
+    window.IconLibrary.apply();
+}
 
 // Initialize cosmetics system on page load
 document.addEventListener('DOMContentLoaded', () => {
     // Re-initialize Lucide icons after DOM loads (catches dynamically added elements)
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
+    }
+    if (window.IconLibrary) {
+        window.IconLibrary.apply();
     }
 
     if (typeof initCosmeticsSystem === 'function') {
@@ -6139,6 +6181,23 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const APP_VERSION = '12.0.0';
 const DETECTOR_VERSION = '6.0.0';
 const APP_NAME = 'AuthenticaDetector';
+
+const rotatingBannerMessages = [
+    'Welcome to the AI-fantasy hub.',
+    'New bestiary drops weekly.',
+    'Scan, hunt, verify, repeat.',
+    'VERA is watching for fakes.',
+    'Earn coins for clean scans.'
+];
+const rotatingBannerText = document.getElementById('rotatingBannerText');
+if (rotatingBannerText) {
+    let bannerIndex = 0;
+    rotatingBannerText.textContent = rotatingBannerMessages[bannerIndex];
+    setInterval(() => {
+        bannerIndex = (bannerIndex + 1) % rotatingBannerMessages.length;
+        rotatingBannerText.textContent = rotatingBannerMessages[bannerIndex];
+    }, 4000);
+}
 
 // ==================== STATE ====================
 let supabase = null, useLocalFallback = true;
@@ -16388,7 +16447,7 @@ async function confirmVerifySubmission() {
 <!-- Floating Helper - VERA the Pixel Fairy - Professional Lucide Icons -->
 <div class="help-bot" id="helpBot" title="Click to pop, hold for help!">
     <span class="help-bot-face" id="veraFace">
-        <i data-lucide="sparkles" class="vera-icon vera-fairy"></i>
+        <span class="vera-icon vera-fairy"><img src="assets/vera/vera_fairy.svg" alt="Vera"></span>
     </span>
     <div class="help-bot-badge" id="veraHelpBadge" onclick="event.stopPropagation(); openHelp();" title="Open Help">
         <i data-lucide="help-circle" class="vera-help-icon"></i>
@@ -16530,19 +16589,35 @@ async function confirmVerifySubmission() {
         "*sweating* Those weren't horns, they were... fancy hair! 💇"
     ];
 
-    // Professional Lucide icons for monster mode
-    const monsterIcons = ['skull', 'flame', 'zap', 'angry', 'ghost'];
-    const fairyIcon = 'sparkles';
+    // INLINE SVG icons for VERA - no CDN dependency!
+    const veraSVGs = {
+        vera_fairy: '<img src="assets/vera/vera_fairy.svg" alt="Vera">',
+        vera_monster: '<img src="assets/vera/vera_monster.svg" alt="Vera">',
+        vera_happy: '<img src="assets/vera/vera_happy.svg" alt="Vera">',
+        vera_think: '<img src="assets/vera/vera_think.svg" alt="Vera">',
+        vera_angry: '<img src="assets/vera/vera_angry.svg" alt="Vera">',
+        // Fairy sparkles icon - cute and magical
+        sparkles: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>`,
+        // Scary skull icon - menacing
+        skull: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><path d="M8 20v2h8v-2"/><path d="m12.5 17-.5-1-.5 1h1z"/><path d="M16 20a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20"/></svg>`,
+        // Fire/flame icon - burning rage
+        flame: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`,
+        // Lightning zap icon - electric danger
+        zap: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+        // Ghost icon - spooky apparition
+        ghost: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 10h.01"/><path d="M15 10h.01"/><path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z"/></svg>`,
+        // Angry frown face - pure rage
+        angry: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><path d="M7.5 8 10 9"/><path d="m14 9 2.5-1"/><path d="M9 10h0"/><path d="M15 10h0"/></svg>`
+    };
+    const monsterIcons = ['vera_monster'];
+    const fairyIcon = 'vera_fairy';
     let currentMonsterFace = 0;
 
-    // Helper function to set VERA's face with Lucide icons
+    // Helper function to set VERA's face with INLINE SVGs (no CDN needed!)
     function setVeraFace(iconName, isMonster = false) {
         const iconClass = isMonster ? 'vera-icon vera-monster' : 'vera-icon vera-fairy';
-        veraFace.innerHTML = `<i data-lucide="${iconName}" class="${iconClass}"></i>`;
-        // Re-initialize Lucide to render the new icon
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
+        const svgContent = veraSVGs[iconName] || veraSVGs.vera_fairy;
+        veraFace.innerHTML = `<span class="${iconClass}">${svgContent}</span>`;
     }
 
     let tipIndex = 0;
@@ -16551,6 +16626,8 @@ async function confirmVerifySubmission() {
         if (!isTransformed && !isMonsterMode) {
             tipIndex = (tipIndex + 1) % veraTips.length;
             veraTip.textContent = veraTips[tipIndex];
+            setVeraFace('vera_think', false);
+            setTimeout(() => { if (!isTransformed && !isMonsterMode) setVeraFace(fairyIcon, false); }, 900);
             // Add subtle bounce animation when tip changes
             helpBot.style.animation = 'veraTipBounce 0.3s ease';
             setTimeout(() => { helpBot.style.animation = ''; }, 300);
@@ -16593,7 +16670,7 @@ async function confirmVerifySubmission() {
             if (flickerCount % 2 === 0) {
                 setVeraFace(fairyIcon, false);
             } else {
-                setVeraFace('zap', true);
+                setVeraFace('vera_angry', true);
             }
             helpBot.style.opacity = flickerCount % 2 === 0 ? '1' : '0.7';
         }, 200);
@@ -16738,6 +16815,9 @@ async function confirmVerifySubmission() {
             }, 50);
         }, 300);
 
+        setVeraFace('vera_happy', false);
+        setTimeout(() => { if (!isTransformed && !isMonsterMode) setVeraFace(fairyIcon, false); }, 800);
+
         if (showClickTip) {
             const tip = clickTips[Math.floor(Math.random() * clickTips.length)];
             veraTip.textContent = tip;
@@ -16759,7 +16839,7 @@ async function confirmVerifySubmission() {
         resetIdleTimer();
 
         // Use scary skull icon for beast mode
-        setVeraFace('skull', true);
+        setVeraFace('vera_monster', true);
         helpBot.style.transform = 'scale(1.5) rotate(15deg)';
         helpBot.style.background = 'linear-gradient(135deg, #ff4757 0%, #2f1a1a 100%)';
         helpBot.classList.add('monster-mode');

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<style>
+  .line { stroke: #0b0f18; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+  .body { fill: #1a1f2e; }
+  .accent { fill: #22d3a6; }
+  .glow { fill: #7c4dff; opacity: 0.6; }
+</style>
+
+  <path class="body line" d="M120 280c0-90 70-160 160-160s160 70 160 160-70 160-160 160-160-70-160-160z"/>
+  <circle class="accent" cx="220" cy="260" r="16"/>
+  <circle class="accent" cx="300" cy="260" r="16"/>
+  <path class="line" d="M220 310c20 16 52 16 72 0"/>
+</svg>
