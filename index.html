@@ -2088,17 +2088,20 @@
             right: -10px;
             width: 32px;
             height: 32px;
-            background: transparent;
+            background: radial-gradient(circle, rgba(255,71,87,0.25) 0%, rgba(255,71,87,0.05) 70%, transparent 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 20px;
+            font-weight: 900;
+            color: #ff4757;
             cursor: pointer;
-            border: none;
+            border: 1px solid rgba(255,71,87,0.4);
+            border-radius: 50%;
             z-index: 10;
             animation: badgeBounce 2s ease-in-out infinite;
             transform-origin: center center;
-            text-shadow: 0 0 10px rgba(0,212,170,0.8), 0 0 20px rgba(0,212,170,0.5);
+            text-shadow: 0 0 10px rgba(255,71,87,0.8), 0 0 20px rgba(255,71,87,0.5);
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
         @keyframes badgeBounce {
@@ -2156,9 +2159,26 @@
         }
         /* Monster mode badge - angry red pulsing */
         .help-bot.monster-mode .help-bot-badge {
-            text-shadow: 0 0 15px rgba(255,71,87,1), 0 0 30px rgba(255,71,87,0.8);
-            animation: badgeAngry 0.15s ease-in-out infinite;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 32px;
+            height: 32px;
+            background: radial-gradient(circle, rgba(255,71,87,0.25) 0%, rgba(255,71,87,0.05) 70%, transparent 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 900;
             color: #ff4757;
+            cursor: pointer;
+            border: 1px solid rgba(255,71,87,0.4);
+            border-radius: 50%;
+            z-index: 10;
+            animation: badgeBounce 2s ease-in-out infinite;
+            transform-origin: center center;
+            text-shadow: 0 0 10px rgba(255,71,87,0.8), 0 0 20px rgba(255,71,87,0.5);
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
         .help-bot.monster-mode .help-bot-badge::before,
         .help-bot.monster-mode .help-bot-badge::after {
@@ -16459,9 +16479,7 @@ async function confirmVerifySubmission() {
     <span class="help-bot-face" id="veraFace">
         <span class="vera-icon vera-fairy"><img src="assets/vera/vera_fairy.svg" alt="Vera"></span>
     </span>
-    <div class="help-bot-badge" id="veraHelpBadge" onclick="event.stopPropagation(); openHelp();" title="Open Help">
-        <i data-lucide="help-circle" class="vera-help-icon"></i>
-    </div>
+    <div class="help-bot-badge" id="veraHelpBadge" onclick="event.stopPropagation(); openHelp();" title="Open Help">?</div>
     <div class="help-bot-tip">
         <strong style="color:#ff6b35"><i data-lucide="sparkles" style="width:14px;height:14px;display:inline;vertical-align:middle"></i> VERA says:</strong><br>
         <span id="veraTip">Those fake images think they're SO smart... Let's bust 'em!</span>
@@ -16489,6 +16507,7 @@ async function confirmVerifySubmission() {
     let currentPosition = 0;
     let clickCount = 0;
     let lastClickTime = 0;
+    let clickTimestamps = [];
     let isTransformed = false;
     let isMonsterMode = false;
     let monsterClicksIgnored = 0;
@@ -16890,18 +16909,14 @@ async function confirmVerifySubmission() {
         }
 
         const now = Date.now();
+        clickTimestamps = clickTimestamps.filter(t => now - t < 2000);
+        clickTimestamps.push(now);
 
-        if (now - lastClickTime < 400) {
-            clickCount++;
-            if (clickCount >= 4 && !isTransformed) {
-                transformToBeast();
-                clickCount = 0;
-                return;
-            }
-        } else {
-            clickCount = 1;
+        if (clickTimestamps.length >= 4 && !isTransformed) {
+            transformToBeast();
+            clickTimestamps = [];
+            return;
         }
-        lastClickTime = now;
 
         if (!isTransformed) {
             popVera();
