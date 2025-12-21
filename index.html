@@ -423,6 +423,38 @@
             filter: drop-shadow(0 0 8px var(--primary));
         }
 
+        /* LOTTIE ANIMATIONS - Smooth micro-interactions */
+        lottie-player {
+            display: inline-block;
+            pointer-events: none;
+        }
+        .lottie-loading {
+            width: 80px;
+            height: 80px;
+        }
+        .lottie-success {
+            width: 60px;
+            height: 60px;
+        }
+        .lottie-coin {
+            width: 32px;
+            height: 32px;
+        }
+        .lottie-confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        .lottie-sparkle {
+            width: 24px;
+            height: 24px;
+            position: absolute;
+        }
+
         /* STATUS BAR - PREMIUM BUTTONS */
         .status-bar{
             flex-shrink:0;
@@ -4718,15 +4750,15 @@
             </div>
         </div>
 
-        <!-- TANK BATTLE GAME CTA - EPIC DESIGN -->
+        <!-- TANK BATTLE GAME CTA - EPIC DESIGN with Professional Icons -->
         <div class="game-cta-card" id="gameCTA" style="display:none">
             <div class="game-cta-glow"></div>
             <div class="game-cta-content">
                 <div class="game-cta-header">
-                    <div class="game-cta-icon" style="font-size:40px;filter:drop-shadow(0 0 15px rgba(0,212,170,0.8))">🎮</div>
+                    <div class="game-cta-icon" style="font-size:40px;filter:drop-shadow(0 0 15px rgba(0,212,170,0.8))"><i data-lucide="gamepad-2" class="lucide-icon-lg" style="color:var(--primary)"></i></div>
                     <div>
                         <h2 style="margin:0;font-size:22px;font-weight:800;background:linear-gradient(135deg,#00d4aa,#0984e3);-webkit-background-clip:text;-webkit-text-fill-color:transparent">TANK BATTLE</h2>
-                        <p style="margin:4px 0 0;color:var(--text2);font-size:13px">🤖 Destroy AI Fakes • 💰 Earn Coins • 🏆 Top the Ranks</p>
+                        <p style="margin:4px 0 0;color:var(--text2);font-size:13px"><i data-lucide="bot" class="lucide-icon-sm"></i> Destroy AI Fakes • <i data-lucide="coins" class="lucide-icon-sm"></i> Earn Coins • <i data-lucide="trophy" class="lucide-icon-sm"></i> Top the Ranks</p>
                     </div>
                 </div>
                 <div class="game-cta-stats">
@@ -4735,7 +4767,7 @@
                         <div class="game-cta-stat-label">Level</div>
                     </div>
                     <div class="game-cta-stat">
-                        <div class="game-cta-stat-value" id="userCoins">0 🪙</div>
+                        <div class="game-cta-stat-value" id="userCoins">0 <i data-lucide="circle-dollar-sign" class="lucide-icon-sm"></i></div>
                         <div class="game-cta-stat-label">Coins</div>
                     </div>
                     <div class="game-cta-stat">
@@ -4744,17 +4776,17 @@
                     </div>
                 </div>
                 <button class="game-cta-btn" onclick="openView('outbreaksView')" style="background:linear-gradient(135deg,#ff4757,#ff6b6b)">
-                    <span style="font-size:24px">🎮</span>
+                    <span style="font-size:24px"><i data-lucide="gamepad-2" class="lucide-icon"></i></span>
                     <span style="font-weight:800;font-size:16px">PLAY TANK BATTLE</span>
-                    <span style="font-size:12px;opacity:0.9">⚔️</span>
+                    <span style="font-size:12px;opacity:0.9"><i data-lucide="swords" class="lucide-icon-sm"></i></span>
                 </button>
                 <div style="display:flex;gap:8px;margin-top:12px">
                     <button onclick="openView('huntView')" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(0,212,170,0.3);background:rgba(0,212,170,0.1);color:var(--primary);font-weight:600;font-size:12px;cursor:pointer;position:relative">
-                        🎯 Hunt Mode
+                        <i data-lucide="crosshair" class="lucide-icon-sm"></i> Hunt Mode
                         <span class="game-badge" style="position:absolute;top:-6px;right:-6px;background:#ff4757;color:#fff;font-size:8px;padding:2px 5px;border-radius:10px;font-weight:700">GAME</span>
                     </button>
                     <button onclick="openView('verifyView')" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(99,102,241,0.3);background:rgba(99,102,241,0.1);color:#a78bfa;font-weight:600;font-size:12px;cursor:pointer;position:relative">
-                        ✅ Verify Mode
+                        <i data-lucide="check-circle" class="lucide-icon-sm"></i> Verify Mode
                         <span class="game-badge" style="position:absolute;top:-6px;right:-6px;background:#ff4757;color:#fff;font-size:8px;padding:2px 5px;border-radius:10px;font-weight:700">GAME</span>
                     </button>
                 </div>
@@ -5760,32 +5792,32 @@
     </div>
 </div>
 
-<!-- Bottom Navigation for Truth Hunters -->
+<!-- Bottom Navigation for Truth Hunters - Professional Icons -->
 <div class="game-nav" id="gameNav" style="display:none">
     <button class="game-nav-btn" data-view="huntView" onclick="openView('huntView')">
-        <div class="game-nav-icon">🎯</div>
+        <div class="game-nav-icon"><i data-lucide="crosshair" class="lucide-icon"></i></div>
         <div class="game-nav-label">Hunt</div>
     </button>
     <button class="game-nav-btn" data-view="verifyView" onclick="openView('verifyView')">
-        <div class="game-nav-icon">✅</div>
+        <div class="game-nav-icon"><i data-lucide="check-circle" class="lucide-icon"></i></div>
         <div class="game-nav-label">Verify</div>
         <div class="game-nav-badge" id="verifyBadge">0</div>
     </button>
     <button class="game-nav-btn" data-view="outbreaksView" onclick="openView('outbreaksView')">
-        <div class="game-nav-icon">⚠️</div>
+        <div class="game-nav-icon"><i data-lucide="alert-triangle" class="lucide-icon"></i></div>
         <div class="game-nav-label">Outbreaks</div>
         <div class="game-nav-pulse" id="outbreakPulse" style="display:none"></div>
     </button>
     <button class="game-nav-btn" data-view="squadsView" onclick="openView('squadsView')">
-        <div class="game-nav-icon">👥</div>
+        <div class="game-nav-icon"><i data-lucide="users" class="lucide-icon"></i></div>
         <div class="game-nav-label">Squad</div>
     </button>
     <button class="game-nav-btn" data-view="leaderboardView" onclick="openView('leaderboardView')">
-        <div class="game-nav-icon">🏆</div>
+        <div class="game-nav-icon"><i data-lucide="trophy" class="lucide-icon"></i></div>
         <div class="game-nav-label">Ranks</div>
     </button>
     <button class="game-nav-btn" data-view="shopView" onclick="openView('shopView')">
-        <div class="game-nav-icon">💰</div>
+        <div class="game-nav-icon"><i data-lucide="coins" class="lucide-icon"></i></div>
         <div class="game-nav-label">Shop</div>
     </button>
 </div>
@@ -5985,8 +6017,19 @@
 <script src="ai-cosmetics-gacha.js"></script>
 
 <script>
+// Initialize Lucide icons for professional UI
+if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+    console.log('[Graphics] Lucide icons initialized');
+}
+
 // Initialize cosmetics system on page load
 document.addEventListener('DOMContentLoaded', () => {
+    // Re-initialize Lucide icons after DOM loads (catches dynamically added elements)
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+
     if (typeof initCosmeticsSystem === 'function') {
         console.log('[Init] Starting cosmetics system...');
         initCosmeticsSystem();
@@ -14331,16 +14374,46 @@ const SoundManager = {
 
     // Sound definitions (using Web Audio API for generated sounds)
     sounds: {
-        coin: { frequency: 800, duration: 0.1, type: 'sine' },
-        success: { frequency: 600, duration: 0.15, type: 'sine', sweep: 800 },
-        error: { frequency: 200, duration: 0.2, type: 'square' },
-        click: { frequency: 400, duration: 0.05, type: 'sine' },
-        levelUp: { frequency: 400, duration: 0.3, type: 'sine', sweep: 800 },
-        reward: { frequency: 500, duration: 0.2, type: 'sine', sweep: 700 },
+        // UI Sounds
+        coin: { frequency: 880, duration: 0.1, type: 'sine', sweep: 1100 },
+        success: { frequency: 600, duration: 0.15, type: 'sine', sweep: 900 },
+        error: { frequency: 180, duration: 0.25, type: 'square' },
+        click: { frequency: 500, duration: 0.04, type: 'sine' },
+        tap: { frequency: 600, duration: 0.03, type: 'triangle' },
+        hover: { frequency: 800, duration: 0.02, type: 'sine' },
+
+        // Progress & Rewards
+        levelUp: { frequency: 400, duration: 0.4, type: 'sine', sweep: 1000 },
+        reward: { frequency: 550, duration: 0.25, type: 'sine', sweep: 800 },
+        unlock: { frequency: 700, duration: 0.3, type: 'sine', sweep: 1200 },
+        achievement: { frequency: 600, duration: 0.5, type: 'sine', sweep: 1400 },
+
+        // Game Sounds
         scan: { frequency: 300, duration: 0.5, type: 'sawtooth' },
-        shoot: { frequency: 150, duration: 0.1, type: 'square' },
-        explosion: { frequency: 100, duration: 0.3, type: 'sawtooth' },
-        powerup: { frequency: 600, duration: 0.2, type: 'sine', sweep: 1000 }
+        shoot: { frequency: 120, duration: 0.12, type: 'square' },
+        explosion: { frequency: 80, duration: 0.35, type: 'sawtooth' },
+        powerup: { frequency: 600, duration: 0.25, type: 'sine', sweep: 1200 },
+        damage: { frequency: 100, duration: 0.15, type: 'square' },
+        shield: { frequency: 400, duration: 0.2, type: 'triangle', sweep: 600 },
+        combo: { frequency: 500, duration: 0.15, type: 'sine', sweep: 1000 },
+
+        // VERA Sounds
+        veraHello: { frequency: 700, duration: 0.15, type: 'sine', sweep: 900 },
+        veraHelp: { frequency: 600, duration: 0.2, type: 'sine', sweep: 800 },
+        veraTip: { frequency: 550, duration: 0.12, type: 'triangle', sweep: 700 },
+
+        // Gacha Sounds
+        gachaRoll: { frequency: 200, duration: 0.8, type: 'sawtooth', sweep: 800 },
+        gachaCommon: { frequency: 400, duration: 0.2, type: 'sine' },
+        gachaRare: { frequency: 600, duration: 0.3, type: 'sine', sweep: 800 },
+        gachaEpic: { frequency: 700, duration: 0.4, type: 'sine', sweep: 1000 },
+        gachaLegendary: { frequency: 500, duration: 0.6, type: 'sine', sweep: 1500 },
+
+        // Navigation
+        navOpen: { frequency: 500, duration: 0.08, type: 'sine' },
+        navClose: { frequency: 400, duration: 0.06, type: 'sine' },
+        modalOpen: { frequency: 450, duration: 0.1, type: 'triangle' },
+        modalClose: { frequency: 350, duration: 0.08, type: 'triangle' }
     },
 
     audioContext: null,
@@ -14438,6 +14511,135 @@ function playSound(name) {
 }
 window.playSound = playSound;
 window.SoundManager = SoundManager;
+
+// ==================== ANIMATION MANAGER ====================
+// Professional Lottie animations and particle effects
+
+const AnimationManager = {
+    // Free Lottie animation URLs from LottieFiles
+    animations: {
+        loading: 'https://lottie.host/4db68bbd-31f6-4cd8-84eb-189571c57333/mCv6xRG0MJ.json',
+        success: 'https://lottie.host/cc4a3b47-cee9-41c4-b2a3-d7ada0ddc13c/BqPvbRxKGx.json',
+        coin: 'https://lottie.host/39f431c9-6d67-4e93-aa6d-74fb51be7d7a/cO87MuQrRb.json',
+        confetti: 'https://lottie.host/7e4a4d6b-b1c1-4f4b-8d55-c8c8c7b3b7e7/xDqFn9KmNr.json',
+        star: 'https://lottie.host/6e91b0d3-4e4f-4f4f-8d0b-c8c8c7b3b7e7/ySt2n9KmNr.json',
+        sparkle: 'https://lottie.host/embed/79be4379-f93e-488a-b8d5-db3fb5df5b24/7VbfWKkqHG.json',
+        levelUp: 'https://lottie.host/embed/d40a9b5b-a3e5-4e4a-8e4b-c8c8c7b3b7e7/gHj2n9KmNr.json',
+        trophy: 'https://lottie.host/embed/5bfd1f38-77cf-4e48-a6c0-c80a0d2d47c4/k7TJ5LqvHq.json'
+    },
+
+    // Play a Lottie animation in a container
+    play(containerId, animationType, options = {}) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const url = this.animations[animationType];
+        if (!url) return;
+
+        const player = document.createElement('lottie-player');
+        player.src = url;
+        player.background = 'transparent';
+        player.speed = options.speed || 1;
+        player.style.width = options.width || '80px';
+        player.style.height = options.height || '80px';
+
+        if (options.loop) {
+            player.loop = true;
+        }
+        player.autoplay = true;
+
+        container.innerHTML = '';
+        container.appendChild(player);
+
+        // Auto-remove after animation completes (unless looping)
+        if (!options.loop) {
+            setTimeout(() => {
+                if (player.parentNode === container) {
+                    player.remove();
+                }
+            }, (options.duration || 2000));
+        }
+
+        return player;
+    },
+
+    // Show confetti celebration (for level ups, achievements)
+    showConfetti() {
+        const overlay = document.createElement('div');
+        overlay.className = 'lottie-confetti';
+        overlay.innerHTML = `
+            <lottie-player
+                src="${this.animations.confetti}"
+                background="transparent"
+                speed="1"
+                style="width:100%;height:100%"
+                autoplay
+            ></lottie-player>
+        `;
+        document.body.appendChild(overlay);
+
+        setTimeout(() => overlay.remove(), 3000);
+        playSound('achievement');
+    },
+
+    // Create floating coin animation
+    showCoinEarned(x, y, amount) {
+        const coin = document.createElement('div');
+        coin.style.cssText = `
+            position: fixed;
+            left: ${x}px;
+            top: ${y}px;
+            z-index: 9999;
+            pointer-events: none;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+            animation: floatUpFade 1s ease-out forwards;
+        `;
+        coin.textContent = `+${amount}`;
+        document.body.appendChild(coin);
+
+        setTimeout(() => coin.remove(), 1000);
+        playSound('coin');
+    },
+
+    // Add sparkle effect to element
+    addSparkle(element) {
+        const rect = element.getBoundingClientRect();
+        const sparkle = document.createElement('div');
+        sparkle.className = 'lottie-sparkle';
+        sparkle.style.left = `${rect.left + rect.width/2 - 12}px`;
+        sparkle.style.top = `${rect.top + rect.height/2 - 12}px`;
+        sparkle.innerHTML = `
+            <lottie-player
+                src="${this.animations.sparkle}"
+                background="transparent"
+                speed="1.5"
+                style="width:24px;height:24px"
+                autoplay
+            ></lottie-player>
+        `;
+        document.body.appendChild(sparkle);
+
+        setTimeout(() => sparkle.remove(), 800);
+    }
+};
+
+// Add float up animation for coin popups
+if (!document.getElementById('floatUpFadeStyle')) {
+    const style = document.createElement('style');
+    style.id = 'floatUpFadeStyle';
+    style.textContent = `
+        @keyframes floatUpFade {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-60px) scale(1.2); }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+window.AnimationManager = AnimationManager;
 
 // ==================== QUEST SYSTEM ====================
 
