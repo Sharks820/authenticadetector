@@ -1936,6 +1936,32 @@
         .help-bot:hover {
             transform: scale(1.2) rotate(15deg) !important;
         }
+        .help-bot-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #00d4aa, #0984e3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            border: 2px solid var(--bg);
+            box-shadow: 0 2px 8px rgba(0,212,170,0.5);
+            animation: badgePulse 2s ease-in-out infinite;
+            z-index: 10;
+        }
+        .help-bot-badge:hover {
+            transform: scale(1.3);
+            box-shadow: 0 4px 12px rgba(0,212,170,0.8);
+        }
+        @keyframes badgePulse {
+            0%, 100% { box-shadow: 0 2px 8px rgba(0,212,170,0.5); }
+            50% { box-shadow: 0 4px 16px rgba(0,212,170,0.9); }
+        }
         .help-bot-face {
             display: flex;
             flex-direction: column;
@@ -13786,11 +13812,13 @@ init();
 </script>
 
 <!-- Floating Helper - VERA the Pixel Fairy -->
-<div class="help-bot" id="helpBot" title="Click VERA!">
+<div class="help-bot" id="helpBot" title="Click to pop, hold for help!">
     <span class="help-bot-face" id="veraFace">🧚</span>
+    <div class="help-bot-badge" id="veraHelpBadge" onclick="event.stopPropagation(); openHelp();" title="Open Help">❓</div>
     <div class="help-bot-tip">
         <strong style="color:#ff6b35">✨ VERA says:</strong><br>
         <span id="veraTip">Those fake images think they're SO smart... Let's bust 'em!</span>
+        <div id="veraHint" style="font-size:10px;opacity:0.7;margin-top:6px;color:#00d4aa;display:none;">💡 Tap ❓ or hold me for help!</div>
     </div>
 </div>
 
@@ -13816,6 +13844,8 @@ init();
     let lastClickTime = 0;
     let isTransformed = false;
     let longPressTimer = null;
+    let popCount = 0; // Track how many times she's been popped
+    const veraHint = document.getElementById('veraHint');
 
     // Hide bot during keyboard input
     if (window.visualViewport) {
@@ -13917,6 +13947,15 @@ init();
         if (showClickTip) {
             const tip = clickTips[Math.floor(Math.random() * clickTips.length)];
             veraTip.textContent = tip;
+        }
+
+        // After 2 pops, show the hint about how to access help
+        popCount++;
+        if (popCount === 2 && veraHint) {
+            veraHint.style.display = 'block';
+        }
+        if (popCount === 3) {
+            veraTip.textContent = "Need actual help? Tap ❓ or hold me down! 💡";
         }
     }
 
