@@ -302,12 +302,19 @@
         }
         .quick-nav-btn:active{transform:translateY(-1px) scale(0.98)}
         .quick-nav-icon{
-            width:32px;height:32px;
+            width:36px;height:36px;
             display:flex;align-items:center;justify-content:center;
             font-size:18px;line-height:1;
-            background:linear-gradient(135deg, rgba(0,212,170,0.12) 0%, rgba(9,132,227,0.08) 100%);
-            border-radius:10px;
-            box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
+            background:linear-gradient(135deg, rgba(0,212,170,0.15) 0%, rgba(9,132,227,0.1) 100%);
+            border:1px solid rgba(0,212,170,0.15);
+            border-radius:12px;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.08), 0 2px 8px rgba(0,0,0,0.15);
+            color:#fff;
+        }
+        .quick-nav-icon svg{
+            width:24px;height:24px;
+            stroke:currentColor;
+            filter:drop-shadow(0 1px 3px rgba(0,212,170,0.3));
         }
         .quick-nav-label{
             font-size:9px;font-weight:700;
@@ -1101,29 +1108,81 @@
         }
         @keyframes toast-in{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
         
-        /* PROFILE */
+        /* PROFILE - Premium Design */
+        @keyframes avatarGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0,212,170,0.4), 0 0 40px rgba(0,212,170,0.2); }
+            50% { box-shadow: 0 0 30px rgba(0,212,170,0.6), 0 0 60px rgba(0,212,170,0.3); }
+        }
+        @keyframes statPop {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
         .profile-header{
-            background:var(--surface2);border-radius:16px;padding:18px;
-            margin-bottom:12px;text-align:center;
+            background:linear-gradient(145deg, rgba(26,31,46,0.95) 0%, rgba(18,22,31,0.98) 100%);
+            border:1px solid rgba(0,212,170,0.15);
+            border-radius:20px;padding:24px;
+            margin-bottom:16px;text-align:center;
+            position:relative;
+            overflow:hidden;
+        }
+        .profile-header::before {
+            content:'';
+            position:absolute;
+            top:-50%;left:-50%;width:200%;height:200%;
+            background:radial-gradient(circle at 30% 20%, rgba(0,212,170,0.08) 0%, transparent 40%);
+            pointer-events:none;
         }
         .profile-avatar{
-            width:64px;height:64px;border-radius:50%;
-            background:linear-gradient(135deg,var(--primary),#00ff88);
-            margin:0 auto 12px;display:flex;align-items:center;justify-content:center;
-            font-size:24px;font-weight:800;color:#000;cursor:pointer;overflow:hidden;
+            width:80px;height:80px;border-radius:50%;
+            background:linear-gradient(135deg, #00d4aa 0%, #0984e3 50%, #6c5ce7 100%);
+            margin:0 auto 16px;display:flex;align-items:center;justify-content:center;
+            font-size:28px;font-weight:900;color:#fff;cursor:pointer;overflow:hidden;
+            position:relative;
+            animation: avatarGlow 3s ease-in-out infinite;
+            border:3px solid rgba(255,255,255,0.2);
         }
-        .profile-avatar img{width:100%;height:100%;object-fit:cover}
-        .profile-name{font-size:16px;font-weight:800;margin-bottom:2px}
-        .profile-email{font-size:11px;color:var(--text3)}
-        
-        .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-        .stat-card{background:var(--surface);border-radius:12px;padding:12px;text-align:center}
-        .stat-value{
-            font-size:20px;font-weight:800;
-            background:linear-gradient(135deg,var(--primary),#00ff88);
+        .profile-avatar::after {
+            content:'';
+            position:absolute;
+            inset:0;
+            background:linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%);
+            pointer-events:none;
+        }
+        .profile-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+        .profile-name{
+            font-size:20px;font-weight:900;margin-bottom:4px;
+            background:linear-gradient(135deg, #fff 0%, #00d4aa 100%);
             -webkit-background-clip:text;-webkit-text-fill-color:transparent;
         }
-        .stat-label{font-size:9px;color:var(--text3);margin-top:2px}
+        .profile-email{font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:8px}
+
+        .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+        .stat-card{
+            background:linear-gradient(145deg, rgba(26,31,46,0.9) 0%, rgba(18,22,31,0.95) 100%);
+            border:1px solid rgba(0,212,170,0.12);
+            border-radius:16px;padding:16px;text-align:center;
+            animation: statPop 0.4s ease-out backwards;
+            transition:all 0.3s ease;
+        }
+        .stat-card:nth-child(1) { animation-delay: 0s; }
+        .stat-card:nth-child(2) { animation-delay: 0.1s; }
+        .stat-card:nth-child(3) { animation-delay: 0.2s; }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0,212,170,0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        .stat-value{
+            font-size:24px;font-weight:900;
+            background:linear-gradient(135deg, #00d4aa 0%, #00ffcc 50%, #0984e3 100%);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+            margin-bottom:4px;
+        }
+        .stat-label{
+            font-size:10px;color:rgba(255,255,255,0.5);
+            text-transform:uppercase;letter-spacing:0.5px;font-weight:600;
+        }
         
         /* BADGES - Styles moved to PROFESSIONAL_UI_OVERHAUL.css */
 
@@ -1320,34 +1379,146 @@
             50%{box-shadow:0 0 20px rgba(251,191,36,0.6), 0 0 40px rgba(251,191,36,0.3)}
         }
 
-        .menu{background:var(--surface);border-radius:12px;overflow:hidden}
+        .menu{
+            background:linear-gradient(145deg, rgba(26,31,46,0.9) 0%, rgba(18,22,31,0.95) 100%);
+            border:1px solid rgba(255,255,255,0.06);
+            border-radius:16px;overflow:hidden;
+        }
         .menu-item{
-            display:flex;align-items:center;gap:10px;padding:12px;
-            border-bottom:1px solid var(--border);cursor:pointer;
+            display:flex;align-items:center;gap:14px;padding:16px;
+            border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;
             background:none;border-left:none;border-right:none;border-top:none;
-            width:100%;text-align:left;color:var(--text);font-family:inherit;font-size:12px;
+            width:100%;text-align:left;color:var(--text);font-family:inherit;font-size:14px;
+            font-weight:500;
+            transition:all 0.25s ease;
+            position:relative;
         }
+        .menu-item::before {
+            content:'';
+            position:absolute;
+            left:0;top:0;bottom:0;width:3px;
+            background:linear-gradient(180deg, #00d4aa, #0984e3);
+            opacity:0;
+            transition:opacity 0.25s ease;
+        }
+        .menu-item:hover {
+            background:rgba(0,212,170,0.08);
+            padding-left:20px;
+        }
+        .menu-item:hover::before { opacity:1; }
         .menu-item:last-child{border-bottom:none}
-        .menu-icon{font-size:16px;width:22px;text-align:center}
-        .menu-text{flex:1}
-        .menu-arrow{color:var(--text3)}
+        .menu-icon{
+            font-size:18px;width:32px;height:32px;
+            display:flex;align-items:center;justify-content:center;
+            background:linear-gradient(135deg, rgba(0,212,170,0.12), rgba(9,132,227,0.08));
+            border-radius:10px;
+        }
+        .menu-text{flex:1;color:#fff}
+        .menu-arrow{
+            color:rgba(0,212,170,0.6);
+            font-size:14px;
+            transition:transform 0.25s ease;
+        }
+        .menu-item:hover .menu-arrow { transform:translateX(4px); }
         
-        /* HISTORY */
+        /* HISTORY - Premium Cards */
+        @keyframes historySlideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scanPulse {
+            0%, 100% { box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+            50% { box-shadow: 0 4px 20px rgba(0,0,0,0.25); }
+        }
+
         .history-item{
-            display:flex;align-items:center;gap:10px;padding:10px;
-            background:var(--surface);border-radius:10px;margin-bottom:6px;
+            display:flex;align-items:center;gap:14px;padding:14px 16px;
+            background:linear-gradient(145deg, rgba(26,31,46,0.95) 0%, rgba(18,22,31,0.98) 100%);
+            border:1px solid rgba(255,255,255,0.06);
+            border-radius:14px;margin-bottom:10px;
+            animation: historySlideIn 0.4s ease-out backwards;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position:relative;
+            overflow:hidden;
         }
+        .history-item::before {
+            content:'';
+            position:absolute;
+            top:0;left:-100%;width:100%;height:100%;
+            background:linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+            transition:left 0.5s ease;
+        }
+        .history-item:hover {
+            transform: translateX(6px);
+            border-color: rgba(0,212,170,0.2);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .history-item:hover::before { left:100%; }
+        .history-item:nth-child(1) { animation-delay: 0s; }
+        .history-item:nth-child(2) { animation-delay: 0.05s; }
+        .history-item:nth-child(3) { animation-delay: 0.1s; }
+        .history-item:nth-child(4) { animation-delay: 0.15s; }
+        .history-item:nth-child(5) { animation-delay: 0.2s; }
+
         .history-thumb{
-            width:42px;height:42px;border-radius:6px;background:var(--surface2);
-            display:flex;align-items:center;justify-content:center;font-size:18px;
+            width:50px;height:50px;border-radius:10px;
+            background:linear-gradient(135deg, rgba(0,212,170,0.1) 0%, rgba(9,132,227,0.08) 100%);
+            border:1px solid rgba(0,212,170,0.15);
+            display:flex;align-items:center;justify-content:center;font-size:20px;
+            flex-shrink:0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
-        .history-info{flex:1}
-        .history-result{font-size:12px;font-weight:700}
-        .history-meta{font-size:10px;color:var(--text3)}
-        .history-score{font-size:12px;font-weight:700;padding:4px 8px;border-radius:5px}
-        .history-score.fake{background:rgba(255,71,87,.15);color:var(--danger)}
-        .history-score.real{background:rgba(46,213,115,.15);color:var(--success)}
-        .history-empty{text-align:center;padding:40px 16px;color:var(--text3)}
+        .history-thumb img {
+            width:100%;height:100%;object-fit:cover;border-radius:9px;
+        }
+
+        .history-info{flex:1;min-width:0}
+
+        .history-result{
+            font-size:14px;font-weight:700;
+            margin-bottom:4px;
+            color:#fff;
+        }
+
+        .history-meta{
+            font-size:11px;color:rgba(255,255,255,0.5);
+            display:flex;align-items:center;gap:8px;
+        }
+        .history-meta::before {
+            content:'';
+            display:inline-block;
+            width:4px;height:4px;
+            background:rgba(0,212,170,0.5);
+            border-radius:50%;
+        }
+
+        .history-score{
+            font-size:13px;font-weight:800;padding:6px 12px;border-radius:8px;
+            min-width:52px;text-align:center;
+            position:relative;
+            animation: scanPulse 3s ease-in-out infinite;
+        }
+        .history-score.fake{
+            background:linear-gradient(135deg, rgba(255,71,87,0.2) 0%, rgba(255,107,107,0.15) 100%);
+            color:#ff6b6b;
+            border:1px solid rgba(255,71,87,0.3);
+            box-shadow: 0 2px 10px rgba(255,71,87,0.2);
+        }
+        .history-score.real{
+            background:linear-gradient(135deg, rgba(46,213,115,0.2) 0%, rgba(0,212,170,0.15) 100%);
+            color:#2ed573;
+            border:1px solid rgba(46,213,115,0.3);
+            box-shadow: 0 2px 10px rgba(46,213,115,0.2);
+        }
+
+        .history-empty{
+            text-align:center;padding:60px 24px;color:rgba(255,255,255,0.4);
+            background:linear-gradient(145deg, rgba(26,31,46,0.5) 0%, rgba(18,22,31,0.3) 100%);
+            border:1px dashed rgba(255,255,255,0.1);
+            border-radius:16px;
+        }
+        .history-empty div { font-size:48px;margin-bottom:12px;opacity:0.6; }
+        .history-empty p { font-size:15px;font-weight:500; }
         
         /* LEADERBOARD - EPIC TIERS */
         .podium{display:flex;justify-content:center;gap:8px;margin-bottom:14px;padding:12px}
@@ -1596,17 +1767,130 @@
             transform:rotate(90deg);
         }
         
-        /* HELP */
-        .help-section{background:var(--surface);border-radius:12px;margin-bottom:10px;overflow:hidden}
-        .help-header{display:flex;align-items:center;justify-content:space-between;padding:12px;cursor:pointer}
-        .help-title{font-size:13px;font-weight:700}
-        .help-toggle{color:var(--text3);font-size:9px}
-        .help-content{padding:0 12px 12px;display:none}
+        /* HELP - Premium Accordion Design */
+        @keyframes helpBotFloat {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+        @keyframes helpBotBlink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+        @keyframes accordionOpen {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 500px; }
+        }
+
+        .help-bot {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00d4aa 0%, #0984e3 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: pointer;
+            animation: helpBotFloat 3s ease-in-out infinite;
+            box-shadow: 0 4px 20px rgba(0,212,170,0.4), 0 0 40px rgba(0,212,170,0.2);
+            z-index: 100;
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: transform 0.3s ease;
+        }
+        .help-bot:hover {
+            transform: scale(1.15) !important;
+            box-shadow: 0 6px 30px rgba(0,212,170,0.6), 0 0 60px rgba(0,212,170,0.3);
+        }
+        .help-bot::after {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 15px;
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            animation: helpBotBlink 3s ease-in-out infinite;
+        }
+        .help-bot-tip {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, rgba(26,31,46,0.98), rgba(18,22,31,0.98));
+            border: 1px solid rgba(0,212,170,0.3);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 12px;
+            color: #fff;
+            width: 200px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        .help-bot:hover .help-bot-tip {
+            opacity: 1;
+            transform: translateY(-5px);
+        }
+        .help-bot-tip::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 20px;
+            border: 8px solid transparent;
+            border-top-color: rgba(0,212,170,0.3);
+        }
+
+        .help-section{
+            background:linear-gradient(145deg, rgba(26,31,46,0.9) 0%, rgba(18,22,31,0.95) 100%);
+            border:1px solid rgba(0,212,170,0.1);
+            border-radius:16px;margin-bottom:12px;overflow:hidden;
+            transition:all 0.3s ease;
+        }
+        .help-section:hover {
+            border-color: rgba(0,212,170,0.25);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .help-header{
+            display:flex;align-items:center;justify-content:space-between;
+            padding:16px;cursor:pointer;
+            transition:background 0.25s ease;
+        }
+        .help-header:hover {
+            background:rgba(0,212,170,0.08);
+        }
+        .help-title{
+            font-size:15px;font-weight:700;
+            color:#fff;
+            display:flex;align-items:center;gap:10px;
+        }
+        .help-toggle{
+            color:rgba(0,212,170,0.7);font-size:12px;
+            transition:transform 0.3s ease;
+        }
+        .help-section.open .help-toggle { transform:rotate(180deg); }
+        .help-content{
+            padding:0 16px 16px;display:none;
+            animation:accordionOpen 0.3s ease-out;
+        }
         .help-content.show{display:block}
-        .help-text{font-size:11px;color:var(--text2);line-height:1.5}
-        .help-text p{margin-bottom:8px}
-        .help-text ul{margin-left:16px;margin-bottom:8px}
-        .help-text li{margin-bottom:3px}
+        .help-text{font-size:13px;color:rgba(255,255,255,0.7);line-height:1.7}
+        .help-text p{margin-bottom:12px}
+        .help-text ul{margin-left:20px;margin-bottom:12px}
+        .help-text li{margin-bottom:6px;position:relative}
+        .help-text li::before {
+            content:'';
+            position:absolute;
+            left:-16px;top:8px;
+            width:6px;height:6px;
+            background:linear-gradient(135deg, #00d4aa, #0984e3);
+            border-radius:50%;
+        }
+        .help-text strong { color:#00d4aa; }
         
         .hidden{display:none!important}
         
@@ -2273,27 +2557,58 @@
             to { opacity: 1; }
         }
 
-        /* ===== SQUADS ===== */
+        /* ===== SQUADS - Premium Glassmorphic Design ===== */
+        @keyframes squadPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3), 0 0 40px rgba(99, 102, 241, 0.1); }
+            50% { box-shadow: 0 0 30px rgba(99, 102, 241, 0.5), 0 0 60px rgba(99, 102, 241, 0.2); }
+        }
+        @keyframes memberGlow {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        @keyframes challengeShimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
         .my-squad-card {
-            background: var(--surface);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            padding: 20px;
+            background: linear-gradient(145deg, rgba(99, 102, 241, 0.12) 0%, rgba(139, 92, 246, 0.08) 50%, rgba(168, 85, 247, 0.05) 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            padding: 24px;
             margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            animation: squadPulse 4s ease-in-out infinite;
+        }
+        .my-squad-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            animation: shimmerSlide 4s ease-in-out infinite;
         }
 
         .squad-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 16px;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
         }
 
         .squad-avatar {
-            width: 56px;
-            height: 56px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
-            border: 3px solid var(--primary);
+            border: 3px solid transparent;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7) border-box;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+            animation: memberGlow 3s ease-in-out infinite;
         }
 
         .squad-info {
@@ -2301,60 +2616,108 @@
         }
 
         .squad-name {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 2px;
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, #fff 0%, #c7d2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 20px rgba(99, 102, 241, 0.3);
         }
 
         .squad-members {
-            font-size: 13px;
-            color: var(--text2);
+            font-size: 14px;
+            color: rgba(199, 210, 254, 0.8);
+            font-weight: 500;
         }
 
         .squad-settings-btn {
-            width: 36px;
-            height: 36px;
-            background: var(--surface2);
-            border: none;
-            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.15));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
             font-size: 18px;
             cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .squad-settings-btn:hover {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.35), rgba(139, 92, 246, 0.25));
+            transform: rotate(45deg);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
         }
 
         .weekly-challenge {
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            border-radius: 12px;
-            padding: 16px;
+            background: linear-gradient(145deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.08));
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            border-radius: 16px;
+            padding: 20px;
             margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .weekly-challenge::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 60%);
+            animation: rotate 20s linear infinite;
         }
 
         .challenge-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 12px;
-            font-size: 14px;
-            font-weight: 600;
+            margin-bottom: 16px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #c7d2fe;
+            position: relative;
+            z-index: 1;
         }
 
         .challenge-bar {
-            background: var(--surface3);
-            height: 24px;
-            border-radius: 12px;
+            background: rgba(30, 27, 75, 0.6);
+            height: 28px;
+            border-radius: 14px;
             overflow: hidden;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            position: relative;
+            z-index: 1;
         }
 
         .challenge-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--secondary), #8b5cf6);
-            transition: width 0.5s;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #a855f7, #8b5cf6);
+            background-size: 200% 100%;
+            animation: challengeShimmer 3s linear infinite;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+            position: relative;
+        }
+        .challenge-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.2), transparent);
         }
 
         .challenge-label {
             text-align: center;
             font-size: 13px;
-            color: var(--text2);
+            color: rgba(199, 210, 254, 0.7);
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
         }
 
         .challenge-progress {
@@ -2362,59 +2725,149 @@
         }
 
         .squad-members-list {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .squad-members-list > div {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05));
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+        .squad-members-list > div:hover {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.18), rgba(139, 92, 246, 0.1));
+            transform: translateX(6px);
+            border-color: rgba(99, 102, 241, 0.3);
         }
 
         .squad-stats {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 12px;
-            margin-top: 16px;
+            gap: 14px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .squad-stat {
             text-align: center;
+            background: linear-gradient(145deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.06));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 14px;
+            padding: 16px 10px;
+            transition: all 0.3s ease;
+        }
+        .squad-stat:hover {
+            background: linear-gradient(145deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.12));
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.25);
         }
 
         .squad-stat-value {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--primary);
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #818cf8, #c4b5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
         }
 
         .squad-stat-label {
             font-size: 11px;
-            color: var(--text3);
+            color: rgba(199, 210, 254, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
         }
 
         .no-squad {
             text-align: center;
-            padding: 40px 20px;
+            padding: 50px 24px;
+            background: linear-gradient(145deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.04));
+            border: 1px dashed rgba(99, 102, 241, 0.3);
+            border-radius: 20px;
+            margin-bottom: 24px;
+        }
+        .no-squad h3 {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #c7d2fe, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+        .no-squad p {
+            color: rgba(199, 210, 254, 0.7);
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 280px;
+            margin: 0 auto;
         }
 
         .cta-btn {
             width: 100%;
-            background: linear-gradient(135deg, var(--primary), #00ff88);
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            background-size: 200% auto;
             border: none;
-            border-radius: 12px;
-            padding: 16px;
-            color: #000;
+            border-radius: 14px;
+            padding: 18px;
+            color: #fff;
             font-weight: 700;
             font-size: 16px;
             cursor: pointer;
             margin-bottom: 12px;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        .cta-btn:hover {
+            background-position: right center;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+        }
+        .cta-btn:hover::before {
+            left: 100%;
+        }
+        .cta-btn:active {
+            transform: translateY(-1px);
         }
 
         .cta-btn-secondary {
             width: 100%;
-            background: var(--surface2);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            padding: 14px;
-            color: var(--text);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1));
+            border: 2px solid rgba(99, 102, 241, 0.35);
+            border-radius: 14px;
+            padding: 16px;
+            color: #c7d2fe;
             font-weight: 600;
             font-size: 16px;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .cta-btn-secondary:hover {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(139, 92, 246, 0.18));
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
         }
 
         .section-header {
@@ -3079,22 +3532,52 @@
         <button class="user-btn" id="userBtn" onclick="openProfile()" title="Profile" style="margin-left:auto"><span id="userInitial">👤</span></button>
     </div>
 
-    <!-- QUICK NAV - Clean button row -->
+    <!-- QUICK NAV - Premium Animated Icons -->
     <div class="quick-nav">
         <button class="quick-nav-btn" onclick="openHistory()">
-            <span class="quick-nav-icon">📋</span>
+            <span class="quick-nav-icon">
+                <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" opacity="0.6"/>
+                    <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M6 12C6 8.686 8.686 6 12 6" stroke="#00d4aa" stroke-width="2" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" values="0 12 12;360 12 12" dur="3s" repeatCount="indefinite"/>
+                    </path>
+                </svg>
+            </span>
             <span class="quick-nav-label">History</span>
         </button>
         <button class="quick-nav-btn" onclick="openLeaderboard()">
-            <span class="quick-nav-icon">🏆</span>
+            <span class="quick-nav-icon">
+                <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="url(#rankGold)" stroke="#ffd700" stroke-width="1"/>
+                    <defs><linearGradient id="rankGold" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ffd700"/><stop offset="100%" stop-color="#ff8c00"/></linearGradient></defs>
+                    <animateTransform attributeName="transform" type="scale" values="1;1.1;1" dur="2s" repeatCount="indefinite" additive="sum"/>
+                </svg>
+            </span>
             <span class="quick-nav-label">Ranks</span>
         </button>
         <button class="quick-nav-btn" onclick="openAvatarSelector()">
-            <span class="quick-nav-icon">🎭</span>
+            <span class="quick-nav-icon">
+                <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
+                    <rect x="3" y="6" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2" fill="rgba(139,92,246,0.2)"/>
+                    <circle cx="12" cy="10" r="3" fill="#8b5cf6"/>
+                    <path d="M6 18C6 15.7909 8.68629 14 12 14C15.3137 14 18 15.7909 18 18" stroke="currentColor" stroke-width="2"/>
+                    <path d="M19 3L21 5L19 7" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M3 17L5 19L3 21" stroke="#00d4aa" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+                </svg>
+            </span>
             <span class="quick-nav-label">Shop</span>
         </button>
         <button class="quick-nav-btn" onclick="openHelp()">
-            <span class="quick-nav-icon">❓</span>
+            <span class="quick-nav-icon">
+                <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="rgba(0,212,170,0.15)"/>
+                    <path d="M9 9C9 7.34315 10.3431 6 12 6C13.6569 6 15 7.34315 15 9C15 10.3742 14.1213 11 12 11.5V13" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="12" cy="17" r="1.5" fill="#00d4aa">
+                        <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite"/>
+                    </circle>
+                </svg>
+            </span>
             <span class="quick-nav-label">Help</span>
         </button>
     </div>
@@ -4295,22 +4778,40 @@ const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
 const LOGO_SVG = `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
 <defs>
     <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#00d4aa">
-            <animate attributeName="stop-color" values="#00d4aa;#8b5cf6;#f472b6;#00d4aa" dur="4s" repeatCount="indefinite"/>
-        </stop>
-        <stop offset="50%" stop-color="#8b5cf6">
-            <animate attributeName="stop-color" values="#8b5cf6;#f472b6;#00d4aa;#8b5cf6" dur="4s" repeatCount="indefinite"/>
-        </stop>
-        <stop offset="100%" stop-color="#f472b6">
-            <animate attributeName="stop-color" values="#f472b6;#00d4aa;#8b5cf6;#f472b6" dur="4s" repeatCount="indefinite"/>
-        </stop>
+        <stop offset="0%" stop-color="#00d4aa"/>
+        <stop offset="50%" stop-color="#0984e3"/>
+        <stop offset="100%" stop-color="#6c5ce7"/>
     </linearGradient>
+    <linearGradient id="eyeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00ffcc"/>
+        <stop offset="100%" stop-color="#00b894"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="1.5" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
 </defs>
-<rect width="48" height="48" rx="12" fill="url(#logoGrad)"/>
-<circle cx="24" cy="24" r="14" stroke="#fff" stroke-width="2.5" fill="none" opacity=".85"/>
-<circle cx="24" cy="24" r="6" fill="#fff" opacity=".85"/>
-<path d="M24 6V12M24 36V42M6 24H12M36 24H42" stroke="#fff" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
-<path d="M10.5 10.5L14.5 14.5M33.5 33.5L37.5 37.5M10.5 37.5L14.5 33.5M33.5 14.5L37.5 10.5" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".4"/>
+<!-- Background hex shape -->
+<path d="M24 2L44 13V35L24 46L4 35V13L24 2Z" fill="url(#logoGrad)" opacity="0.95"/>
+<!-- Scanner ring -->
+<circle cx="24" cy="24" r="15" stroke="#00ffcc" stroke-width="1.5" fill="none" opacity="0.6" stroke-dasharray="4 2">
+    <animateTransform attributeName="transform" type="rotate" values="0 24 24;360 24 24" dur="8s" repeatCount="indefinite"/>
+</circle>
+<!-- AI Eye -->
+<ellipse cx="24" cy="24" rx="10" ry="8" stroke="#fff" stroke-width="2" fill="none" filter="url(#glow)"/>
+<circle cx="24" cy="24" r="4" fill="url(#eyeGrad)">
+    <animate attributeName="r" values="4;5;4" dur="2s" repeatCount="indefinite"/>
+</circle>
+<circle cx="25" cy="23" r="1.5" fill="#fff" opacity="0.9"/>
+<!-- Detection beams -->
+<path d="M24 8V14M24 34V40" stroke="#00ffcc" stroke-width="1.5" stroke-linecap="round" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="1.5s" repeatCount="indefinite"/>
+</path>
+<path d="M8 24H14M34 24H40" stroke="#00ffcc" stroke-width="1.5" stroke-linecap="round" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="1.5s" repeatCount="indefinite" begin="0.75s"/>
+</path>
+<!-- Corner brackets -->
+<path d="M12 16V12H16M32 12H36V16M36 32V36H32M16 36H12V32" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
 </svg>`;
 
 const ANALYSIS_ICON = `<svg viewBox="0 0 72 72" fill="none">
@@ -5520,16 +6021,20 @@ let lastNavTime = 0; // Debounce navigation
 const GAME_VIEWS = ['huntView', 'verifyView', 'outbreaksView', 'squadsView', 'leaderboardView', 'shopView'];
 
 window.openView = function(viewId) {
+    // Reset navigation lock after safety timeout (prevents permanent lockout)
+    clearTimeout(window._navSafetyTimer);
+    window._navSafetyTimer = setTimeout(() => { isNavigating = false; }, 500);
+
     // Debounce navigation (prevent rapid re-calls)
     const now = Date.now();
-    if (now - lastNavTime < 100) {
+    if (now - lastNavTime < 80) {
         console.log('[View] Navigation debounced');
         return;
     }
     lastNavTime = now;
 
-    // Guard against recursive navigation
-    if (isNavigating) {
+    // Guard against recursive navigation (but with safety valve)
+    if (isNavigating && now - lastNavTime < 400) {
         console.log('[View] Navigation already in progress, skipping');
         return;
     }
@@ -5537,19 +6042,17 @@ window.openView = function(viewId) {
     isNavigating = true;
     console.log('[View] Opening view:', viewId);
 
-    // Determine if this is a game view
-    const isGameView = GAME_VIEWS.includes(viewId);
+    try {
+        // Determine if this is a game view
+        const isGameView = GAME_VIEWS.includes(viewId);
 
-    // Close ALL views first for clean transition
-    document.querySelectorAll('.view').forEach(v => {
-        v.classList.remove('active');
-        v.style.opacity = '0';
-    });
+        // Close ALL views first for clean transition
+        document.querySelectorAll('.view').forEach(v => {
+            v.classList.remove('active');
+            v.style.opacity = '0';
+        });
 
-    // Small delay for transition effect
-    setTimeout(() => {
-        isNavigating = false; // Allow navigation again after transition
-        // Open the requested view
+        // Immediate view activation (no delay for responsiveness)
         const view = $(viewId);
         if (view) {
             view.classList.add('active');
@@ -5560,7 +6063,9 @@ window.openView = function(viewId) {
             if (viewStack[viewStack.length - 1] !== viewId) {
                 viewStack.push(viewId);
                 // Push state to enable back button
-                history.pushState({ view: viewId }, '', '#' + viewId);
+                try {
+                    history.pushState({ view: viewId }, '', '#' + viewId);
+                } catch(e) { console.warn('[View] History push failed:', e); }
             }
 
             // Handle game navigation bar
@@ -5577,48 +6082,96 @@ window.openView = function(viewId) {
                 }
             }
 
-            // Load data based on view
-            if (viewId === 'huntView') loadHuntView();
-            else if (viewId === 'verifyView') loadVerifyView();
-            else if (viewId === 'outbreaksView') loadOutbreaksView();
-            else if (viewId === 'squadsView') loadSquadsView();
-            else if (viewId === 'leaderboardView') loadLeaderboardView();
-            else if (viewId === 'shopView') loadShopView();
+            // Load data based on view (async, don't block)
+            setTimeout(() => {
+                try {
+                    if (viewId === 'huntView') loadHuntView();
+                    else if (viewId === 'verifyView') loadVerifyView();
+                    else if (viewId === 'outbreaksView') loadOutbreaksView();
+                    else if (viewId === 'squadsView') loadSquadsView();
+                    else if (viewId === 'leaderboardView') loadLeaderboardView();
+                    else if (viewId === 'shopView') loadShopView();
+                } catch(e) { console.error('[View] Load error:', e); }
+            }, 10);
         } else {
             console.warn('[View] View not found:', viewId);
-            // Fallback to home
-            openView('homeView');
         }
-    }, 50);
+    } catch(e) {
+        console.error('[View] Navigation error:', e);
+    } finally {
+        // Always unlock navigation after short delay
+        setTimeout(() => { isNavigating = false; }, 60);
+    }
 };
 
 window.closeView = function() {
     console.log('[View] Closing current view:', currentView);
 
-    // Pop from view stack
-    if (viewStack.length > 1) {
-        viewStack.pop();
-    }
+    try {
+        // Reset any stuck navigation state
+        isNavigating = false;
 
-    // Go back to previous view (or home if stack is empty)
-    const previousView = viewStack[viewStack.length - 1] || 'homeView';
-
-    // Close current view with transition
-    if (currentView) {
-        const view = $(currentView);
-        if (view) {
-            view.style.opacity = '0';
-            setTimeout(() => {
-                view.classList.remove('active');
-                // Open previous view
-                openView(previousView);
-            }, 50);
+        // Pop from view stack
+        if (viewStack.length > 1) {
+            viewStack.pop();
         }
-    } else {
-        // No current view, just go home
-        openView('homeView');
+
+        // Go back to previous view (or home if stack is empty)
+        const previousView = viewStack[viewStack.length - 1] || 'homeView';
+
+        // Close current view
+        if (currentView) {
+            const view = $(currentView);
+            if (view) {
+                view.classList.remove('active');
+                view.style.opacity = '0';
+            }
+        }
+
+        // Immediately open previous view
+        openView(previousView);
+    } catch(e) {
+        console.error('[View] closeView error:', e);
+        // Emergency fallback - go home
+        isNavigating = false;
+        const homeView = $('homeView');
+        if (homeView) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            homeView.classList.add('active');
+            homeView.style.opacity = '1';
+            currentView = 'homeView';
+        }
     }
 };
+
+// Emergency navigation reset - call this if buttons ever break
+window.resetNavigation = function() {
+    console.log('[View] Emergency navigation reset');
+    isNavigating = false;
+    isHandlingPopstate = false;
+    viewStack = ['homeView'];
+    currentView = 'homeView';
+    document.querySelectorAll('.view').forEach(v => {
+        v.classList.remove('active');
+        v.style.opacity = '0';
+    });
+    const homeView = $('homeView');
+    if (homeView) {
+        homeView.classList.add('active');
+        homeView.style.opacity = '1';
+    }
+    const gameNav = $('gameNav');
+    if (gameNav) gameNav.style.display = 'none';
+    console.log('[View] Navigation reset complete');
+};
+
+// Auto-reset stuck navigation every 10 seconds as safety net
+setInterval(() => {
+    if (isNavigating) {
+        console.warn('[View] Navigation appears stuck, auto-resetting');
+        isNavigating = false;
+    }
+}, 10000);
 
 // Handle browser back button (Android physical back button)
 let isHandlingPopstate = false; // Guard against rapid popstate events
