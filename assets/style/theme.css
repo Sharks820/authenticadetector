@@ -73,6 +73,9 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--ad-text-2);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .rotating-banner-text {
@@ -101,3 +104,8 @@ body {
   height: 58px;
 }
 
+
+.rotating-banner-subtext {
+  font-size: 11px;
+  color: var(--ad-text-2);
+}

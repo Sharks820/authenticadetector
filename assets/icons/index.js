@@ -1,5 +1,6 @@
 (function() {
   const iconPaths = {
+    chevronRight: 'assets/icons/chevron-right.svg',
     back: 'assets/icons/back.svg',
     badges: 'assets/icons/badges.svg',
     beasts: 'assets/icons/beasts.svg',

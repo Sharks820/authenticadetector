@@ -219,6 +219,14 @@
             width:42px;height:42px;
             filter:drop-shadow(0 0 12px rgba(0,212,170,0.6));
             animation:logo-pulse 3s ease-in-out infinite;
+            flex-shrink: 0;
+            overflow: visible;
+        }
+        .logo-icon svg{
+            width:100%;
+            height:100%;
+            display:block;
+            overflow: visible;
         }
         @keyframes logo-pulse{
             0%,100%{filter:drop-shadow(0 0 12px rgba(0,212,170,0.5))}
@@ -555,7 +563,16 @@
             display:flex;align-items:flex-start;gap:10px;
             position:relative;z-index:1;
         }
-        .facts-icon{font-size:20px;flex-shrink:0;filter:drop-shadow(0 0 8px rgba(0,212,170,0.5))}
+        .facts-icon{
+            font-size:20px;
+            flex-shrink:0;
+            width:24px;
+            height:24px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            filter:drop-shadow(0 0 8px rgba(0,212,170,0.5));
+        }
 
         /* TRUTH HUNTERS GAME CTA - EPIC PREMIUM DESIGN */
         .game-cta-card {
@@ -1485,7 +1502,7 @@
             border-color:rgba(0,212,170,0.4);
         }
         .shop-item.purchased::after{
-            content:'✓';position:absolute;top:10px;right:10px;
+            content:'OK';position:absolute;top:10px;right:10px;
             width:26px;height:26px;border-radius:50%;
             background:linear-gradient(135deg, var(--primary), #00b894);color:#fff;
             display:flex;align-items:center;justify-content:center;
@@ -2175,7 +2192,7 @@
             border: 1px solid rgba(255,71,87,0.4);
             border-radius: 50%;
             z-index: 10;
-            animation: badgeBounce 2s ease-in-out infinite;
+            animation: veraBadgePulse 0.6s ease-in-out infinite;
             transform-origin: center center;
             text-shadow: 0 0 10px rgba(255,71,87,0.8), 0 0 20px rgba(255,71,87,0.5);
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
@@ -2195,6 +2212,10 @@
         @keyframes angrySparkle {
             0%, 100% { opacity: 0.5; transform: scale(0.8); }
             50% { opacity: 1; transform: scale(1.1); }
+        }
+        @keyframes veraBadgePulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 10px rgba(255,71,87,0.4); }
+            50% { transform: scale(1.15); box-shadow: 0 0 20px rgba(255,71,87,0.7); }
         }
         .help-bot-face {
             display: flex;
@@ -3396,6 +3417,7 @@
             align-items: center;
             justify-content: center;
             gap: 20px;
+            flex-wrap: wrap;
             margin-bottom: 16px;
         }
         .battle-tank {
@@ -3403,6 +3425,14 @@
             flex-direction: column;
             align-items: center;
             animation: tankBounce 1.5s ease-in-out infinite;
+        }
+        .battle-tank-hero {
+            width: 140px;
+        }
+        .battle-tank-visual {
+            width: 120px;
+            height: auto;
+            filter: drop-shadow(0 10px 22px rgba(0,0,0,0.45));
         }
         .tank-body {
             font-size: 48px;
@@ -3439,16 +3469,38 @@
         }
         .battle-enemies {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 200px;
         }
         .enemy-monster {
-            font-size: 36px;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            border-radius: 14px;
+            background: rgba(24, 28, 38, 0.8);
+            border: 1px solid rgba(255, 107, 53, 0.4);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.35);
             animation: enemyFloat 2s ease-in-out infinite;
         }
+        .enemy-monster img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .enemy-monster.boss {
+            width: 68px;
+            height: 68px;
+            border-color: rgba(255, 198, 0, 0.55);
+            box-shadow: 0 10px 24px rgba(255, 198, 0, 0.25);
+        }
         .enemy-1 { animation-delay: 0s; }
-        .enemy-2 { animation-delay: 0.3s; font-size: 28px; margin-top: -8px; }
-        .enemy-3 { animation-delay: 0.6s; font-size: 24px; margin-top: -8px; }
+        .enemy-2 { animation-delay: 0.3s; }
+        .enemy-3 { animation-delay: 0.6s; }
         @keyframes enemyFloat {
             0%, 100% { transform: translateX(0) rotate(0deg); }
             25% { transform: translateX(3px) rotate(5deg); }
@@ -4129,6 +4181,103 @@
             height: 70px;
             font-size: 42px;
             z-index: 6;
+        }
+
+        .character-part {
+            color: var(--text);
+        }
+
+        .char-head {
+            background: radial-gradient(circle at 30% 30%, #f6c7a2 0%, #e9a87f 60%, #c77a55 100%);
+            border: 3px solid #0b0f18;
+            border-radius: 50%;
+            font-size: 0;
+        }
+        .char-torso {
+            background: linear-gradient(180deg, #1e2a3f 0%, #0f1624 100%);
+            border: 3px solid #0b0f18;
+            border-radius: 18px;
+            font-size: 0;
+        }
+        .char-left-arm,
+        .char-right-arm {
+            background: linear-gradient(180deg, #20324a 0%, #0d1524 100%);
+            border: 3px solid #0b0f18;
+            border-radius: 18px;
+            font-size: 0;
+        }
+        .char-legs {
+            background: linear-gradient(180deg, #1f2836 0%, #0b111d 100%);
+            border: 3px solid #0b0f18;
+            border-radius: 18px;
+            font-size: 0;
+        }
+        .char-weapon,
+        .char-hat,
+        .char-glasses,
+        .char-back,
+        .char-pet {
+            font-size: 0;
+        }
+        .avatar-item-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(124,77,255,0.15);
+            border: 1px solid rgba(124,77,255,0.4);
+            box-shadow: 0 0 12px rgba(124,77,255,0.25);
+        }
+
+        .character-extra-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 6;
+        }
+        .char-extra-arm,
+        .char-extra-leg {
+            position: absolute;
+            border: 3px solid #0b0f18;
+            border-radius: 18px;
+            background: linear-gradient(180deg, #23314a 0%, #0b111d 100%);
+        }
+
+        .tank-body img.tank-visual {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 8px 20px rgba(0,0,0,0.45));
+        }
+
+        .mutation-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .mutation-control {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(18,22,31,0.85);
+            border: 1px solid rgba(124,77,255,0.3);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+        .mutation-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            border: 1px solid rgba(124,77,255,0.4);
+            background: rgba(124,77,255,0.15);
+            color: var(--text);
+            font-weight: 700;
+            cursor: pointer;
         }
 
         /* Back item (cape, wings, etc) */
@@ -4847,14 +4996,15 @@
 
     <div class="rotating-banner" id="rotatingBanner">
         <span class="rotating-banner-glow"></span>
-        <span class="rotating-banner-label">Signal</span>
+        <span class="rotating-banner-label"><span class="ad-icon-slot" data-ad-icon="stats" data-ad-size="12"></span> Signal</span>
         <span class="rotating-banner-text" id="rotatingBannerText">Loading updates...</span>
+        <span class="rotating-banner-subtext" id="rotatingBannerSubtext">Stay sharp, verifier.</span>
     </div>
 
 <div class="status-bar" id="statusBar">
-        <button class="status-chip pending" id="installChip" onclick="promptInstall()"><span>📲</span> Install</button>
-        <button class="status-chip signup" id="signupChip" onclick="openLogin(true)"><span>✨</span> Sign Up</button>
-        <button class="status-chip pending" id="loginChip" onclick="openLogin()"><span>🔑</span> Sign In</button>
+        <button class="status-chip pending" id="installChip" onclick="promptInstall()"><span class="ad-icon-slot" data-ad-icon="install" data-ad-size="14"></span> Install</button>
+        <button class="status-chip signup" id="signupChip" onclick="openLogin(true)"><span class="ad-icon-slot" data-ad-icon="profile" data-ad-size="14"></span> Sign Up</button>
+        <button class="status-chip pending" id="loginChip" onclick="openLogin()"><span class="ad-icon-slot" data-ad-icon="verify" data-ad-size="14"></span> Sign In</button>
     </div>
     
     <div class="install-banner" id="installBanner">
@@ -4867,9 +5017,9 @@
     </div>
     
     <div class="ios-helper" id="iosHelper">
-        <div class="ios-helper-title">📲 Add to Home Screen</div>
+        <div class="ios-helper-title"><span class="ad-icon-slot" data-ad-icon="install" data-ad-size="16"></span> Add to Home Screen</div>
         <div class="ios-steps">
-            <div class="ios-step"><div class="ios-step-num">1</div><span>Tap Share ⬆️</span></div>
+            <div class="ios-step"><div class="ios-step-num">1</div><span>Tap Share <span class="ad-icon-slot" data-ad-icon="upload" data-ad-size="14"></span></span></div>
             <div class="ios-step"><div class="ios-step-num">2</div><span>Tap "Add to Home Screen"</span></div>
             <div class="ios-step"><div class="ios-step-num">3</div><span>Tap Add</span></div>
         </div>
@@ -4879,7 +5029,7 @@
     <!-- SCROLLABLE HOME CONTENT -->
     <div class="home-content">
         <div class="facts-panel" id="factsPanel">
-            <div class="facts-header"><span>💡</span> AI FACT</div>
+            <div class="facts-header"><span class="ad-icon-slot" data-ad-icon="info" data-ad-size="14"></span> AI FACT</div>
             <div class="facts-content">
                 <span class="facts-icon" id="factIcon">🧬</span>
                 <span id="factText">Loading...</span>
@@ -4892,42 +5042,42 @@
             <div class="game-cta-content">
                 <div class="game-cta-header">
                     <div class="game-cta-icon">
-                        <i data-lucide="tank" class="lucide-icon-lg" style="color:#00d4aa;width:32px;height:32px"></i>
+                        <span class="ad-icon-slot" data-ad-icon="tank" data-ad-size="32"></span>
                     </div>
                     <div style="flex:1">
                         <h2 style="margin:0;font-size:24px;font-weight:900;background:linear-gradient(135deg,#00d4aa 0%,#6366f1 50%,#ff6b35 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px">TANK BATTLE</h2>
                         <p style="margin:6px 0 0;color:var(--text2);font-size:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-                            <span style="display:flex;align-items:center;gap:4px"><i data-lucide="target" class="lucide-icon-sm" style="color:#ff6b35"></i> Destroy Fakes</span>
-                            <span style="display:flex;align-items:center;gap:4px"><i data-lucide="coins" class="lucide-icon-sm" style="color:#ffd700"></i> Earn Coins</span>
-                            <span style="display:flex;align-items:center;gap:4px"><i data-lucide="crown" class="lucide-icon-sm" style="color:#a78bfa"></i> Rank Up</span>
+                            <span style="display:flex;align-items:center;gap:4px"><span class="ad-icon-slot" data-ad-icon="crosshair" data-ad-size="16"></span> Destroy Fakes</span>
+                            <span style="display:flex;align-items:center;gap:4px"><span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="16"></span> Earn Coins</span>
+                            <span style="display:flex;align-items:center;gap:4px"><span class="ad-icon-slot" data-ad-icon="trophy" data-ad-size="16"></span> Rank Up</span>
                         </p>
                     </div>
                 </div>
                 <div class="game-cta-stats">
                     <div class="game-cta-stat">
-                        <div class="game-cta-stat-value" id="userLevel"><i data-lucide="star" class="lucide-icon-sm" style="width:16px;height:16px"></i> Lvl 1</div>
+                        <div class="game-cta-stat-value" id="userLevel"><span class="ad-icon-slot" data-ad-icon="star" data-ad-size="16"></span> Lvl 1</div>
                         <div class="game-cta-stat-label">Level</div>
                     </div>
                     <div class="game-cta-stat">
-                        <div class="game-cta-stat-value" id="userCoins"><i data-lucide="circle-dollar-sign" class="lucide-icon-sm" style="width:16px;height:16px;color:#ffd700"></i> 0</div>
+                        <div class="game-cta-stat-value" id="userCoins"><span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="16"></span> 0</div>
                         <div class="game-cta-stat-label">Coins</div>
                     </div>
                     <div class="game-cta-stat">
-                        <div class="game-cta-stat-value" id="userRank"><i data-lucide="trophy" class="lucide-icon-sm" style="width:16px;height:16px;color:#ff6b35"></i> #--</div>
+                        <div class="game-cta-stat-value" id="userRank"><span class="ad-icon-slot" data-ad-icon="trophy" data-ad-size="16"></span> #--</div>
                         <div class="game-cta-stat-label">Rank</div>
                     </div>
                 </div>
                 <button class="game-cta-btn" onclick="startTankShooter()">
                     <span class="ad-icon-slot" data-ad-icon="play" data-ad-size="24"></span>
                     <span>PLAY NOW</span>
-                    <i data-lucide="chevrons-right" class="lucide-icon-sm"></i>
+                    <span class="ad-icon-slot" data-ad-icon="chevronRight" data-ad-size="18"></span>
                 </button>
                 <div style="display:flex;gap:10px;margin-top:14px">
                     <button onclick="openView('huntView')" class="game-mode-btn" style="flex:1;padding:14px 16px;border-radius:12px;border:1px solid rgba(0,212,170,0.3);background:linear-gradient(135deg,rgba(0,212,170,0.12),rgba(0,212,170,0.04));color:var(--primary);font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.3s ease;box-shadow:0 4px 20px rgba(0,212,170,0.15)">
-                        <i data-lucide="crosshair" class="lucide-icon-sm"></i> Hunt
+                        <span class="ad-icon-slot" data-ad-icon="crosshair" data-ad-size="16"></span> Hunt
                     </button>
                     <button onclick="openView('verifyView')" class="game-mode-btn" style="flex:1;padding:14px 16px;border-radius:12px;border:1px solid rgba(99,102,241,0.3);background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(99,102,241,0.04));color:#a78bfa;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.3s ease;box-shadow:0 4px 20px rgba(99,102,241,0.15)">
-                        <i data-lucide="shield-check" class="lucide-icon-sm"></i> Verify
+                        <span class="ad-icon-slot" data-ad-icon="shield" data-ad-size="16"></span> Verify
                     </button>
                 </div>
             </div>
@@ -5065,9 +5215,9 @@
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title"><i data-lucide="trophy" class="lucide-icon-sm"></i> Tank Commanders</span>
+        <span class="view-title"><span class="ad-icon-slot" data-ad-icon="trophy" data-ad-size="16"></span> Tank Commanders</span>
         <div class="coins-display" id="leaderboardViewCoins">
-            <i data-lucide="coins" class="lucide-icon-sm" style="color:#ffd700"></i>
+            <span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="16"></span>
             <span>0</span>
         </div>
     </div>
@@ -5148,7 +5298,7 @@
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title"><i data-lucide="award" class="lucide-icon-sm"></i> All Badges</span>
+        <span class="view-title"><span class="ad-icon-slot" data-ad-icon="badges" data-ad-size="16"></span> All Badges</span>
         <div class="coins-display" id="badgesViewCoins">
             <span style="font-size:16px">🪙</span>
             <span>0</span>
@@ -5164,7 +5314,7 @@
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title"><i data-lucide="zap" class="lucide-icon-sm"></i> Quests & Challenges</span>
+        <span class="view-title"><span class="ad-icon-slot" data-ad-icon="quest" data-ad-size="16"></span> Quests & Challenges</span>
         <div class="coins-display" id="questsViewCoins">
             <span style="font-size:16px">🪙</span>
             <span>0</span>
@@ -5201,9 +5351,9 @@
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">🎨 Character Designer</span>
+        <span class="view-title"><span class="ad-icon-slot" data-ad-icon="profile" data-ad-size="16"></span> Character Designer</span>
         <div class="coins-display" id="avatarViewCoins">
-            <span style="font-size:16px">🪙</span>
+            <span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="16"></span>
             <span id="designerCoinsCount">0</span>
         </div>
     </div>
@@ -5213,21 +5363,17 @@
         <div class="character-stage" id="characterStage">
             <!-- Mode Toggle -->
             <div class="character-mode-toggle">
-                <button class="mode-btn active" id="standModeBtn" onclick="setCharacterMode('stand')">🧍 Stand</button>
-                <button class="mode-btn" id="tankModeBtn" onclick="setCharacterMode('tank')">🎮 Tank</button>
+                <button class="mode-btn active" id="standModeBtn" onclick="setCharacterMode('stand')">
+                    <span class="ad-icon-slot" data-ad-icon="profile" data-ad-size="14"></span> Stand
+                </button>
+                <button class="mode-btn" id="tankModeBtn" onclick="setCharacterMode('tank')">
+                    <span class="ad-icon-slot" data-ad-icon="tank" data-ad-size="14"></span> Tank
+                </button>
             </div>
 
             <!-- Tank Riding Container -->
             <div class="tank-ride-container" id="tankRideContainer">
-                <div class="tank-body">
-                    <div class="tank-turret" id="tankTurret">  ╔══╗
- ═╣▓▓╠══════</div>
-                    <div class="tank-hull" id="tankHull">╔════════════╗
-║ ▓▓▓▓▓▓▓▓▓▓ ║
-╠════════════╣
-║ ████████████║</div>
-                    <div class="tank-treads" id="tankTreads">◄●●●●●●●●●●●►</div>
-                </div>
+                <div class="tank-body"><img src="assets/game/sprites/tank.svg" alt="Tank" class="tank-visual"></div>
             </div>
 
             <!-- Character Container with body parts -->
@@ -5236,36 +5382,37 @@
                 <div class="character-part char-back" id="charBack" onclick="selectBodyPart('back')" title="Back Item"></div>
 
                 <!-- Hat layer -->
-                <div class="character-part char-hat" id="charHat" onclick="selectBodyPart('hat')" title="Hat">🎩</div>
+                <div class="character-part char-hat" id="charHat" onclick="selectBodyPart('hat')" title="Hat"></div>
 
                 <!-- Head layer -->
-                <div class="character-part char-head" id="charHead" onclick="selectBodyPart('head')" title="Head">👤</div>
+                <div class="character-part char-head" id="charHead" onclick="selectBodyPart('head')" title="Head"></div>
 
                 <!-- Glasses layer -->
                 <div class="character-part char-glasses" id="charGlasses" onclick="selectBodyPart('glasses')" title="Glasses"></div>
 
                 <!-- Left Arm -->
-                <div class="character-part char-left-arm" id="charLeftArm" onclick="selectBodyPart('leftArm')" title="Left Arm">💪</div>
+                <div class="character-part char-left-arm" id="charLeftArm" onclick="selectBodyPart('leftArm')" title="Left Arm"></div>
 
                 <!-- Torso layer -->
-                <div class="character-part char-torso" id="charTorso" onclick="selectBodyPart('torso')" title="Torso">👕</div>
+                <div class="character-part char-torso" id="charTorso" onclick="selectBodyPart('torso')" title="Torso"></div>
 
                 <!-- Right Arm -->
-                <div class="character-part char-right-arm" id="charRightArm" onclick="selectBodyPart('rightArm')" title="Right Arm">🦾</div>
+                <div class="character-part char-right-arm" id="charRightArm" onclick="selectBodyPart('rightArm')" title="Right Arm"></div>
 
                 <!-- Weapon layer -->
-                <div class="character-part char-weapon" id="charWeapon" onclick="selectBodyPart('weapon')" title="Weapon">⚔️</div>
+                <div class="character-part char-weapon" id="charWeapon" onclick="selectBodyPart('weapon')" title="Weapon"></div>
 
                 <!-- Legs layer -->
-                <div class="character-part char-legs" id="charLegs" onclick="selectBodyPart('legs')" title="Legs">👖</div>
+                <div class="character-part char-legs" id="charLegs" onclick="selectBodyPart('legs')" title="Legs"></div>
 
                 <!-- Pet layer -->
-                <div class="character-part char-pet" id="charPet" onclick="selectBodyPart('pet')" title="Pet">🐱</div>
+                <div class="character-part char-pet" id="charPet" onclick="selectBodyPart('pet')" title="Pet"></div>
 
                 <!-- Effect/Aura layer -->
                 <div class="char-effect" id="charEffect">
                     <div class="effect-particles" id="effectParticles"></div>
                 </div>
+                <div class="character-extra-layer" id="characterExtraLayer"></div>
             </div>
 
             <!-- Ground shadow -->
@@ -5277,60 +5424,80 @@
             </div>
         </div>
 
+
+        <div class="designer-section-header">
+            <h3><span class="ad-icon-slot" data-ad-icon="corruption" data-ad-size="16"></span> Mutation Controls</h3>
+            <span class="item-count">Max 2 extra limbs each</span>
+        </div>
+        <div class="mutation-controls" id="mutationControls">
+            <div class="mutation-control">
+                <span>Extra Arms</span>
+                <button class="mutation-btn" onclick="adjustMutations('arms', -1)">-</button>
+                <span id="extraArmsCount">0</span>
+                <button class="mutation-btn" onclick="adjustMutations('arms', 1)">+</button>
+            </div>
+            <div class="mutation-control">
+                <span>Extra Legs</span>
+                <button class="mutation-btn" onclick="adjustMutations('legs', -1)">-</button>
+                <span id="extraLegsCount">0</span>
+                <button class="mutation-btn" onclick="adjustMutations('legs', 1)">+</button>
+            </div>
+        </div>
+
         <!-- Equipment Slots Overview -->
         <div class="designer-section-header">
-            <h3>⚡ Equipped Items</h3>
+            <h3><span class="ad-icon-slot" data-ad-icon="inventory" data-ad-size="16"></span> Equipped Items</h3>
             <span class="item-count" id="equippedCount">0/10</span>
         </div>
         <div class="equipment-slots" id="equipmentSlots">
             <div class="equip-slot" data-slot="head" onclick="selectBodyPart('head')">
-                <span class="equip-slot-icon" id="slotHeadIcon">👤</span>
+                <span class="equip-slot-icon" id="slotHeadIcon"></span>
                 <span class="equip-slot-label">Head</span>
             </div>
             <div class="equip-slot" data-slot="torso" onclick="selectBodyPart('torso')">
-                <span class="equip-slot-icon" id="slotTorsoIcon">👕</span>
+                <span class="equip-slot-icon" id="slotTorsoIcon"></span>
                 <span class="equip-slot-label">Torso</span>
             </div>
             <div class="equip-slot" data-slot="legs" onclick="selectBodyPart('legs')">
-                <span class="equip-slot-icon" id="slotLegsIcon">👖</span>
+                <span class="equip-slot-icon" id="slotLegsIcon"></span>
                 <span class="equip-slot-label">Legs</span>
             </div>
             <div class="equip-slot" data-slot="weapon" onclick="selectBodyPart('weapon')">
-                <span class="equip-slot-icon" id="slotWeaponIcon">⚔️</span>
+                <span class="equip-slot-icon" id="slotWeaponIcon"></span>
                 <span class="equip-slot-label">Weapon</span>
             </div>
             <div class="equip-slot" data-slot="hat" onclick="selectBodyPart('hat')">
-                <span class="equip-slot-icon" id="slotHatIcon">🎩</span>
+                <span class="equip-slot-icon" id="slotHatIcon"></span>
                 <span class="equip-slot-label">Hat</span>
             </div>
             <div class="equip-slot" data-slot="glasses" onclick="selectBodyPart('glasses')">
-                <span class="equip-slot-icon" id="slotGlassesIcon">👓</span>
+                <span class="equip-slot-icon" id="slotGlassesIcon"></span>
                 <span class="equip-slot-label">Glasses</span>
             </div>
             <div class="equip-slot" data-slot="back" onclick="selectBodyPart('back')">
-                <span class="equip-slot-icon" id="slotBackIcon">🦸</span>
+                <span class="equip-slot-icon" id="slotBackIcon"></span>
                 <span class="equip-slot-label">Back</span>
             </div>
             <div class="equip-slot" data-slot="pet" onclick="selectBodyPart('pet')">
-                <span class="equip-slot-icon" id="slotPetIcon">🐱</span>
+                <span class="equip-slot-icon" id="slotPetIcon"></span>
                 <span class="equip-slot-label">Pet</span>
             </div>
         </div>
 
         <!-- Body Part Selection Tabs -->
         <div class="designer-section-header">
-            <h3>🎭 Select Items</h3>
+            <h3><span class="ad-icon-slot" data-ad-icon="store" data-ad-size="16"></span> Select Items</h3>
         </div>
         <div class="body-part-tabs" id="bodyPartTabs">
-            <button class="body-part-tab active" data-part="all" onclick="filterDesignerItems('all', this)">🌟 All</button>
-            <button class="body-part-tab" data-part="head" onclick="filterDesignerItems('head', this)">👤 Heads</button>
-            <button class="body-part-tab" data-part="torso" onclick="filterDesignerItems('torso', this)">👕 Torso</button>
-            <button class="body-part-tab" data-part="legs" onclick="filterDesignerItems('legs', this)">👖 Legs</button>
-            <button class="body-part-tab" data-part="weapon" onclick="filterDesignerItems('weapon', this)">⚔️ Weapons</button>
-            <button class="body-part-tab" data-part="hat" onclick="filterDesignerItems('hat', this)">🎩 Hats</button>
-            <button class="body-part-tab" data-part="glasses" onclick="filterDesignerItems('glasses', this)">👓 Glasses</button>
-            <button class="body-part-tab" data-part="back" onclick="filterDesignerItems('back', this)">🦸 Back</button>
-            <button class="body-part-tab" data-part="pet" onclick="filterDesignerItems('pet', this)">🐱 Pets</button>
+            <button class="body-part-tab active" data-part="all" onclick="filterDesignerItems('all', this)"><span class="ad-icon-slot" data-ad-icon="sparkles" data-ad-size="14"></span> All</button>
+            <button class="body-part-tab" data-part="head" onclick="filterDesignerItems('head', this)"><span class="ad-icon-slot" data-ad-icon="profile" data-ad-size="14"></span> Heads</button>
+            <button class="body-part-tab" data-part="torso" onclick="filterDesignerItems('torso', this)"><span class="ad-icon-slot" data-ad-icon="shield" data-ad-size="14"></span> Torso</button>
+            <button class="body-part-tab" data-part="legs" onclick="filterDesignerItems('legs', this)"><span class="ad-icon-slot" data-ad-icon="stats" data-ad-size="14"></span> Legs</button>
+            <button class="body-part-tab" data-part="weapon" onclick="filterDesignerItems('weapon', this)"><span class="ad-icon-slot" data-ad-icon="wand" data-ad-size="14"></span> Weapons</button>
+            <button class="body-part-tab" data-part="hat" onclick="filterDesignerItems('hat', this)"><span class="ad-icon-slot" data-ad-icon="star" data-ad-size="14"></span> Hats</button>
+            <button class="body-part-tab" data-part="glasses" onclick="filterDesignerItems('glasses', this)"><span class="ad-icon-slot" data-ad-icon="search" data-ad-size="14"></span> Glasses</button>
+            <button class="body-part-tab" data-part="back" onclick="filterDesignerItems('back', this)"><span class="ad-icon-slot" data-ad-icon="sparkles" data-ad-size="14"></span> Back</button>
+            <button class="body-part-tab" data-part="pet" onclick="filterDesignerItems('pet', this)"><span class="ad-icon-slot" data-ad-icon="beasts" data-ad-size="14"></span> Pets</button>
         </div>
 
         <!-- Items Selection Grid -->
@@ -5341,21 +5508,21 @@
         <!-- Gacha Section -->
         <div class="gacha-section" style="margin-top: 24px;">
             <div class="gacha-banner" style="background: linear-gradient(135deg, #8e44ad, #9b59b6); border-radius: 16px; padding: 20px; border: 2px solid #6c3483;">
-                <h3 style="margin: 0 0 8px; color: white;">🎰 Mystery Cosmetics</h3>
+                <h3 style="margin: 0 0 8px; color: white;"><span class="ad-icon-slot" data-ad-icon="lootbox" data-ad-size="18"></span> Mystery Cosmetics</h3>
                 <p style="color: rgba(255,255,255,0.8); margin: 0 0 16px; font-size: 14px;">Roll for rare AI-themed items!</p>
                 <div class="gacha-costs" style="display: flex; gap: 12px; flex-wrap: wrap;">
                     <button class="gacha-btn" onclick="rollDesignerGacha('basic')" style="flex: 1; min-width: 120px; padding: 12px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; color: white; cursor: pointer; transition: all 0.3s;">
                         <div style="font-weight: 700;">Basic Roll</div>
-                        <div style="color: #f39c12; font-size: 16px;">🪙 100</div>
+                        <div style="color: #f39c12; font-size: 16px;"><span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="14"></span> 100</div>
                     </button>
                     <button class="gacha-btn" onclick="rollDesignerGacha('premium')" style="flex: 1; min-width: 120px; padding: 12px; background: linear-gradient(135deg, rgba(243, 156, 18, 0.3), rgba(230, 126, 34, 0.3)); border: 2px solid #f39c12; border-radius: 10px; color: white; cursor: pointer; transition: all 0.3s;">
                         <div style="font-weight: 700;">Premium Roll</div>
-                        <div style="color: #f39c12; font-size: 16px;">🪙 400</div>
+                        <div style="color: #f39c12; font-size: 16px;"><span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="14"></span> 400</div>
                         <div style="font-size: 10px; color: #2ecc71;">Better odds!</div>
                     </button>
                     <button class="gacha-btn" onclick="rollDesignerGacha('legendary')" style="flex: 1; min-width: 120px; padding: 12px; background: linear-gradient(135deg, rgba(231, 76, 60, 0.3), rgba(192, 57, 43, 0.3)); border: 2px solid #e74c3c; border-radius: 10px; color: white; cursor: pointer; transition: all 0.3s;">
                         <div style="font-weight: 700;">Legendary</div>
-                        <div style="color: #e74c3c; font-size: 16px;">🪙 1000</div>
+                        <div style="color: #e74c3c; font-size: 16px;"><span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="14"></span> 1000</div>
                         <div style="font-size: 10px; color: #e74c3c;">Epic+ guaranteed!</div>
                     </button>
                 </div>
@@ -5368,8 +5535,8 @@
 <div class="modal" id="gachaResultModal" style="display:none">
     <div class="modal-content gacha-result-content">
         <div class="gacha-result-header">
-            <h2>🎉 You Got:</h2>
-            <button class="modal-close" onclick="closeGachaResult()">✕</button>
+            <h2><span class="ad-icon-slot" data-ad-icon="lootbox" data-ad-size="18"></span> You Got:</h2>
+            <button class="modal-close" onclick="closeGachaResult()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="14"></span></button>
         </div>
         <div class="gacha-results-grid" id="gachaResultsGrid"></div>
         <div class="gacha-result-actions">
@@ -5418,7 +5585,7 @@
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title"><i data-lucide="crosshair" class="lucide-icon-sm"></i> Hunt Mode</span>
+        <span class="view-title"><span class="ad-icon-slot" data-ad-icon="crosshair" data-ad-size="16"></span> Hunt Mode</span>
         <div class="coins-display" id="headerCoins">
             <span style="font-size:16px">🪙</span>
             <span id="coinsCount">0</span>
@@ -5540,7 +5707,7 @@
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title"><i data-lucide="shield-check" class="lucide-icon-sm"></i> Verify Mode</span>
+        <span class="view-title"><span class="ad-icon-slot" data-ad-icon="shield" data-ad-size="16"></span> Verify Mode</span>
         <div class="streak-display" id="streakDisplay">
             <span>🔥</span>
             <span id="streakCount">0</span>
@@ -5620,7 +5787,7 @@
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title"><i data-lucide="users" class="lucide-icon-sm"></i> Squads</span>
+        <span class="view-title"><span class="ad-icon-slot" data-ad-icon="friends" data-ad-size="16"></span> Squads</span>
         <button class="icon-btn" onclick="showCreateSquad()">➕</button>
     </div>
     <div class="view-body view-body-padded">
@@ -5702,59 +5869,50 @@
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">🎮 Tank Battle</span>
+        <span class="view-title"><span class="ad-icon-slot" data-ad-icon="tank" data-ad-size="16"></span> Tank Battle</span>
         <div style="width:44px"></div>
     </div>
     <div class="view-body view-body-padded">
         <!-- HERO BATTLE SCENE - Epic Tank vs AI Monsters -->
         <div class="battle-hero" style="background:linear-gradient(180deg, rgba(255,71,87,0.05) 0%, transparent 100%);border-radius:20px;padding:28px 20px">
             <div class="battle-scene" style="gap:30px">
-                <!-- Your Tank (left side) - ASCII Art Style -->
-                <div class="battle-tank" style="position:relative">
-                    <div style="display:flex;flex-direction:column;align-items:center">
-                        <!-- Tank Turret -->
-                        <div style="font-size:12px;color:var(--primary);margin-bottom:-6px;animation:cannonPulse 0.5s ease-in-out infinite">━━━▶💥</div>
-                        <!-- Tank Body -->
-                        <div style="background:linear-gradient(180deg,#2d3436,#1a1a1a);padding:8px 16px;border-radius:8px;border:2px solid var(--primary);box-shadow:0 4px 20px rgba(0,212,170,0.4)">
-                            <div style="font-size:10px;color:var(--primary);font-weight:900;letter-spacing:2px">⊕ TANK ⊕</div>
-                        </div>
-                        <!-- Treads -->
-                        <div style="display:flex;gap:4px;margin-top:-3px">
-                            <div style="width:14px;height:10px;background:#444;border-radius:3px;animation:treadSpin 0.3s linear infinite"></div>
-                            <div style="width:14px;height:10px;background:#444;border-radius:3px;animation:treadSpin 0.3s linear infinite 0.1s"></div>
-                            <div style="width:14px;height:10px;background:#444;border-radius:3px;animation:treadSpin 0.3s linear infinite 0.2s"></div>
-                        </div>
-                    </div>
+                <!-- Your Tank (left side) -->
+                <div class="battle-tank battle-tank-hero">
+                    <img src="assets/game/sprites/tank.svg" alt="Tank Commander" class="battle-tank-visual">
                     <div class="tank-label" style="margin-top:8px">COMMANDER</div>
                 </div>
 
                 <!-- VS Symbol -->
-                <div class="battle-vs" style="font-size:28px;text-shadow:0 0 20px rgba(255,71,87,0.6)">⚡VS⚡</div>
+                <div class="battle-vs">VS</div>
 
-                <!-- AI Monsters (right side) - Scary & Anime-Styled -->
-                <div class="battle-enemies" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;max-width:180px">
-                    <!-- Glitch Monster -->
-                    <div class="enemy-monster enemy-1" style="filter:drop-shadow(0 0 10px #ff4757);font-size:42px" title="GLITCH - Corrupts your aim">👹</div>
-                    <!-- Deepfake Phantom -->
-                    <div class="enemy-monster enemy-2" style="filter:drop-shadow(0 0 10px #9b59b6);font-size:32px" title="PHANTOM - Hard to detect">👻</div>
-                    <!-- Neural Virus -->
-                    <div class="enemy-monster enemy-3" style="filter:drop-shadow(0 0 10px #e74c3c);font-size:28px" title="VIRUS - Spreads fast">🦠</div>
-                    <!-- Boss Teaser -->
-                    <div class="enemy-monster" style="filter:drop-shadow(0 0 15px #f39c12);font-size:24px;animation:bossThrob 1s ease-in-out infinite" title="??? BOSS ???">💀</div>
-                    <div class="enemy-label" style="width:100%;text-align:center;font-size:11px;margin-top:6px;color:#ff4757;text-shadow:0 0 10px rgba(255,71,87,0.5)">⚠️ AI THREATS ⚠️</div>
+                <!-- AI Monsters (right side) -->
+                <div class="battle-enemies">
+                    <div class="enemy-monster enemy-1" title="GLITCH - Corrupts your aim">
+                        <img src="assets/game/bestiary/common_1.svg" alt="Glitch Imp">
+                    </div>
+                    <div class="enemy-monster enemy-2" title="PHANTOM - Hard to detect">
+                        <img src="assets/game/bestiary/uncommon_2.svg" alt="Phantom Veil">
+                    </div>
+                    <div class="enemy-monster enemy-3" title="VIRUS - Spreads fast">
+                        <img src="assets/game/bestiary/rare_2.svg" alt="Neural Virus">
+                    </div>
+                    <div class="enemy-monster boss" title="BOSS INCOMING">
+                        <img src="assets/game/bestiary/legendary_1.svg" alt="Legendary Boss">
+                    </div>
+                    <div class="enemy-label">AI THREATS DETECTED</div>
                 </div>
             </div>
-            <h1 class="battle-title" style="font-size:26px;margin-top:20px">🚨 OUTBREAK DETECTED! 🚨</h1>
+            <h1 class="battle-title" style="font-size:26px;margin-top:20px">OUTBREAK DETECTED</h1>
             <p class="battle-subtitle" style="font-size:13px">AI-generated threats are invading. Pilot your tank and destroy them all!</p>
         </div>
 
         <!-- Active Outbreak Card -->
         <div class="outbreak-card active-outbreak" id="activeOutbreak">
-            <div class="outbreak-badge">⚡ ACTIVE NOW</div>
+            <div class="outbreak-badge"><span class="ad-icon-slot" data-ad-icon="warning" data-ad-size="14"></span> ACTIVE NOW</div>
             <div class="outbreak-card-header">
                 <h2 id="outbreakCardTitle">Deepfake Invasion</h2>
                 <div class="outbreak-difficulty" id="outbreakDifficulty">
-                    <span>🔥</span><span>🔥</span><span>🔥</span>
+                    <span class="ad-icon-slot" data-ad-icon="star" data-ad-size="14"></span><span class="ad-icon-slot" data-ad-icon="star" data-ad-size="14"></span><span class="ad-icon-slot" data-ad-icon="star" data-ad-size="14"></span>
                 </div>
             </div>
             <p class="outbreak-description" id="outbreakDescription">
@@ -5763,24 +5921,24 @@
 
             <!-- Timer -->
             <div class="outbreak-timer-big">
-                <div class="timer-label">⏰ Event Ends In</div>
+                <div class="timer-label"><span class="ad-icon-slot" data-ad-icon="refresh" data-ad-size="12"></span> Event Ends In</div>
                 <div class="timer-display" id="outbreakTimerBig">23:45:12</div>
             </div>
 
             <!-- Battle Stats -->
             <div class="battle-stats">
                 <div class="battle-stat-card">
-                    <div class="stat-icon">💀</div>
+                    <div class="stat-icon"><span class="ad-icon-slot" data-ad-icon="crosshair" data-ad-size="16"></span></div>
                     <div class="stat-value" id="totalFakesDestroyed">1,247</div>
                     <div class="stat-label">Fakes Destroyed</div>
                 </div>
                 <div class="battle-stat-card">
-                    <div class="stat-icon">🏆</div>
+                    <div class="stat-icon"><span class="ad-icon-slot" data-ad-icon="trophy" data-ad-size="16"></span></div>
                     <div class="stat-value" id="highestWave">Wave 12</div>
                     <div class="stat-label">Your Best</div>
                 </div>
                 <div class="battle-stat-card">
-                    <div class="stat-icon">🪙</div>
+                    <div class="stat-icon"><span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="16"></span></div>
                     <div class="stat-value" id="coinsThisOutbreak">350</div>
                     <div class="stat-label">Coins Earned</div>
                 </div>
@@ -5788,11 +5946,11 @@
 
             <!-- Rewards -->
             <div class="outbreak-rewards">
-                <div class="rewards-label">🏆 Battle Rewards</div>
+                <div class="rewards-label"><span class="ad-icon-slot" data-ad-icon="trophy" data-ad-size="14"></span> Battle Rewards</div>
                 <div class="reward-pills">
-                    <div class="reward-pill">💰 Coins per Wave</div>
-                    <div class="reward-pill">🎖️ Grade Bonus (S+ = 2.5x)</div>
-                    <div class="reward-pill">🏅 "Tank Commander" Badge</div>
+                    <div class="reward-pill"><span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="14"></span> Coins per Wave</div>
+                    <div class="reward-pill"><span class="ad-icon-slot" data-ad-icon="star" data-ad-size="14"></span> Grade Bonus (S+ = 2.5x)</div>
+                    <div class="reward-pill"><span class="ad-icon-slot" data-ad-icon="badges" data-ad-size="14"></span> "Tank Commander" Badge</div>
                 </div>
             </div>
 
@@ -5800,7 +5958,7 @@
             <button class="tank-play-btn" onclick="startTankShooter()">
                 <div class="tank-btn-glow"></div>
                 <div class="tank-btn-content">
-                    <span class="tank-btn-icon">🎮</span>
+                    <span class="tank-btn-icon"><span class="ad-icon-slot" data-ad-icon="play" data-ad-size="20"></span></span>
                     <span class="tank-btn-text">BATTLE NOW</span>
                     <span class="tank-btn-sub">Destroy AI Fakes!</span>
                 </div>
@@ -5810,14 +5968,14 @@
         <!-- Leaderboard -->
         <div class="outbreak-card" style="margin-top:20px;">
             <h3 style="margin-bottom:16px;display:flex;align-items:center;gap:8px;">
-                <span>👑</span> Top Tank Commanders
+                <span class="ad-icon-slot" data-ad-icon="trophy" data-ad-size="16"></span> Top Tank Commanders
             </h3>
             <div id="outbreakTopHunters"></div>
         </div>
 
         <!-- Past Battles -->
         <div class="section-header" style="margin-top:32px">
-            <h3>📜 Your Battle History</h3>
+            <h3><span class="ad-icon-slot" data-ad-icon="history" data-ad-size="16"></span> Your Battle History</h3>
         </div>
         <div id="pastOutbreaks" class="battle-history">
             <div class="history-placeholder">Play some battles to see your history!</div>
@@ -5829,7 +5987,7 @@
 <div class="truth-cannon-game" id="truthCannonGame" style="display:none">
     <!-- Game Header -->
     <div class="game-header">
-        <button class="game-close-btn" onclick="closeTruthCannon()">✕</button>
+        <button class="game-close-btn" onclick="closeTruthCannon()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
         <div class="game-stats-row">
             <div class="game-stat">
                 <div class="game-stat-label">WAVE</div>
@@ -6096,34 +6254,40 @@
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">💰 Shop</span>
+        <span class="view-title"><span class="ad-icon-slot" data-ad-icon="store" data-ad-size="16"></span> Shop</span>
         <div style="display:flex;align-items:center;gap:8px;padding:4px 12px;background:var(--surface2);border-radius:8px;font-size:12px;font-weight:700">
-            <span style="font-size:16px">🪙</span>
+            <span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="16"></span>
             <span id="shopCoinsDisplay">0</span>
         </div>
     </div>
     <div class="view-body view-body-padded">
         <!-- COSMETICS CATEGORY -->
         <div class="shop-category">
-            <h3 class="shop-category-title">✨ Cosmetics</h3>
+            <h3 class="shop-category-title"><span class="ad-icon-slot" data-ad-icon="sparkles" data-ad-size="16"></span> Cosmetics</h3>
             <div class="shop-grid" id="cosmeticsShop"></div>
+        </div>
+
+        <!-- BADGES CATEGORY -->
+        <div class="shop-category">
+            <h3 class="shop-category-title"><span class="ad-icon-slot" data-ad-icon="badges" data-ad-size="16"></span> Badges</h3>
+            <div class="shop-grid" id="badgesShop"></div>
         </div>
 
         <!-- POWER-UPS CATEGORY -->
         <div class="shop-category">
-            <h3 class="shop-category-title">⚡ Power-Ups</h3>
+            <h3 class="shop-category-title"><span class="ad-icon-slot" data-ad-icon="wand" data-ad-size="16"></span> Power-Ups</h3>
             <div class="shop-grid" id="powerupsShop"></div>
         </div>
 
         <!-- TANK UPGRADES CATEGORY -->
         <div class="shop-category">
-            <h3 class="shop-category-title">🎮 Tank Upgrades</h3>
+            <h3 class="shop-category-title"><span class="ad-icon-slot" data-ad-icon="tank" data-ad-size="16"></span> Tank Upgrades</h3>
             <div class="shop-grid" id="tank_upgradesShop"></div>
         </div>
 
         <!-- BOOSTERS CATEGORY -->
         <div class="shop-category">
-            <h3 class="shop-category-title">🔥 Boosters</h3>
+            <h3 class="shop-category-title"><span class="ad-icon-slot" data-ad-icon="star" data-ad-size="16"></span> Boosters</h3>
             <div class="shop-grid" id="boostersShop"></div>
         </div>
     </div>
@@ -6213,20 +6377,27 @@ const DETECTOR_VERSION = '6.0.0';
 const APP_NAME = 'AuthenticaDetector';
 
 const rotatingBannerMessages = [
-    'Welcome to the AI-fantasy hub.',
-    'New bestiary drops weekly.',
-    'Scan, hunt, verify, repeat.',
-    'VERA is watching for fakes.',
-    'Earn coins for clean scans.'
+    { title: 'VEILBREAKERS PROTOCOL', detail: 'New zones soon: Neon Alley, Mirror Shrine, Bloom Gardens.' },
+    { title: 'DAILY KEYS ONLINE', detail: 'Earn 3-5 keys/day. Use them to hunt and capture AI beasts.' },
+    { title: 'TOOLKIT READY', detail: 'Noise Lens + Edge Prism now train your eye for AI tells.' },
+    { title: 'SQUAD FOCUS', detail: 'Invite friends, share hunts, and climb the rankings.' },
+    { title: 'TANK BATTLE LIVE', detail: 'Farm coins, unlock cosmetics, and prep for raids.' }
 ];
 const rotatingBannerText = document.getElementById('rotatingBannerText');
+const rotatingBannerSubtext = document.getElementById('rotatingBannerSubtext');
 if (rotatingBannerText) {
     let bannerIndex = 0;
-    rotatingBannerText.textContent = rotatingBannerMessages[bannerIndex];
+    rotatingBannerText.textContent = rotatingBannerMessages[bannerIndex].title;
+    if (rotatingBannerSubtext) {
+        rotatingBannerSubtext.textContent = rotatingBannerMessages[bannerIndex].detail;
+    }
     setInterval(() => {
         bannerIndex = (bannerIndex + 1) % rotatingBannerMessages.length;
-        rotatingBannerText.textContent = rotatingBannerMessages[bannerIndex];
-    }, 4000);
+        rotatingBannerText.textContent = rotatingBannerMessages[bannerIndex].title;
+        if (rotatingBannerSubtext) {
+            rotatingBannerSubtext.textContent = rotatingBannerMessages[bannerIndex].detail;
+        }
+    }, 4500);
 }
 
 // ==================== STATE ====================
@@ -6296,160 +6467,240 @@ const ANALYSIS_ICON = `<svg viewBox="0 0 72 72" fill="none">
 
 // ==================== WOW FACTS ====================
 const WOW_FACTS = [
-    { icon: '🧠', text: "Your brain processes images in 13 milliseconds - faster than you can blink. That's why AI fakes fool us!" },
-    { icon: '🤯', text: "DALL-E 3, Midjourney, and Stable Diffusion create 34 MILLION AI images every single day." },
-    { icon: '👁️', text: "In blind tests, humans correctly identify AI images only 38% of the time. Worse than flipping a coin!" },
-    { icon: '💰', text: "The deepfake industry hit $534 million in 2024. By 2030, it'll be $6.5 BILLION." },
-    { icon: '🎭', text: "A single AI-generated fake image of a Pentagon explosion caused a real stock market dip in 2023." },
-    { icon: '✋', text: "The 'count fingers' trick? AI fixed it. Modern generators get hands right 94% of the time now." },
-    { icon: '🔬', text: "AI images have invisible 'fingerprints' in their pixel noise. Each generator leaves unique patterns." },
-    { icon: '📱', text: "60% of people have unknowingly shared AI-generated content on social media." },
-    { icon: '🗳️', text: "In 2024, AI-generated political deepfakes were detected in elections across 40+ countries." },
-    { icon: '🎨', text: "Midjourney v6 creates images so real that professional photographers can't tell the difference." },
-    { icon: '⚡', text: "It takes AI just 3 seconds to generate an image. It takes experts 20+ minutes to verify one." },
-    { icon: '🔍', text: "AI detectors like ours analyze 50+ invisible signals humans can't see - pixel patterns, frequency anomalies, compression artifacts." }
+    { icon: 'stats', text: "Your brain processes images in 13 milliseconds - faster than you can blink. That's why AI fakes fool us!" },
+    { icon: 'sparkles', text: "DALL-E 3, Midjourney, and Stable Diffusion create 34 MILLION AI images every single day." },
+    { icon: 'warning', text: "In blind tests, humans correctly identify AI images only 38% of the time. Worse than flipping a coin!" },
+    { icon: 'coins', text: "The deepfake industry hit $534 million in 2024. By 2030, it'll be $6.5 BILLION." },
+    { icon: 'warning', text: "A single AI-generated fake image of a Pentagon explosion caused a real stock market dip in 2023." },
+    { icon: 'search', text: "The 'count fingers' trick? AI fixed it. Modern generators get hands right 94% of the time now." },
+    { icon: 'scan', text: "AI images have invisible 'fingerprints' in their pixel noise. Each generator leaves unique patterns." },
+    { icon: 'chat', text: "60% of people have unknowingly shared AI-generated content on social media." },
+    { icon: 'trophy', text: "In 2024, AI-generated political deepfakes were detected in elections across 40+ countries." },
+    { icon: 'boss', text: "Midjourney v6 creates images so real that professional photographers can't tell the difference." },
+    { icon: 'sparkles', text: "It takes AI just 3 seconds to generate an image. It takes experts 20+ minutes to verify one." },
+    { icon: 'scan', text: "AI detectors like ours analyze 50+ invisible signals humans can't see - pixel patterns, frequency anomalies, compression artifacts." }
 ];
 let currentFactIndex = 0;
 
-// ==================== BADGES (EXPANDED - 3 PAGES WORTH) ====================
+// ==================== BADGES (Expanded) ====================
 const BADGES = {
-    // COMMON (Easy to get)
-    first_scan: { id: 'first_scan', name: 'First Steps', desc: 'Complete your first scan', icon: '🔰', req: 1, type: 'total', rarity: 'common', points: 10 },
-    ai_spotter: { id: 'ai_spotter', name: 'AI Spotter', desc: 'Find your first AI image', icon: '🎯', req: 1, type: 'ai', rarity: 'common', points: 15 },
-    five_scans: { id: 'five_scans', name: 'Getting Started', desc: 'Complete 5 scans', icon: '✋', req: 5, type: 'total', rarity: 'common', points: 25 },
-    ten_scans: { id: 'ten_scans', name: 'Double Digits', desc: 'Complete 10 scans', icon: '🔟', req: 10, type: 'total', rarity: 'common', points: 50 },
-    first_deep: { id: 'first_deep', name: 'Deep Thinker', desc: 'First Deep Scan', icon: '🧠', req: 1, type: 'deep', rarity: 'common', points: 20 },
-    truth_seeker: { id: 'truth_seeker', name: 'Truth Seeker', desc: 'Find 5 real images', icon: '✅', req: 5, type: 'real', rarity: 'common', points: 30 },
-    
-    // RARE (Medium difficulty)
-    detective: { id: 'detective', name: 'Detective', desc: 'Complete 25 scans', icon: '🕵️', req: 25, type: 'total', rarity: 'rare', points: 100 },
-    ai_hunter: { id: 'ai_hunter', name: 'AI Hunter', desc: 'Find 10 AI images', icon: '🤖', req: 10, type: 'ai', rarity: 'rare', points: 75 },
-    streak_3: { id: 'streak_3', name: 'On Fire', desc: '3 correct in a row', icon: '🔥', req: 3, type: 'streak', rarity: 'rare', points: 50 },
-    forensics_fan: { id: 'forensics_fan', name: 'Forensics Fan', desc: '5 Forensics scans', icon: '🔬', req: 5, type: 'forensics', rarity: 'rare', points: 60 },
-    daily_scanner: { id: 'daily_scanner', name: 'Daily Scanner', desc: 'Scan 3 days in a row', icon: '📅', req: 3, type: 'daily_streak', rarity: 'rare', points: 80 },
-    quick_draw: { id: 'quick_draw', name: 'Quick Draw', desc: '10 Quick Scans', icon: '⚡', req: 10, type: 'quick', rarity: 'rare', points: 40 },
-    
-    // EPIC (Hard)
-    master: { id: 'master', name: 'Master Detective', desc: 'Complete 50 scans', icon: '👑', req: 50, type: 'total', rarity: 'epic', points: 200 },
-    ai_expert: { id: 'ai_expert', name: 'AI Expert', desc: 'Find 25 AI images', icon: '🦸', req: 25, type: 'ai', rarity: 'epic', points: 150 },
-    streak_5: { id: 'streak_5', name: 'Unstoppable', desc: '5 correct in a row', icon: '💪', req: 5, type: 'streak', rarity: 'epic', points: 100 },
-    centurion: { id: 'centurion', name: 'Centurion', desc: '100 scans', icon: '💯', req: 100, type: 'total', rarity: 'epic', points: 300 },
-    week_warrior: { id: 'week_warrior', name: 'Week Warrior', desc: 'Scan 7 days straight', icon: '📆', req: 7, type: 'daily_streak', rarity: 'epic', points: 200 },
-    sharp_eye: { id: 'sharp_eye', name: 'Sharp Eye', desc: '90%+ accuracy (20+ scans)', icon: '👁️', req: 90, type: 'accuracy', rarity: 'epic', points: 250 },
-    
-    // LEGENDARY (Very hard)
-    legend: { id: 'legend', name: 'Legend', desc: '250 scans', icon: '⭐', req: 250, type: 'total', rarity: 'legendary', points: 500 },
-    ai_nemesis: { id: 'ai_nemesis', name: 'AI Nemesis', desc: 'Find 100 AI images', icon: '🎖️', req: 100, type: 'ai', rarity: 'legendary', points: 400 },
-    perfect_10: { id: 'perfect_10', name: 'Perfect 10', desc: '10 correct in a row', icon: '🏅', req: 10, type: 'streak', rarity: 'legendary', points: 300 },
-    month_master: { id: 'month_master', name: 'Month Master', desc: 'Scan 30 days', icon: '🗓️', req: 30, type: 'daily_streak', rarity: 'legendary', points: 500 },
-    elite_detector: { id: 'elite_detector', name: 'Elite Detector', desc: '95%+ accuracy (50+ scans)', icon: '🏆', req: 95, type: 'accuracy', rarity: 'legendary', points: 750 },
-    founding_member: { id: 'founding_member', name: 'Founding Member', desc: 'Beta tester', icon: '💎', req: 1, type: 'special', rarity: 'legendary', points: 1000 }
+    // COMMON
+    first_scan: { id: 'first_scan', name: 'First Steps', desc: 'Complete your first scan', icon: 'scan', req: 1, type: 'total', rarity: 'common', points: 10 },
+    ai_spotter: { id: 'ai_spotter', name: 'AI Spotter', desc: 'Find your first AI image', icon: 'warning', req: 1, type: 'ai', rarity: 'common', points: 15 },
+    first_real: { id: 'first_real', name: 'Reality Check', desc: 'Find your first real image', icon: 'verify', req: 1, type: 'real', rarity: 'common', points: 12 },
+    five_scans: { id: 'five_scans', name: 'Getting Started', desc: 'Complete 5 scans', icon: 'stats', req: 5, type: 'total', rarity: 'common', points: 25 },
+    ten_scans: { id: 'ten_scans', name: 'Double Digits', desc: 'Complete 10 scans', icon: 'stats', req: 10, type: 'total', rarity: 'common', points: 50 },
+    first_deep: { id: 'first_deep', name: 'Deep Thinker', desc: 'First deep scan', icon: 'search', req: 1, type: 'deep', rarity: 'common', points: 20 },
+    first_quick: { id: 'first_quick', name: 'Quick Start', desc: 'First quick scan', icon: 'scan', req: 1, type: 'quick', rarity: 'common', points: 20 },
+    first_forensics: { id: 'first_forensics', name: 'Forensics Initiate', desc: 'First forensics scan', icon: 'info', req: 1, type: 'forensics', rarity: 'common', points: 25 },
+    truth_seeker: { id: 'truth_seeker', name: 'Truth Seeker', desc: 'Find 5 real images', icon: 'shield', req: 5, type: 'real', rarity: 'common', points: 30 },
+    ai_breaker: { id: 'ai_breaker', name: 'AI Breaker', desc: 'Find 5 AI images', icon: 'corruption', req: 5, type: 'ai', rarity: 'common', points: 30 },
+    twenty_scans: { id: 'twenty_scans', name: 'On the Board', desc: 'Complete 20 scans', icon: 'stats', req: 20, type: 'total', rarity: 'common', points: 40 },
+    deep_5: { id: 'deep_5', name: 'Deep Diver', desc: 'Complete 5 deep scans', icon: 'search', req: 5, type: 'deep', rarity: 'common', points: 45 },
+
+    // RARE
+    detective: { id: 'detective', name: 'Detective', desc: 'Complete 25 scans', icon: 'search', req: 25, type: 'total', rarity: 'rare', points: 100 },
+    ai_hunter: { id: 'ai_hunter', name: 'AI Hunter', desc: 'Find 10 AI images', icon: 'crosshair', req: 10, type: 'ai', rarity: 'rare', points: 75 },
+    streak_3: { id: 'streak_3', name: 'On Fire', desc: '3 correct in a row', icon: 'star', req: 3, type: 'streak', rarity: 'rare', points: 50 },
+    forensics_fan: { id: 'forensics_fan', name: 'Forensics Fan', desc: '5 forensics scans', icon: 'info', req: 5, type: 'forensics', rarity: 'rare', points: 60 },
+    daily_scanner: { id: 'daily_scanner', name: 'Daily Scanner', desc: 'Scan 3 days in a row', icon: 'refresh', req: 3, type: 'daily_streak', rarity: 'rare', points: 80 },
+    quick_draw: { id: 'quick_draw', name: 'Quick Draw', desc: '10 quick scans', icon: 'scan', req: 10, type: 'quick', rarity: 'rare', points: 40 },
+    real_guardian: { id: 'real_guardian', name: 'Real Guardian', desc: 'Find 15 real images', icon: 'shield', req: 15, type: 'real', rarity: 'rare', points: 70 },
+    ai_tracker: { id: 'ai_tracker', name: 'AI Tracker', desc: 'Find 20 AI images', icon: 'warning', req: 20, type: 'ai', rarity: 'rare', points: 90 },
+    deep_diver: { id: 'deep_diver', name: 'Deep Diver', desc: 'Complete 10 deep scans', icon: 'search', req: 10, type: 'deep', rarity: 'rare', points: 95 },
+    quick_runner: { id: 'quick_runner', name: 'Quick Runner', desc: 'Complete 20 quick scans', icon: 'scan', req: 20, type: 'quick', rarity: 'rare', points: 85 },
+    forensics_hawk: { id: 'forensics_hawk', name: 'Forensics Hawk', desc: 'Complete 10 forensics scans', icon: 'info', req: 10, type: 'forensics', rarity: 'rare', points: 90 },
+    accuracy_80: { id: 'accuracy_80', name: 'Steady Hand', desc: 'Maintain 80% accuracy', icon: 'stats', req: 80, type: 'accuracy', rarity: 'rare', points: 120 },
+    fifty_scans: { id: 'fifty_scans', name: 'Halfway Hero', desc: 'Complete 50 scans', icon: 'stats', req: 50, type: 'total', rarity: 'rare', points: 110 },
+    week_tracker: { id: 'week_tracker', name: 'Week Tracker', desc: 'Scan 5 days in a row', icon: 'refresh', req: 5, type: 'daily_streak', rarity: 'rare', points: 130 },
+
+    // EPIC
+    master: { id: 'master', name: 'Master Detective', desc: 'Complete 75 scans', icon: 'trophy', req: 75, type: 'total', rarity: 'epic', points: 200 },
+    ai_expert: { id: 'ai_expert', name: 'AI Expert', desc: 'Find 50 AI images', icon: 'boss', req: 50, type: 'ai', rarity: 'epic', points: 150 },
+    streak_5: { id: 'streak_5', name: 'Unstoppable', desc: '5 correct in a row', icon: 'star', req: 5, type: 'streak', rarity: 'epic', points: 100 },
+    centurion: { id: 'centurion', name: 'Centurion', desc: 'Complete 100 scans', icon: 'trophy', req: 100, type: 'total', rarity: 'epic', points: 300 },
+    week_warrior: { id: 'week_warrior', name: 'Week Warrior', desc: 'Scan 7 days straight', icon: 'refresh', req: 7, type: 'daily_streak', rarity: 'epic', points: 200 },
+    sharp_eye: { id: 'sharp_eye', name: 'Sharp Eye', desc: 'Reach 90% accuracy', icon: 'search', req: 90, type: 'accuracy', rarity: 'epic', points: 250 },
+    deep_sage: { id: 'deep_sage', name: 'Deep Sage', desc: 'Complete 25 deep scans', icon: 'wand', req: 25, type: 'deep', rarity: 'epic', points: 220 },
+    quick_strike: { id: 'quick_strike', name: 'Quick Strike', desc: 'Complete 50 quick scans', icon: 'scan', req: 50, type: 'quick', rarity: 'epic', points: 210 },
+    forensics_elite: { id: 'forensics_elite', name: 'Forensics Elite', desc: 'Complete 25 forensics scans', icon: 'info', req: 25, type: 'forensics', rarity: 'epic', points: 230 },
+    real_sentinel: { id: 'real_sentinel', name: 'Real Sentinel', desc: 'Find 50 real images', icon: 'shield', req: 50, type: 'real', rarity: 'epic', points: 240 },
+    ai_slayer: { id: 'ai_slayer', name: 'AI Slayer', desc: 'Find 75 AI images', icon: 'crosshair', req: 75, type: 'ai', rarity: 'epic', points: 260 },
+    streak_7: { id: 'streak_7', name: 'Blazing Streak', desc: '7 correct in a row', icon: 'star', req: 7, type: 'streak', rarity: 'epic', points: 190 },
+    month_guard: { id: 'month_guard', name: 'Month Guard', desc: 'Scan 14 days straight', icon: 'refresh', req: 14, type: 'daily_streak', rarity: 'epic', points: 280 },
+    hundred_fifty: { id: 'hundred_fifty', name: 'One-Fifty Club', desc: 'Complete 150 scans', icon: 'stats', req: 150, type: 'total', rarity: 'epic', points: 320 },
+
+    // LEGENDARY
+    legend: { id: 'legend', name: 'Legend', desc: 'Complete 250 scans', icon: 'trophy', req: 250, type: 'total', rarity: 'legendary', points: 500 },
+    ai_nemesis: { id: 'ai_nemesis', name: 'AI Nemesis', desc: 'Find 100 AI images', icon: 'boss', req: 100, type: 'ai', rarity: 'legendary', points: 400 },
+    perfect_10: { id: 'perfect_10', name: 'Perfect 10', desc: '10 correct in a row', icon: 'star', req: 10, type: 'streak', rarity: 'legendary', points: 300 },
+    month_master: { id: 'month_master', name: 'Month Master', desc: 'Scan 30 days', icon: 'refresh', req: 30, type: 'daily_streak', rarity: 'legendary', points: 500 },
+    elite_detector: { id: 'elite_detector', name: 'Elite Detector', desc: '95% accuracy (50+ scans)', icon: 'verify', req: 95, type: 'accuracy', rarity: 'legendary', points: 750 },
+    founding_member: { id: 'founding_member', name: 'Founding Member', desc: 'Beta supporter', icon: 'badges', req: 1, type: 'special', rarity: 'legendary', points: 1000 },
+    deep_oracle: { id: 'deep_oracle', name: 'Deep Oracle', desc: 'Complete 50 deep scans', icon: 'wand', req: 50, type: 'deep', rarity: 'legendary', points: 450 },
+    quick_legend: { id: 'quick_legend', name: 'Quick Legend', desc: 'Complete 100 quick scans', icon: 'scan', req: 100, type: 'quick', rarity: 'legendary', points: 450 },
+    forensics_master: { id: 'forensics_master', name: 'Forensics Master', desc: 'Complete 50 forensics scans', icon: 'info', req: 50, type: 'forensics', rarity: 'legendary', points: 480 },
+    real_paragon: { id: 'real_paragon', name: 'Real Paragon', desc: 'Find 150 real images', icon: 'shield', req: 150, type: 'real', rarity: 'legendary', points: 500 }
 };
 
-// ==================== SHOP ITEMS (20 items across 4 categories) ====================
+// ==================== SHOP ITEMS (Expanded catalog) ====================
 const SHOP_ITEMS = {
-    // COSMETICS (5 items: 100-500 coins)
+    // COSMETICS
     avatar_border_gold: {
         id: 'avatar_border_gold',
         name: 'Golden Border',
-        desc: 'Premium avatar border',
+        desc: 'Cosmetic avatar border (visual only)',
         category: 'cosmetics',
         cost: 250,
-        icon: '✨',
+        icon: 'trophy',
         rarity: 'rare'
     },
     avatar_border_neon: {
         id: 'avatar_border_neon',
         name: 'Neon Border',
-        desc: 'Glowing cyan border',
+        desc: 'Glowing cyan border (visual only)',
         category: 'cosmetics',
         cost: 300,
-        icon: '💫',
+        icon: 'sparkles',
         rarity: 'rare'
     },
     bg_nebula: {
         id: 'bg_nebula',
         name: 'Nebula BG',
-        desc: 'Space background',
+        desc: 'Cosmetic profile backdrop',
         category: 'cosmetics',
         cost: 200,
-        icon: '🌌',
+        icon: 'star',
         rarity: 'common'
     },
     bg_synthwave: {
         id: 'bg_synthwave',
         name: 'Synthwave BG',
-        desc: 'Retro neon vibe',
+        desc: 'Retro neon profile backdrop',
         category: 'cosmetics',
         cost: 150,
-        icon: '🌅',
+        icon: 'sparkles',
         rarity: 'common'
     },
     badge_frame_platinum: {
         id: 'badge_frame_platinum',
         name: 'Platinum Frame',
-        desc: 'Elite badge frame',
+        desc: 'Elite badge frame (visual only)',
         category: 'cosmetics',
         cost: 500,
-        icon: '💎',
+        icon: 'badges',
+        rarity: 'epic'
+    },
+    aura_pulse: {
+        id: 'aura_pulse',
+        name: 'Pulse Aura',
+        desc: 'Animated aura (visual only)',
+        category: 'cosmetics',
+        cost: 650,
+        icon: 'sparkles',
+        rarity: 'epic'
+    },
+    profile_holo: {
+        id: 'profile_holo',
+        name: 'Holo Profile Frame',
+        desc: 'Hologram profile frame',
+        category: 'cosmetics',
+        cost: 420,
+        icon: 'info',
+        rarity: 'rare'
+    },
+    nameplate_onyx: {
+        id: 'nameplate_onyx',
+        name: 'Onyx Nameplate',
+        desc: 'Premium nameplate (visual only)',
+        category: 'cosmetics',
+        cost: 700,
+        icon: 'shield',
         rarity: 'epic'
     },
 
-    // POWER-UPS (5 items: 200-1000 coins)
+    // POWER-UPS (GAME-ONLY)
     scan_boost_2x: {
         id: 'scan_boost_2x',
-        name: '2x Scan Boost',
-        desc: 'Double detection speed',
+        name: 'Battle XP Boost',
+        desc: 'Game-only: double XP for battles',
         category: 'powerups',
         cost: 400,
-        icon: '⚡',
+        icon: 'stats',
         rarity: 'rare'
     },
     xp_multiplier_3x: {
         id: 'xp_multiplier_3x',
-        name: '3x XP Multiplier',
-        desc: 'Triple XP for 24h',
+        name: 'Raid XP Surge',
+        desc: 'Game-only: 3x XP for 24h',
         category: 'powerups',
         cost: 600,
-        icon: '📈',
+        icon: 'stats',
         rarity: 'epic'
     },
     accuracy_boost: {
         id: 'accuracy_boost',
-        name: 'Accuracy Boost',
-        desc: '+15% detection boost',
+        name: 'Aim Stabilizer',
+        desc: 'Game-only: tighter spread for tanks',
         category: 'powerups',
         cost: 500,
-        icon: '🎯',
+        icon: 'crosshair',
         rarity: 'rare'
     },
     daily_bonus_coins: {
         id: 'daily_bonus_coins',
-        name: 'Daily Bonus +100',
-        desc: '+100 coins/day (7d)',
+        name: 'Daily Coin Cache',
+        desc: 'Game-only: +100 coins/day (7d)',
         category: 'powerups',
         cost: 700,
-        icon: '💰',
+        icon: 'coins',
         rarity: 'epic'
     },
     priority_queue: {
         id: 'priority_queue',
-        name: 'Priority Queue',
-        desc: 'Fast-track scanning',
+        name: 'Instant Match Queue',
+        desc: 'Game-only: faster matchmaking',
         category: 'powerups',
         cost: 1000,
-        icon: '⏱️',
+        icon: 'shield',
+        rarity: 'epic'
+    },
+    deep_scan_credit: {
+        id: 'deep_scan_credit',
+        name: 'Veilbreak Key',
+        desc: 'Game-only: +1 special hunt key',
+        category: 'powerups',
+        cost: 350,
+        icon: 'wand',
+        rarity: 'rare'
+    },
+    quick_scan_pack: {
+        id: 'quick_scan_pack',
+        name: 'Rapid Keys Pack',
+        desc: 'Game-only: +3 quick hunt keys',
+        category: 'powerups',
+        cost: 450,
+        icon: 'scan',
+        rarity: 'rare'
+    },
+    revive_token: {
+        id: 'revive_token',
+        name: 'Revive Token',
+        desc: 'Game-only: revive once in battle',
+        category: 'powerups',
+        cost: 900,
+        icon: 'heart',
         rarity: 'epic'
     },
 
-    // TANK UPGRADES (Replaces badges - 500-5000 coins)
+    // TANK UPGRADES
     tank_armor_light: {
         id: 'tank_armor_light',
         name: 'Light Armor',
         desc: '+25% tank HP',
         category: 'tank_upgrades',
         cost: 500,
-        icon: '🛡️',
+        icon: 'shield',
         rarity: 'common',
         effect: { hp_boost: 0.25 }
     },
@@ -6459,7 +6710,7 @@ const SHOP_ITEMS = {
         desc: '+50% tank HP, -10% speed',
         category: 'tank_upgrades',
         cost: 1200,
-        icon: '🔰',
+        icon: 'shield',
         rarity: 'rare',
         effect: { hp_boost: 0.50, speed_penalty: 0.10 }
     },
@@ -6469,7 +6720,7 @@ const SHOP_ITEMS = {
         desc: '+30% movement speed',
         category: 'tank_upgrades',
         cost: 800,
-        icon: '⚡',
+        icon: 'stats',
         rarity: 'common',
         effect: { speed_boost: 0.30 }
     },
@@ -6479,7 +6730,7 @@ const SHOP_ITEMS = {
         desc: '+20% speed, ignore slowdown',
         category: 'tank_upgrades',
         cost: 1500,
-        icon: '🏔️',
+        icon: 'stats',
         rarity: 'rare',
         effect: { speed_boost: 0.20, ignore_slow: true }
     },
@@ -6489,7 +6740,7 @@ const SHOP_ITEMS = {
         desc: '+40% explosion radius',
         category: 'tank_upgrades',
         cost: 1000,
-        icon: '💥',
+        icon: 'warning',
         rarity: 'rare',
         effect: { blast_radius: 0.40 }
     },
@@ -6499,7 +6750,7 @@ const SHOP_ITEMS = {
         desc: 'Shots pierce 2 enemies',
         category: 'tank_upgrades',
         cost: 1800,
-        icon: '🎯',
+        icon: 'crosshair',
         rarity: 'epic',
         effect: { pierce_count: 2 }
     },
@@ -6509,7 +6760,7 @@ const SHOP_ITEMS = {
         desc: 'Invisible when stationary',
         category: 'tank_upgrades',
         cost: 3500,
-        icon: '👻',
+        icon: 'corruption',
         rarity: 'epic',
         effect: { stealth_mode: true }
     },
@@ -6519,7 +6770,7 @@ const SHOP_ITEMS = {
         desc: '2x damage, 2x fire rate',
         category: 'tank_upgrades',
         cost: 5000,
-        icon: '💀',
+        icon: 'boss',
         rarity: 'legendary',
         effect: { damage_mult: 2, fire_rate_mult: 2 }
     },
@@ -6529,19 +6780,29 @@ const SHOP_ITEMS = {
         desc: 'Ultimate: 3x HP, 2x damage, shield',
         category: 'tank_upgrades',
         cost: 10000,
-        icon: '🏆',
+        icon: 'trophy',
         rarity: 'legendary',
         effect: { hp_mult: 3, damage_mult: 2, has_shield: true }
     },
+    turret_overclock: {
+        id: 'turret_overclock',
+        name: 'Turret Overclock',
+        desc: '+35% fire rate',
+        category: 'tank_upgrades',
+        cost: 2200,
+        icon: 'wand',
+        rarity: 'epic',
+        effect: { fire_rate_mult: 1.35 }
+    },
 
-    // BOOSTERS (5 items: 300-800 coins)
+    // BOOSTERS
     truth_cannon_ammo: {
         id: 'truth_cannon_ammo',
         name: 'Cannon Ammo x50',
         desc: '50 truth cannon rounds',
         category: 'boosters',
         cost: 400,
-        icon: '🔫',
+        icon: 'crosshair',
         rarity: 'rare'
     },
     outbreak_defense: {
@@ -6550,35 +6811,109 @@ const SHOP_ITEMS = {
         desc: '+50% outbreak rewards',
         category: 'boosters',
         cost: 600,
-        icon: '🛡️',
+        icon: 'shield',
         rarity: 'epic'
     },
     critical_hit: {
         id: 'critical_hit',
         name: 'Critical Hit Boost',
-        desc: '+20% detection bonus',
+        desc: '+20% battle crit chance',
         category: 'boosters',
         cost: 500,
-        icon: '💥',
+        icon: 'star',
         rarity: 'rare'
     },
     time_warp: {
         id: 'time_warp',
         name: 'Time Warp',
-        desc: 'Instant deep scan',
+        desc: 'Instant deep scan (game-only)',
         category: 'boosters',
         cost: 800,
-        icon: '⏰',
+        icon: 'refresh',
         rarity: 'epic'
     },
     immunity_shield: {
         id: 'immunity_shield',
         name: 'Immunity Shield',
-        desc: 'Protect 5 scans',
+        desc: 'Protect 5 scans (game-only)',
         category: 'boosters',
         cost: 700,
-        icon: '🛡️',
+        icon: 'shield',
         rarity: 'epic'
+    },
+    loot_magnet: {
+        id: 'loot_magnet',
+        name: 'Loot Magnet',
+        desc: '+25% drop rate in battles',
+        category: 'boosters',
+        cost: 650,
+        icon: 'coins',
+        rarity: 'rare'
+    },
+    boss_radar: {
+        id: 'boss_radar',
+        name: 'Boss Radar',
+        desc: 'Increases boss encounter chance',
+        category: 'boosters',
+        cost: 950,
+        icon: 'boss',
+        rarity: 'epic'
+    },
+
+    // BADGES (SHOP-ONLY COSMETICS)
+    badge_veilbreaker: {
+        id: 'badge_veilbreaker',
+        name: 'Veilbreaker Crest',
+        desc: 'Cosmetic badge for your profile',
+        category: 'badges',
+        cost: 300,
+        icon: 'badges',
+        rarity: 'common'
+    },
+    badge_truth_titan: {
+        id: 'badge_truth_titan',
+        name: 'Truth Titan',
+        desc: 'Cosmetic badge for your profile',
+        category: 'badges',
+        cost: 600,
+        icon: 'trophy',
+        rarity: 'rare'
+    },
+    badge_signal_sage: {
+        id: 'badge_signal_sage',
+        name: 'Signal Sage',
+        desc: 'Cosmetic badge for your profile',
+        category: 'badges',
+        cost: 450,
+        icon: 'info',
+        rarity: 'rare'
+    },
+    badge_voidwatcher: {
+        id: 'badge_voidwatcher',
+        name: 'Voidwatcher',
+        desc: 'Cosmetic badge for your profile',
+        category: 'badges',
+        cost: 800,
+        icon: 'corruption',
+        rarity: 'epic'
+    },
+    badge_auric_guard: {
+        id: 'badge_auric_guard',
+        name: 'Auric Guard',
+        desc: 'Cosmetic badge for your profile',
+        category: 'badges',
+        cost: 550,
+        icon: 'shield',
+        rarity: 'rare'
+    },
+    badge_neon_ace: {
+        id: 'badge_neon_ace',
+        name: 'Neon Ace',
+        desc: 'Cosmetic badge for your profile',
+        category: 'badges',
+        cost: 400,
+        icon: 'sparkles',
+        rarity: 'common'
     }
 };
 
@@ -6733,10 +7068,15 @@ function initFacts() {
 function updateFact() {
     currentFactIndex = (currentFactIndex + 1) % WOW_FACTS.length;
     const f = WOW_FACTS[currentFactIndex];
-    if ($('factIcon')) $('factIcon').textContent = f.icon;
+    const iconMarkup = `<span class="ad-icon-slot" data-ad-icon="${f.icon}" data-ad-size="18"></span>`;
+    if ($('factIcon')) $('factIcon').innerHTML = iconMarkup;
     if ($('factText')) $('factText').textContent = f.text;
-    if ($('progressFactIcon')) $('progressFactIcon').textContent = f.icon;
+    if ($('progressFactIcon')) $('progressFactIcon').innerHTML = iconMarkup;
     if ($('progressFactText')) $('progressFactText').textContent = f.text;
+    if (window.IconLibrary) {
+        window.IconLibrary.apply(document.getElementById('factIcon'));
+        window.IconLibrary.apply(document.getElementById('progressFactIcon'));
+    }
 }
 
 // ==================== SUPABASE ====================
@@ -8508,7 +8848,7 @@ function showNoMoreSubmissions() {
 
     cardStack.innerHTML = `
         <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:32px">
-            <div style="font-size:48px;margin-bottom:16px">🎉</div>
+            <div style="font-size:48px;margin-bottom:16px"><span class="ad-icon-slot" data-ad-icon="trophy" data-ad-size="32"></span></div>
             <div style="font-size:18px;font-weight:700;margin-bottom:8px">All Caught Up!</div>
             <div style="color:var(--text2);margin-bottom:24px">No more submissions to verify right now.</div>
             <button class="cta-btn" onclick="openView('huntView')">
@@ -9212,6 +9552,7 @@ async function loadLeaderboardView() {
 
 function renderLeaderboard(leaderboard) {
     const container = $('leaderboardContent');
+    const fallbackAvatar = 'assets/vera/vera_fairy.svg';
     if (!container) return;
 
     if (!leaderboard || leaderboard.length === 0) {
@@ -9236,8 +9577,8 @@ function renderLeaderboard(leaderboard) {
         html += `
             <div class="podium-item ${pos}">
                 <div class="podium-avatar">
-                    ${i === 0 ? '<span class="podium-crown">👑</span>' : ''}
-                    ${p.avatar_url ? `<img src="${p.avatar_url}">` : (p.display_name || 'A')[0].toUpperCase()}
+                    ${i === 0 ? '<span class="podium-crown"><span class="ad-icon-slot" data-ad-icon="trophy" data-ad-size="16"></span></span>' : ''}
+                    <img src="${p.avatar_url || fallbackAvatar}">
                 </div>
                 <div class="podium-name">${p.display_name || 'Anonymous'}</div>
                 <div class="podium-points">${p.total_points || 0} pts</div>
@@ -9251,10 +9592,10 @@ function renderLeaderboard(leaderboard) {
     if (rest.length > 0) {
         // Define tier groups with their display info
         const tierGroups = [
-            { name: 'LEGEND', class: 'tier-legend', range: [4, 10], bracket: '⭐ LEGEND TIER ⭐' },
-            { name: 'ELITE', class: 'tier-elite', range: [11, 25], bracket: '★ ELITE TIER ★' },
-            { name: 'VETERAN', class: 'tier-veteran', range: [26, 50], bracket: '◆ VETERAN TIER ◆' },
-            { name: 'RISING', class: 'tier-rising', range: [51, 100], bracket: '● RISING TIER ●' }
+            { name: 'LEGEND', class: 'tier-legend', range: [4, 10], bracket: 'LEGEND TIER' },
+            { name: 'ELITE', class: 'tier-elite', range: [11, 25], bracket: 'ELITE TIER' },
+            { name: 'VETERAN', class: 'tier-veteran', range: [26, 50], bracket: 'VETERAN TIER' },
+            { name: 'RISING', class: 'tier-rising', range: [51, 100], bracket: 'RISING TIER' }
         ];
 
         // Group players by tier
@@ -9287,7 +9628,7 @@ function renderLeaderboard(leaderboard) {
                     html += `
                         <div class="lb-item">
                             <div class="lb-rank ${p.rank <= 10 ? 'top10' : 'normal'}">${p.rank}</div>
-                            <div class="lb-avatar">${p.avatar_url ? `<img src="${p.avatar_url}">` : (p.display_name || 'A')[0].toUpperCase()}</div>
+                            <div class="lb-avatar"><img src="${p.avatar_url || fallbackAvatar}"></div>
                             <div class="lb-info">
                                 <div class="lb-name">${p.display_name || 'Anonymous'}</div>
                                 <div class="lb-stats">${p.total_scans || 0} scans</div>
@@ -9309,6 +9650,12 @@ function renderLeaderboard(leaderboard) {
     }
 
     container.innerHTML = html;
+    if (window.IconLibrary) {
+        window.IconLibrary.apply(container);
+    }
+    if (window.IconLibrary) {
+        window.IconLibrary.apply(container);
+    }
 }
 
 // ==================== SHOP ====================
@@ -9329,6 +9676,7 @@ async function loadShopView() {
     // Render shop categories
     renderShopCategory('cosmetics');
     renderShopCategory('powerups');
+    renderShopCategory('tank_upgrades');
     renderShopCategory('badges');
     renderShopCategory('boosters');
 }
@@ -9366,11 +9714,11 @@ function renderShopCategory(category) {
         html += `
             <div class="shop-item ${owned ? 'purchased' : ''} ${!canAfford && !owned ? 'locked' : ''}">
                 <div class="shop-item-rarity" data-rarity="${item.rarity}">${item.rarity}</div>
-                <div class="shop-item-icon">${item.icon}</div>
+                <div class="shop-item-icon"><span class="ad-icon-slot" data-ad-icon="${item.icon}" data-ad-size="22"></span></div>
                 <div class="shop-item-name">${item.name}</div>
                 <div class="shop-item-desc">${item.desc}</div>
                 <div class="shop-item-cost">
-                    <span class="shop-item-cost-icon">🪙</span>
+                    <span class="shop-item-cost-icon"><span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="14"></span></span>
                     <span>${item.cost}</span>
                 </div>
                 ${owned ?
@@ -9451,6 +9799,7 @@ function updateShopDisplay() {
     if (activeView === 'shopView') {
         renderShopCategory('cosmetics');
         renderShopCategory('powerups');
+        renderShopCategory('tank_upgrades');
         renderShopCategory('badges');
         renderShopCategory('boosters');
 
@@ -13877,8 +14226,13 @@ async function updateUserScanStats(mode, result) {
 
     let stats = getStorage('user_stats', {});
     stats.total = (stats.total || 0) + 1;
-    if (mode === 'deep') stats.deep = (stats.deep || 0) + 1;
-    else stats.quick = (stats.quick || 0) + 1;
+    if (mode === 'forensics') {
+        stats.forensics = (stats.forensics || 0) + 1;
+    } else if (mode === 'deep') {
+        stats.deep = (stats.deep || 0) + 1;
+    } else {
+        stats.quick = (stats.quick || 0) + 1;
+    }
     if (result.verdict === 'ai') stats.ai = (stats.ai || 0) + 1;
     else if (result.verdict === 'real') stats.real = (stats.real || 0) + 1;
 
@@ -13891,6 +14245,7 @@ async function updateUserScanStats(mode, result) {
                 user_id: user.id,
                 total_scans: stats.total,
                 deep_scans: stats.deep || 0,
+                forensics_scans: stats.forensics || 0,
                 quick_scans: stats.quick || 0,
                 ai_found: stats.ai || 0,
                 real_found: stats.real || 0,
@@ -13926,6 +14281,11 @@ function checkBadgeUnlocks(stats) {
             case 'real': unlocked = stats.real >= badge.req; break;
             case 'deep': unlocked = stats.deep >= badge.req; break;
             case 'quick': unlocked = stats.quick >= badge.req; break;
+            case 'forensics': unlocked = (stats.forensics || 0) >= badge.req; break;
+            case 'streak': unlocked = Math.max(stats.streak || 0, stats.maxStreak || 0) >= badge.req; break;
+            case 'accuracy': unlocked = (stats.accuracy || 0) >= badge.req; break;
+            case 'daily_streak': unlocked = (stats.dailyStreak || 0) >= badge.req; break;
+            case 'special': unlocked = false; break;
         }
 
         if (unlocked) {
@@ -13950,7 +14310,9 @@ function showBadgeUnlock(badge) {
     `;
     notification.innerHTML = `
         <div style="text-align:center;animation:bounceIn 0.5s">
-            <div style="font-size:64px;margin-bottom:16px">${badge.icon}</div>
+            <div style="font-size:64px;margin-bottom:16px">
+                <span class="ad-icon-slot" data-ad-icon="${badge.icon}" data-ad-size="48"></span>
+            </div>
             <div style="font-size:14px;color:var(--text3);margin-bottom:4px">BADGE UNLOCKED!</div>
             <div style="font-size:24px;font-weight:800;color:var(--primary)">${badge.name}</div>
             <div style="font-size:13px;color:var(--text2);margin-top:8px">${badge.desc}</div>
@@ -13958,6 +14320,9 @@ function showBadgeUnlock(badge) {
         </div>
     `;
     document.body.appendChild(notification);
+    if (window.IconLibrary) {
+        window.IconLibrary.apply(notification);
+    }
     notification.addEventListener('click', () => notification.remove());
     setTimeout(() => notification.remove(), 4000);
 }
@@ -14020,94 +14385,127 @@ window.openAvatarView = function() {
 let characterDesignerState = {
     mode: 'stand', // 'stand' or 'tank'
     selectedPart: null,
+    mutations: {
+        arms: 0,
+        legs: 0
+    },
     equipped: {
-        head: { id: 'default', emoji: '👤', name: 'Default Face' },
-        torso: { id: 'shirt', emoji: '👕', name: 'Basic Shirt' },
-        legs: { id: 'pants', emoji: '👖', name: 'Basic Pants' },
-        weapon: { id: 'sword', emoji: '⚔️', name: 'Pixel Sword' },
+        head: { id: 'default', icon: 'profile', name: 'Default Face', rarity: 'common' },
+        torso: { id: 'shirt', icon: 'shield', name: 'Basic Shirt', rarity: 'common' },
+        legs: { id: 'pants', icon: 'stats', name: 'Basic Pants', rarity: 'common' },
+        weapon: { id: 'sword', icon: 'crosshair', name: 'Pixel Sword', rarity: 'rare' },
         hat: null,
         glasses: null,
         back: null,
-        pet: { id: 'cat', emoji: '🐱', name: 'Cyber Cat' },
-        leftArm: { id: 'arm', emoji: '💪', name: 'Strong Arm' },
-        rightArm: { id: 'arm', emoji: '🦾', name: 'Cyber Arm' }
+        pet: { id: 'cat', icon: 'beasts', name: 'Cyber Cat', rarity: 'common' },
+        leftArm: { id: 'default_arm', icon: 'shield', name: 'Default Arm', rarity: 'common' },
+        rightArm: { id: 'default_arm', icon: 'shield', name: 'Default Arm', rarity: 'common' }
     }
 };
 
 // Character Designer Items Database
 const CHARACTER_ITEMS = {
     head: [
-        { id: 'default', emoji: '👤', name: 'Default Face', rarity: 'common', price: 0 },
-        { id: 'detective', emoji: '🕵️', name: 'Detective', rarity: 'common', price: 50 },
-        { id: 'scientist', emoji: '👨‍🔬', name: 'Scientist', rarity: 'common', price: 60 },
-        { id: 'hacker', emoji: '👨‍💻', name: 'Hacker', rarity: 'uncommon', price: 120 },
-        { id: 'cyborg', emoji: '🤖', name: 'Cyborg', rarity: 'uncommon', price: 150 },
-        { id: 'alien', emoji: '👽', name: 'Alien', rarity: 'rare', price: 300 },
-        { id: 'ghost', emoji: '👻', name: 'Ghost', rarity: 'rare', price: 350 },
-        { id: 'demon', emoji: '👹', name: 'Demon', rarity: 'epic', price: 600 },
-        { id: 'dragon', emoji: '🐉', name: 'Dragon', rarity: 'epic', price: 800 },
-        { id: 'skull', emoji: '💀', name: 'Skull King', rarity: 'legendary', price: 1500 },
-        { id: 'neural', emoji: '🧠', name: 'Neural Net', rarity: 'legendary', price: 2000 }
+        { id: 'default', icon: 'profile', name: 'Default Face', rarity: 'common', price: 0 },
+        { id: 'detective', icon: 'search', name: 'Detective', rarity: 'common', price: 50 },
+        { id: 'scientist', icon: 'stats', name: 'Scientist', rarity: 'common', price: 60 },
+        { id: 'hacker', icon: 'scan', name: 'Hacker', rarity: 'uncommon', price: 120 },
+        { id: 'cyborg', icon: 'settings', name: 'Cyborg', rarity: 'uncommon', price: 150 },
+        { id: 'alien', icon: 'beasts', name: 'Alien', rarity: 'rare', price: 300 },
+        { id: 'ghost', icon: 'corruption', name: 'Ghost', rarity: 'rare', price: 350 },
+        { id: 'demon', icon: 'warning', name: 'Demon', rarity: 'epic', price: 600 },
+        { id: 'dragon', icon: 'boss', name: 'Dragon', rarity: 'epic', price: 800 },
+        { id: 'skull', icon: 'warning', name: 'Skull King', rarity: 'legendary', price: 1500 },
+        { id: 'neural', icon: 'stats', name: 'Neural Net', rarity: 'legendary', price: 2000 }
     ],
     torso: [
-        { id: 'shirt', emoji: '👕', name: 'Basic Shirt', rarity: 'common', price: 0 },
-        { id: 'hoodie', emoji: '🧥', name: 'Hacker Hoodie', rarity: 'common', price: 80 },
-        { id: 'suit', emoji: '🤵', name: 'Executive Suit', rarity: 'uncommon', price: 200 },
-        { id: 'armor', emoji: '🛡️', name: 'Pixel Armor', rarity: 'rare', price: 400 },
-        { id: 'robe', emoji: '🧙', name: 'Wizard Robe', rarity: 'rare', price: 450 },
-        { id: 'cape', emoji: '🦸', name: 'Hero Cape', rarity: 'epic', price: 700 },
-        { id: 'cyber', emoji: '🦾', name: 'Cyber Suit', rarity: 'epic', price: 900 },
-        { id: 'golden', emoji: '👑', name: 'Golden Armor', rarity: 'legendary', price: 1800 }
+        { id: 'shirt', icon: 'shield', name: 'Basic Shirt', rarity: 'common', price: 0 },
+        { id: 'hoodie', icon: 'scan', name: 'Hacker Hoodie', rarity: 'common', price: 80 },
+        { id: 'suit', icon: 'stats', name: 'Executive Suit', rarity: 'uncommon', price: 200 },
+        { id: 'armor', icon: 'shield', name: 'Pixel Armor', rarity: 'rare', price: 400 },
+        { id: 'robe', icon: 'wand', name: 'Wizard Robe', rarity: 'rare', price: 450 },
+        { id: 'cape', icon: 'sparkles', name: 'Hero Cape', rarity: 'epic', price: 700 },
+        { id: 'cyber', icon: 'settings', name: 'Cyber Suit', rarity: 'epic', price: 900 },
+        { id: 'golden', icon: 'trophy', name: 'Golden Armor', rarity: 'legendary', price: 1800 }
     ],
     legs: [
-        { id: 'pants', emoji: '👖', name: 'Basic Pants', rarity: 'common', price: 0 },
-        { id: 'shorts', emoji: '🩳', name: 'Pixel Shorts', rarity: 'common', price: 50 },
-        { id: 'jeans', emoji: '👖', name: 'Data Jeans', rarity: 'uncommon', price: 120 },
-        { id: 'boots', emoji: '👢', name: 'Combat Boots', rarity: 'rare', price: 350 },
-        { id: 'hover', emoji: '🛹', name: 'Hover Boots', rarity: 'epic', price: 750 },
-        { id: 'flames', emoji: '🔥', name: 'Flame Legs', rarity: 'legendary', price: 1600 }
+        { id: 'pants', icon: 'stats', name: 'Basic Pants', rarity: 'common', price: 0 },
+        { id: 'shorts', icon: 'stats', name: 'Pixel Shorts', rarity: 'common', price: 50 },
+        { id: 'jeans', icon: 'stats', name: 'Data Jeans', rarity: 'uncommon', price: 120 },
+        { id: 'boots', icon: 'shield', name: 'Combat Boots', rarity: 'rare', price: 350 },
+        { id: 'hover', icon: 'sparkles', name: 'Hover Boots', rarity: 'epic', price: 750 },
+        { id: 'flames', icon: 'warning', name: 'Flame Legs', rarity: 'legendary', price: 1600 }
     ],
     weapon: [
-        { id: 'magnify', emoji: '🔍', name: 'Truth Magnifier', rarity: 'common', price: 100, bonus: '+5% accuracy' },
-        { id: 'scanner', emoji: '📡', name: 'Quantum Scanner', rarity: 'uncommon', price: 200, bonus: '+10% accuracy' },
-        { id: 'sword', emoji: '⚔️', name: 'Pixel Sword', rarity: 'rare', price: 350 },
-        { id: 'hammer', emoji: '🔨', name: 'Ban Hammer', rarity: 'rare', price: 400 },
-        { id: 'wand', emoji: '🪄', name: 'Detection Wand', rarity: 'epic', price: 600, bonus: '+20% accuracy' },
-        { id: 'laser', emoji: '🔫', name: 'Truth Laser', rarity: 'epic', price: 750 },
-        { id: 'staff', emoji: '🏹', name: 'Algorithm Staff', rarity: 'legendary', price: 1200, bonus: '+30% accuracy' },
-        { id: 'trident', emoji: '🔱', name: 'Data Trident', rarity: 'legendary', price: 2000, bonus: '+35% accuracy' }
+        { id: 'magnify', icon: 'search', name: 'Truth Magnifier', rarity: 'common', price: 100, bonus: '+5% accuracy' },
+        { id: 'scanner', icon: 'scan', name: 'Quantum Scanner', rarity: 'uncommon', price: 200, bonus: '+10% accuracy' },
+        { id: 'sword', icon: 'crosshair', name: 'Pixel Sword', rarity: 'rare', price: 350 },
+        { id: 'hammer', icon: 'shield', name: 'Ban Hammer', rarity: 'rare', price: 400 },
+        { id: 'wand', icon: 'wand', name: 'Detection Wand', rarity: 'epic', price: 600, bonus: '+20% accuracy' },
+        { id: 'laser', icon: 'warning', name: 'Truth Laser', rarity: 'epic', price: 750 },
+        { id: 'staff', icon: 'wand', name: 'Algorithm Staff', rarity: 'legendary', price: 1200, bonus: '+30% accuracy' },
+        { id: 'trident', icon: 'boss', name: 'Data Trident', rarity: 'legendary', price: 2000, bonus: '+35% accuracy' }
     ],
     hat: [
-        { id: 'cap', emoji: '🧢', name: 'Hacker Cap', rarity: 'common', price: 80 },
-        { id: 'fedora', emoji: '🎩', name: 'Detective Hat', rarity: 'common', price: 100 },
-        { id: 'helmet', emoji: '⛑️', name: 'VR Helmet', rarity: 'uncommon', price: 180 },
-        { id: 'wizard', emoji: '🧙‍♂️', name: 'Wizard Hat', rarity: 'rare', price: 350 },
-        { id: 'crown', emoji: '👑', name: 'Gold Crown', rarity: 'epic', price: 800 },
-        { id: 'halo', emoji: '😇', name: 'Truth Halo', rarity: 'legendary', price: 1500 }
+        { id: 'cap', icon: 'profile', name: 'Hacker Cap', rarity: 'common', price: 80 },
+        { id: 'fedora', icon: 'search', name: 'Detective Hat', rarity: 'common', price: 100 },
+        { id: 'helmet', icon: 'shield', name: 'VR Helmet', rarity: 'uncommon', price: 180 },
+        { id: 'wizard', icon: 'wand', name: 'Wizard Hat', rarity: 'rare', price: 350 },
+        { id: 'crown', icon: 'trophy', name: 'Gold Crown', rarity: 'epic', price: 800 },
+        { id: 'halo', icon: 'sparkles', name: 'Truth Halo', rarity: 'legendary', price: 1500 }
     ],
     glasses: [
-        { id: 'shades', emoji: '🕶️', name: 'AI Shades', rarity: 'common', price: 100 },
-        { id: 'goggles', emoji: '🥽', name: 'Tech Goggles', rarity: 'uncommon', price: 180 },
-        { id: 'monocle', emoji: '🧐', name: 'Sherlock Monocle', rarity: 'rare', price: 300 },
-        { id: 'visor', emoji: '📺', name: 'Cyber Visor', rarity: 'epic', price: 650 },
-        { id: 'laser_eyes', emoji: '👁️', name: 'Laser Eyes', rarity: 'legendary', price: 1400 }
+        { id: 'shades', icon: 'search', name: 'AI Shades', rarity: 'common', price: 100 },
+        { id: 'goggles', icon: 'scan', name: 'Tech Goggles', rarity: 'uncommon', price: 180 },
+        { id: 'monocle', icon: 'search', name: 'Sherlock Monocle', rarity: 'rare', price: 300 },
+        { id: 'visor', icon: 'stats', name: 'Cyber Visor', rarity: 'epic', price: 650 },
+        { id: 'laser_eyes', icon: 'warning', name: 'Laser Eyes', rarity: 'legendary', price: 1400 }
     ],
     back: [
-        { id: 'cape', emoji: '🦸', name: 'Hero Cape', rarity: 'uncommon', price: 250 },
-        { id: 'wings', emoji: '🪽', name: 'Angel Wings', rarity: 'rare', price: 500 },
-        { id: 'demon_wings', emoji: '🦇', name: 'Demon Wings', rarity: 'epic', price: 800 },
-        { id: 'dragon_wings', emoji: '🐲', name: 'Dragon Wings', rarity: 'legendary', price: 1800 },
-        { id: 'jetpack', emoji: '🚀', name: 'Jetpack', rarity: 'legendary', price: 2000 }
+        { id: 'cape', icon: 'sparkles', name: 'Hero Cape', rarity: 'uncommon', price: 250 },
+        { id: 'wings', icon: 'sparkles', name: 'Angel Wings', rarity: 'rare', price: 500 },
+        { id: 'demon_wings', icon: 'corruption', name: 'Demon Wings', rarity: 'epic', price: 800 },
+        { id: 'dragon_wings', icon: 'boss', name: 'Dragon Wings', rarity: 'legendary', price: 1800 },
+        { id: 'jetpack', icon: 'settings', name: 'Jetpack', rarity: 'legendary', price: 2000 }
     ],
     pet: [
-        { id: 'cat', emoji: '🐱', name: 'Cyber Cat', rarity: 'common', price: 150 },
-        { id: 'dog', emoji: '🐕', name: 'Truth Dog', rarity: 'common', price: 180 },
-        { id: 'bird', emoji: '🦅', name: 'Scout Bird', rarity: 'uncommon', price: 250 },
-        { id: 'robot', emoji: '🤖', name: 'Mini Bot', rarity: 'rare', price: 400 },
-        { id: 'dragon_pet', emoji: '🐲', name: 'Mini Dragon', rarity: 'epic', price: 700 },
-        { id: 'phoenix', emoji: '🔥', name: 'Phoenix', rarity: 'legendary', price: 1600 }
+        { id: 'cat', icon: 'beasts', name: 'Cyber Cat', rarity: 'common', price: 150 },
+        { id: 'dog', icon: 'heart', name: 'Truth Dog', rarity: 'common', price: 180 },
+        { id: 'bird', icon: 'sparkles', name: 'Scout Bird', rarity: 'uncommon', price: 250 },
+        { id: 'robot', icon: 'settings', name: 'Mini Bot', rarity: 'rare', price: 400 },
+        { id: 'dragon_pet', icon: 'boss', name: 'Mini Dragon', rarity: 'epic', price: 700 },
+        { id: 'phoenix', icon: 'sparkles', name: 'Phoenix', rarity: 'legendary', price: 1600 }
     ]
 };
+
+const SLOT_ICON_MAP = {
+    head: 'profile',
+    torso: 'shield',
+    legs: 'stats',
+    weapon: 'wand',
+    hat: 'star',
+    glasses: 'search',
+    back: 'sparkles',
+    pet: 'beasts',
+    leftArm: 'shield',
+    rightArm: 'shield'
+};
+
+function getItemIconName(item, slot) {
+    if (item?.icon) return item.icon;
+    if (item?.id && slot && CHARACTER_ITEMS[slot]) {
+        const match = CHARACTER_ITEMS[slot].find(entry => entry.id === item.id);
+        if (match?.icon) return match.icon;
+    }
+    return SLOT_ICON_MAP[slot] || 'sparkles';
+}
+
+function normalizeEquippedItem(slot, item) {
+    if (!item) return null;
+    if (item.icon) return item;
+    const icon = getItemIconName(item, slot);
+    return { ...item, icon };
+}
 
 // Initialize Character Designer
 function initCharacterDesigner() {
@@ -14125,6 +14523,10 @@ function initCharacterDesigner() {
     // Apply equipped items to character
     updateCharacterPreview();
 
+    // Update mutation controls + extra limb renders
+    updateMutationControls();
+    renderExtraLimbs();
+
     // Update equipped count
     updateEquippedCount();
 }
@@ -14136,6 +14538,17 @@ function loadCharacterDesignerState() {
         if (saved) {
             const parsed = JSON.parse(saved);
             characterDesignerState = { ...characterDesignerState, ...parsed };
+            if (!characterDesignerState.mutations) {
+                characterDesignerState.mutations = { arms: 0, legs: 0 };
+            }
+            if (characterDesignerState.equipped) {
+                Object.keys(characterDesignerState.equipped).forEach(slot => {
+                    characterDesignerState.equipped[slot] = normalizeEquippedItem(
+                        slot,
+                        characterDesignerState.equipped[slot]
+                    );
+                });
+            }
         }
     } catch (e) {
         console.error('[Character Designer] Failed to load state:', e);
@@ -14181,8 +14594,76 @@ function setCharacterMode(mode) {
     }
 
     saveCharacterDesignerState();
+    renderExtraLimbs();
 }
 window.setCharacterMode = setCharacterMode;
+
+function updateMutationControls() {
+    const armsEl = document.getElementById('extraArmsCount');
+    const legsEl = document.getElementById('extraLegsCount');
+    if (armsEl) armsEl.textContent = characterDesignerState.mutations?.arms || 0;
+    if (legsEl) legsEl.textContent = characterDesignerState.mutations?.legs || 0;
+}
+
+function adjustMutations(type, delta) {
+    const maxExtra = 2;
+    if (!characterDesignerState.mutations) {
+        characterDesignerState.mutations = { arms: 0, legs: 0 };
+    }
+    const current = characterDesignerState.mutations[type] || 0;
+    const next = Math.max(0, Math.min(maxExtra, current + delta));
+    characterDesignerState.mutations[type] = next;
+    saveCharacterDesignerState();
+    updateMutationControls();
+    renderExtraLimbs();
+}
+window.adjustMutations = adjustMutations;
+
+function renderExtraLimbs() {
+    const layer = document.getElementById('characterExtraLayer');
+    if (!layer) return;
+    layer.innerHTML = '';
+
+    const isTank = characterDesignerState.mode === 'tank';
+    const armTop = isTank ? 78 : 72;
+    const legTop = isTank ? 138 : 130;
+
+    const armSlots = [
+        { left: '6%', top: `${armTop}px`, rotate: -18 },
+        { right: '6%', top: `${armTop}px`, rotate: 18 }
+    ];
+    const legSlots = [
+        { left: '24%', top: `${legTop}px`, rotate: -8 },
+        { right: '24%', top: `${legTop}px`, rotate: 8 }
+    ];
+
+    const extraArms = Math.max(0, Math.min(2, characterDesignerState.mutations?.arms || 0));
+    const extraLegs = Math.max(0, Math.min(2, characterDesignerState.mutations?.legs || 0));
+
+    armSlots.slice(0, extraArms).forEach(slot => {
+        const arm = document.createElement('div');
+        arm.className = 'char-extra-arm';
+        arm.style.width = '28px';
+        arm.style.height = '56px';
+        arm.style.top = slot.top;
+        if (slot.left) arm.style.left = slot.left;
+        if (slot.right) arm.style.right = slot.right;
+        arm.style.transform = `rotate(${slot.rotate}deg)`;
+        layer.appendChild(arm);
+    });
+
+    legSlots.slice(0, extraLegs).forEach(slot => {
+        const leg = document.createElement('div');
+        leg.className = 'char-extra-leg';
+        leg.style.width = '30px';
+        leg.style.height = '58px';
+        leg.style.top = slot.top;
+        if (slot.left) leg.style.left = slot.left;
+        if (slot.right) leg.style.right = slot.right;
+        leg.style.transform = `rotate(${slot.rotate}deg)`;
+        layer.appendChild(leg);
+    });
+}
 
 // Select a body part for customization
 function selectBodyPart(part) {
@@ -14262,11 +14743,14 @@ function renderDesignerItems(part) {
 
         const card = document.createElement('div');
         card.className = `item-card rarity-${item.rarity} ${isEquipped ? 'equipped' : ''} ${!isOwned ? 'locked' : ''}`;
+        const itemIcon = getItemIconName(item, item.slot);
         card.innerHTML = `
-            <span class="item-card-icon">${item.emoji}</span>
-            <span class="item-card-name">${item.name}</span>
-            ${!isOwned ? `<span class="item-card-price">🪙 ${item.price}</span>` : ''}
-            ${item.bonus ? `<span style="font-size:9px;color:#2ecc71;">${item.bonus}</span>` : ''}
+            <span class=\"item-card-icon\">
+                <span class=\"avatar-item-icon ad-icon-slot\" data-ad-icon=\"${itemIcon}\" data-ad-size=\"18\"></span>
+            </span>
+            <span class=\"item-card-name\">${item.name}</span>
+            ${!isOwned ? `<span class=\"item-card-price\"><span class=\"ad-icon-slot\" data-ad-icon=\"coins\" data-ad-size=\"14\"></span> ${item.price}</span>` : ''}
+            ${item.bonus ? `<span style=\"font-size:9px;color:#2ecc71;\">${item.bonus}</span>` : ''}
         `;
 
         if (isOwned) {
@@ -14276,6 +14760,9 @@ function renderDesignerItems(part) {
         }
 
         grid.appendChild(card);
+        if (window.IconLibrary) {
+            window.IconLibrary.apply(card);
+        }
     });
 }
 
@@ -14294,7 +14781,7 @@ async function purchaseDesignerItem(slot, item) {
     const coins = typeof userProgression !== 'undefined' ? userProgression.truth_coins : 0;
 
     if (coins < item.price) {
-        toast(`Not enough coins! Need ${item.price} 🪙`, 'error');
+        toast(`Not enough coins! Need ${item.price} coins.`, 'error');
         return;
     }
 
@@ -14315,7 +14802,7 @@ async function purchaseDesignerItem(slot, item) {
         console.error('[Character Designer] Failed to save owned item:', e);
     }
 
-    toast(`Purchased ${item.name}! 🎉`, 'success');
+    toast(`Purchased ${item.name}!`, 'success');
 
     // Auto-equip
     equipDesignerItem(slot, item);
@@ -14341,66 +14828,66 @@ function equipDesignerItem(slot, item) {
 function updateCharacterPreview() {
     const equipped = characterDesignerState.equipped;
 
-    // Update each body part
-    const updatePart = (partId, item) => {
+    const updatePart = (partId, item, slot) => {
         const el = document.getElementById(partId);
-        if (el && item) {
-            el.textContent = item.emoji;
-        } else if (el) {
-            el.textContent = '';
+        if (!el) return;
+        if (item) {
+            const iconName = getItemIconName(item, slot);
+            el.innerHTML = `<span class="avatar-item-icon ad-icon-slot" data-ad-icon="${iconName}" data-ad-size="20"></span>`;
+        } else {
+            el.innerHTML = '';
         }
     };
 
-    updatePart('charHead', equipped.head);
-    updatePart('charTorso', equipped.torso);
-    updatePart('charLegs', equipped.legs);
-    updatePart('charWeapon', equipped.weapon);
-    updatePart('charHat', equipped.hat);
-    updatePart('charGlasses', equipped.glasses);
-    updatePart('charBack', equipped.back);
-    updatePart('charPet', equipped.pet);
-    updatePart('charLeftArm', equipped.leftArm);
-    updatePart('charRightArm', equipped.rightArm);
+    updatePart('charHead', equipped.head, 'head');
+    updatePart('charTorso', equipped.torso, 'torso');
+    updatePart('charLegs', equipped.legs, 'legs');
+    updatePart('charWeapon', equipped.weapon, 'weapon');
+    updatePart('charHat', equipped.hat, 'hat');
+    updatePart('charGlasses', equipped.glasses, 'glasses');
+    updatePart('charBack', equipped.back, 'back');
+    updatePart('charPet', equipped.pet, 'pet');
+    updatePart('charLeftArm', equipped.leftArm, 'leftArm');
+    updatePart('charRightArm', equipped.rightArm, 'rightArm');
 
-    // Update equipment slot icons
-    const updateSlot = (slotId, item) => {
+    const updateSlot = (slotId, item, slot) => {
         const el = document.getElementById(slotId);
         const slotEl = el?.closest('.equip-slot');
-        if (el && item) {
-            el.textContent = item.emoji;
+        if (!el) return;
+        if (item) {
+            const iconName = getItemIconName(item, slot);
+            el.innerHTML = `<span class="avatar-item-icon ad-icon-slot" data-ad-icon="${iconName}" data-ad-size="18"></span>`;
             slotEl?.classList.add('filled', `rarity-${item.rarity}`);
-        } else if (el) {
-            el.textContent = getDefaultSlotIcon(slotId);
+        } else {
+            const defaultIcon = getDefaultSlotIcon(slot);
+            el.innerHTML = `<span class="avatar-item-icon ad-icon-slot" data-ad-icon="${defaultIcon}" data-ad-size="18"></span>`;
             slotEl?.classList.remove('filled', 'rarity-common', 'rarity-uncommon', 'rarity-rare', 'rarity-epic', 'rarity-legendary');
         }
     };
 
-    updateSlot('slotHeadIcon', equipped.head);
-    updateSlot('slotTorsoIcon', equipped.torso);
-    updateSlot('slotLegsIcon', equipped.legs);
-    updateSlot('slotWeaponIcon', equipped.weapon);
-    updateSlot('slotHatIcon', equipped.hat);
-    updateSlot('slotGlassesIcon', equipped.glasses);
-    updateSlot('slotBackIcon', equipped.back);
-    updateSlot('slotPetIcon', equipped.pet);
+    updateSlot('slotHeadIcon', equipped.head, 'head');
+    updateSlot('slotTorsoIcon', equipped.torso, 'torso');
+    updateSlot('slotLegsIcon', equipped.legs, 'legs');
+    updateSlot('slotWeaponIcon', equipped.weapon, 'weapon');
+    updateSlot('slotHatIcon', equipped.hat, 'hat');
+    updateSlot('slotGlassesIcon', equipped.glasses, 'glasses');
+    updateSlot('slotBackIcon', equipped.back, 'back');
+    updateSlot('slotPetIcon', equipped.pet, 'pet');
+
+    renderExtraLimbs();
 
     // Update character name based on equipped items
     updateCharacterName();
+
+    if (window.IconLibrary) {
+        window.IconLibrary.apply(document.getElementById('characterContainer'));
+        window.IconLibrary.apply(document.getElementById('equipmentSlots'));
+    }
 }
 
 // Get default icon for empty slot
-function getDefaultSlotIcon(slotId) {
-    const defaults = {
-        slotHeadIcon: '👤',
-        slotTorsoIcon: '👕',
-        slotLegsIcon: '👖',
-        slotWeaponIcon: '⚔️',
-        slotHatIcon: '🎩',
-        slotGlassesIcon: '👓',
-        slotBackIcon: '🦸',
-        slotPetIcon: '🐱'
-    };
-    return defaults[slotId] || '?';
+function getDefaultSlotIcon(slot) {
+    return SLOT_ICON_MAP[slot] || 'sparkles';
 }
 
 // Update equipped count display
@@ -14447,7 +14934,7 @@ async function rollDesignerGacha(tier) {
     const coins = typeof userProgression !== 'undefined' ? userProgression.truth_coins : 0;
 
     if (coins < cost) {
-        toast(`Not enough coins! Need ${cost} 🪙`, 'error');
+        toast(`Not enough coins! Need ${cost} coins.`, 'error');
         return;
     }
 
@@ -14518,7 +15005,7 @@ async function rollDesignerGacha(tier) {
         legendary: '#e74c3c'
     };
 
-    toast(`🎉 You won: ${wonItem.emoji} ${wonItem.name} (${rarity.toUpperCase()})!`, 'success');
+    toast(`You won: ${wonItem.name} (${rarity.toUpperCase()})!`, 'success');
 
     // Refresh grid
     renderDesignerItems(characterDesignerState.selectedPart || 'all');
@@ -15400,7 +15887,7 @@ function renderHistory() {
 
     container.innerHTML = history.map(item => `
         <div class="pro-list-item fade-in-up">
-            <div class="pro-list-icon">${item.verdict === 'ai' ? '🤖' : item.verdict === 'real' ? '✅' : '❓'}</div>
+            <div class="pro-list-icon"><span class="ad-icon-slot" data-ad-icon="${item.verdict === 'ai' ? 'warning' : item.verdict === 'real' ? 'verify' : 'info'}" data-ad-size="16"></span></div>
             <div class="pro-list-content">
                 <div class="pro-list-title">${item.verdict === 'ai' ? 'AI Generated' : item.verdict === 'real' ? 'Real Image' : 'Uncertain'}</div>
                 <div class="pro-list-subtitle">${item.mode} scan • ${new Date(item.timestamp).toLocaleDateString()}</div>
@@ -15408,6 +15895,10 @@ function renderHistory() {
             <div class="history-score ${item.verdict}">${item.aiScore}%</div>
         </div>
     `).join('');
+
+    if (window.IconLibrary) {
+        window.IconLibrary.apply(container);
+    }
 }
 
 // Render badges preview (for profile page) with enhanced design
@@ -15422,23 +15913,29 @@ function renderBadgesPreview() {
 
     grid.innerHTML = badgeKeys.map(badge => {
         const isUnlocked = unlockedBadges.includes(badge.id);
+        const badgeIcon = `<span class="ad-icon-slot" data-ad-icon="${badge.icon}" data-ad-size="18"></span>`;
+        const checkIcon = isUnlocked ? `<span class="ad-icon-slot" data-ad-icon="verify" data-ad-size="10"></span>` : '';
         return `
             <div class="badge-item" style="position:relative;transition:transform 0.2s ease"
                  onmouseover="this.style.transform='scale(1.1)'"
                  onmouseout="this.style.transform='scale(1)'">
                 <div class="badge-icon ${isUnlocked ? badge.rarity : 'locked'}"
                      style="box-shadow:${isUnlocked ? '0 4px 12px rgba(0,0,0,0.3)' : 'none'};
-                             transition:all 0.2s ease">${badge.icon}</div>
+                             transition:all 0.2s ease">${badgeIcon}</div>
                 <div class="badge-name" title="${badge.name}: ${badge.desc}">${badge.name}</div>
                 <div style="position:absolute;top:0;right:-4px;width:18px;height:18px;
                            border-radius:50%;background:${isUnlocked ? 'var(--primary)' : 'var(--surface2)'};
                            color:white;display:flex;align-items:center;justify-content:center;
                            font-size:10px;font-weight:700;box-shadow:0 2px 4px rgba(0,0,0,0.2)">
-                    ${isUnlocked ? '✓' : ''}
+                    ${checkIcon}
                 </div>
             </div>
         `;
     }).join('');
+
+    if (window.IconLibrary) {
+        window.IconLibrary.apply(grid);
+    }
 
     // Add footer showing progress
     const container = grid.parentElement;
@@ -15463,12 +15960,17 @@ function renderAllBadges() {
     let html = '';
     rarities.forEach(rarity => {
         const badges = Object.values(BADGES).filter(b => b.rarity === rarity);
-        const rarityEmojis = { common: '🔷', rare: '🔹', epic: '💜', legendary: '✨' };
+        const rarityIcons = {
+            common: 'star',
+            rare: 'sparkles',
+            epic: 'trophy',
+            legendary: 'boss'
+        };
 
         html += `
             <div style="margin-bottom:32px">
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
-                    <span style="font-size:20px">${rarityEmojis[rarity]}</span>
+                    <span class="ad-icon-slot" data-ad-icon="${rarityIcons[rarity]}" data-ad-size="18"></span>
                     <div style="font-size:16px;font-weight:800;text-transform:capitalize;color:var(--text);
                         text-shadow:0 2px 8px rgba(0,0,0,.1)">${rarity} Badges</div>
                     <span style="font-size:12px;color:var(--text3);margin-left:auto">${badges.length} total</span>
@@ -15476,11 +15978,15 @@ function renderAllBadges() {
                 <div class="enhanced-badges-grid">
                     ${badges.map(badge => {
                         const isUnlocked = unlockedBadges.includes(badge.id);
+                        const badgeIcon = `<span class="ad-icon-slot" data-ad-icon="${badge.icon}" data-ad-size="22"></span>`;
+                        const statusIcon = isUnlocked
+                            ? `<span class="ad-icon-slot" data-ad-icon="verify" data-ad-size="12"></span>`
+                            : `<span class="ad-icon-slot" data-ad-icon="warning" data-ad-size="12"></span>`;
                         return `
                             <div class="badge-card ${isUnlocked ? 'unlocked' : 'locked'}">
                                 <div class="badge-tooltip">${badge.name}</div>
-                                <div class="badge-status-indicator ${isUnlocked ? '' : 'locked'}">${isUnlocked ? '✓' : '🔒'}</div>
-                                <div class="badge-card-icon ${isUnlocked ? badge.rarity : 'locked'}">${badge.icon}</div>
+                                <div class="badge-status-indicator ${isUnlocked ? '' : 'locked'}">${statusIcon}</div>
+                                <div class="badge-card-icon ${isUnlocked ? badge.rarity : 'locked'}">${badgeIcon}</div>
                                 <div class="badge-card-title">${badge.name}</div>
                                 <div class="badge-card-desc">${badge.desc}</div>
                                 <div class="badge-card-points">${badge.points} pts</div>
@@ -15493,6 +15999,9 @@ function renderAllBadges() {
     });
 
     container.innerHTML = html;
+    if (window.IconLibrary) {
+        window.IconLibrary.apply(container);
+    }
 }
 
 // Change profile picture
@@ -16481,9 +16990,9 @@ async function confirmVerifySubmission() {
     </span>
     <div class="help-bot-badge" id="veraHelpBadge" onclick="event.stopPropagation(); openHelp();" title="Open Help">?</div>
     <div class="help-bot-tip">
-        <strong style="color:#ff6b35"><i data-lucide="sparkles" style="width:14px;height:14px;display:inline;vertical-align:middle"></i> VERA says:</strong><br>
+        <strong style="color:#ff6b35"><span class="ad-icon-slot" data-ad-icon="sparkles" data-ad-size="14" style="vertical-align:middle"></span> VERA says:</strong><br>
         <span id="veraTip">Those fake images think they're SO smart... Let's bust 'em!</span>
-        <div id="veraHint" style="font-size:10px;opacity:0.7;margin-top:6px;color:#00d4aa;display:none;"><i data-lucide="lightbulb" style="width:12px;height:12px;display:inline"></i> Tap ? or hold me for help!</div>
+        <div id="veraHint" style="font-size:10px;opacity:0.7;margin-top:6px;color:#00d4aa;display:none;"><span class="ad-icon-slot" data-ad-icon="info" data-ad-size="12" style="vertical-align:middle"></span> Tap ? or hold me for help!</div>
     </div>
 </div>
 
@@ -16909,17 +17418,22 @@ async function confirmVerifySubmission() {
         }
 
         const now = Date.now();
-        clickTimestamps = clickTimestamps.filter(t => now - t < 2000);
+        clickTimestamps = clickTimestamps.filter(t => now - t < 1500);
         clickTimestamps.push(now);
 
-        if (clickTimestamps.length >= 4 && !isTransformed) {
+        if (clickTimestamps.length >= 3 && !isTransformed) {
             transformToBeast();
             clickTimestamps = [];
             return;
         }
 
         if (!isTransformed) {
-            popVera();
+            if (clickTimestamps.length >= 2) {
+                helpBot.style.animation = 'veraSquish 0.25s ease';
+                setTimeout(() => { helpBot.style.animation = ''; }, 250);
+            } else {
+                popVera();
+            }
         }
     });
 

@@ -1314,7 +1314,7 @@ function updateWaveSpawning(deltaTime) {
     }
 
     // Check if wave should complete: all enemies spawned AND all enemies killed
-    if (tankGame.enemiesToSpawn.length === 0 && tankGame.enemies.length === 0 && tankGame.enemiesSpawned > 0) {
+    if (tankGame.enemiesToSpawn.length === 0 && tankGame.enemies.length === 0) {
         waveComplete();
         return;
     }
