@@ -1632,23 +1632,35 @@ function setupVirtualJoystick() {
 
     if (!joystickZone || !fireBtn) return;
 
-    let joystickActive = false;
+    // Track touch identifiers for multi-touch support
+    let joystickTouchId = null;
     let joystickCenterX = 0;
     let joystickCenterY = 0;
 
     joystickZone.addEventListener('touchstart', (e) => {
         e.preventDefault();
-        joystickActive = true;
-        const touch = e.touches[0];
+        // Use the first new touch for joystick
+        const touch = e.changedTouches[0];
+        joystickTouchId = touch.identifier;
         const rect = joystickZone.getBoundingClientRect();
         joystickCenterX = touch.clientX - rect.left;
         joystickCenterY = touch.clientY - rect.top;
-    });
+    }, { passive: false });
 
     joystickZone.addEventListener('touchmove', (e) => {
-        if (!joystickActive) return;
+        if (joystickTouchId === null) return;
         e.preventDefault();
-        const touch = e.touches[0];
+
+        // Find our specific touch by identifier (multi-touch safe)
+        let touch = null;
+        for (let i = 0; i < e.touches.length; i++) {
+            if (e.touches[i].identifier === joystickTouchId) {
+                touch = e.touches[i];
+                break;
+            }
+        }
+        if (!touch) return;
+
         const rect = joystickZone.getBoundingClientRect();
         const dx = (touch.clientX - rect.left) - joystickCenterX;
         const dy = (touch.clientY - rect.top) - joystickCenterY;
@@ -1657,31 +1669,100 @@ function setupVirtualJoystick() {
         tankGame.keys['s'] = dy > 15;
         tankGame.keys['a'] = dx < -15;
         tankGame.keys['d'] = dx > 15;
-    });
+    }, { passive: false });
 
-    joystickZone.addEventListener('touchend', () => {
-        joystickActive = false;
-        tankGame.keys['w'] = false;
-        tankGame.keys['s'] = false;
-        tankGame.keys['a'] = false;
-        tankGame.keys['d'] = false;
-    });
-
-    // Fire button
-    let fireTouchId = null;
-    fireBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        fireTouchId = setInterval(() => {
-            if (tankGame.player && tankGame.running) tankGame.player.shoot();
-        }, 150);
-    });
-
-    fireBtn.addEventListener('touchend', () => {
-        if (fireTouchId) {
-            clearInterval(fireTouchId);
-            fireTouchId = null;
+    joystickZone.addEventListener('touchend', (e) => {
+        // Check if our joystick touch ended
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === joystickTouchId) {
+                joystickTouchId = null;
+                tankGame.keys['w'] = false;
+                tankGame.keys['s'] = false;
+                tankGame.keys['a'] = false;
+                tankGame.keys['d'] = false;
+                break;
+            }
         }
     });
+
+    joystickZone.addEventListener('touchcancel', (e) => {
+        // Handle touch cancel same as end
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === joystickTouchId) {
+                joystickTouchId = null;
+                tankGame.keys['w'] = false;
+                tankGame.keys['s'] = false;
+                tankGame.keys['a'] = false;
+                tankGame.keys['d'] = false;
+                break;
+            }
+        }
+    });
+
+    // Fire button - track touch ID for multi-touch support
+    let fireInterval = null;
+    let fireTouchId = null;
+
+    fireBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation(); // Don't interfere with joystick
+
+        const touch = e.changedTouches[0];
+        fireTouchId = touch.identifier;
+
+        // Shoot immediately on touch
+        if (tankGame.player && tankGame.running) tankGame.player.shoot();
+
+        // Continue shooting while held
+        fireInterval = setInterval(() => {
+            if (tankGame.player && tankGame.running) tankGame.player.shoot();
+        }, 150);
+    }, { passive: false });
+
+    fireBtn.addEventListener('touchend', (e) => {
+        // Check if our fire touch ended
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === fireTouchId) {
+                if (fireInterval) {
+                    clearInterval(fireInterval);
+                    fireInterval = null;
+                }
+                fireTouchId = null;
+                break;
+            }
+        }
+    });
+
+    fireBtn.addEventListener('touchcancel', () => {
+        if (fireInterval) {
+            clearInterval(fireInterval);
+            fireInterval = null;
+        }
+        fireTouchId = null;
+    });
+
+    // Setup touch handlers for powerup buttons (fixes "can't use powerups while moving")
+    setupPowerUpTouchHandlers();
+}
+
+// Add touch event support for powerup buttons (mobile multi-touch fix)
+function setupPowerUpTouchHandlers() {
+    const powerUpTypes = ['slowMo', 'scatterShot', 'xRay', 'shield', 'emp'];
+    const powerUpIds = ['powerup1', 'powerup2', 'powerup3', 'powerup4', 'powerup5'];
+
+    powerUpTypes.forEach((type, index) => {
+        const btn = document.getElementById(powerUpIds[index]);
+        if (!btn) return;
+
+        // Add touchstart handler that triggers immediately (doesn't wait for click)
+        btn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            e.stopPropagation(); // Don't interfere with joystick
+            activatePowerUp(type);
+        }, { passive: false });
+    });
+
+    console.log('[TankShooter] Powerup touch handlers initialized');
 }
 
 // ==================== GAME OVER ====================
