@@ -1,6 +1,6 @@
 {
   "name": "fairy_dust",
-  "emitRate": 12,
+  "emitRate": 16,
   "palette": [
     "#22d3a6",
     "#f472b6",
@@ -10,15 +10,15 @@
     "shape": "spark",
     "size": [
       2,
-      6
+      7
     ],
     "life": [
       0.6,
       1.4
     ],
     "speed": [
-      6,
-      16
+      8,
+      18
     ],
     "drift": [
       -0.4,
