@@ -7306,14 +7306,14 @@ async function analyzeImage(dataUrl, mode) {
     const ctx = canvas.getContext('2d');
 
     // FORENSICS: Higher resolution analysis for forensics mode
-    // P1-A FIX: Reduced Deep Scan size from 256 to 128 to prevent browser crash
+    // P1-A FIX: Aggressive size reduction to prevent browser crash
     let analysisSize = 256;
     if (finalMode === 'forensics') {
-        analysisSize = 512;  // Forensics uses higher resolution
+        analysisSize = 256;  // Forensics uses medium resolution (was 512)
     } else if (finalMode === 'deep') {
-        analysisSize = 128;  // P1-A FIX: Deep uses 128 (prevents mobile crash)
+        analysisSize = 64;   // P1-A FIX: Deep uses 64 (aggressive crash prevention)
     } else {
-        analysisSize = 128;  // Quick uses 128 (faster)
+        analysisSize = 64;   // Quick uses 64 (very fast)
     }
     canvas.width = Math.min(img.width, analysisSize);
     canvas.height = Math.min(img.height, analysisSize);
@@ -7387,9 +7387,9 @@ async function analyzeImage(dataUrl, mode) {
         const isForensics = finalMode === 'forensics';
         console.log(`[Scan] 3/12: FFT frequency analysis (${isForensics ? 'Forensics' : 'Deep'})...`);
 
-        // P1-A FIX: Reduced FFT max size for Deep Scan to prevent crash
-        const fftMaxSize = isForensics ? 512 : 128;
-        const fftTimeout = isForensics ? 6000 : 2000;
+        // P1-A FIX: Aggressive FFT size reduction to prevent crash
+        const fftMaxSize = isForensics ? 256 : 64;
+        const fftTimeout = isForensics ? 4000 : 1500;
 
         if (width <= fftMaxSize && height <= fftMaxSize) {
             const frequencyResult = await runDetectorSafe('FFT Analysis',
