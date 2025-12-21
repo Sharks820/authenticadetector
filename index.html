@@ -3032,7 +3032,201 @@
             margin: 0;
         }
 
-        /* ===== OUTBREAKS ===== */
+        /* ===== OUTBREAKS / TANK BATTLE ===== */
+
+        /* Battle Hero Scene */
+        .battle-hero {
+            text-align: center;
+            padding: 24px 16px;
+            margin-bottom: 20px;
+        }
+        .battle-scene {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 16px;
+        }
+        .battle-tank {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: tankBounce 1.5s ease-in-out infinite;
+        }
+        .tank-body {
+            font-size: 48px;
+            filter: drop-shadow(0 4px 12px rgba(0,212,170,0.5));
+        }
+        .tank-cannon {
+            font-size: 20px;
+            color: var(--primary);
+            margin-top: -10px;
+            animation: cannonPulse 0.5s ease-in-out infinite;
+        }
+        .tank-label {
+            font-size: 10px;
+            font-weight: 900;
+            color: var(--primary);
+            margin-top: 4px;
+            letter-spacing: 2px;
+        }
+        @keyframes tankBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        @keyframes cannonPulse {
+            0%, 100% { opacity: 0.5; transform: translateX(0); }
+            50% { opacity: 1; transform: translateX(5px); }
+        }
+        .battle-vs {
+            font-size: 32px;
+            animation: vsPulse 1s ease-in-out infinite;
+        }
+        @keyframes vsPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .battle-enemies {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .enemy-monster {
+            font-size: 36px;
+            animation: enemyFloat 2s ease-in-out infinite;
+        }
+        .enemy-1 { animation-delay: 0s; }
+        .enemy-2 { animation-delay: 0.3s; font-size: 28px; margin-top: -8px; }
+        .enemy-3 { animation-delay: 0.6s; font-size: 24px; margin-top: -8px; }
+        @keyframes enemyFloat {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(3px) rotate(5deg); }
+            75% { transform: translateX(-3px) rotate(-5deg); }
+        }
+        .enemy-label {
+            font-size: 10px;
+            font-weight: 900;
+            color: #ff4757;
+            margin-top: 4px;
+            letter-spacing: 2px;
+        }
+        .battle-title {
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff4757 0%, #ff6348 50%, #ffb800 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            text-shadow: 0 2px 20px rgba(255,71,87,0.3);
+        }
+        .battle-subtitle {
+            color: var(--text2);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* Battle Stats */
+        .battle-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .battle-stat-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            padding: 16px 8px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .battle-stat-card .stat-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        .battle-stat-card .stat-value {
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+        }
+        .battle-stat-card .stat-label {
+            font-size: 10px;
+            color: var(--text3);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Big Tank Play Button */
+        .tank-play-btn {
+            width: 100%;
+            padding: 24px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #00d4aa 0%, #0984e3 50%, #6c5ce7 100%);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0,212,170,0.4);
+        }
+        .tank-play-btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(0,212,170,0.5);
+        }
+        .tank-play-btn:active {
+            transform: scale(0.98);
+        }
+        .tank-btn-glow {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: translateX(-100%);
+            animation: btnShimmer 2s ease-in-out infinite;
+        }
+        @keyframes btnShimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .tank-btn-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .tank-btn-icon {
+            font-size: 32px;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+        }
+        .tank-btn-text {
+            font-size: 24px;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+        }
+        .tank-btn-sub {
+            font-size: 12px;
+            color: rgba(255,255,255,0.8);
+            font-weight: 600;
+        }
+
+        /* Battle History */
+        .battle-history {
+            background: rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .history-placeholder {
+            text-align: center;
+            color: var(--text3);
+            font-size: 14px;
+            padding: 20px;
+        }
+
         /* PREMIUM OUTBREAKS PAGE - Complete Overhaul */
         .outbreak-card {
             background: linear-gradient(145deg, rgba(26,31,46,0.95) 0%, rgba(18,22,31,0.98) 100%);
@@ -4412,104 +4606,114 @@
     </div>
 </div>
 
-<!-- OUTBREAKS VIEW -->
+<!-- OUTBREAKS VIEW - Tank Shooter Battle Mode -->
 <div class="view" id="outbreaksView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
             <button class="back-btn" onclick="closeView()">←</button>
             <button class="home-btn" onclick="openView('homeView')" title="Home">🏡</button>
         </div>
-        <span class="view-title">⚠️ Outbreaks</span>
+        <span class="view-title">🎮 Tank Battle</span>
         <div style="width:44px"></div>
     </div>
     <div class="view-body view-body-padded">
-        <!-- Active Outbreak -->
+        <!-- HERO BATTLE SCENE -->
+        <div class="battle-hero">
+            <div class="battle-scene">
+                <!-- Tank (left side) -->
+                <div class="battle-tank">
+                    <div class="tank-body">🛡️</div>
+                    <div class="tank-cannon">▶</div>
+                    <div class="tank-label">YOU</div>
+                </div>
+                <!-- VS -->
+                <div class="battle-vs">⚔️</div>
+                <!-- AI Monsters (right side) -->
+                <div class="battle-enemies">
+                    <div class="enemy-monster enemy-1">🤖</div>
+                    <div class="enemy-monster enemy-2">👾</div>
+                    <div class="enemy-monster enemy-3">🧠</div>
+                    <div class="enemy-label">AI FAKES</div>
+                </div>
+            </div>
+            <h1 class="battle-title">OUTBREAK DETECTED!</h1>
+            <p class="battle-subtitle">AI-generated images are spreading. Take them down!</p>
+        </div>
+
+        <!-- Active Outbreak Card -->
         <div class="outbreak-card active-outbreak" id="activeOutbreak">
             <div class="outbreak-badge">⚡ ACTIVE NOW</div>
             <div class="outbreak-card-header">
-                <h2 id="outbreakCardTitle">Political Deepfake Outbreak</h2>
+                <h2 id="outbreakCardTitle">Deepfake Invasion</h2>
                 <div class="outbreak-difficulty" id="outbreakDifficulty">
                     <span>🔥</span><span>🔥</span><span>🔥</span>
                 </div>
             </div>
             <p class="outbreak-description" id="outbreakDescription">
-                A surge of AI-generated political figures has been detected across social media.
-                Hunt them down before they spread misinformation!
+                Waves of AI-generated fakes are attacking! Jump in your tank and blast them before they spread misinformation!
             </p>
 
             <!-- Timer -->
             <div class="outbreak-timer-big">
-                <div class="timer-label">⏰ Time Remaining</div>
+                <div class="timer-label">⏰ Event Ends In</div>
                 <div class="timer-display" id="outbreakTimerBig">23:45:12</div>
             </div>
 
-            <!-- Goals -->
-            <div class="outbreak-goals">
-                <div class="outbreak-goal">
-                    <div class="goal-progress">
-                        <div class="goal-bar">
-                            <div class="goal-fill" id="submissionsGoalFill" style="width:40%"></div>
-                        </div>
-                        <div class="goal-label">
-                            <span>🎯 Submissions</span>
-                            <span><strong id="submissionsProgress">20</strong> / <span id="submissionsGoal">50</span></span>
-                        </div>
-                    </div>
+            <!-- Battle Stats -->
+            <div class="battle-stats">
+                <div class="battle-stat-card">
+                    <div class="stat-icon">💀</div>
+                    <div class="stat-value" id="totalFakesDestroyed">1,247</div>
+                    <div class="stat-label">Fakes Destroyed</div>
                 </div>
-                <div class="outbreak-goal">
-                    <div class="goal-progress">
-                        <div class="goal-bar">
-                            <div class="goal-fill" id="votesGoalFill" style="width:65%"></div>
-                        </div>
-                        <div class="goal-label">
-                            <span>✅ Verifications</span>
-                            <span><strong id="votesProgress">130</strong> / <span id="votesGoal">200</span></span>
-                        </div>
-                    </div>
+                <div class="battle-stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value" id="highestWave">Wave 12</div>
+                    <div class="stat-label">Your Best</div>
+                </div>
+                <div class="battle-stat-card">
+                    <div class="stat-icon">🪙</div>
+                    <div class="stat-value" id="coinsThisOutbreak">350</div>
+                    <div class="stat-label">Coins Earned</div>
                 </div>
             </div>
 
             <!-- Rewards -->
             <div class="outbreak-rewards">
-                <div class="rewards-label">🏆 Event Rewards</div>
+                <div class="rewards-label">🏆 Battle Rewards</div>
                 <div class="reward-pills">
-                    <div class="reward-pill">2x Points Multiplier</div>
-                    <div class="reward-pill">Exclusive "Outbreak Hunter" Badge</div>
-                    <div class="reward-pill">500 🪙 Bonus</div>
+                    <div class="reward-pill">💰 Coins per Wave</div>
+                    <div class="reward-pill">🎖️ Grade Bonus (S+ = 2.5x)</div>
+                    <div class="reward-pill">🏅 "Tank Commander" Badge</div>
                 </div>
             </div>
 
-            <!-- Leaderboard -->
-            <div class="outbreak-leaderboard">
-                <div class="leaderboard-header">👑 Top Hunters This Outbreak</div>
-                <div id="outbreakTopHunters"></div>
-            </div>
-
-            <!-- CTA -->
-            <div class="outbreak-ctas">
-                <button class="cta-btn" onclick="startTankShooter()" style="background:linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);color:#000;font-size:18px;font-weight:800;box-shadow:0 6px 20px rgba(26,188,156,0.4);animation:pulse 2s ease-in-out infinite">
-                    🎮 PLAY TANK SHOOTER
-                </button>
-                <button class="cta-btn-secondary" onclick="openView('huntView')">
-                    🎯 Hunt Submissions
-                </button>
-                <button class="cta-btn-secondary" onclick="openView('verifyView')">
-                    ✅ Verify Images
-                </button>
-            </div>
+            <!-- BIG PLAY BUTTON -->
+            <button class="tank-play-btn" onclick="startTankShooter()">
+                <div class="tank-btn-glow"></div>
+                <div class="tank-btn-content">
+                    <span class="tank-btn-icon">🎮</span>
+                    <span class="tank-btn-text">BATTLE NOW</span>
+                    <span class="tank-btn-sub">Destroy AI Fakes!</span>
+                </div>
+            </button>
         </div>
 
-        <!-- Upcoming Outbreaks -->
+        <!-- Leaderboard -->
+        <div class="outbreak-card" style="margin-top:20px;">
+            <h3 style="margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+                <span>👑</span> Top Tank Commanders
+            </h3>
+            <div id="outbreakTopHunters"></div>
+        </div>
+
+        <!-- Past Battles -->
         <div class="section-header" style="margin-top:32px">
-            <h3>📅 Upcoming Outbreaks</h3>
+            <h3>📜 Your Battle History</h3>
         </div>
-        <div id="upcomingOutbreaks"></div>
-
-        <!-- Past Outbreaks -->
-        <div class="section-header" style="margin-top:32px">
-            <h3>📜 Past Outbreaks</h3>
+        <div id="pastOutbreaks" class="battle-history">
+            <div class="history-placeholder">Play some battles to see your history!</div>
         </div>
-        <div id="pastOutbreaks"></div>
     </div>
 </div>
 
