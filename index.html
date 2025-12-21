@@ -135,18 +135,26 @@
             text-shadow:0 0 30px rgba(0,212,170,0.5);
             white-space:nowrap;
         }
-        /* Mobile: responsive header */
+        /* Mobile: responsive header - fit all buttons */
         @media(max-width:480px){
-            .logo-text{font-size:14px}
-            .header-btns{gap:4px}
-            .icon-btn{width:36px;height:36px;font-size:16px;border-radius:10px}
-            .user-btn{width:36px;height:36px}
+            .logo-text{font-size:13px}
+            .logo-icon{width:30px;height:30px}
+            .header-btns{gap:3px}
+            .icon-btn{width:34px;height:34px;font-size:15px;border-radius:10px}
+            .user-btn{width:34px;height:34px;font-size:12px}
         }
-        @media(max-width:380px){
-            .logo-text{font-size:12px}
+        @media(max-width:400px){
+            .logo-text{font-size:11px}
+            .logo-icon{width:28px;height:28px}
             .header-btns{gap:2px}
-            .icon-btn{width:32px;height:32px;font-size:14px;border-radius:8px}
-            .user-btn{width:32px;height:32px;font-size:12px}
+            .icon-btn{width:30px;height:30px;font-size:14px;border-radius:8px}
+            .user-btn{width:30px;height:30px;font-size:11px}
+        }
+        @media(max-width:360px){
+            .logo-text{font-size:10px;letter-spacing:-0.5px}
+            .logo-icon{width:26px;height:26px}
+            .icon-btn{width:28px;height:28px;font-size:13px;border-radius:6px}
+            .user-btn{width:28px;height:28px;font-size:10px}
         }
         /* Hide tooltips on mobile - touch devices don't need hover */
         @media(max-width:768px){
@@ -156,7 +164,7 @@
             0%{background-position:0% center}
             100%{background-position:200% center}
         }
-        .header-btns{display:flex;gap:8px}
+        .header-btns{display:flex;gap:6px;flex-shrink:1;min-width:0;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
         .icon-btn{
             width:40px;height:40px;border-radius:12px;
             background:var(--surface2);border:1px solid var(--border);
