@@ -7381,9 +7381,11 @@ async function analyzeImage(dataUrl, mode) {
     // =========================================
     // 3. FREQUENCY DOMAIN ANALYSIS (FFT)
     // Detects spectral anomalies in AI images
-    // OPTIMIZED: Skip FFT for very large images to prevent freeze
+    // P1-A CRASH FIX: FFT completely disabled for Deep Scan to isolate crash
     // =========================================
-    if (finalMode === 'deep' || finalMode === 'forensics') {
+    if (false && (finalMode === 'deep' || finalMode === 'forensics')) {
+        // P1-A: This entire block is disabled to test if FFT causes crash
+        console.log('[DeepScan] 3/12: FFT DISABLED (P1-A crash investigation)');
         const isForensics = finalMode === 'forensics';
         console.log(`[Scan] 3/12: FFT frequency analysis (${isForensics ? 'Forensics' : 'Deep'})...`);
 
@@ -7424,6 +7426,9 @@ async function analyzeImage(dataUrl, mode) {
             console.log('[DeepScan] Image too large for FFT/UGAD, skipping to prevent freeze');
         }
         await yieldToMain();
+    } else {
+        // P1-A: FFT disabled for crash investigation
+        console.log('[DeepScan] 3/12: FFT SKIPPED (P1-A crash prevention)');
     }
 
     // =========================================
