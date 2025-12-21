@@ -496,30 +496,60 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+        @keyframes playNowPulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(255,107,53,0.5), 0 0 30px rgba(255,107,53,0.3); }
+            50% { box-shadow: 0 6px 30px rgba(255,184,0,0.6), 0 0 50px rgba(255,184,0,0.4); }
+        }
+        @keyframes playNowShimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
         .game-cta-btn {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #00d4aa 0%, #00b894 50%, #0984e3 100%);
-            border: none;
-            border-radius: 12px;
+            padding: 18px 24px;
+            background: linear-gradient(90deg, #ff6b35 0%, #ffb800 25%, #ff6b35 50%, #ffb800 75%, #ff6b35 100%);
+            background-size: 200% auto;
+            animation: playNowPulse 2s ease-in-out infinite, playNowShimmer 3s linear infinite;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 16px;
             color: #fff;
-            font-size: 16px;
-            font-weight: 800;
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 16px rgba(0,212,170,0.4);
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            gap: 14px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4), 0 0 20px rgba(255,184,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        .game-cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
         }
         .game-cta-btn:hover {
-            box-shadow: 0 6px 24px rgba(0,212,170,0.5);
-            transform: translateY(-2px);
+            transform: translateY(-4px) scale(1.02);
+            filter: brightness(1.1);
+        }
+        .game-cta-btn:hover::before {
+            left: 100%;
         }
         .game-cta-btn:active {
             transform: scale(0.98);
+        }
+        .game-cta-btn .game-cta-icon {
+            font-size: 24px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
         @keyframes pulse {
             0%, 100% { box-shadow: 0 0 20px rgba(26, 188, 156, 0.3); }
@@ -13661,6 +13691,50 @@ function drawParticles(ctx) {
 }
 
 init();
+</script>
+
+<!-- Floating Helper Bot -->
+<div class="help-bot" id="helpBot" onclick="openHelp()" title="Need help?">
+    🤖
+    <div class="help-bot-tip">
+        <strong>Hi! I'm AuthentiBot!</strong><br>
+        Tap me for help with scans, games, and more!
+    </div>
+</div>
+
+<script>
+// Helper bot visibility - show on all pages except when keyboard is open
+(function() {
+    const helpBot = document.getElementById('helpBot');
+    if (!helpBot) return;
+
+    // Hide bot during keyboard input
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+            const isKeyboardOpen = window.innerHeight - window.visualViewport.height > 150;
+            helpBot.style.display = isKeyboardOpen ? 'none' : 'flex';
+        });
+    }
+
+    // Random tips
+    const tips = [
+        "Need help? Tap me!",
+        "I detect AI images!",
+        "Play Truth Hunters! 🎮",
+        "Earn coins by scanning!",
+        "Join a Squad today!",
+        "Check the leaderboard! 🏆"
+    ];
+
+    let tipIndex = 0;
+    setInterval(() => {
+        const tipEl = helpBot.querySelector('.help-bot-tip strong + br');
+        if (tipEl && tipEl.nextSibling) {
+            tipIndex = (tipIndex + 1) % tips.length;
+            tipEl.nextSibling.textContent = tips[tipIndex];
+        }
+    }, 5000);
+})();
 </script>
 </body>
 </html>
