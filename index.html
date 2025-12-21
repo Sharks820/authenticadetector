@@ -2025,8 +2025,8 @@
             position: fixed;
             bottom: 100px;
             right: 20px;
-            width: 120px;
-            height: 120px;
+            width: 180px;
+            height: 180px;
             background: radial-gradient(circle at 30% 30%, rgba(138, 43, 226, 0.3), rgba(0, 212, 170, 0.2) 50%, rgba(255, 107, 53, 0.1));
             border-radius: 50%;
             display: flex;
@@ -2238,8 +2238,8 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 110px;
-            height: 110px;
+            width: 170px;
+            height: 170px;
             transition: all 0.3s ease;
         }
         .vera-icon svg,
@@ -17118,13 +17118,12 @@ async function confirmVerifySubmission() {
     }
 
     let tipIndex = 0;
-    // FASTER dialog rotation - 3.5 seconds instead of 7
+    // Dialog rotation - keeps fairy form (no confusing head swaps)
     setInterval(() => {
         if (!isTransformed && !isMonsterMode) {
             tipIndex = (tipIndex + 1) % veraTips.length;
             veraTip.textContent = veraTips[tipIndex];
-            setVeraFace('vera_think', false);
-            setTimeout(() => { if (!isTransformed && !isMonsterMode) setVeraFace(fairyIcon, false); }, 900);
+            // Just update the tip text, keep the beautiful fairy showing!
             // Add subtle bounce animation when tip changes
             helpBot.style.animation = 'veraTipBounce 0.3s ease';
             setTimeout(() => { helpBot.style.animation = ''; }, 300);
