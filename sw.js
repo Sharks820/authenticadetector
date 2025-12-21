@@ -1,5 +1,5 @@
-// AuthenticaDetector Service Worker v12
-const CACHE_NAME = 'authenticadetector-v12';
+// AuthenticaDetector Service Worker v13
+const CACHE_NAME = 'authenticadetector-v13';
 const ASSETS = [
     '/',
     '/index.html',
@@ -10,13 +10,13 @@ const ASSETS = [
 
 let sharedFile = null;
 
-// Install
+// Install - wait for activation message instead of auto-skip
 self.addEventListener('install', e => {
-    console.log('[SW] Installing v12');
+    console.log('[SW] Installing v13');
     e.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => cache.addAll(ASSETS))
-            .then(() => self.skipWaiting())
+        // Note: removed skipWaiting() - now controlled via message
     );
 });
 
@@ -86,6 +86,14 @@ async function handleShareTarget(request) {
 
 // Message handling
 self.addEventListener('message', e => {
+    // Handle update request from app
+    if (e.data.type === 'SKIP_WAITING') {
+        console.log('[SW] Received SKIP_WAITING message, activating new version...');
+        self.skipWaiting();
+        return;
+    }
+
+    // Handle shared file request
     if (e.data.type === 'GET_SHARED_FILE' && sharedFile) {
         console.log('[SW] Sending shared file to client');
         e.source.postMessage({
