@@ -17350,12 +17350,13 @@ async function confirmVerifySubmission() {
                 beginFullMonsterMode();
                 return;
             }
-            // Intensifying flicker between fairy and monster
+            // Intensifying flicker between fairy and monster (FULL BODY SVGs only!)
             if (flickerCount % 2 === 0) {
                 setVeraFace(fairyIcon, false);
                 helpBot.style.filter = 'hue-rotate(0deg)';
             } else {
-                setVeraFace('vera_angry', true);
+                // Use full monster SVG, not head-only vera_angry
+                setVeraFace('vera_monster', true);
                 helpBot.style.filter = `hue-rotate(${flickerCount * 30}deg) brightness(${1 + flickerCount * 0.1})`;
             }
             helpBot.style.opacity = flickerCount % 2 === 0 ? '1' : String(0.5 + flickerCount * 0.08);
@@ -17585,8 +17586,8 @@ async function confirmVerifySubmission() {
             }, 50);
         }, 300);
 
-        setVeraFace('vera_happy', false);
-        setTimeout(() => { if (!isTransformed && !isMonsterMode) setVeraFace(fairyIcon, false); }, 800);
+        // Keep full fairy body visible - just add a bounce animation instead of swapping to head-only SVG
+        // (Previously used vera_happy which is head-only, causing the "random head" issue)
 
         if (showClickTip) {
             const tip = clickTips[Math.floor(Math.random() * clickTips.length)];
