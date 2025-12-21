@@ -3896,12 +3896,24 @@ const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
 
 // ==================== SVG ASSETS ====================
 const LOGO_SVG = `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-<defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d4aa"/><stop offset="100%" stop-color="#00ff88"/></linearGradient></defs>
+<defs>
+    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00d4aa">
+            <animate attributeName="stop-color" values="#00d4aa;#8b5cf6;#f472b6;#00d4aa" dur="4s" repeatCount="indefinite"/>
+        </stop>
+        <stop offset="50%" stop-color="#8b5cf6">
+            <animate attributeName="stop-color" values="#8b5cf6;#f472b6;#00d4aa;#8b5cf6" dur="4s" repeatCount="indefinite"/>
+        </stop>
+        <stop offset="100%" stop-color="#f472b6">
+            <animate attributeName="stop-color" values="#f472b6;#00d4aa;#8b5cf6;#f472b6" dur="4s" repeatCount="indefinite"/>
+        </stop>
+    </linearGradient>
+</defs>
 <rect width="48" height="48" rx="12" fill="url(#logoGrad)"/>
-<circle cx="24" cy="24" r="14" stroke="#000" stroke-width="2.5" fill="none" opacity=".85"/>
-<circle cx="24" cy="24" r="6" fill="#000" opacity=".85"/>
-<path d="M24 6V12M24 36V42M6 24H12M36 24H42" stroke="#000" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
-<path d="M10.5 10.5L14.5 14.5M33.5 33.5L37.5 37.5M10.5 37.5L14.5 33.5M33.5 14.5L37.5 10.5" stroke="#000" stroke-width="2" stroke-linecap="round" opacity=".4"/>
+<circle cx="24" cy="24" r="14" stroke="#fff" stroke-width="2.5" fill="none" opacity=".85"/>
+<circle cx="24" cy="24" r="6" fill="#fff" opacity=".85"/>
+<path d="M24 6V12M24 36V42M6 24H12M36 24H42" stroke="#fff" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
+<path d="M10.5 10.5L14.5 14.5M33.5 33.5L37.5 37.5M10.5 37.5L14.5 33.5M33.5 14.5L37.5 10.5" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".4"/>
 </svg>`;
 
 const ANALYSIS_ICON = `<svg viewBox="0 0 72 72" fill="none">
@@ -4411,8 +4423,9 @@ async function loadUser() {
                     user.name = p.display_name || user.name; 
                     user.avatar_url = p.avatar_url; 
                 }
-                updateUserUI(); 
-                loadUserStats(); 
+                updateUserUI();
+                await loadUserStats();
+                await loadUserProgression();
                 return;
             }
         } catch (e) { console.error('[Auth] Session load failed:', e); }
@@ -4423,7 +4436,8 @@ async function loadUser() {
     if (saved) {
         user = saved;
         updateUserUI();
-        loadUserStats();
+        await loadUserStats();
+        await loadUserProgression();
     }
 }
 
@@ -4433,25 +4447,35 @@ function saveUser() {
 }
 
 function updateUserUI() {
+    // Safe DOM update helper
+    const safeSet = (id, value, isHTML = false) => {
+        const el = $(id);
+        if (el) {
+            if (isHTML) el.innerHTML = value;
+            else el.textContent = value;
+        }
+    };
+
     if (user) {
-        const initial = user.name ? user.name[0].toUpperCase() : user.email[0].toUpperCase();
-        $('userInitial').textContent = initial;
-        $('userBtn').innerHTML = user.avatar_url ? `<img src="${user.avatar_url}">` : `<span id="userInitial">${initial}</span>`;
-        $('profileName').textContent = user.name || user.email.split('@')[0];
-        $('profileEmail').textContent = user.email;
-        $('profileAvatar').innerHTML = user.avatar_url ? `<img src="${user.avatar_url}">` : initial;
-        $('loginLogoutText').textContent = 'Sign Out'; 
-        $('loginLogoutIcon').textContent = '🚪';
+        const initial = (user.name && user.name[0]) ? user.name[0].toUpperCase() :
+                       (user.email && user.email[0]) ? user.email[0].toUpperCase() : '?';
+        safeSet('userInitial', initial);
+        safeSet('userBtn', user.avatar_url ? `<img src="${user.avatar_url}">` : `<span id="userInitial">${initial}</span>`, true);
+        safeSet('profileName', user.name || (user.email ? user.email.split('@')[0] : 'User'));
+        safeSet('profileEmail', user.email || '');
+        safeSet('profileAvatar', user.avatar_url ? `<img src="${user.avatar_url}">` : initial, true);
+        safeSet('loginLogoutText', 'Sign Out');
+        safeSet('loginLogoutIcon', '🚪');
     } else {
-        $('userInitial').textContent = '👤';
-        $('userBtn').innerHTML = '<span id="userInitial">👤</span>';
-        $('profileName').textContent = 'Guest'; 
-        $('profileEmail').textContent = 'Sign in to save progress';
-        $('profileAvatar').innerHTML = '?';
-        $('loginLogoutText').textContent = 'Sign In'; 
-        $('loginLogoutIcon').textContent = '🔑';
+        safeSet('userInitial', '👤');
+        safeSet('userBtn', '<span id="userInitial">👤</span>', true);
+        safeSet('profileName', 'Guest');
+        safeSet('profileEmail', 'Sign in to save progress');
+        safeSet('profileAvatar', '?', true);
+        safeSet('loginLogoutText', 'Sign In');
+        safeSet('loginLogoutIcon', '🔑');
     }
-    updateStatusBar(); 
+    updateStatusBar();
     updateGating();
 }
 
@@ -4488,20 +4512,26 @@ async function loadUserStats() {
 
     scanCount = stats.total;
     setStorage(`stats_${user.id}`, stats);
-    
-    $('statScans').textContent = stats.total || 0; 
-    $('statFound').textContent = stats.ai || 0; 
-    $('statPoints').textContent = stats.points || 0;
+
+    // Safe DOM updates with null checks
+    const statScans = $('statScans');
+    const statFound = $('statFound');
+    const statPoints = $('statPoints');
+    if (statScans) statScans.textContent = stats.total || 0;
+    if (statFound) statFound.textContent = stats.ai || 0;
+    if (statPoints) statPoints.textContent = stats.points || 0;
 }
 
 function updateGating() {
     const canDeep = user; // Only need login now, not install
-    if (canDeep) { 
-        $('deepLock').classList.add('hidden'); 
-        $('advancedPanel').classList.remove('hidden'); 
-    } else { 
-        $('deepLock').classList.remove('hidden'); 
-        $('advancedPanel').classList.add('hidden'); 
+    const deepLock = $('deepLock');
+    const advancedPanel = $('advancedPanel');
+    if (canDeep) {
+        if (deepLock) deepLock.classList.add('hidden');
+        if (advancedPanel) advancedPanel.classList.remove('hidden');
+    } else {
+        if (deepLock) deepLock.classList.remove('hidden');
+        if (advancedPanel) advancedPanel.classList.add('hidden');
     }
 }
 
@@ -4686,6 +4716,7 @@ window.submitLogin = async function() {
         saveUser();
         updateUserUI();
         await loadUserStats();
+        await loadUserProgression();
 
         // Clear form
         emailInput.value = '';
@@ -4803,6 +4834,24 @@ window.closeLoginRequired = () => {
     if (currentFile) startScan('quick');
 };
 
+// ==================== GLOBAL ERROR HANDLERS ====================
+// Catch unhandled promise rejections to prevent button/UI breakage
+window.addEventListener('unhandledrejection', (event) => {
+    console.error('[Global] Unhandled promise rejection:', event.reason);
+    // Prevent the default browser error popup
+    event.preventDefault();
+    // Show user-friendly message if not already shown
+    if (event.reason?.message && !event.reason.message.includes('already shown')) {
+        toast('Something went wrong. Please try again.');
+    }
+});
+
+// Catch global errors
+window.addEventListener('error', (event) => {
+    console.error('[Global] Uncaught error:', event.error || event.message);
+    // Don't show toast for every error, just log
+});
+
 // ==================== INIT ====================
 async function init() {
     console.log(`[AuthenticaDetector] v${APP_VERSION} starting...`);
@@ -4840,7 +4889,7 @@ async function init() {
     
     // Auth state listener
     if (!useLocalFallback && supabase) {
-        supabase.auth.onAuthStateChange((event, session) => {
+        supabase.auth.onAuthStateChange(async (event, session) => {
             console.log('[Auth] State change:', event);
             if (event === 'SIGNED_IN' && session?.user) {
                 user = {
@@ -4850,7 +4899,8 @@ async function init() {
                 };
                 saveUser();
                 updateUserUI();
-                loadUserStats();
+                await loadUserStats();
+                await loadUserProgression();
             } else if (event === 'SIGNED_OUT') {
                 user = null;
                 saveUser();
@@ -4872,10 +4922,27 @@ async function init() {
 // View stack for proper navigation
 let viewStack = ['homeView'];
 let currentView = null;
+let isNavigating = false; // Guard against recursive navigation
+let lastNavTime = 0; // Debounce navigation
 
 const GAME_VIEWS = ['huntView', 'verifyView', 'outbreaksView', 'squadsView', 'leaderboardView', 'shopView'];
 
 window.openView = function(viewId) {
+    // Debounce navigation (prevent rapid re-calls)
+    const now = Date.now();
+    if (now - lastNavTime < 100) {
+        console.log('[View] Navigation debounced');
+        return;
+    }
+    lastNavTime = now;
+
+    // Guard against recursive navigation
+    if (isNavigating) {
+        console.log('[View] Navigation already in progress, skipping');
+        return;
+    }
+
+    isNavigating = true;
     console.log('[View] Opening view:', viewId);
 
     // Determine if this is a game view
@@ -4889,6 +4956,7 @@ window.openView = function(viewId) {
 
     // Small delay for transition effect
     setTimeout(() => {
+        isNavigating = false; // Allow navigation again after transition
         // Open the requested view
         const view = $(viewId);
         if (view) {
@@ -4961,51 +5029,63 @@ window.closeView = function() {
 };
 
 // Handle browser back button (Android physical back button)
+let isHandlingPopstate = false; // Guard against rapid popstate events
+
 window.addEventListener('popstate', function(event) {
+    // Debounce popstate events
+    if (isHandlingPopstate) {
+        console.log('[View] Popstate already being handled, skipping');
+        return;
+    }
+    isHandlingPopstate = true;
+
     console.log('[View] Popstate event:', event.state);
-    
-    if (event.state && event.state.view) {
-        // Navigate to the view in history
-        const targetView = event.state.view;
-        
-        // Remove from stack without adding to history again
-        if (viewStack.length > 1) {
-            viewStack.pop();
-        }
-        
+
+    // Helper to directly show view WITHOUT pushing to history (prevents loops)
+    function showViewDirect(viewId) {
         // Close all views
         document.querySelectorAll('.view').forEach(v => {
             v.classList.remove('active');
             v.style.opacity = '0';
         });
-        
-        // Open target view
+
         setTimeout(() => {
-            const view = $(targetView);
+            const view = $(viewId);
             if (view) {
                 view.classList.add('active');
                 view.style.opacity = '1';
-                currentView = targetView;
-                
+                currentView = viewId;
+
                 // Update game nav
-                const isGameView = GAME_VIEWS.includes(targetView);
+                const isGameView = GAME_VIEWS.includes(viewId);
                 const gameNav = $('gameNav');
                 if (gameNav) {
                     gameNav.style.display = isGameView ? 'flex' : 'none';
                     if (isGameView) {
                         document.querySelectorAll('.game-nav-btn').forEach(btn => {
-                            btn.classList.toggle('active', btn.dataset.view === targetView);
+                            btn.classList.toggle('active', btn.dataset.view === viewId);
                         });
                     }
                 }
-            } else {
-                // Fallback to home
-                openView('homeView');
             }
+            isHandlingPopstate = false;
         }, 50);
+    }
+
+    if (event.state && event.state.view) {
+        // Navigate to the view in history
+        const targetView = event.state.view;
+
+        // Remove from stack without adding to history again
+        if (viewStack.length > 1) {
+            viewStack.pop();
+        }
+
+        showViewDirect(targetView);
     } else {
-        // No state, go to home
-        openView('homeView');
+        // No state, go to home (without pushing to history)
+        viewStack = ['homeView'];
+        showViewDirect('homeView');
     }
 });
 
@@ -5092,6 +5172,10 @@ window.fetchImageFromUrl = async function() {
             if (preview) preview.style.display = 'block';
             updateHuntSubmitButton();
         };
+        reader.onerror = () => {
+            console.error('[Hunt] FileReader error loading image');
+            toast('Failed to load image. Please try again.');
+        };
         reader.readAsDataURL(blob);
 
         if (button) {
@@ -5130,6 +5214,10 @@ window.handleHuntFile = function(event) {
         if (preview) preview.style.display = 'block';
         updateHuntSubmitButton();
         toast('Image loaded!');
+    };
+    reader.onerror = () => {
+        console.error('[Hunt] FileReader error reading file');
+        toast('Failed to read image file. Please try again.');
     };
     reader.readAsDataURL(file);
 };
@@ -5717,7 +5805,10 @@ async function addXP(amount) {
 }
 
 async function awardCoins(amount, reason) {
-    if (!user || !userProgression) return;
+    if (!user || !userProgression) {
+        console.error('[Progression] Cannot award coins - user or userProgression is null:', { user: !!user, userProgression: !!userProgression, amount, reason });
+        return;
+    }
 
     try {
         // Use atomic coin award function (prevents race conditions)
@@ -6544,6 +6635,11 @@ window.handleFileSelect = function(event) {
         currentDataUrl = e.target.result;
         showFilePreview(file, e.target.result);
     };
+    reader.onerror = () => {
+        console.error('[Scan] FileReader error reading file');
+        toast('Failed to read image. Please try again.');
+        currentFile = null;
+    };
     reader.readAsDataURL(file);
 };
 
@@ -6615,6 +6711,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 reader.onload = (ev) => {
                     currentDataUrl = ev.target.result;
                     showFilePreview(file, ev.target.result);
+                };
+                reader.onerror = () => {
+                    console.error('[Drop] FileReader error reading file');
+                    toast('Failed to read dropped image.');
+                    currentFile = null;
                 };
                 reader.readAsDataURL(file);
             }
@@ -11516,10 +11617,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Profile stats
 function loadProfileStats() {
-    const stats = getStorage('user_stats', {});
-    if ($('statTotal')) $('statTotal').textContent = stats.total || 0;
-    if ($('statAI')) $('statAI').textContent = stats.ai || 0;
-    if ($('statReal')) $('statReal').textContent = stats.real || 0;
+    // Get stats from user-specific storage (matches loadUserStats)
+    const stats = user ? getStorage(`stats_${user.id}`, {}) : getStorage('user_stats', {});
+    // Use correct element IDs that exist in the DOM
+    if ($('statScans')) $('statScans').textContent = stats.total || 0;
+    if ($('statFound')) $('statFound').textContent = stats.ai || 0;
+    if ($('statPoints')) $('statPoints').textContent = stats.points || 0;
 }
 
 // Render history
@@ -11650,11 +11753,12 @@ window.handleProfilePic = async function(event) {
     reader.onload = async (e) => {
         const dataUrl = e.target.result;
 
-        // Update UI
+        // Update UI with null checks
         const avatar = $('profileAvatar');
         if (avatar) avatar.innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover">`;
 
-        $('userBtn').innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+        const userBtn = $('userBtn');
+        if (userBtn) userBtn.innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
 
         // Save locally
         if (user) {
@@ -11663,6 +11767,10 @@ window.handleProfilePic = async function(event) {
         }
 
         toast('Profile picture updated!');
+    };
+    reader.onerror = () => {
+        console.error('[Profile] FileReader error reading avatar');
+        toast('Failed to upload profile picture. Please try again.');
     };
     reader.readAsDataURL(file);
 };
