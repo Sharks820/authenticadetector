@@ -1,0 +1,208 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <!-- Aura gradients -->
+    <radialGradient id="vf-aura" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#fff5f8" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#f9a8d4" stop-opacity="0.4"/>
+      <stop offset="70%" stop-color="#a78bfa" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#0b0f18" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Wing gradients -->
+    <linearGradient id="vf-wingL" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f9a8d4"/>
+      <stop offset="50%" stop-color="#c4b5fd"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+    <linearGradient id="vf-wingR" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f9a8d4"/>
+      <stop offset="50%" stop-color="#c4b5fd"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+
+    <!-- Hair gradient - anime purple-pink -->
+    <linearGradient id="vf-hair" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#f472b6"/>
+    </linearGradient>
+
+    <!-- Dress gradient - teal to blue -->
+    <linearGradient id="vf-dress" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+
+    <!-- Eye shine -->
+    <radialGradient id="vf-eyeShine" cx="0.3" cy="0.3" r="0.5">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="100%" stop-color="#f0f0f0" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Skin gradient -->
+    <linearGradient id="vf-skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fde7d9"/>
+      <stop offset="100%" stop-color="#f5d1c3"/>
+    </linearGradient>
+
+    <!-- Wand glow -->
+    <radialGradient id="vf-wandGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="60%" stop-color="#facc15"/>
+      <stop offset="100%" stop-color="#f472b6" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Sparkle filter -->
+    <filter id="vf-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <style>
+    .vf-line { fill: none; stroke: #1f1f3a; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Wing flutter animation */
+    @keyframes wingFlutterL {
+      0%, 100% { transform: rotate(-5deg) scaleX(1); }
+      50% { transform: rotate(5deg) scaleX(0.9); }
+    }
+    @keyframes wingFlutterR {
+      0%, 100% { transform: rotate(5deg) scaleX(1); }
+      50% { transform: rotate(-5deg) scaleX(0.9); }
+    }
+    .vf-wingL { transform-origin: 75px 80px; animation: wingFlutterL 0.4s ease-in-out infinite; }
+    .vf-wingR { transform-origin: 125px 80px; animation: wingFlutterR 0.4s ease-in-out infinite; }
+
+    /* Body bob animation */
+    @keyframes fairyBob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    .vf-body { animation: fairyBob 2s ease-in-out infinite; }
+
+    /* Eye blink */
+    @keyframes eyeBlink {
+      0%, 95%, 100% { transform: scaleY(1); }
+      97% { transform: scaleY(0.1); }
+    }
+    .vf-eyes { transform-origin: 100px 85px; animation: eyeBlink 4s ease-in-out infinite; }
+
+    /* Hair sway */
+    @keyframes hairSway {
+      0%, 100% { transform: rotate(-2deg); }
+      50% { transform: rotate(2deg); }
+    }
+    .vf-hair { transform-origin: 100px 60px; animation: hairSway 3s ease-in-out infinite; }
+
+    /* Sparkle twinkle */
+    @keyframes sparkleTwinkle {
+      0%, 100% { opacity: 0.3; transform: scale(0.5); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+    .vf-sparkle { animation: sparkleTwinkle 1.5s ease-in-out infinite; }
+    .vf-sparkle:nth-of-type(1) { animation-delay: 0s; }
+    .vf-sparkle:nth-of-type(2) { animation-delay: 0.3s; }
+    .vf-sparkle:nth-of-type(3) { animation-delay: 0.6s; }
+    .vf-sparkle:nth-of-type(4) { animation-delay: 0.9s; }
+
+    /* Wand glow pulse -->
+    @keyframes wandPulse {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
+    .vf-wandGlow { animation: wandPulse 1.2s ease-in-out infinite; }
+
+    /* Cheek blush pulse */
+    @keyframes blushPulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.8; }
+    }
+    .vf-blush { animation: blushPulse 2s ease-in-out infinite; }
+  </style>
+
+  <!-- Outer aura -->
+  <circle cx="100" cy="100" r="95" fill="url(#vf-aura)"/>
+
+  <!-- Wings (behind body) -->
+  <g class="vf-wingL">
+    <ellipse cx="55" cy="85" rx="45" ry="55" fill="url(#vf-wingL)" stroke="#c4b5fd" stroke-width="1.5" opacity="0.85"/>
+    <ellipse cx="60" cy="85" rx="28" ry="35" fill="#fff" fill-opacity="0.4"/>
+  </g>
+  <g class="vf-wingR">
+    <ellipse cx="145" cy="85" rx="45" ry="55" fill="url(#vf-wingR)" stroke="#c4b5fd" stroke-width="1.5" opacity="0.85"/>
+    <ellipse cx="140" cy="85" rx="28" ry="35" fill="#fff" fill-opacity="0.4"/>
+  </g>
+
+  <g class="vf-body">
+    <!-- Hair (behind head) -->
+    <g class="vf-hair">
+      <path d="M60 70 C55 90, 50 130, 65 165 Q75 180, 80 170 L75 120 C70 95, 75 80, 80 70"
+            fill="url(#vf-hair)" class="vf-line"/>
+      <path d="M140 70 C145 90, 150 130, 135 165 Q125 180, 120 170 L125 120 C130 95, 125 80, 120 70"
+            fill="url(#vf-hair)" class="vf-line"/>
+    </g>
+
+    <!-- Head -->
+    <ellipse cx="100" cy="80" rx="32" ry="30" fill="url(#vf-skin)" class="vf-line"/>
+
+    <!-- Hair (front bangs) -->
+    <path d="M68 65 C80 50, 100 45, 120 50 C130 52, 132 60, 132 68
+             C125 55, 100 52, 75 58 C70 60, 68 63, 68 65"
+          fill="url(#vf-hair)" class="vf-line"/>
+
+    <!-- Anime eyes -->
+    <g class="vf-eyes">
+      <!-- Left eye -->
+      <ellipse cx="88" cy="82" rx="8" ry="10" fill="#1f1f3a"/>
+      <ellipse cx="88" cy="82" rx="6" ry="8" fill="#7c3aed"/>
+      <circle cx="86" cy="79" r="3" fill="#fff"/>
+      <circle cx="90" cy="84" r="1.5" fill="#fff" opacity="0.6"/>
+
+      <!-- Right eye -->
+      <ellipse cx="112" cy="82" rx="8" ry="10" fill="#1f1f3a"/>
+      <ellipse cx="112" cy="82" rx="6" ry="8" fill="#7c3aed"/>
+      <circle cx="110" cy="79" r="3" fill="#fff"/>
+      <circle cx="114" cy="84" r="1.5" fill="#fff" opacity="0.6"/>
+    </g>
+
+    <!-- Cheek blush -->
+    <ellipse class="vf-blush" cx="75" cy="90" rx="6" ry="4" fill="#f9a8d4" opacity="0.6"/>
+    <ellipse class="vf-blush" cx="125" cy="90" rx="6" ry="4" fill="#f9a8d4" opacity="0.6" style="animation-delay: 0.5s"/>
+
+    <!-- Cute mouth -->
+    <path d="M95 95 Q100 100, 105 95" stroke="#1f1f3a" stroke-width="2" fill="none"/>
+
+    <!-- Body/Dress -->
+    <path d="M80 105 C75 115, 70 140, 75 160 Q80 175, 100 175 Q120 175, 125 160 C130 140, 125 115, 120 105
+             Q110 100, 100 100 Q90 100, 80 105"
+          fill="url(#vf-dress)" class="vf-line"/>
+
+    <!-- Dress detail -->
+    <path d="M85 120 Q100 125, 115 120" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.5"/>
+    <path d="M80 140 Q100 148, 120 140" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.4"/>
+
+    <!-- Arms -->
+    <path d="M78 110 C65 118, 55 125, 48 130" fill="none" stroke="url(#vf-skin)" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="48" cy="130" r="5" fill="url(#vf-skin)" class="vf-line"/>
+
+    <path d="M122 110 C135 118, 148 115, 158 105" fill="none" stroke="url(#vf-skin)" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="158" cy="105" r="5" fill="url(#vf-skin)" class="vf-line"/>
+
+    <!-- Wand -->
+    <line x1="158" y1="105" x2="175" y2="75" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+    <circle class="vf-wandGlow" cx="175" cy="70" r="12" fill="url(#vf-wandGlow)" filter="url(#vf-glow)"/>
+    <polygon points="175,62 178,70 175,78 172,70" fill="#fef08a"/>
+  </g>
+
+  <!-- Sparkles -->
+  <g filter="url(#vf-glow)">
+    <polygon class="vf-sparkle" points="25,35 27,40 25,45 23,40" fill="#f472b6"/>
+    <polygon class="vf-sparkle" points="170,50 172,55 170,60 168,55" fill="#22d3ee" style="animation-delay: 0.4s"/>
+    <polygon class="vf-sparkle" points="40,140 42,145 40,150 38,145" fill="#facc15" style="animation-delay: 0.8s"/>
+    <polygon class="vf-sparkle" points="160,155 162,160 160,165 158,160" fill="#a855f7" style="animation-delay: 1.2s"/>
+  </g>
+</svg>

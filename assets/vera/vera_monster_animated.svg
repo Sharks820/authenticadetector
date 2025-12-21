@@ -1,0 +1,228 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <!-- Dark aura gradient -->
+    <radialGradient id="vm-aura" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ff4757" stop-opacity="0.5"/>
+      <stop offset="40%" stop-color="#7c4dff" stop-opacity="0.3"/>
+      <stop offset="70%" stop-color="#1a1a2e" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0b0f18" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Wing gradient -->
+    <linearGradient id="vm-wing" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7c4dff"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+
+    <!-- Skin gradient - corrupted -->
+    <linearGradient id="vm-skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8b6b6b"/>
+      <stop offset="100%" stop-color="#5a4040"/>
+    </linearGradient>
+
+    <!-- Body gradient -->
+    <linearGradient id="vm-body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a1f3d"/>
+      <stop offset="100%" stop-color="#1a1525"/>
+    </linearGradient>
+
+    <!-- Core glow -->
+    <radialGradient id="vm-core" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ff4757"/>
+      <stop offset="40%" stop-color="#7c4dff"/>
+      <stop offset="100%" stop-color="#4a1d96" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Eye glow -->
+    <radialGradient id="vm-eyeGlow" cx="0.3" cy="0.3" r="0.5">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="40%" stop-color="#ff6b6b"/>
+      <stop offset="100%" stop-color="#ff4757"/>
+    </radialGradient>
+
+    <!-- Corruption glow filter -->
+    <filter id="vm-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <style>
+    .vm-line { fill: none; stroke: #1a0a1a; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Wing beat animation */
+    @keyframes wingBeatL {
+      0%, 100% { transform: rotate(-10deg) scaleX(1); }
+      50% { transform: rotate(15deg) scaleX(0.85); }
+    }
+    @keyframes wingBeatR {
+      0%, 100% { transform: rotate(10deg) scaleX(1); }
+      50% { transform: rotate(-15deg) scaleX(0.85); }
+    }
+    .vm-wingL { transform-origin: 70px 80px; animation: wingBeatL 0.3s ease-in-out infinite; }
+    .vm-wingR { transform-origin: 130px 80px; animation: wingBeatR 0.3s ease-in-out infinite; }
+
+    /* Breathing/body pulse */
+    @keyframes monsterBreath {
+      0%, 100% { transform: scale(1) translateY(0); }
+      50% { transform: scale(1.03) translateY(-2px); }
+    }
+    .vm-body { animation: monsterBreath 1.5s ease-in-out infinite; }
+
+    /* Core pulse */
+    @keyframes corePulse {
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.4); }
+    }
+    .vm-core { animation: corePulse 0.8s ease-in-out infinite; }
+
+    /* Eye flicker */
+    @keyframes eyeFlicker {
+      0%, 90%, 100% { opacity: 1; transform: scaleY(1); }
+      5% { opacity: 0.3; }
+      95% { transform: scaleY(0.2); }
+    }
+    .vm-eyes { transform-origin: 100px 70px; animation: eyeFlicker 3s ease-in-out infinite; }
+
+    /* Rune glow */
+    @keyframes runeGlow {
+      0%, 100% { opacity: 0.3; stroke-width: 2; }
+      50% { opacity: 1; stroke-width: 3.5; }
+    }
+    .vm-rune { stroke: #7c4dff; fill: none; stroke-linecap: round; animation: runeGlow 1.2s ease-in-out infinite; }
+    .vm-rune:nth-of-type(1) { animation-delay: 0s; }
+    .vm-rune:nth-of-type(2) { animation-delay: 0.3s; }
+    .vm-rune:nth-of-type(3) { animation-delay: 0.6s; }
+    .vm-rune:nth-of-type(4) { animation-delay: 0.9s; }
+
+    /* Aura pulse */
+    @keyframes auraPulse {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 0.9; transform: scale(1.05); }
+    }
+    .vm-aura { animation: auraPulse 2s ease-in-out infinite; }
+
+    /* Horn shimmer */
+    @keyframes hornShimmer {
+      0%, 100% { opacity: 0.9; }
+      50% { opacity: 1; filter: brightness(1.2); }
+    }
+    .vm-horn { animation: hornShimmer 2.5s ease-in-out infinite; }
+
+    /* Arm flex */
+    @keyframes armFlex {
+      0%, 100% { transform: scaleX(1); }
+      50% { transform: scaleX(1.05); }
+    }
+    .vm-armL { transform-origin: 50px 110px; animation: armFlex 2s ease-in-out infinite; }
+    .vm-armR { transform-origin: 150px 110px; animation: armFlex 2s ease-in-out infinite; animation-delay: -1s; }
+  </style>
+
+  <!-- Outer dark aura -->
+  <circle class="vm-aura" cx="100" cy="100" r="95" fill="url(#vm-aura)"/>
+
+  <!-- Corrupted wings -->
+  <g class="vm-wingL">
+    <path d="M20 85 C50 30, 75 25, 85 55 C70 65, 45 85, 30 110 C20 130, 10 115, 20 85"
+          fill="url(#vm-wing)" stroke="#4a1d96" stroke-width="1.5" opacity="0.9"/>
+    <path d="M35 75 C50 50, 65 45, 70 60" stroke="#c4b5fd" stroke-width="1" fill="none" opacity="0.5"/>
+  </g>
+  <g class="vm-wingR">
+    <path d="M180 85 C150 30, 125 25, 115 55 C130 65, 155 85, 170 110 C180 130, 190 115, 180 85"
+          fill="url(#vm-wing)" stroke="#4a1d96" stroke-width="1.5" opacity="0.9"/>
+    <path d="M165 75 C150 50, 135 45, 130 60" stroke="#c4b5fd" stroke-width="1" fill="none" opacity="0.5"/>
+  </g>
+
+  <g class="vm-body">
+    <!-- Horns -->
+    <g class="vm-horn">
+      <path d="M68 50 L55 25 L78 45 Z" fill="#3b2b2b" class="vm-line"/>
+      <path d="M132 50 L145 25 L122 45 Z" fill="#3b2b2b" class="vm-line"/>
+      <path d="M78 45 L70 22 L88 40 Z" fill="#2a1f1f" class="vm-line"/>
+      <path d="M122 45 L130 22 L112 40 Z" fill="#2a1f1f" class="vm-line"/>
+    </g>
+
+    <!-- Head -->
+    <ellipse cx="100" cy="68" rx="35" ry="32" fill="url(#vm-skin)" class="vm-line"/>
+
+    <!-- Menacing eyebrows -->
+    <path d="M78 58 L90 62" stroke="#1a0a1a" stroke-width="3" stroke-linecap="round"/>
+    <path d="M122 58 L110 62" stroke="#1a0a1a" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Eyes -->
+    <g class="vm-eyes">
+      <ellipse cx="88" cy="70" rx="8" ry="10" fill="#1a0a1a"/>
+      <ellipse cx="88" cy="70" rx="6" ry="8" fill="url(#vm-eyeGlow)"/>
+      <circle cx="86" cy="68" r="2" fill="#fff"/>
+
+      <ellipse cx="112" cy="70" rx="8" ry="10" fill="#1a0a1a"/>
+      <ellipse cx="112" cy="70" rx="6" ry="8" fill="url(#vm-eyeGlow)"/>
+      <circle cx="110" cy="68" r="2" fill="#fff"/>
+    </g>
+
+    <!-- Fanged mouth -->
+    <path d="M88 88 Q100 95, 112 88" stroke="#1a0a1a" stroke-width="2.5" fill="none"/>
+    <path d="M92 88 L95 95 L98 88" fill="#fff" stroke="#1a0a1a" stroke-width="1"/>
+    <path d="M102 88 L105 95 L108 88" fill="#fff" stroke="#1a0a1a" stroke-width="1"/>
+
+    <!-- Hulking body -->
+    <path d="M65 95 C50 110, 45 140, 55 170 Q60 185, 100 185 Q140 185, 145 170 C155 140, 150 110, 135 95 Q115 85, 100 85 Q85 85, 65 95"
+          fill="url(#vm-body)" class="vm-line"/>
+
+    <!-- Chest muscles -->
+    <path d="M75 110 Q100 120, 125 110" stroke="#3a2a4a" stroke-width="1.5" fill="none" opacity="0.6"/>
+    <path d="M80 125 Q100 132, 120 125" stroke="#3a2a4a" stroke-width="1.5" fill="none" opacity="0.5"/>
+
+    <!-- Core -->
+    <circle class="vm-core" cx="100" cy="130" r="10" fill="url(#vm-core)" filter="url(#vm-glow)"/>
+
+    <!-- Arms -->
+    <g class="vm-armL">
+      <path d="M60 100 C40 115, 30 135, 38 155" fill="none" stroke="url(#vm-skin)" stroke-width="14" stroke-linecap="round"/>
+      <circle cx="38" cy="158" r="8" fill="url(#vm-skin)" class="vm-line"/>
+      <!-- Claws -->
+      <path d="M32 158 L22 165" stroke="#2a1f1f" stroke-width="3" stroke-linecap="round"/>
+      <path d="M38 162 L33 175" stroke="#2a1f1f" stroke-width="3" stroke-linecap="round"/>
+      <path d="M44 160 L50 170" stroke="#2a1f1f" stroke-width="3" stroke-linecap="round"/>
+    </g>
+
+    <g class="vm-armR">
+      <path d="M140 100 C160 115, 170 135, 162 155" fill="none" stroke="url(#vm-skin)" stroke-width="14" stroke-linecap="round"/>
+      <circle cx="162" cy="158" r="8" fill="url(#vm-skin)" class="vm-line"/>
+      <!-- Claws -->
+      <path d="M168 158 L178 165" stroke="#2a1f1f" stroke-width="3" stroke-linecap="round"/>
+      <path d="M162 162 L167 175" stroke="#2a1f1f" stroke-width="3" stroke-linecap="round"/>
+      <path d="M156 160 L150 170" stroke="#2a1f1f" stroke-width="3" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- Corruption runes (floating around) -->
+  <g filter="url(#vm-glow)">
+    <path class="vm-rune" d="M25 50 L35 65 L25 65 L35 50"/>
+    <path class="vm-rune" d="M170 45 L180 55 L170 65"/>
+    <path class="vm-rune" d="M30 150 L40 145 L35 160"/>
+    <path class="vm-rune" d="M165 155 L175 150 L170 165"/>
+  </g>
+
+  <!-- Corruption particles -->
+  <g filter="url(#vm-glow)">
+    <circle cx="20" cy="100" r="3" fill="#7c4dff" opacity="0.6">
+      <animate attributeName="opacity" values="0.3;0.8;0.3" dur="1.5s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="100;90;100" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="180" cy="95" r="2" fill="#ff4757" opacity="0.5">
+      <animate attributeName="opacity" values="0.4;0.9;0.4" dur="1.2s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="95;85;95" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="35" cy="170" r="2.5" fill="#ef4444" opacity="0.5">
+      <animate attributeName="opacity" values="0.3;0.7;0.3" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="165" cy="175" r="2" fill="#8b5cf6" opacity="0.4">
+      <animate attributeName="opacity" values="0.2;0.6;0.2" dur="2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

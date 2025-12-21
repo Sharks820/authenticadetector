@@ -2233,19 +2233,21 @@
             transition: all 0.3s ease;
         }
 
-        /* VERA Inline SVG Icon Styling */
+        /* VERA Inline SVG Icon Styling - Anime Edition */
         .vera-icon {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 32px;
-            height: 32px;
+            width: 80px;
+            height: 80px;
             transition: all 0.3s ease;
         }
-        .vera-icon svg {
+        .vera-icon svg,
+        .vera-icon object {
             width: 100%;
             height: 100%;
             stroke-width: 2;
+            pointer-events: none;
         }
         .vera-fairy {
             color: #00d4aa;
@@ -16943,7 +16945,7 @@ async function confirmVerifySubmission() {
 <!-- Floating Helper - VERA the Pixel Fairy - Professional Lucide Icons -->
 <div class="help-bot" id="helpBot" title="Click to pop, hold for help!">
     <span class="help-bot-face" id="veraFace">
-        <span class="vera-icon vera-fairy"><img src="assets/vera/vera_fairy.svg" alt="Vera"></span>
+        <span class="vera-icon vera-fairy"><object type="image/svg+xml" data="assets/vera/vera_fairy_animated.svg" width="100%" height="100%" aria-label="VERA the fairy"></object></span>
     </span>
     <div class="help-bot-badge" id="veraHelpBadge" onclick="event.stopPropagation(); openHelp();" title="Open Help">?</div>
     <div class="help-bot-tip">
@@ -17084,10 +17086,10 @@ async function confirmVerifySubmission() {
         "*sweating* Those weren't horns, they were... fancy hair! 💇"
     ];
 
-    // INLINE SVG icons for VERA - no CDN dependency!
+    // INLINE SVG icons for VERA - ANIMATED ANIME VERSIONS!
     const veraSVGs = {
-        vera_fairy: '<img src="assets/vera/vera_fairy.svg" alt="Vera">',
-        vera_monster: '<img src="assets/vera/vera_monster.svg" alt="Vera">',
+        vera_fairy: '<object type="image/svg+xml" data="assets/vera/vera_fairy_animated.svg" width="100%" height="100%" aria-label="VERA fairy"></object>',
+        vera_monster: '<object type="image/svg+xml" data="assets/vera/vera_monster_animated.svg" width="100%" height="100%" aria-label="VERA monster"></object>',
         vera_happy: '<img src="assets/vera/vera_happy.svg" alt="Vera">',
         vera_think: '<img src="assets/vera/vera_think.svg" alt="Vera">',
         vera_angry: '<img src="assets/vera/vera_angry.svg" alt="Vera">',
