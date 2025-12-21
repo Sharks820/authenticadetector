@@ -124,12 +124,23 @@
             50%{filter:drop-shadow(0 0 20px rgba(0,212,170,0.8))}
         }
         .logo-text{
-            font-size:18px;font-weight:900;letter-spacing:-0.5px;
-            background:linear-gradient(135deg, var(--primary), #6366f1, #ec4899);
-            background-size:200% auto;
-            animation:text-shimmer 3s linear infinite;
+            font-size:16px;font-weight:900;letter-spacing:-0.3px;
+            /* Brighter, more visible gradient */
+            background:linear-gradient(135deg, #00ffcc 0%, #00d4aa 25%, #8b5cf6 50%, #ec4899 75%, #00ffcc 100%);
+            background-size:300% auto;
+            animation:text-shimmer 4s linear infinite;
             -webkit-background-clip:text;-webkit-text-fill-color:transparent;
             background-clip:text;
+            text-shadow:0 0 30px rgba(0,212,170,0.5);
+            white-space:nowrap;
+        }
+        /* Mobile: shorter text display */
+        @media(max-width:420px){
+            .logo-text{font-size:14px}
+            .header-btns .icon-btn:not(:nth-child(-n+2)){display:none}
+        }
+        @media(max-width:360px){
+            .logo-text{font-size:12px}
         }
         @keyframes text-shimmer{
             0%{background-position:0% center}
