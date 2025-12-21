@@ -269,12 +269,17 @@
         }
         .game-cta-glow {
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(26, 188, 156, 0.2) 0%, transparent 70%);
-            animation: rotate 10s linear infinite;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(26, 188, 156, 0.15) 0%, transparent 60%);
+            animation: subtle-pulse 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes subtle-pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
         }
         .game-cta-content {
             position: relative;
@@ -289,7 +294,7 @@
         .game-cta-icon {
             font-size: 48px;
             line-height: 1;
-            animation: bounce 2s ease-in-out infinite;
+            /* Removed constant bounce - too distracting */
         }
         .game-cta-stats {
             display: flex;
