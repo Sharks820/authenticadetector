@@ -557,98 +557,126 @@
         }
         .facts-icon{font-size:20px;flex-shrink:0;filter:drop-shadow(0 0 8px rgba(0,212,170,0.5))}
 
-        /* TRUTH HUNTERS GAME CTA - DEEP PROFESSIONAL DESIGN */
+        /* TRUTH HUNTERS GAME CTA - EPIC PREMIUM DESIGN */
         .game-cta-card {
             margin: 16px;
-            padding: 20px;
-            background: linear-gradient(135deg, rgba(0,212,170,0.12) 0%, rgba(9,132,227,0.1) 50%, rgba(108,92,231,0.08) 100%);
-            border: 2px solid rgba(0,212,170,0.4);
-            border-radius: 16px;
+            padding: 0;
+            background: linear-gradient(145deg, #1a1f35 0%, #0d1117 100%);
+            border: 2px solid transparent;
+            border-image: linear-gradient(135deg, #00d4aa, #6366f1, #ff6b35) 1;
+            border-radius: 20px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4),
+                        0 0 0 1px rgba(255,255,255,0.05) inset,
+                        0 0 60px rgba(0,212,170,0.1);
         }
         .game-cta-glow {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at 30% 50%, rgba(0,212,170,0.15) 0%, transparent 50%),
-                        radial-gradient(ellipse at 70% 50%, rgba(9,132,227,0.12) 0%, transparent 50%);
-            animation: subtle-pulse 4s ease-in-out infinite;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(0,212,170,0.1), transparent, rgba(99,102,241,0.1), transparent, rgba(255,107,53,0.1), transparent);
+            animation: epicRotate 8s linear infinite;
             pointer-events: none;
         }
-        @keyframes subtle-pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 0.8; }
+        @keyframes epicRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
         .game-cta-content {
             position: relative;
             z-index: 1;
+            padding: 24px;
+            background: linear-gradient(180deg, rgba(26,31,53,0.9) 0%, rgba(13,17,23,0.95) 100%);
         }
         .game-cta-header {
             display: flex;
             align-items: center;
             gap: 16px;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         .game-cta-icon {
-            font-size: 48px;
-            line-height: 1;
-            /* Removed constant bounce - too distracting */
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, rgba(0,212,170,0.2), rgba(99,102,241,0.2));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0,212,170,0.3);
+            box-shadow: 0 4px 20px rgba(0,212,170,0.2);
         }
         .game-cta-stats {
             display: flex;
             gap: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
         .game-cta-stat {
             flex: 1;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 12px 8px;
-            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            padding: 14px 10px;
+            border-radius: 14px;
             text-align: center;
+            border: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
         }
         .game-cta-stat-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary);
+            font-size: 20px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4aa, #00ffcc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 4px;
         }
         .game-cta-stat-label {
             font-size: 10px;
             color: var(--text3);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            font-weight: 600;
         }
-        @keyframes playNowPulse {
-            0%, 100% { box-shadow: 0 4px 20px rgba(255,107,53,0.5), 0 0 30px rgba(255,107,53,0.3); }
-            50% { box-shadow: 0 6px 30px rgba(255,184,0,0.6), 0 0 50px rgba(255,184,0,0.4); }
+        @keyframes epicPulse {
+            0%, 100% {
+                box-shadow: 0 6px 24px rgba(255,107,53,0.4),
+                            0 0 40px rgba(255,107,53,0.2),
+                            inset 0 1px 0 rgba(255,255,255,0.2);
+            }
+            50% {
+                box-shadow: 0 8px 32px rgba(255,184,0,0.5),
+                            0 0 60px rgba(255,184,0,0.3),
+                            inset 0 1px 0 rgba(255,255,255,0.3);
+            }
         }
-        @keyframes playNowShimmer {
+        @keyframes epicShimmer {
             0% { background-position: -200% center; }
             100% { background-position: 200% center; }
         }
         .game-cta-btn {
             width: 100%;
-            padding: 18px 24px;
-            background: linear-gradient(90deg, #ff6b35 0%, #ffb800 25%, #ff6b35 50%, #ffb800 75%, #ff6b35 100%);
-            background-size: 200% auto;
-            animation: playNowPulse 2s ease-in-out infinite, playNowShimmer 3s linear infinite;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 16px;
+            padding: 18px 28px;
+            background: linear-gradient(90deg,
+                #ff4757 0%, #ff6b35 20%, #ffb800 40%,
+                #ff6b35 60%, #ff4757 80%, #ff6b35 100%);
+            background-size: 300% auto;
+            animation: epicPulse 2.5s ease-in-out infinite, epicShimmer 4s linear infinite;
+            border: none;
+            border-radius: 14px;
             color: #fff;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 900;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             text-transform: uppercase;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 14px;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.4), 0 0 20px rgba(255,184,0,0.5);
+            gap: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
             position: relative;
             overflow: hidden;
         }
@@ -657,24 +685,24 @@
             position: absolute;
             top: 0;
             left: -100%;
-            width: 100%;
+            width: 60%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.6s ease;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transform: skewX(-20deg);
+            transition: left 0.8s ease;
         }
         .game-cta-btn:hover {
-            transform: translateY(-4px) scale(1.02);
-            filter: brightness(1.1);
+            transform: translateY(-3px) scale(1.02);
+            filter: brightness(1.15) saturate(1.1);
         }
         .game-cta-btn:hover::before {
-            left: 100%;
+            left: 150%;
         }
         .game-cta-btn:active {
             transform: scale(0.98);
         }
-        .game-cta-btn .game-cta-icon {
-            font-size: 24px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        .game-cta-btn .lucide-icon {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
         }
         @keyframes pulse {
             0%, 100% { box-shadow: 0 0 20px rgba(26, 188, 156, 0.3); }
@@ -4792,44 +4820,48 @@
             </div>
         </div>
 
-        <!-- TANK BATTLE GAME CTA - EPIC DESIGN with Professional Icons -->
+        <!-- TANK BATTLE GAME CTA - EPIC PREMIUM DESIGN -->
         <div class="game-cta-card" id="gameCTA" style="display:none">
             <div class="game-cta-glow"></div>
             <div class="game-cta-content">
                 <div class="game-cta-header">
-                    <div class="game-cta-icon" style="font-size:40px;filter:drop-shadow(0 0 15px rgba(0,212,170,0.8))"><i data-lucide="gamepad-2" class="lucide-icon-lg" style="color:var(--primary)"></i></div>
-                    <div>
-                        <h2 style="margin:0;font-size:22px;font-weight:800;background:linear-gradient(135deg,#00d4aa,#0984e3);-webkit-background-clip:text;-webkit-text-fill-color:transparent">TANK BATTLE</h2>
-                        <p style="margin:4px 0 0;color:var(--text2);font-size:13px"><i data-lucide="bot" class="lucide-icon-sm"></i> Destroy AI Fakes • <i data-lucide="coins" class="lucide-icon-sm"></i> Earn Coins • <i data-lucide="trophy" class="lucide-icon-sm"></i> Top the Ranks</p>
+                    <div class="game-cta-icon">
+                        <i data-lucide="tank" class="lucide-icon-lg" style="color:#00d4aa;width:32px;height:32px"></i>
+                    </div>
+                    <div style="flex:1">
+                        <h2 style="margin:0;font-size:24px;font-weight:900;background:linear-gradient(135deg,#00d4aa 0%,#6366f1 50%,#ff6b35 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px">TANK BATTLE</h2>
+                        <p style="margin:6px 0 0;color:var(--text2);font-size:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                            <span style="display:flex;align-items:center;gap:4px"><i data-lucide="target" class="lucide-icon-sm" style="color:#ff6b35"></i> Destroy Fakes</span>
+                            <span style="display:flex;align-items:center;gap:4px"><i data-lucide="coins" class="lucide-icon-sm" style="color:#ffd700"></i> Earn Coins</span>
+                            <span style="display:flex;align-items:center;gap:4px"><i data-lucide="crown" class="lucide-icon-sm" style="color:#a78bfa"></i> Rank Up</span>
+                        </p>
                     </div>
                 </div>
                 <div class="game-cta-stats">
                     <div class="game-cta-stat">
-                        <div class="game-cta-stat-value" id="userLevel">Lvl 1</div>
+                        <div class="game-cta-stat-value" id="userLevel"><i data-lucide="star" class="lucide-icon-sm" style="width:16px;height:16px"></i> Lvl 1</div>
                         <div class="game-cta-stat-label">Level</div>
                     </div>
                     <div class="game-cta-stat">
-                        <div class="game-cta-stat-value" id="userCoins">0 <i data-lucide="circle-dollar-sign" class="lucide-icon-sm"></i></div>
+                        <div class="game-cta-stat-value" id="userCoins"><i data-lucide="circle-dollar-sign" class="lucide-icon-sm" style="width:16px;height:16px;color:#ffd700"></i> 0</div>
                         <div class="game-cta-stat-label">Coins</div>
                     </div>
                     <div class="game-cta-stat">
-                        <div class="game-cta-stat-value" id="userRank">#--</div>
+                        <div class="game-cta-stat-value" id="userRank"><i data-lucide="trophy" class="lucide-icon-sm" style="width:16px;height:16px;color:#ff6b35"></i> #--</div>
                         <div class="game-cta-stat-label">Rank</div>
                     </div>
                 </div>
-                <button class="game-cta-btn" onclick="openView('outbreaksView')" style="background:linear-gradient(135deg,#ff4757,#ff6b6b)">
-                    <span style="font-size:24px"><i data-lucide="gamepad-2" class="lucide-icon"></i></span>
-                    <span style="font-weight:800;font-size:16px">PLAY TANK BATTLE</span>
-                    <span style="font-size:12px;opacity:0.9"><i data-lucide="swords" class="lucide-icon-sm"></i></span>
+                <button class="game-cta-btn" onclick="startTankShooter()">
+                    <i data-lucide="play" class="lucide-icon" style="width:24px;height:24px"></i>
+                    <span>PLAY NOW</span>
+                    <i data-lucide="chevrons-right" class="lucide-icon-sm"></i>
                 </button>
-                <div style="display:flex;gap:8px;margin-top:12px">
-                    <button onclick="openView('huntView')" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(0,212,170,0.3);background:rgba(0,212,170,0.1);color:var(--primary);font-weight:600;font-size:12px;cursor:pointer;position:relative">
-                        <i data-lucide="crosshair" class="lucide-icon-sm"></i> Hunt Mode
-                        <span class="game-badge" style="position:absolute;top:-6px;right:-6px;background:#ff4757;color:#fff;font-size:8px;padding:2px 5px;border-radius:10px;font-weight:700">GAME</span>
+                <div style="display:flex;gap:10px;margin-top:14px">
+                    <button onclick="openView('huntView')" class="game-mode-btn" style="flex:1;padding:14px 16px;border-radius:12px;border:1px solid rgba(0,212,170,0.3);background:linear-gradient(135deg,rgba(0,212,170,0.12),rgba(0,212,170,0.04));color:var(--primary);font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.3s ease;box-shadow:0 4px 20px rgba(0,212,170,0.15)">
+                        <i data-lucide="crosshair" class="lucide-icon-sm"></i> Hunt
                     </button>
-                    <button onclick="openView('verifyView')" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(99,102,241,0.3);background:rgba(99,102,241,0.1);color:#a78bfa;font-weight:600;font-size:12px;cursor:pointer;position:relative">
-                        <i data-lucide="check-circle" class="lucide-icon-sm"></i> Verify Mode
-                        <span class="game-badge" style="position:absolute;top:-6px;right:-6px;background:#ff4757;color:#fff;font-size:8px;padding:2px 5px;border-radius:10px;font-weight:700">GAME</span>
+                    <button onclick="openView('verifyView')" class="game-mode-btn" style="flex:1;padding:14px 16px;border-radius:12px;border:1px solid rgba(99,102,241,0.3);background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(99,102,241,0.04));color:#a78bfa;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.3s ease;box-shadow:0 4px 20px rgba(99,102,241,0.15)">
+                        <i data-lucide="shield-check" class="lucide-icon-sm"></i> Verify
                     </button>
                 </div>
             </div>
