@@ -14179,6 +14179,123 @@ window.openQuestsView = function() {
     toast('Check daily quests on your profile!');
 };
 
+// ==================== SOUND SYSTEM ====================
+// Simple sound effects for game actions
+
+const SoundManager = {
+    enabled: true,
+    volume: 0.5,
+
+    // Sound definitions (using Web Audio API for generated sounds)
+    sounds: {
+        coin: { frequency: 800, duration: 0.1, type: 'sine' },
+        success: { frequency: 600, duration: 0.15, type: 'sine', sweep: 800 },
+        error: { frequency: 200, duration: 0.2, type: 'square' },
+        click: { frequency: 400, duration: 0.05, type: 'sine' },
+        levelUp: { frequency: 400, duration: 0.3, type: 'sine', sweep: 800 },
+        reward: { frequency: 500, duration: 0.2, type: 'sine', sweep: 700 },
+        scan: { frequency: 300, duration: 0.5, type: 'sawtooth' },
+        shoot: { frequency: 150, duration: 0.1, type: 'square' },
+        explosion: { frequency: 100, duration: 0.3, type: 'sawtooth' },
+        powerup: { frequency: 600, duration: 0.2, type: 'sine', sweep: 1000 }
+    },
+
+    audioContext: null,
+
+    init() {
+        try {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            console.log('[Sound] Audio system initialized');
+        } catch (e) {
+            console.warn('[Sound] Web Audio API not supported');
+            this.enabled = false;
+        }
+
+        // Load saved preference
+        const savedEnabled = localStorage.getItem('sound_enabled');
+        if (savedEnabled !== null) {
+            this.enabled = savedEnabled === 'true';
+        }
+
+        const savedVolume = localStorage.getItem('sound_volume');
+        if (savedVolume !== null) {
+            this.volume = parseFloat(savedVolume);
+        }
+    },
+
+    play(soundName) {
+        if (!this.enabled || !this.audioContext) return;
+
+        const sound = this.sounds[soundName];
+        if (!sound) return;
+
+        try {
+            // Resume audio context if suspended (required by browsers)
+            if (this.audioContext.state === 'suspended') {
+                this.audioContext.resume();
+            }
+
+            const oscillator = this.audioContext.createOscillator();
+            const gainNode = this.audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(this.audioContext.destination);
+
+            oscillator.type = sound.type || 'sine';
+            oscillator.frequency.setValueAtTime(sound.frequency, this.audioContext.currentTime);
+
+            // Apply frequency sweep if defined
+            if (sound.sweep) {
+                oscillator.frequency.linearRampToValueAtTime(
+                    sound.sweep,
+                    this.audioContext.currentTime + sound.duration
+                );
+            }
+
+            // Envelope
+            gainNode.gain.setValueAtTime(this.volume * 0.3, this.audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(
+                0.01,
+                this.audioContext.currentTime + sound.duration
+            );
+
+            oscillator.start(this.audioContext.currentTime);
+            oscillator.stop(this.audioContext.currentTime + sound.duration);
+        } catch (e) {
+            console.warn('[Sound] Failed to play sound:', e);
+        }
+    },
+
+    toggle() {
+        this.enabled = !this.enabled;
+        localStorage.setItem('sound_enabled', this.enabled);
+        toast(this.enabled ? '🔊 Sound ON' : '🔇 Sound OFF');
+        return this.enabled;
+    },
+
+    setVolume(vol) {
+        this.volume = Math.max(0, Math.min(1, vol));
+        localStorage.setItem('sound_volume', this.volume);
+    }
+};
+
+// Initialize sound system
+document.addEventListener('DOMContentLoaded', () => SoundManager.init());
+
+// Also init on first user interaction (required by browsers)
+document.addEventListener('click', () => {
+    if (SoundManager.audioContext?.state === 'suspended') {
+        SoundManager.audioContext.resume();
+    }
+}, { once: true });
+
+// Helper function for easy sound playing
+function playSound(name) {
+    SoundManager.play(name);
+}
+window.playSound = playSound;
+window.SoundManager = SoundManager;
+
 // ==================== QUEST SYSTEM ====================
 
 // Quest Definitions
@@ -14483,29 +14600,76 @@ function showQuestCompleted(questDef, questType) {
 
 // Claim quest reward
 async function claimQuestReward(questId, questType) {
-    const userQuests = getStorage('userQuests', null);
-    if (!userQuests) return;
+    console.log('[Quests] Claiming reward for:', questId, questType);
 
-    const questList = userQuests[questType].quests;
+    const userQuests = getStorage('userQuests', null);
+    if (!userQuests) {
+        console.error('[Quests] No userQuests found');
+        toast('Error: Quest data not found', 'error');
+        return;
+    }
+
+    const questList = userQuests[questType]?.quests;
+    if (!questList) {
+        console.error('[Quests] No quest list for type:', questType);
+        return;
+    }
+
     const quest = questList.find(q => q.id === questId);
 
-    if (!quest || !quest.completed || quest.claimed) return;
+    if (!quest) {
+        console.error('[Quests] Quest not found:', questId);
+        return;
+    }
 
-    const def = QUEST_DEFINITIONS[questType].find(q => q.id === questId);
-    if (!def) return;
+    if (!quest.completed) {
+        toast('Complete the quest first!', 'warning');
+        return;
+    }
+
+    if (quest.claimed) {
+        toast('Already claimed!', 'warning');
+        return;
+    }
+
+    const def = QUEST_DEFINITIONS[questType]?.find(q => q.id === questId);
+    if (!def) {
+        console.error('[Quests] Quest definition not found:', questId);
+        return;
+    }
 
     // Award reward
     if (def.reward.coins) {
-        await awardCoins(def.reward.coins, `Quest: ${def.title}`);
-    } else if (def.reward.cosmetic) {
+        // Try to award coins (works for both logged in and guest)
+        try {
+            if (user && userProgression) {
+                await awardCoins(def.reward.coins, `Quest: ${def.title}`);
+            } else {
+                // Guest mode - just update local progression
+                if (typeof userProgression !== 'undefined' && userProgression) {
+                    userProgression.truth_coins = (userProgression.truth_coins || 0) + def.reward.coins;
+                    if (typeof updateCoinsDisplay === 'function') updateCoinsDisplay();
+                }
+            }
+            playSound('coin');
+            toast(`+${def.reward.coins} 🪙 coins earned!`, 'success');
+        } catch (err) {
+            console.error('[Quests] Failed to award coins:', err);
+            playSound('error');
+            toast('Failed to award coins', 'error');
+            return;
+        }
+    }
+
+    if (def.reward.cosmetic) {
         // Store cosmetic reward
         const cosmetics = getStorage('cosmetic_rewards', []);
         if (!cosmetics.includes(def.reward.cosmetic)) {
             cosmetics.push(def.reward.cosmetic);
             setStorage('cosmetic_rewards', cosmetics);
         }
-
-        showNotification(`Unlocked: ${def.reward.cosmetic}!`, 'success');
+        playSound('reward');
+        toast(`Unlocked: ${def.reward.cosmetic}!`, 'success');
     }
 
     // Mark as claimed
@@ -14514,7 +14678,11 @@ async function claimQuestReward(questId, questType) {
 
     // Re-render quests
     renderQuests();
+
+    console.log('[Quests] Successfully claimed reward for:', def.title);
 }
+// Expose to window for onclick handlers
+window.claimQuestReward = claimQuestReward;
 
 // Render quests in UI
 function renderQuests() {
