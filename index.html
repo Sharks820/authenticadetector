@@ -1811,39 +1811,69 @@
             to { opacity: 1; max-height: 500px; }
         }
 
+        @keyframes botWiggle {
+            0%, 100% { transform: translateY(0) rotate(-8deg) scale(1); }
+            25% { transform: translateY(-8px) rotate(5deg) scale(1.05); }
+            50% { transform: translateY(-12px) rotate(-5deg) scale(1.08); }
+            75% { transform: translateY(-6px) rotate(8deg) scale(1.03); }
+        }
+        @keyframes botGlowPulse {
+            0%, 100% {
+                box-shadow: 0 4px 20px rgba(255,107,53,0.5), 0 0 40px rgba(0,212,170,0.3),
+                            inset 0 0 20px rgba(255,255,255,0.1);
+            }
+            50% {
+                box-shadow: 0 8px 40px rgba(255,184,0,0.7), 0 0 60px rgba(0,212,170,0.5),
+                            inset 0 0 30px rgba(255,255,255,0.2);
+            }
+        }
+        @keyframes eyeGlow {
+            0%, 100% { text-shadow: 0 0 10px #ff6b35, 0 0 20px #ffb800; }
+            50% { text-shadow: 0 0 20px #ff6b35, 0 0 40px #ffb800, 0 0 60px #00d4aa; }
+        }
+
         .help-bot {
             position: fixed;
             bottom: 100px;
             right: 20px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #00d4aa 0%, #0984e3 100%);
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            font-size: 36px;
             cursor: pointer;
-            animation: helpBotFloat 3s ease-in-out infinite;
-            box-shadow: 0 4px 20px rgba(0,212,170,0.4), 0 0 40px rgba(0,212,170,0.2);
+            animation: botWiggle 2.5s ease-in-out infinite, botGlowPulse 2s ease-in-out infinite;
             z-index: 100;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 3px solid transparent;
+            background-clip: padding-box;
             transition: transform 0.3s ease;
         }
-        .help-bot:hover {
-            transform: scale(1.15) !important;
-            box-shadow: 0 6px 30px rgba(0,212,170,0.6), 0 0 60px rgba(0,212,170,0.3);
-        }
-        .help-bot::after {
+        .help-bot::before {
             content: '';
             position: absolute;
-            top: 18px;
-            left: 15px;
-            width: 8px;
-            height: 8px;
-            background: #fff;
+            inset: -3px;
             border-radius: 50%;
-            animation: helpBotBlink 3s ease-in-out infinite;
+            background: linear-gradient(135deg, #ff6b35, #ffb800, #00d4aa, #0984e3);
+            background-size: 300% 300%;
+            animation: botBorderRotate 3s linear infinite;
+            z-index: -1;
+        }
+        @keyframes botBorderRotate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .help-bot:hover {
+            transform: scale(1.2) rotate(15deg) !important;
+        }
+        .help-bot-face {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: eyeGlow 1.5s ease-in-out infinite;
         }
         .help-bot-tip {
             position: absolute;
@@ -13693,20 +13723,22 @@ function drawParticles(ctx) {
 init();
 </script>
 
-<!-- Floating Helper Bot -->
-<div class="help-bot" id="helpBot" onclick="openHelp()" title="Need help?">
-    🤖
+<!-- Floating Helper Bot - VERA the AI Fighter -->
+<div class="help-bot" id="helpBot" onclick="openHelp()" title="Ask VERA!">
+    <span class="help-bot-face">👾</span>
     <div class="help-bot-tip">
-        <strong>Hi! I'm AuthentiBot!</strong><br>
-        Tap me for help with scans, games, and more!
+        <strong style="color:#ff6b35">⚡ VERA says:</strong><br>
+        <span id="veraTip">Those fake images think they're SO smart... Let's bust 'em!</span>
     </div>
 </div>
 
 <script>
-// Helper bot visibility - show on all pages except when keyboard is open
+// VERA - The quirky AI who hunts AI-generated images
+// She's an AI but has a silly grudge against AI images... the irony isn't lost on her
 (function() {
     const helpBot = document.getElementById('helpBot');
-    if (!helpBot) return;
+    const veraTip = document.getElementById('veraTip');
+    if (!helpBot || !veraTip) return;
 
     // Hide bot during keyboard input
     if (window.visualViewport) {
@@ -13716,24 +13748,38 @@ init();
         });
     }
 
-    // Random tips
-    const tips = [
-        "Need help? Tap me!",
-        "I detect AI images!",
-        "Play Truth Hunters! 🎮",
-        "Earn coins by scanning!",
-        "Join a Squad today!",
-        "Check the leaderboard! 🏆"
+    // VERA's quirky personality tips
+    const veraTips = [
+        "Those fake images think they're SO smart... 🙄",
+        "I'm an AI hunting AI. Yes, the irony isn't lost on me! 😤",
+        "DALL-E? Midjourney? Psh. I see RIGHT through them!",
+        "Upload a pic! I'll sniff out those AI imposters! 🔍",
+        "Why do I hate AI images? It's... complicated. 💔",
+        "Every fake I catch is a personal victory! 🏆",
+        "Scan something! These pixels won't analyze themselves!",
+        "I was born to fight fakes. It's kinda my whole thing.",
+        "Join Truth Hunters! Together we're unstoppable! 💪",
+        "*beep boop* Just kidding, I'm way more advanced than that.",
+        "AI images ruined my... nevermind. Just scan something!",
+        "Is this image real? Only one way to find out! 👀",
+        "Trust no pixel! Except me. I'm trustworthy... mostly.",
+        "Being an AI fighting AI is like being a double agent! 🕵️",
+        "Those generators work 24/7. So do I. Let's GO! 🔥"
     ];
 
     let tipIndex = 0;
     setInterval(() => {
-        const tipEl = helpBot.querySelector('.help-bot-tip strong + br');
-        if (tipEl && tipEl.nextSibling) {
-            tipIndex = (tipIndex + 1) % tips.length;
-            tipEl.nextSibling.textContent = tips[tipIndex];
-        }
-    }, 5000);
+        tipIndex = (tipIndex + 1) % veraTips.length;
+        veraTip.textContent = veraTips[tipIndex];
+    }, 4000);
+
+    // Random entrance animations
+    setTimeout(() => {
+        helpBot.style.transform = 'scale(1.3) rotate(360deg)';
+        setTimeout(() => {
+            helpBot.style.transform = '';
+        }, 500);
+    }, 2000);
 })();
 </script>
 </body>
