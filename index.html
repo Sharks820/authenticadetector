@@ -4474,7 +4474,11 @@ function showView(id) {
 }
 // Note: closeView is defined in the TruthHunters game section below
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-function round(v) { return Math.round(v); }
+function round(v) {
+    const num = Number(v);
+    if (isNaN(num) || v === null || v === undefined) return 50; // Safe default
+    return Math.round(Math.max(0, Math.min(100, num)));  // Clamp to 0-100
+}
 function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 
 // ==================== INIT LOGOS ====================
@@ -7959,11 +7963,11 @@ async function analyzeImage(dataUrl, mode) {
     // =========================================
     // 3. FREQUENCY DOMAIN ANALYSIS (FFT)
     // Detects spectral anomalies in AI images
-    // P1-A CRASH FIX: FFT completely disabled for Deep Scan to isolate crash
+    // RE-ENABLED: FFT now uses safe size limits (64px deep, 256px forensics)
     // =========================================
-    if (false && (finalMode === 'deep' || finalMode === 'forensics')) {
-        // P1-A: This entire block is disabled to test if FFT causes crash
-        console.log('[DeepScan] 3/12: FFT DISABLED (P1-A crash investigation)');
+    if (finalMode === 'deep' || finalMode === 'forensics') {
+        // FFT re-enabled with size limits to prevent crashes
+        console.log('[DeepScan] 3/12: FFT frequency analysis...');
         const isForensics = finalMode === 'forensics';
         console.log(`[Scan] 3/12: FFT frequency analysis (${isForensics ? 'Forensics' : 'Deep'})...`);
 
@@ -8005,8 +8009,8 @@ async function analyzeImage(dataUrl, mode) {
         }
         await yieldToMain();
     } else {
-        // P1-A: FFT disabled for crash investigation
-        console.log('[DeepScan] 3/12: FFT SKIPPED (P1-A crash prevention)');
+        // Quick scan mode - skip FFT for speed
+        console.log('[DeepScan] 3/12: FFT SKIPPED (Quick scan mode)');
     }
 
     // =========================================
