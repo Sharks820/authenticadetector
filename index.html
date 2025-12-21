@@ -5312,6 +5312,7 @@ async function loadHuntView() {
 
 // ==================== VERIFY MODE ====================
 let currentSubmission = null;
+let pendingSubmissions = []; // P1-B fix: was missing declaration
 let swipeStartX = 0;
 let swipeCurrentX = 0;
 let isSwiping = false;
