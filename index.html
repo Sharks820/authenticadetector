@@ -2025,9 +2025,9 @@
             position: fixed;
             bottom: 100px;
             right: 20px;
-            width: 180px;
-            height: 180px;
-            background: radial-gradient(circle at 30% 30%, rgba(138, 43, 226, 0.3), rgba(0, 212, 170, 0.2) 50%, rgba(255, 107, 53, 0.1));
+            width: 90px;
+            height: 90px;
+            background: radial-gradient(circle at 30% 30%, rgba(138, 43, 226, 0.2), rgba(0, 212, 170, 0.15) 50%, transparent);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -2036,11 +2036,11 @@
             cursor: pointer;
             animation: veraFloat 3s ease-in-out infinite, veraGlowPulse 2s ease-in-out infinite;
             z-index: 100;
-            border: 3px solid rgba(0, 212, 170, 0.5);
-            box-shadow: 0 0 20px rgba(0, 212, 170, 0.4),
-                        0 0 40px rgba(138, 43, 226, 0.2),
-                        inset 0 0 15px rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(0, 212, 170, 0.3);
+            box-shadow: 0 0 15px rgba(0, 212, 170, 0.3),
+                        0 0 30px rgba(138, 43, 226, 0.15);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: visible;
         }
         /* Magical sparkle ring around VERA */
         .help-bot::before {
@@ -2090,8 +2090,8 @@
             }
         }
         @keyframes veraSparkleOrbit {
-            0% { transform: rotate(0deg) translateX(62px) rotate(0deg); }
-            100% { transform: rotate(360deg) translateX(62px) rotate(-360deg); }
+            0% { transform: rotate(0deg) translateX(35px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(35px) rotate(-360deg); }
         }
         .help-bot:hover {
             transform: scale(1.15) rotate(10deg) !important;
@@ -2109,15 +2109,15 @@
         /* VERA's Help Badge - Clean ? with star animations */
         .help-bot-badge {
             position: absolute;
-            top: -12px;
-            right: -12px;
-            width: 36px;
-            height: 36px;
+            top: -8px;
+            right: -8px;
+            width: 28px;
+            height: 28px;
             background: radial-gradient(circle, rgba(255,71,87,0.25) 0%, rgba(255,71,87,0.05) 70%, transparent 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 16px;
             font-weight: 900;
             color: #ff4757;
             cursor: pointer;
@@ -2238,9 +2238,10 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 170px;
-            height: 170px;
+            width: 140px;
+            height: 140px;
             transition: all 0.3s ease;
+            /* Fairy overflows the small orb - she's the star! */
         }
         .vera-icon svg,
         .vera-icon object {
