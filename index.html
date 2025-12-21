@@ -14173,12 +14173,6 @@ window.rollDesignerGacha = rollDesignerGacha;
 // Initialize on load
 window.initCharacterDesigner = initCharacterDesigner;
 
-window.openQuestsView = function() {
-    showView('helpView'); // Quests are in help for now
-    // TODO: Create dedicated quests view
-    toast('Check daily quests on your profile!');
-};
-
 // ==================== SOUND SYSTEM ====================
 // Simple sound effects for game actions
 
@@ -14301,6 +14295,16 @@ window.SoundManager = SoundManager;
 // Quest Definitions
 const QUEST_DEFINITIONS = {
     daily: [
+        {
+            id: 'daily_login',
+            icon: '🎁',
+            title: 'Daily Login',
+            description: 'Log in today',
+            target: 1,
+            reward: { coins: 25 },
+            trackedEvent: 'daily_login',
+            autoComplete: true // This one completes automatically on open
+        },
         {
             id: 'scan_master',
             icon: '🔍',
@@ -14436,8 +14440,8 @@ function initializeQuests() {
                 lastReset: Date.now(),
                 quests: QUEST_DEFINITIONS.daily.map(q => ({
                     id: q.id,
-                    progress: 0,
-                    completed: false,
+                    progress: q.autoComplete ? q.target : 0,
+                    completed: q.autoComplete || false,
                     claimed: false
                 }))
             },
@@ -14445,20 +14449,56 @@ function initializeQuests() {
                 lastReset: Date.now(),
                 quests: QUEST_DEFINITIONS.weekly.map(q => ({
                     id: q.id,
-                    progress: 0,
-                    completed: false,
+                    progress: q.autoComplete ? q.target : 0,
+                    completed: q.autoComplete || false,
                     claimed: false
                 }))
             },
             special: {
                 quests: QUEST_DEFINITIONS.special.map(q => ({
                     id: q.id,
-                    progress: 0,
-                    completed: false,
+                    progress: q.autoComplete ? q.target : 0,
+                    completed: q.autoComplete || false,
                     claimed: false
                 }))
             }
         };
+        setStorage('userQuests', userQuests);
+    }
+
+    // Sync quests - add any new quests that were added to definitions
+    let needsSave = false;
+    ['daily', 'weekly', 'special'].forEach(type => {
+        if (!userQuests[type]?.quests) return;
+        const defs = QUEST_DEFINITIONS[type] || [];
+
+        // Add any new quests from definitions
+        defs.forEach(def => {
+            const exists = userQuests[type].quests.find(q => q.id === def.id);
+            if (!exists) {
+                userQuests[type].quests.push({
+                    id: def.id,
+                    progress: def.autoComplete ? def.target : 0,
+                    completed: def.autoComplete || false,
+                    claimed: false
+                });
+                needsSave = true;
+                console.log('[Quests] Added new quest:', def.id);
+            }
+        });
+
+        // Auto-complete any autoComplete quests that aren't claimed yet
+        userQuests[type].quests.forEach(quest => {
+            const def = defs.find(q => q.id === quest.id);
+            if (def?.autoComplete && !quest.completed && !quest.claimed) {
+                quest.progress = def.target;
+                quest.completed = true;
+                needsSave = true;
+                console.log('[Quests] Auto-completed:', quest.id);
+            }
+        });
+    });
+    if (needsSave) {
         setStorage('userQuests', userQuests);
     }
 
@@ -14795,11 +14835,14 @@ function updateQuestTimers() {
 
 // Open quests view
 window.openQuestsView = function() {
+    console.log('[Quests] Opening quests view...');
     checkQuestResets();
     initializeQuests();
     showView('questsView');
     renderQuests();
     updateQuestTimers();
+    updateCoinsDisplay();
+    console.log('[Quests] Quests view opened');
 
     // Update timers every second
     if (window.questTimerInterval) {
