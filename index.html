@@ -7283,11 +7283,10 @@ function downsamplePixelsSimple(pixelData, width, height, targetSize) {
 
 // Main Analysis Function - Completely Rewritten
 async function analyzeImage(dataUrl, mode) {
-    // FORENSICS FIX: mode can now be 'quick', 'deep', or 'forensics'
-    // Normalize mode - if 'forensics' passed as mode, use it
-    // If mode is 'deep' but forensicsMode is true, convert to 'forensics'
-    const normalizedMode = (mode === 'forensics' || (mode === 'deep' && forensicsMode)) ? 'forensics' : mode;
-    const finalMode = normalizedMode;
+    // P1-A CRASH FIX: Force ALL modes to use 'quick' code path
+    // This tests if the crash is in deep-specific code
+    const finalMode = 'quick'; // TEMP: Force quick mode for crash debugging
+    console.log(`[P1-A DEBUG] Requested mode: ${mode}, Forced to: ${finalMode}`);
 
     console.log(`[DeepScan] Starting ${finalMode} scan...`);
     const scanStartTime = performance.now();
