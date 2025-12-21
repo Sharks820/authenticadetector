@@ -51,6 +51,50 @@
             touch-action:pan-x pan-y;
         }
 
+        /* GLOBAL ANIMATIONS - Make everything feel alive */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+        }
+        @keyframes shimmerSlide {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        @keyframes borderGlow {
+            0%, 100% { border-color: rgba(0,212,170,0.3); }
+            50% { border-color: rgba(0,212,170,0.6); }
+        }
+        @keyframes floatUp {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Apply animations to common elements */
+        button, .card, .panel { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        button:active { transform: scale(0.97); }
+
+        /* Animated underline for links */
+        a { position: relative; text-decoration: none; color: var(--primary); }
+        a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        a:hover::after { width: 100%; }
+
         /* VIEWS - SCROLLABLE */
         .view{
             position:fixed;inset:0;
@@ -916,14 +960,33 @@
         .dropzone-preview{max-width:100%;max-height:180px;border-radius:12px;object-fit:contain;
             box-shadow:0 10px 30px rgba(0,0,0,0.3)}
         .dropzone-content{display:flex;flex-direction:column;align-items:center;gap:12px}
-        .dropzone-icon{width:80px;height:80px;filter:drop-shadow(0 0 20px rgba(0,212,170,0.5))}
+        .dropzone-icon{
+            width:80px;height:80px;
+            filter:drop-shadow(0 0 20px rgba(0,212,170,0.5));
+            animation: floatUp 3s ease-in-out infinite;
+        }
         .dropzone h3{font-size:18px;font-weight:700;
             background:linear-gradient(135deg, #fff, var(--primary));
-            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+            animation: subtlePulse 3s ease-in-out infinite;
+        }
         .dropzone p{font-size:12px;color:var(--text2)}
         .file-types{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px}
-        .file-type{padding:5px 10px;background:rgba(0,212,170,0.15);border-radius:8px;
-            font-size:10px;color:var(--primary);font-weight:600;border:1px solid rgba(0,212,170,0.3)}
+        .file-type{
+            padding:5px 10px;background:rgba(0,212,170,0.15);border-radius:8px;
+            font-size:10px;color:var(--primary);font-weight:600;border:1px solid rgba(0,212,170,0.3);
+            transition: all 0.25s ease;
+            animation: fadeInScale 0.4s ease-out backwards;
+        }
+        .file-type:nth-child(1) { animation-delay: 0s; }
+        .file-type:nth-child(2) { animation-delay: 0.1s; }
+        .file-type:nth-child(3) { animation-delay: 0.2s; }
+        .file-type:nth-child(4) { animation-delay: 0.3s; }
+        .file-type:hover {
+            background: rgba(0,212,170,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,212,170,0.2);
+        }
         .file-input{display:none}
         
         /* SCAN SECTION - FIXED AT BOTTOM */
@@ -5217,12 +5280,37 @@ function toast(msg) {
 }
 
 function showView(id) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    // Reset navigation state to prevent lockouts
+    isNavigating = false;
+
+    // Hide all views
+    document.querySelectorAll('.view').forEach(v => {
+        v.classList.remove('active');
+        v.style.opacity = '0';
+    });
+
+    // Show the requested view
     const view = $(id);
     if (view) {
         view.classList.add('active');
+        view.style.opacity = '1';
+        currentView = id;
+
+        // Hide game nav for non-game views
+        const GAME_VIEWS = ['huntView', 'verifyView', 'outbreaksView', 'squadsView', 'leaderboardView', 'shopView'];
+        const gameNav = $('gameNav');
+        if (gameNav) {
+            gameNav.style.display = GAME_VIEWS.includes(id) ? 'flex' : 'none';
+        }
     } else {
         console.warn('[View] Not found:', id);
+        // Fallback to home
+        const homeView = $('homeView');
+        if (homeView) {
+            homeView.classList.add('active');
+            homeView.style.opacity = '1';
+            currentView = 'homeView';
+        }
     }
 }
 // Note: closeView is defined in the TruthHunters game section below
