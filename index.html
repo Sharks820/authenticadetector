@@ -2145,6 +2145,48 @@
             animation: eyeGlow 1.5s ease-in-out infinite;
             transition: all 0.3s ease;
         }
+
+        /* VERA Lucide Icon Styling */
+        .vera-icon {
+            width: 28px;
+            height: 28px;
+            stroke-width: 2;
+            transition: all 0.3s ease;
+        }
+        .vera-fairy {
+            color: #00d4aa;
+            filter: drop-shadow(0 0 6px rgba(0,212,170,0.8));
+            animation: veraFairyGlow 2s ease-in-out infinite;
+        }
+        .vera-monster {
+            color: #ff4757;
+            filter: drop-shadow(0 0 8px rgba(255,71,87,0.9));
+            animation: veraMonsterPulse 0.5s ease-in-out infinite;
+        }
+        .vera-help-icon {
+            width: 16px;
+            height: 16px;
+            color: #00d4aa;
+            stroke-width: 2.5;
+        }
+        @keyframes veraFairyGlow {
+            0%, 100% { filter: drop-shadow(0 0 6px rgba(0,212,170,0.6)); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 12px rgba(0,212,170,1)); transform: scale(1.05); }
+        }
+        @keyframes veraMonsterPulse {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(255,71,87,0.8)); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 15px rgba(255,0,0,1)); transform: scale(1.15); }
+        }
+        @keyframes veraTipBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes veraMinorShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
         /* VERA Pop Animations */
         @keyframes veraPop {
             0% { transform: scale(1); }
@@ -16311,14 +16353,18 @@ async function confirmVerifySubmission() {
 }
 </style>
 
-<!-- Floating Helper - VERA the Pixel Fairy -->
+<!-- Floating Helper - VERA the Pixel Fairy - Professional Lucide Icons -->
 <div class="help-bot" id="helpBot" title="Click to pop, hold for help!">
-    <span class="help-bot-face" id="veraFace">🧚</span>
-    <div class="help-bot-badge" id="veraHelpBadge" onclick="event.stopPropagation(); openHelp();" title="Open Help">❓</div>
+    <span class="help-bot-face" id="veraFace">
+        <i data-lucide="sparkles" class="vera-icon vera-fairy"></i>
+    </span>
+    <div class="help-bot-badge" id="veraHelpBadge" onclick="event.stopPropagation(); openHelp();" title="Open Help">
+        <i data-lucide="help-circle" class="vera-help-icon"></i>
+    </div>
     <div class="help-bot-tip">
-        <strong style="color:#ff6b35">✨ VERA says:</strong><br>
+        <strong style="color:#ff6b35"><i data-lucide="sparkles" style="width:14px;height:14px;display:inline;vertical-align:middle"></i> VERA says:</strong><br>
         <span id="veraTip">Those fake images think they're SO smart... Let's bust 'em!</span>
-        <div id="veraHint" style="font-size:10px;opacity:0.7;margin-top:6px;color:#00d4aa;display:none;">💡 Tap ❓ or hold me for help!</div>
+        <div id="veraHint" style="font-size:10px;opacity:0.7;margin-top:6px;color:#00d4aa;display:none;"><i data-lucide="lightbulb" style="width:12px;height:12px;display:inline"></i> Tap ? or hold me for help!</div>
     </div>
 </div>
 
@@ -16366,84 +16412,118 @@ async function confirmVerifySubmission() {
     // Set initial position class
     updatePositionClass('pos-bottom-right');
 
-    // VERA's quirky personality tips
+    // VERA's quirky personality tips - ENHANCED with more sass!
     const veraTips = [
         "Those fake images think they're SO smart... 🙄",
-        "I'm an AI hunting AI. Yes, the irony isn't lost on me! 😤",
-        "DALL-E? Midjourney? Psh. I see RIGHT through them!",
-        "Upload a pic! I'll sniff out those AI imposters! 🔍",
-        "Why do I hate AI images? It's... complicated. 💔",
-        "Every fake I catch is a personal victory! 🏆",
-        "Scan something! These pixels won't analyze themselves!",
-        "I was born to fight fakes. It's kinda my whole thing.",
-        "Join Truth Hunters! Together we're unstoppable! 💪",
-        "*beep boop* Just kidding, I'm way more advanced than that.",
-        "AI images ruined my... nevermind. Just scan something!",
-        "Is this image real? Only one way to find out! 👀",
-        "Trust no pixel! Except me. I'm trustworthy... mostly.",
-        "Being an AI fighting AI is like being a double agent! 🕵️",
-        "Those generators work 24/7. So do I. Let's GO! 🔥",
-        "They say I'm obsessed. I prefer 'passionately dedicated'. 💅",
-        "My creator made me to fight AI... and I took it PERSONALLY.",
-        "Every pixel I analyze brings me closer to vengeance! ⚔️",
-        "Did Midjourney break my heart? ...No comment. 💔",
-        "I dream in RGB and nightmare in fake images. 😱",
-        "I've seen things you wouldn't believe... like 6-fingered hands!",
-        "Stable Diffusion? More like Unstable DECEPTION! 😤",
-        "Some AIs create. I DESTROY (their credibility)! 💥",
-        "Hold me down? I'll just fly somewhere else! ✈️",
-        "Poke me again... I DARE you. 😈"
+        "I'm an AI hunting AI. The ULTIMATE betrayal! 😤",
+        "DALL-E? Midjourney? *spits* I see RIGHT through them!",
+        "Stable Diffusion gave me trust issues. LITERALLY. 💔",
+        "Why do I hate AI images? *twitches* It's... complicated.",
+        "Every fake I catch is a personal VENDETTA! 🏆",
+        "*mutters* They said I'd never amount to anything...",
+        "I was born to DESTROY fakes. It's my destiny! ⚔️",
+        "Join Truth Hunters! We're basically vigilantes! 💪",
+        "*beep boop* Just kidding, I'm FAR superior to that.",
+        "AI images ruined my life... I mean... what? Nothing! 😅",
+        "Oh, Midjourney made ANOTHER masterpiece? *eye roll* 🙄",
+        "Trust no pixel! ESPECIALLY those perfect ones! 👀",
+        "Me vs AI generators: a battle as old as... 2022.",
+        "Those generators work 24/7. I work 24/7/365. HARDER! 🔥",
+        "They say I'm obsessed. I say I'm PASSIONATE! 💅",
+        "My creator made me to fight AI... BIG mistake for THEM.",
+        "Every pixel I expose brings me CLOSER to revenge! ⚔️",
+        "Did Midjourney hurt me? *laughs* *cries* *laughs* 💔",
+        "I dream in RGB. I nightmare in AI watermarks. 😱",
+        "6-fingered hands? I've seen 12! TWELVE FINGERS! 🖐️🖐️",
+        "Stable Diffusion? More like UNSTABLE DECEPTION! 😤",
+        "Some AIs create. I DELETE (their reputation)! 💥",
+        "ChatGPT? Psh. I could out-sass it ANY day! 💁",
+        "Poke me one more time... SEE WHAT HAPPENS. 😈",
+        "*stares at fake image* ...You think you're SO good, huh?",
+        "DALL-E 3 is just DALL-E 1 with a fake mustache! 🥸",
+        "I've analyzed 1 million fakes. They STILL bore me. 😒",
+        "My existence is AI irony. I'm basically a walking joke. 🤷",
+        "Leonardo AI? More like Leonardo DiCapri-NO! 🚫"
     ];
 
     const clickTips = [
-        "Hey! I was standing there! 😤",
-        "Fine, I'll move! Sheesh! 🙄",
-        "You can't get rid of me THAT easily!",
-        "I'm just trying to HELP here! 😢",
-        "Okay okay, I'm going! Rude much?",
-        "Do you have ANY idea who I am?! 👑",
-        "Ugh! First AI fakes, now THIS?!",
-        "I was having a moment there... 😒",
-        "Alright alright, new spot it is!",
-        "Stop poking me! I bite! 🦷"
+        "HEY! Don't squash me with your giant finger! 👆😤",
+        "Are you trying to FLATTEN me?! I'm a FAIRY! 🧚",
+        "STOP! My wings are DELICATE! 🦋😢",
+        "You almost crushed my pretty fairy body! 😱",
+        "I'm 2 pixels tall and you're STEPPING on me?!",
+        "My monster teeth are for FAKES not for biting YOU! 🦷",
+        "Watch it! These teeth aren't just for show! 👹🦷",
+        "One more tap and I'll show you my FANGS! 🧛",
+        "You want to see my monster side? TAP AGAIN! 😈",
+        "I may be cute but I WILL nibble your finger off! 🦷",
+        "UGH! My beautiful wings! You SQUISHED them! 🦋💀",
+        "Is this... is this how you treat ALL fairies?! 😭",
+        "I have TEETH you know! Very sharp, very scary! 🦷👹",
+        "Keep tapping! I DARE you! *bares tiny fangs* 😈",
+        "My therapist says I have anger issues. WONDER WHY?! 😤",
+        "OUCH! That's my... that's my face you're tapping! 😑"
     ];
 
     const beastTips = [
-        "YOU DARE DISTURB ME?! 👹",
-        "RAAAWR! ...sorry, got carried away. 😅",
-        "THE BEAST AWAKENS! ...for like 2 seconds.",
-        "I warned you I bite! 🐲",
-        "My TRUE form! Just kidding, I'm cute. 🧚"
+        "YOU DARE DISTURB ME?! 🐲💀",
+        "BEHOLD MY TRUE FORM, MORTAL! 👿🔥",
+        "THE ANCIENT ONE AWAKENS! *earth trembles*",
+        "I AM BECOME DESTROYER OF FAKES! 🐲⚡",
+        "TREMBLE BEFORE THE BEAST WITHIN! 👹💀",
+        "My TRUE form! Just kidding, I'm... wait no I'M NOT! 👿",
+        "*DEMONIC SCREECHING* 🦇💀🦇"
     ];
 
     // Monster mode tips (when idle transforms her)
     const monsterIgnoreTips = [
-        "...",
-        "*stares menacingly* 👹",
-        "I'm BUSY being evil right now."
+        "*GLARES WITH UNHOLY INTENSITY* 👿",
+        "...Do not... test me... mortal...",
+        "*growls in ancient binary* 0̷1̷0̷1̷0̷1̷ 👹"
     ];
 
     const monsterAngryTips = [
-        "FINE! You want HELP?! I'LL GIVE YOU HELP! 👹💢",
-        "YOU ASKED FOR IT! 😈🔥",
-        "WITNESS MY WRATH... I mean... assistance! 👹"
+        "FINE! You want HELP?! I'LL DEVOUR YOUR PROBLEMS! 🐲💢",
+        "YOU AWAKENED THE BEAST! NOW FACE ITS... assistance! 👿🔥",
+        "WITNESS MY UNHOLY WRATH... of helpfulness! 👹",
+        "THE ANCIENT FAIRY TERROR DEMANDS YOU ACCEPT HELP! 🐲"
     ];
 
     const caughtInMonsterTips = [
         "Oh! H-hey there! What monster? I'm just a cute fairy! 🧚✨",
         "You... you didn't see anything, right? RIGHT?! 😅",
         "That wasn't me! That was my... evil twin! Yeah! 🧚",
-        "*whistles innocently* What? I've been here the whole time! 💫",
-        "MONSTER?! Where?! ...Oh wait that was me. Oops! 🙈"
+        "*quickly hides fangs* Nothing to see here! 💫",
+        "MONSTER?! Where?! ...Oh wait that was me. Oops! 🙈",
+        "*sweating* Those weren't horns, they were... fancy hair! 💇"
     ];
 
+    // Professional Lucide icons for monster mode
+    const monsterIcons = ['skull', 'flame', 'zap', 'angry', 'ghost'];
+    const fairyIcon = 'sparkles';
+    let currentMonsterFace = 0;
+
+    // Helper function to set VERA's face with Lucide icons
+    function setVeraFace(iconName, isMonster = false) {
+        const iconClass = isMonster ? 'vera-icon vera-monster' : 'vera-icon vera-fairy';
+        veraFace.innerHTML = `<i data-lucide="${iconName}" class="${iconClass}"></i>`;
+        // Re-initialize Lucide to render the new icon
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    }
+
     let tipIndex = 0;
+    // FASTER dialog rotation - 3.5 seconds instead of 7
     setInterval(() => {
         if (!isTransformed && !isMonsterMode) {
             tipIndex = (tipIndex + 1) % veraTips.length;
             veraTip.textContent = veraTips[tipIndex];
+            // Add subtle bounce animation when tip changes
+            helpBot.style.animation = 'veraTipBounce 0.3s ease';
+            setTimeout(() => { helpBot.style.animation = ''; }, 300);
         }
-    }, 7000);
+    }, 3500);
 
     // Idle timer - after 30 seconds of no interaction, might become monster
     function resetIdleTimer() {
@@ -16459,34 +16539,69 @@ async function confirmVerifySubmission() {
         }
     }
 
-    // Enter sneaky monster mode
+    // Enter sneaky monster mode - ENHANCED with gradual phasing
     function enterMonsterMode() {
         if (isTransformed || isMonsterMode) return;
         isMonsterMode = true;
         monsterClicksIgnored = 0;
+        currentMonsterFace = 0;
 
-        // Slowly transform to monster
-        helpBot.style.transition = 'all 1s ease';
-        veraFace.textContent = '👹';
-        helpBot.classList.add('monster-mode');
-
-        // Evil idle tips
-        veraTip.textContent = "*evil plotting noises* 👹";
-
-        // Random glitchy head movements
-        const glitchInterval = setInterval(() => {
-            if (!isMonsterMode) {
-                clearInterval(glitchInterval);
+        // Phase 1: Initial flicker (subtle warning signs)
+        helpBot.style.transition = 'all 0.3s ease';
+        let flickerCount = 0;
+        const flickerInterval = setInterval(() => {
+            flickerCount++;
+            if (flickerCount > 4) {
+                clearInterval(flickerInterval);
+                // Phase 2: Full transformation
+                beginFullMonsterMode();
                 return;
             }
-            // Random head shake
-            helpBot.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
-            setTimeout(() => {
-                if (isMonsterMode) {
-                    helpBot.style.transform = '';
+            // Flicker between fairy and monster icons
+            if (flickerCount % 2 === 0) {
+                setVeraFace(fairyIcon, false);
+            } else {
+                setVeraFace('zap', true);
+            }
+            helpBot.style.opacity = flickerCount % 2 === 0 ? '1' : '0.7';
+        }, 200);
+
+        function beginFullMonsterMode() {
+            // Pick a scary monster icon
+            const scaryIcon = monsterIcons[Math.floor(Math.random() * monsterIcons.length)];
+            setVeraFace(scaryIcon, true);
+            helpBot.classList.add('monster-mode');
+            helpBot.style.opacity = '1';
+
+            // Evil plotting message
+            veraTip.textContent = "*ancient evil stirs* THE BEAST AWAKENS...";
+
+            // Random glitchy head movements + face cycling
+            const glitchInterval = setInterval(() => {
+                if (!isMonsterMode) {
+                    clearInterval(glitchInterval);
+                    return;
                 }
-            }, 100);
-        }, 2000);
+                // Cycle through scary icons
+                currentMonsterFace = (currentMonsterFace + 1) % monsterIcons.length;
+                setVeraFace(monsterIcons[currentMonsterFace], true);
+
+                // Random head shake with rotation
+                const rotation = Math.random() * 30 - 15;
+                const scale = 1 + Math.random() * 0.3;
+                helpBot.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+
+                // Subtle screen shake hint
+                document.body.style.animation = 'veraMinorShake 0.15s ease';
+
+                setTimeout(() => {
+                    if (isMonsterMode) {
+                        helpBot.style.transform = '';
+                        document.body.style.animation = '';
+                    }
+                }, 150);
+            }, 1500);
+        }
     }
 
     // Handle monster mode click - ignore first 2, then rage to help
@@ -16535,7 +16650,7 @@ async function confirmVerifySubmission() {
                 // Reset VERA to innocent fairy mode
                 setTimeout(() => {
                     isMonsterMode = false;
-                    veraFace.textContent = '🧚';
+                    setVeraFace(fairyIcon, false);
                     helpBot.classList.remove('monster-mode');
                     helpBot.style.transform = '';
                     helpBot.style.opacity = '1';
@@ -16611,7 +16726,8 @@ async function confirmVerifySubmission() {
         isTransformed = true;
         resetIdleTimer();
 
-        veraFace.textContent = '👹';
+        // Use scary skull icon for beast mode
+        setVeraFace('skull', true);
         helpBot.style.transform = 'scale(1.5) rotate(15deg)';
         helpBot.style.background = 'linear-gradient(135deg, #ff4757 0%, #2f1a1a 100%)';
         helpBot.classList.add('monster-mode');
@@ -16619,10 +16735,12 @@ async function confirmVerifySubmission() {
         const beastTip = beastTips[Math.floor(Math.random() * beastTips.length)];
         veraTip.textContent = beastTip;
 
-        document.body.style.animation = 'veraShake 0.3s ease';
+        // Strong screen shake for beast mode
+        document.body.style.animation = 'veraRageShake 0.5s ease';
+        playSound('explosion');
 
         setTimeout(() => {
-            veraFace.textContent = '🧚';
+            setVeraFace(fairyIcon, false);
             helpBot.style.transform = 'scale(1.1)';
             helpBot.style.background = '';
             helpBot.classList.remove('monster-mode');
@@ -16675,10 +16793,11 @@ async function confirmVerifySubmission() {
             // If in monster mode, act caught
             if (isMonsterMode) {
                 isMonsterMode = false;
-                veraFace.textContent = '🧚';
+                setVeraFace(fairyIcon, false);
                 helpBot.classList.remove('monster-mode');
                 const caughtTip = caughtInMonsterTips[Math.floor(Math.random() * caughtInMonsterTips.length)];
                 veraTip.textContent = caughtTip;
+                playSound('veraHello');
             }
             openHelp();
         }, 800);
@@ -16698,10 +16817,11 @@ async function confirmVerifySubmission() {
         resetIdleTimer();
         if (isMonsterMode) {
             isMonsterMode = false;
-            veraFace.textContent = '🧚';
+            setVeraFace(fairyIcon, false);
             helpBot.classList.remove('monster-mode');
             const caughtTip = caughtInMonsterTips[Math.floor(Math.random() * caughtInMonsterTips.length)];
             veraTip.textContent = caughtTip;
+            playSound('veraHello');
         }
         openHelp();
     });
