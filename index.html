@@ -84,7 +84,46 @@
             background:var(--surface2);border:none;
             color:var(--text);font-size:22px;
             cursor:pointer;display:flex;align-items:center;justify-content:center;
+            transition:all 0.2s ease;
         }
+        .view-close:hover{
+            background:var(--surface3);
+            transform:scale(1.05);
+        }
+        /* Premium Home Button */
+        .home-btn{
+            width:40px;height:40px;border-radius:12px;
+            background:linear-gradient(135deg, rgba(0,212,170,0.15) 0%, rgba(9,132,227,0.1) 100%);
+            border:1px solid rgba(0,212,170,0.3);
+            color:var(--primary);font-size:18px;
+            cursor:pointer;display:flex;align-items:center;justify-content:center;
+            transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow:0 2px 8px rgba(0,0,0,0.2);
+        }
+        .home-btn:hover{
+            background:linear-gradient(135deg, rgba(0,212,170,0.25) 0%, rgba(9,132,227,0.2) 100%);
+            border-color:rgba(0,212,170,0.5);
+            transform:translateY(-2px);
+            box-shadow:0 4px 12px rgba(0,212,170,0.3);
+        }
+        .home-btn:active{transform:scale(0.95)}
+        /* Back Button - matches home-btn style */
+        .back-btn{
+            width:40px;height:40px;border-radius:12px;
+            background:linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(139,92,246,0.1) 100%);
+            border:1px solid rgba(99,102,241,0.3);
+            color:#a78bfa;font-size:18px;
+            cursor:pointer;display:flex;align-items:center;justify-content:center;
+            transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow:0 2px 8px rgba(0,0,0,0.2);
+        }
+        .back-btn:hover{
+            background:linear-gradient(135deg, rgba(99,102,241,0.25) 0%, rgba(139,92,246,0.2) 100%);
+            border-color:rgba(99,102,241,0.5);
+            transform:translateY(-2px);
+            box-shadow:0 4px 12px rgba(99,102,241,0.3);
+        }
+        .back-btn:active{transform:scale(0.95)}
         
         /* SCROLLABLE VIEW BODY - KEY FIX */
         .view-body{
@@ -125,19 +164,19 @@
             content:'';position:absolute;top:calc(-1 * var(--safe-top));left:0;right:0;
             height:var(--safe-top);background:var(--surface);z-index:-1;
         }
-        .logo{display:flex;align-items:center;gap:10px;cursor:pointer;transition:transform 0.2s}
+        .logo{display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform 0.2s}
         .logo:hover{transform:scale(1.02)}
         .logo-icon{
-            width:36px;height:36px;
-            filter:drop-shadow(0 0 10px rgba(0,212,170,0.5));
+            width:42px;height:42px;
+            filter:drop-shadow(0 0 12px rgba(0,212,170,0.6));
             animation:logo-pulse 3s ease-in-out infinite;
         }
         @keyframes logo-pulse{
-            0%,100%{filter:drop-shadow(0 0 10px rgba(0,212,170,0.5))}
-            50%{filter:drop-shadow(0 0 20px rgba(0,212,170,0.8))}
+            0%,100%{filter:drop-shadow(0 0 12px rgba(0,212,170,0.5))}
+            50%{filter:drop-shadow(0 0 24px rgba(0,212,170,0.9))}
         }
         .logo-text{
-            font-size:16px;font-weight:900;letter-spacing:-0.3px;
+            font-size:22px;font-weight:900;letter-spacing:-0.5px;
             /* Deep professional gradient - teal, purple, blue */
             background:linear-gradient(135deg, #00d4aa 0%, #0984e3 25%, #6c5ce7 50%, #00b894 75%, #00d4aa 100%);
             background-size:300% auto;
@@ -145,24 +184,25 @@
             -webkit-background-clip:text;-webkit-text-fill-color:transparent;
             background-clip:text;
             white-space:nowrap;
+            text-shadow:0 2px 20px rgba(0,212,170,0.3);
         }
-        /* Mobile: responsive header - fit all buttons */
+        /* Mobile: responsive header - bigger text on mobile too */
         @media(max-width:480px){
-            .logo-text{font-size:13px}
-            .logo-icon{width:30px;height:30px}
+            .logo-text{font-size:18px}
+            .logo-icon{width:36px;height:36px}
             .header-btns{gap:3px}
             .icon-btn{width:34px;height:34px;font-size:15px;border-radius:10px}
             .user-btn{width:34px;height:34px;font-size:12px}
         }
         @media(max-width:400px){
-            .logo-text{font-size:11px}
-            .logo-icon{width:28px;height:28px}
+            .logo-text{font-size:16px}
+            .logo-icon{width:32px;height:32px}
             .header-btns{gap:2px}
             .icon-btn{width:30px;height:30px;font-size:14px;border-radius:8px}
             .user-btn{width:30px;height:30px;font-size:11px}
         }
         @media(max-width:360px){
-            .logo-text{font-size:10px;letter-spacing:-0.5px}
+            .logo-text{font-size:14px;letter-spacing:-0.3px}
             .logo-icon{width:26px;height:26px}
             .icon-btn{width:28px;height:28px;font-size:13px;border-radius:6px}
             .user-btn{width:28px;height:28px;font-size:10px}
@@ -3085,8 +3125,8 @@
 <div class="view" id="historyView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
-            <button class="view-close" onclick="openView('homeView')" style="background:none;font-size:16px" title="Home">🏠</button>
+            <button class="back-btn" onclick="closeView()">←</button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home">🏠</button>
         </div>
         <span class="view-title">📋 History</span>
         <div class="coins-display" id="historyViewCoins">
@@ -3103,8 +3143,8 @@
 <div class="view" id="leaderboardView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
-            <button class="view-close" onclick="openView('homeView')" style="background:none;font-size:16px" title="Home">🏠</button>
+            <button class="back-btn" onclick="closeView()">←</button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home">🏠</button>
         </div>
         <span class="view-title">🏆 Leaderboard</span>
         <div class="coins-display" id="leaderboardViewCoins">
@@ -3143,8 +3183,8 @@
 <div class="view" id="profileView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
-            <button class="view-close" onclick="openView('homeView')" style="background:none;font-size:16px" title="Home">🏠</button>
+            <button class="back-btn" onclick="closeView()">←</button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home">🏠</button>
         </div>
         <span class="view-title">👤 Profile</span>
         <div class="coins-display" id="profileViewCoins">
@@ -3180,8 +3220,8 @@
 <div class="view" id="allBadgesView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
-            <button class="view-close" onclick="openView('homeView')" style="background:none;font-size:16px" title="Home">🏠</button>
+            <button class="back-btn" onclick="closeView()">←</button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home">🏠</button>
         </div>
         <span class="view-title">🎖️ All Badges</span>
         <div class="coins-display" id="badgesViewCoins">
@@ -3196,8 +3236,8 @@
 <div class="view" id="questsView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
-            <button class="view-close" onclick="openView('homeView')" style="background:none;font-size:16px" title="Home">🏠</button>
+            <button class="back-btn" onclick="closeView()">←</button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home">🏠</button>
         </div>
         <span class="view-title">⚡ Quests & Challenges</span>
         <div class="coins-display" id="questsViewCoins">
@@ -3233,8 +3273,8 @@
 <div class="view" id="avatarView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
-            <button class="view-close" onclick="openView('homeView')" style="background:none;font-size:16px" title="Home">🏠</button>
+            <button class="back-btn" onclick="closeView()">←</button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home">🏠</button>
         </div>
         <span class="view-title">🎨 Customize Avatar</span>
         <div class="coins-display" id="avatarViewCoins">
@@ -3332,8 +3372,8 @@
 <div class="view" id="huntView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
-            <button class="view-close" onclick="openView('homeView')" style="background:none;font-size:16px" title="Home">🏠</button>
+            <button class="back-btn" onclick="closeView()">←</button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home">🏠</button>
         </div>
         <span class="view-title">🎯 Hunt Mode</span>
         <div class="coins-display" id="headerCoins">
@@ -3454,8 +3494,8 @@
 <div class="view" id="verifyView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
-            <button class="view-close" onclick="openView('homeView')" style="background:none;font-size:16px" title="Home">🏠</button>
+            <button class="back-btn" onclick="closeView()">←</button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home">🏠</button>
         </div>
         <span class="view-title">✅ Verify Mode</span>
         <div class="streak-display" id="streakDisplay">
@@ -3534,8 +3574,8 @@
 <div class="view" id="squadsView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
-            <button class="view-close" onclick="openView('homeView')" style="background:none;font-size:16px" title="Home">🏠</button>
+            <button class="back-btn" onclick="closeView()">←</button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home">🏠</button>
         </div>
         <span class="view-title">👥 Squads</span>
         <button class="icon-btn" onclick="showCreateSquad()">➕</button>
@@ -3616,8 +3656,8 @@
 <div class="view" id="outbreaksView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
-            <button class="view-close" onclick="openView('homeView')" style="background:none;font-size:16px" title="Home">🏠</button>
+            <button class="back-btn" onclick="closeView()">←</button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home">🏠</button>
         </div>
         <span class="view-title">⚠️ Outbreaks</span>
         <div style="width:44px"></div>
@@ -3854,8 +3894,8 @@
 <div class="view" id="helpView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
-            <button class="view-close" onclick="openView('homeView')" style="background:none;font-size:16px" title="Home">🏠</button>
+            <button class="back-btn" onclick="closeView()">←</button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home">🏠</button>
         </div>
         <span class="view-title">❓ Help</span>
         <div style="width:44px"></div>
@@ -3981,8 +4021,8 @@
 <div class="view" id="shopView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
-            <button class="view-close" onclick="closeView()" style="background:none;font-size:20px">←</button>
-            <button class="view-close" onclick="openView('homeView')" style="background:none;font-size:16px" title="Home">🏠</button>
+            <button class="back-btn" onclick="closeView()">←</button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home">🏠</button>
         </div>
         <span class="view-title">💰 Shop</span>
         <div style="display:flex;align-items:center;gap:8px;padding:4px 12px;background:var(--surface2);border-radius:8px;font-size:12px;font-weight:700">
