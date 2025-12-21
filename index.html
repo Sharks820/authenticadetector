@@ -4539,15 +4539,21 @@ window.addEventListener('appinstalled', () => {
 });
 
 function checkInstallState() {
-    if (isStandalone) { 
-        isInstalled = true; 
-        localStorage.setItem('app_installed', 'true'); 
+    // CRITICAL FIX: Only trust localStorage if we're actually in standalone mode
+    // After uninstall, localStorage persists but standalone mode is false
+    if (isStandalone) {
+        isInstalled = true;
+        localStorage.setItem('app_installed', 'true');
+    } else {
+        // Not in standalone mode = not installed (even if localStorage says otherwise)
+        // This fixes the install banner not showing after uninstall
+        isInstalled = false;
+        localStorage.removeItem('app_installed');
     }
-    if (localStorage.getItem('app_installed') === 'true') isInstalled = true;
-    
-    if (isInstalled) { 
-        $('installBanner').classList.remove('show'); 
-        $('iosHelper').classList.remove('show'); 
+
+    if (isInstalled) {
+        $('installBanner').classList.remove('show');
+        $('iosHelper').classList.remove('show');
     } else if (isIOS && !localStorage.getItem('ios_dismissed')) {
         setTimeout(() => { if (!isInstalled) $('iosHelper').classList.add('show'); }, 2000);
     }
