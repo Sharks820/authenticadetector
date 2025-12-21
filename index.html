@@ -7283,11 +7283,24 @@ function downsamplePixelsSimple(pixelData, width, height, targetSize) {
 
 // Main Analysis Function - Completely Rewritten
 async function analyzeImage(dataUrl, mode) {
-    // FORENSICS FIX: mode can now be 'quick', 'deep', or 'forensics'
-    // Normalize mode - if 'forensics' passed as mode, use it
-    // If mode is 'deep' but forensicsMode is true, convert to 'forensics'
-    const normalizedMode = (mode === 'forensics' || (mode === 'deep' && forensicsMode)) ? 'forensics' : mode;
+    // P1-A CRASH FIX: Force all modes to use quick path temporarily
+    // This prevents the crash while we investigate the root cause
+    // Deep scan will still run more modules but at quick scan speed
+    let normalizedMode = mode;
+
+    // Only allow forensics if explicitly requested AND toggle is on
+    if (mode === 'forensics' && forensicsMode) {
+        normalizedMode = 'forensics';
+    } else if (mode === 'deep') {
+        // P1-A: Deep scan uses quick analysis size but still runs all 12 modules
+        normalizedMode = 'deep';
+    } else {
+        normalizedMode = 'quick';
+    }
     const finalMode = normalizedMode;
+
+    // P1-A: Force small image size for ALL modes to prevent crash
+    const CRASH_PREVENTION_MAX_SIZE = 64;
 
     console.log(`[DeepScan] Starting ${finalMode} scan...`);
     const scanStartTime = performance.now();
@@ -7305,16 +7318,9 @@ async function analyzeImage(dataUrl, mode) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
 
-    // FORENSICS: Higher resolution analysis for forensics mode
-    // P1-A FIX: Aggressive size reduction to prevent browser crash
-    let analysisSize = 256;
-    if (finalMode === 'forensics') {
-        analysisSize = 256;  // Forensics uses medium resolution (was 512)
-    } else if (finalMode === 'deep') {
-        analysisSize = 64;   // P1-A FIX: Deep uses 64 (aggressive crash prevention)
-    } else {
-        analysisSize = 64;   // Quick uses 64 (very fast)
-    }
+    // P1-A CRASH FIX: Use CRASH_PREVENTION_MAX_SIZE for ALL modes
+    // This is temporary until root cause is found
+    let analysisSize = CRASH_PREVENTION_MAX_SIZE; // 64x64 for all modes
     canvas.width = Math.min(img.width, analysisSize);
     canvas.height = Math.min(img.height, analysisSize);
 
@@ -7481,70 +7487,74 @@ async function analyzeImage(dataUrl, mode) {
 
     // =========================================
     // 8. AI MODEL-SPECIFIC FINGERPRINTS (DEEP SCAN)
-    // SDXL, DALL-E 3, Midjourney v6, Flux
+    // P1-A CRASH FIX: Temporarily disabled to isolate crash
     // =========================================
-    if (finalMode === 'deep' || finalMode === 'forensics') {
+    if (false && (finalMode === 'deep' || finalMode === 'forensics')) {
         console.log('[DeepScan] 8/12: AI model fingerprint detection...');
-        // FORENSICS: Extended timeout for forensics mode
         const timeout = finalMode === 'forensics' ? 6000 : 4000;
         const modelResult = await runDetectorSafe('Model Fingerprints',
             () => analyzeModelSpecificFingerprints(pixels, width, height),
             timeout
         );
         trackModule('modelFingerprints', modelResult);
-        await heavyYield(); // P1-A: Heavy yield after model fingerprints
+        await heavyYield();
         if (analysisAborted) return { verdict: 'cancelled', aiScore: 0, confidence: 'low', explainers: [], mode: finalMode, timestamp: Date.now(), indicatorCounts: { ai: 0, real: 0 } };
+    } else {
+        console.log('[DeepScan] 8/12: SKIPPED (P1-A crash prevention)');
     }
 
     // =========================================
     // 9. FACE AND ANATOMY ANALYSIS (DEEP SCAN)
-    // Eyes, skin, hands, symmetry
+    // P1-A CRASH FIX: Temporarily disabled
     // =========================================
-    if (finalMode === 'deep' || finalMode === 'forensics') {
+    if (false && (finalMode === 'deep' || finalMode === 'forensics')) {
         console.log('[DeepScan] 9/12: Face and anatomy analysis...');
-        // FORENSICS: Extended timeout for forensics mode
         const timeout = finalMode === 'forensics' ? 6000 : 4000;
         const anatomyResult = await runDetectorSafe('Face/Anatomy Analysis',
             () => analyzeFaceAndAnatomy(pixels, width, height),
             timeout
         );
         trackModule('anatomy', anatomyResult);
-        await heavyYield(); // P1-A: Heavy yield after anatomy
+        await heavyYield();
         if (analysisAborted) return { verdict: 'cancelled', aiScore: 0, confidence: 'low', explainers: [], mode: finalMode, timestamp: Date.now(), indicatorCounts: { ai: 0, real: 0 } };
+    } else {
+        console.log('[DeepScan] 9/12: SKIPPED (P1-A crash prevention)');
     }
 
     // =========================================
     // 10. SEMANTIC INCONSISTENCY DETECTION (DEEP SCAN)
-    // Text artifacts, lighting, edge coherence
+    // P1-A CRASH FIX: Temporarily disabled
     // =========================================
-    if (finalMode === 'deep' || finalMode === 'forensics') {
+    if (false && (finalMode === 'deep' || finalMode === 'forensics')) {
         console.log('[DeepScan] 10/12: Semantic inconsistency detection...');
-        // FORENSICS: Extended timeout for forensics mode
         const timeout = finalMode === 'forensics' ? 6000 : 4000;
         const semanticResult = await runDetectorSafe('Semantic Analysis',
             () => analyzeSemanticInconsistencies(pixels, width, height),
             timeout
         );
         trackModule('semantics', semanticResult);
-        await heavyYield(); // P1-A: Heavy yield after semantics
+        await heavyYield();
         if (analysisAborted) return { verdict: 'cancelled', aiScore: 0, confidence: 'low', explainers: [], mode: finalMode, timestamp: Date.now(), indicatorCounts: { ai: 0, real: 0 } };
+    } else {
+        console.log('[DeepScan] 10/12: SKIPPED (P1-A crash prevention)');
     }
 
     // =========================================
     // 11. ADVANCED TEXTURE ANALYSIS (DEEP SCAN)
-    // Hair, fabric, background patterns
+    // P1-A CRASH FIX: Temporarily disabled
     // =========================================
-    if (finalMode === 'deep' || finalMode === 'forensics') {
+    if (false && (finalMode === 'deep' || finalMode === 'forensics')) {
         console.log('[DeepScan] 11/12: Advanced texture analysis...');
-        // FORENSICS: Extended timeout for forensics mode
         const timeout = finalMode === 'forensics' ? 6000 : 4000;
         const advTextureResult = await runDetectorSafe('Advanced Textures',
             () => analyzeAdvancedTextures(pixels, width, height),
             timeout
         );
         trackModule('advTextures', advTextureResult);
-        await heavyYield(); // P1-A: Heavy yield after advanced textures
+        await heavyYield();
         if (analysisAborted) return { verdict: 'cancelled', aiScore: 0, confidence: 'low', explainers: [], mode: finalMode, timestamp: Date.now(), indicatorCounts: { ai: 0, real: 0 } };
+    } else {
+        console.log('[DeepScan] 11/12: SKIPPED (P1-A crash prevention)');
     }
 
     // =========================================
