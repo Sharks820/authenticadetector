@@ -1765,159 +1765,191 @@
             font-size: 12px;
         }
 
+        /* PREMIUM HUNT PAGE - Complete Overhaul */
         .hunt-intro h2 {
-            font-size: 20px;
-            background: linear-gradient(135deg, var(--primary), #00ff88);
+            font-size: 24px;
+            background: linear-gradient(135deg, var(--primary), #00ff88, var(--primary));
+            background-size:200% auto;
+            animation:text-shimmer 3s linear infinite;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow:0 0 30px rgba(0,212,170,0.3);
         }
 
         .hunt-form {
-            background: var(--surface);
-            padding: 20px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
+            background: linear-gradient(145deg, rgba(26,31,46,0.95) 0%, rgba(18,22,31,0.98) 100%);
+            padding: 24px;
+            border-radius: 20px;
+            border: 1px solid rgba(0,212,170,0.15);
+            box-shadow:0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03);
         }
 
         .form-section {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .form-label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
+            display: flex;align-items:center;gap:8px;
+            font-weight: 700;
+            margin-bottom: 10px;
             font-size: 14px;
+            color:var(--text);
         }
 
         .upload-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 14px;
         }
 
         .upload-option {
-            background: var(--surface2);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
+            background: linear-gradient(145deg, rgba(26,31,46,0.9) 0%, rgba(18,22,31,0.95) 100%);
+            border: 2px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 20px 16px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            box-shadow:0 4px 16px rgba(0,0,0,0.2);
+        }
+
+        .upload-option:hover {
+            border-color: rgba(0,212,170,0.3);
+            transform:translateY(-4px);
+            box-shadow:0 8px 24px rgba(0,0,0,0.3), 0 0 20px rgba(0,212,170,0.1);
         }
 
         .upload-option.active {
             border-color: var(--primary);
-            background: rgba(0, 212, 170, 0.1);
+            background: linear-gradient(145deg, rgba(0,212,170,0.15) 0%, rgba(0,184,148,0.1) 100%);
+            box-shadow:0 4px 20px rgba(0,212,170,0.2), inset 0 1px 0 rgba(0,212,170,0.1);
         }
 
         .upload-option-icon {
-            font-size: 32px;
+            font-size: 36px;
+            filter:drop-shadow(0 4px 8px rgba(0,0,0,0.3));
         }
 
         .upload-option-text {
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
+            color:var(--text2);
         }
+        .upload-option.active .upload-option-text{color:var(--primary)}
 
         .hunt-input, .hunt-select, .hunt-textarea {
             width: 100%;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px 16px;
+            background: linear-gradient(145deg, rgba(26,31,46,0.9) 0%, rgba(18,22,31,0.95) 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 14px 18px;
             color: var(--text);
             font-size: 14px;
             font-family: inherit;
-            transition: all 0.2s;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow:inset 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .hunt-input:focus, .hunt-select:focus, .hunt-textarea:focus {
             outline: none;
             border-color: var(--primary);
-            background: var(--surface3);
+            background: rgba(0,212,170,0.05);
+            box-shadow:0 0 0 3px rgba(0,212,170,0.1), inset 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .hunt-textarea {
             resize: vertical;
-            min-height: 80px;
+            min-height: 100px;
         }
 
         .dropzone-small {
-            background: var(--surface2);
-            border: 2px dashed var(--border);
-            border-radius: 12px;
-            padding: 40px 20px;
+            background: linear-gradient(145deg, rgba(26,31,46,0.9) 0%, rgba(18,22,31,0.95) 100%);
+            border: 2px dashed rgba(0,212,170,0.3);
+            border-radius: 16px;
+            padding: 48px 24px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .dropzone-small:hover {
             border-color: var(--primary);
-            background: rgba(0, 212, 170, 0.05);
+            background: rgba(0, 212, 170, 0.08);
+            transform:scale(1.01);
+            box-shadow:0 0 30px rgba(0,212,170,0.15);
         }
 
         .dropzone-small-icon {
-            font-size: 48px;
-            margin-bottom: 8px;
+            font-size: 56px;
+            margin-bottom: 12px;
+            filter:drop-shadow(0 4px 12px rgba(0,0,0,0.3));
         }
 
         .dropzone-small-text {
             color: var(--text2);
             font-size: 14px;
+            font-weight:500;
         }
 
         .hunt-preview {
             position: relative;
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
+            box-shadow:0 8px 32px rgba(0,0,0,0.3);
+            border:2px solid rgba(0,212,170,0.2);
         }
 
         .preview-remove {
             position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 32px;
-            height: 32px;
-            background: rgba(0, 0, 0, 0.7);
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,71,87,0.9);
             backdrop-filter: blur(10px);
             border: none;
             border-radius: 50%;
             color: #fff;
             font-size: 18px;
             cursor: pointer;
+            transition:all 0.2s;
+            box-shadow:0 4px 12px rgba(255,71,87,0.3);
         }
+        .preview-remove:hover{transform:scale(1.1);background:var(--danger)}
 
         .submit-hunt-btn {
             width: 100%;
-            background: linear-gradient(135deg, var(--primary), #00ff88);
+            background: linear-gradient(135deg, var(--primary) 0%, #00b894 50%, #00ff88 100%);
             border: none;
-            border-radius: 12px;
-            padding: 16px;
-            color: #000;
+            border-radius: 14px;
+            padding: 18px;
+            color: #fff;
             font-weight: 800;
             font-size: 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            transition: all 0.2s;
-            box-shadow: 0 4px 16px var(--primary-glow);
+            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 24px rgba(0,212,170,0.4);
+            text-shadow:0 1px 2px rgba(0,0,0,0.2);
+            text-transform:uppercase;letter-spacing:0.5px;
         }
 
         .submit-hunt-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 24px var(--primary-glow);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 36px rgba(0,212,170,0.5);
         }
+        .submit-hunt-btn:active:not(:disabled){transform:scale(0.98) translateY(0)}
 
         .submit-hunt-btn:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
+            filter:grayscale(0.5);
         }
 
         .submit-icon, .submit-reward {
@@ -1925,23 +1957,26 @@
         }
 
         .submit-reward {
-            background: rgba(255, 215, 0, 0.3);
-            padding: 4px 8px;
-            border-radius: 8px;
+            background: rgba(255, 215, 0, 0.25);
+            padding: 6px 12px;
+            border-radius: 10px;
             font-size: 14px;
+            border:1px solid rgba(255,215,0,0.3);
         }
 
         .hunt-tips {
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 20px;
+            background: linear-gradient(145deg, rgba(99,102,241,0.12) 0%, rgba(139,92,246,0.08) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 24px;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.03);
         }
 
         .tip-title {
-            font-weight: 700;
-            margin-bottom: 8px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color:#a78bfa;
         }
 
         .tip-list {
