@@ -3039,10 +3039,12 @@
             border-radius: 24px;
             border: 2px solid rgba(255,71,87,0.2);
             padding: 28px 24px;
+            padding-top: 36px; /* Extra space for the badge */
+            margin-top: 20px; /* Space for the overflowing badge */
             position: relative;
             margin-bottom: 28px;
             box-shadow:0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03);
-            overflow:hidden;
+            overflow: visible; /* Allow badge to overflow */
         }
         .outbreak-card::before{
             content:'';position:absolute;top:0;left:0;right:0;height:4px;
@@ -3678,7 +3680,7 @@
 <!-- HOME VIEW -->
 <div class="view active" id="homeView">
     <div class="home-header">
-        <div class="logo" onclick="showView('homeView')" style="cursor: pointer;">
+        <div class="logo" onclick="window.location.reload()" style="cursor: pointer;" title="Tap to refresh">
             <div class="logo-icon" id="mainLogo"></div>
             <span class="logo-text">AuthenticaDetector Hub</span>
         </div>
@@ -3779,7 +3781,7 @@
                 <p>Upload any image to check if it's AI-generated</p>
             </div>
             
-            <div class="dropzone" id="dropzone" onclick="triggerFileInput()">
+            <label class="dropzone" id="dropzone" for="fileInput" style="display:block;">
                 <img class="dropzone-preview hidden" id="dropzonePreview">
                 <div class="dropzone-content" id="dropzoneContent">
                     <div class="dropzone-icon" id="analysisIcon"></div>
@@ -3792,7 +3794,7 @@
                         <span class="file-type">GIF</span>
                     </div>
                 </div>
-            </div>
+            </label>
             <input type="file" class="file-input" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
             
             <!-- PROGRESS -->

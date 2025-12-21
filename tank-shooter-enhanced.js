@@ -1308,13 +1308,18 @@ function generateWaveEnemies(wave) {
 }
 
 function updateWaveSpawning(deltaTime) {
+    // If wave not active, we're in transition - don't do anything
     if (!tankGame.waveActive) {
-        if (tankGame.enemies.length === 0 && tankGame.enemiesToSpawn.length === 0 && tankGame.enemiesSpawned > 0) {
-            waveComplete();
-        }
         return;
     }
 
+    // Check if wave should complete: all enemies spawned AND all enemies killed
+    if (tankGame.enemiesToSpawn.length === 0 && tankGame.enemies.length === 0 && tankGame.enemiesSpawned > 0) {
+        waveComplete();
+        return;
+    }
+
+    // Continue spawning enemies
     tankGame.spawnTimer += deltaTime;
 
     if (tankGame.spawnTimer > TANK_CONFIG.SPAWN_INTERVAL && tankGame.enemiesToSpawn.length > 0) {
@@ -1773,9 +1778,8 @@ function gameOver() {
     const grade = calculateGrade(tankGame.score);
     const totalCoins = calculateCoins(grade);
 
-    if (typeof user !== 'undefined' && user && typeof userProgression !== 'undefined' && userProgression) {
-        awardTankShooterCoins(totalCoins);
-    }
+    // Always try to award coins - the function handles null checks and shows feedback
+    awardTankShooterCoins(totalCoins);
 
     document.getElementById('finalWave').textContent = tankGame.wave;
     document.getElementById('finalScore').textContent = tankGame.score.toLocaleString();
@@ -1809,8 +1813,16 @@ function calculateCoins(grade) {
 
 async function awardTankShooterCoins(amount) {
     try {
+        // Check prerequisites
         if (typeof supabase === 'undefined') {
             console.error('[TankShooter] Supabase not available');
+            showCoinsFeedback(amount, false);
+            return;
+        }
+
+        if (typeof user === 'undefined' || !user || !user.id) {
+            console.error('[TankShooter] User not logged in');
+            showCoinsFeedback(amount, false);
             return;
         }
 
@@ -1820,17 +1832,57 @@ async function awardTankShooterCoins(amount) {
         });
 
         if (!error && data && data.length > 0) {
-            userProgression.truth_coins = data[0].truth_coins;
+            // Update local progression if available
+            if (typeof userProgression !== 'undefined' && userProgression) {
+                userProgression.truth_coins = data[0].truth_coins;
+                userProgression.lifetime_coins_earned = data[0].lifetime_coins_earned;
+            }
             if (typeof updateCoinsDisplay === 'function') {
                 updateCoinsDisplay();
             }
-            console.log(`[TankShooter] Awarded ${amount} coins. New total: ${userProgression.truth_coins}`);
+            console.log(`[TankShooter] Awarded ${amount} coins. New total: ${data[0].truth_coins}`);
+            showCoinsFeedback(amount, true);
         } else {
             console.error('[TankShooter] Error awarding coins:', error);
+            showCoinsFeedback(amount, false);
         }
     } catch (err) {
         console.error('[TankShooter] Exception awarding coins:', err);
+        showCoinsFeedback(amount, false);
     }
+}
+
+function showCoinsFeedback(amount, success) {
+    // Show a floating notification on the game over screen
+    const gameOver = document.getElementById('gameOverScreen');
+    if (!gameOver) return;
+
+    const feedback = document.createElement('div');
+    feedback.style.cssText = `
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 700;
+        animation: fadeInUp 0.5s ease;
+        z-index: 100;
+    `;
+
+    if (success) {
+        feedback.style.background = 'linear-gradient(135deg, #00d4aa, #0984e3)';
+        feedback.style.color = '#fff';
+        feedback.textContent = `💰 +${amount} coins saved!`;
+    } else {
+        feedback.style.background = 'rgba(255,71,87,0.9)';
+        feedback.style.color = '#fff';
+        feedback.textContent = '⚠️ Coins not saved (sign in to save)';
+    }
+
+    gameOver.appendChild(feedback);
+    setTimeout(() => feedback.remove(), 4000);
 }
 
 window.retryTankShooter = function() {
