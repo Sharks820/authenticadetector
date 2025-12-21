@@ -4961,92 +4961,52 @@ window.closeView = function() {
 };
 
 // Handle browser back button (Android physical back button)
-let popstateDebounce = null;
 window.addEventListener('popstate', function(event) {
     console.log('[View] Popstate event:', event.state);
-
-    // Debounce rapid back button presses
-    if (popstateDebounce) {
-        clearTimeout(popstateDebounce);
-    }
-
-    popstateDebounce = setTimeout(() => {
-        popstateDebounce = null;
-
-        if (event.state && event.state.view) {
-            // Navigate to the view in history
-            const targetView = event.state.view;
-
-            // Update view stack to match history
-            const stackIndex = viewStack.indexOf(targetView);
-            if (stackIndex >= 0) {
-                // Remove everything after this view
-                viewStack = viewStack.slice(0, stackIndex + 1);
-            } else {
-                // View not in stack, add it
-                viewStack = [targetView];
-            }
-
-            // Close all views
-            document.querySelectorAll('.view').forEach(v => {
-                v.classList.remove('active');
-                v.style.opacity = '0';
-            });
-
-            // Open target view
-            setTimeout(() => {
-                const view = $(targetView);
-                if (view) {
-                    view.classList.add('active');
-                    view.style.opacity = '1';
-                    currentView = targetView;
-
-                    // Update game nav
-                    const isGameView = GAME_VIEWS.includes(targetView);
-                    const gameNav = $('gameNav');
-                    if (gameNav) {
-                        gameNav.style.display = isGameView ? 'flex' : 'none';
-                        if (isGameView) {
-                            document.querySelectorAll('.game-nav-btn').forEach(btn => {
-                                btn.classList.toggle('active', btn.dataset.view === targetView);
-                            });
-                        }
-                    }
-                } else {
-                    // Fallback to home and replace state
-                    const homeView = $('homeView');
-                    if (homeView) {
-                        homeView.classList.add('active');
-                        homeView.style.opacity = '1';
-                        currentView = 'homeView';
-                        viewStack = ['homeView'];
-                        history.replaceState({ view: 'homeView' }, '', '#homeView');
-                    }
-                }
-            }, 50);
-        } else {
-            // No state - user is trying to exit app
-            // Prevent exit by ensuring homeView state exists
-            if (currentView !== 'homeView') {
-                // Go to home instead of exiting
-                const homeView = $('homeView');
-                if (homeView) {
-                    document.querySelectorAll('.view').forEach(v => {
-                        v.classList.remove('active');
-                        v.style.opacity = '0';
-                    });
-                    homeView.classList.add('active');
-                    homeView.style.opacity = '1';
-                    currentView = 'homeView';
-                    viewStack = ['homeView'];
-                    history.pushState({ view: 'homeView' }, '', '#homeView');
-                }
-            } else {
-                // Already at home, push state back to prevent browser exit
-                history.pushState({ view: 'homeView' }, '', '#homeView');
-            }
+    
+    if (event.state && event.state.view) {
+        // Navigate to the view in history
+        const targetView = event.state.view;
+        
+        // Remove from stack without adding to history again
+        if (viewStack.length > 1) {
+            viewStack.pop();
         }
-    }, 50);
+        
+        // Close all views
+        document.querySelectorAll('.view').forEach(v => {
+            v.classList.remove('active');
+            v.style.opacity = '0';
+        });
+        
+        // Open target view
+        setTimeout(() => {
+            const view = $(targetView);
+            if (view) {
+                view.classList.add('active');
+                view.style.opacity = '1';
+                currentView = targetView;
+                
+                // Update game nav
+                const isGameView = GAME_VIEWS.includes(targetView);
+                const gameNav = $('gameNav');
+                if (gameNav) {
+                    gameNav.style.display = isGameView ? 'flex' : 'none';
+                    if (isGameView) {
+                        document.querySelectorAll('.game-nav-btn').forEach(btn => {
+                            btn.classList.toggle('active', btn.dataset.view === targetView);
+                        });
+                    }
+                }
+            } else {
+                // Fallback to home
+                openView('homeView');
+            }
+        }, 50);
+    } else {
+        // No state, go to home
+        openView('homeView');
+    }
 });
 
 // Initialize: Set initial state for home view
@@ -5251,8 +5211,11 @@ window.submitHunt = async function() {
             });
             setStorage('pending_submissions', localSubmissions);
 
-            // Award coins using atomic function (even offline, to maintain consistency)
-            await awardCoins(50, 'Submission (offline)');
+            // Award coins locally
+            if (userProgression) {
+                userProgression.truth_coins = (userProgression.truth_coins || 0) + 50;
+                updateCoinsDisplay();
+            }
 
             toast('Submitted locally! Will sync when online.');
         } else {
@@ -5390,8 +5353,11 @@ window.vote = async function(choice) {
             });
             setStorage('pending_votes', localVotes);
 
-            // Award coins using atomic function (even offline, to maintain consistency)
-            await awardCoins(10, 'Vote (offline)');
+            // Award coins locally
+            if (userProgression) {
+                userProgression.truth_coins = (userProgression.truth_coins || 0) + 10;
+                updateCoinsDisplay();
+            }
 
             await showVoteFeedback(choice, 10);
             setTimeout(() => loadNextSubmission(), 1000);
@@ -10887,7 +10853,7 @@ window.shareResult = async function() {
     const text = `I analyzed an image with AuthenticaDetector!\n\nVerdict: ${
         currentResult.verdict === 'ai' ? '🤖 Likely AI Generated' :
         currentResult.verdict === 'real' ? '✅ Likely Real' : '❓ Uncertain'
-    }\nAI Probability: ${currentResult.aiScore}%\nConfidence: ${currentResult.confidence}\n\nTry it yourself: ${window.location.origin}`;
+    }\nAI Probability: ${currentResult.aiScore}%\nConfidence: ${currentResult.confidence}\n\nTry it yourself: https://authenticadetector-v7.pages.dev`;
 
     if (navigator.share) {
         try {
@@ -11356,7 +11322,7 @@ function updateQuestProgress(eventType, amount = 1) {
 function showQuestCompleted(questDef, questType) {
     const notification = document.createElement('div');
     notification.style.cssText = `
-        position: fixed; top: calc(80px + var(--safe-top)); right: calc(16px + var(--safe-right));
+        position: fixed; top: 80px; right: 16px;
         background: linear-gradient(135deg, var(--primary), var(--secondary));
         padding: 16px 20px; border-radius: 12px; z-index: 9999;
         box-shadow: 0 8px 32px rgba(0,212,170,0.3);
@@ -11728,53 +11694,18 @@ window.showSquadSettings = function() {
 };
 
 // Handle share target (PWA)
-async function handleShareTarget() {
+function handleShareTarget() {
     const urlParams = new URLSearchParams(window.location.search);
-    const shareParam = urlParams.get('share');
     const sharedUrl = urlParams.get('url') || urlParams.get('text');
     const sharedTitle = urlParams.get('title');
 
-    // Check for shared file from service worker
-    if (shareParam === '1' && 'serviceWorker' in navigator && navigator.serviceWorker.controller) {
-        console.log('[Share Target] Checking for shared file from service worker...');
-
-        // Request shared file from service worker
-        navigator.serviceWorker.controller.postMessage({ type: 'GET_SHARED_FILE' });
-
-        // Listen for response from service worker
-        navigator.serviceWorker.addEventListener('message', async function handleSharedFile(event) {
-            if (event.data.type === 'SHARED_FILE') {
-                console.log('[Share Target] Received shared file:', event.data.name);
-
-                // Convert ArrayBuffer back to Blob
-                const blob = new Blob([event.data.file], { type: event.data.mimeType });
-                const file = new File([blob], event.data.name, { type: event.data.mimeType });
-
-                // Load the image into the app
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    currentImageData = e.target.result;
-                    $(
-                        'uploadedImage'
-                    ).src = currentImageData;
-                    $('uploadSection').classList.add('hidden');
-                    $('resultSection').classList.remove('hidden');
-
-                    toast('Shared image loaded! Ready to analyze.');
-                };
-                reader.readAsDataURL(file);
-
-                // Remove event listener after handling
-                navigator.serviceWorker.removeEventListener('message', handleSharedFile);
-            }
-        });
-    } else if (sharedUrl) {
+    if (sharedUrl) {
         console.log('[Share Target] Received URL:', sharedUrl);
-        toast('Shared URL received: ' + sharedUrl);
+        toast('Shared content received!');
         // Could auto-fetch image from URL here
     }
 
-    // Clean URL parameters
+    // Clean URL
     if (urlParams.toString()) {
         window.history.replaceState({}, document.title, window.location.pathname);
     }
@@ -12271,15 +12202,17 @@ function updateGameUI() {
     $('credibilityFill').style.width = `${gameState.credibility}%`;
 }
 
-async function gameOver() {
+function gameOver() {
     gameState.running = false;
 
     // Calculate coins earned
     const coinsEarned = Math.floor(gameState.score / 100) + gameState.fakesDestroyed * 2;
 
-    // Award coins using atomic function
-    if (coinsEarned > 0) {
-        await awardCoins(coinsEarned, 'Truth Cannon game');
+    // Award coins
+    if (user && userProgression) {
+        userProgression.truth_coins = (userProgression.truth_coins || 0) + coinsEarned;
+        saveUserProgression();
+        updateCoinsDisplay();
     }
 
     // Show game over screen
