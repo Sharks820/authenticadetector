@@ -354,9 +354,9 @@
 /* Layer z-index order */
 .vera-wings { z-index: 1; }
 .vera-body { z-index: 2; }
-.vera-eyes { z-index: 3; }
-.vera-hair { z-index: 4; }
-.vera-overlay { z-index: 5; opacity: 0; }
+.vera-hair { z-index: 3; }
+.vera-overlay { z-index: 4; opacity: 0; }
+/* Eyes layer removed - eye sprites are head crops, not overlays */
 
 /* ==========================================================================
    FAIRY STATE SPRITES
@@ -377,14 +377,7 @@
     animation: hairSwayGentle 4s ease-in-out infinite;
 }
 
-.vera-container.fairy .vera-eyes {
-    background-image: url('assets/vera/vera_fairy_eyes_open.png');
-    transition: opacity 0.05s ease;
-}
-
-.vera-container.fairy .vera-eyes.closed {
-    background-image: url('assets/vera/vera_fairy_eyes_closed.png');
-}
+/* Eye layer removed - sprites are head crops not eye overlays */
 
 /* ==========================================================================
    PARTIAL STATE SPRITES
@@ -405,13 +398,7 @@
     animation: hairSwayUneasy 2.5s ease-in-out infinite;
 }
 
-.vera-container.partial .vera-eyes {
-    background-image: url('assets/vera/vera_fairy_eyes_open.png');
-}
-
-.vera-container.partial .vera-eyes.closed {
-    background-image: url('assets/vera/vera_fairy_eyes_closed.png');
-}
+/* Partial eyes removed */
 
 /* ==========================================================================
    TAKEOVER STATE SPRITES
@@ -432,10 +419,7 @@
     animation: hairSwayWild 1.5s ease-in-out infinite;
 }
 
-.vera-container.takeover .vera-eyes {
-    /* Monster eyes during takeover */
-    background-image: url('assets/vera/vera_monster_eyes_open.png');
-}
+/* Takeover eyes removed */
 
 /* ==========================================================================
    MONSTER STATE SPRITES
@@ -456,9 +440,7 @@
     animation: hairSwayRage 0.8s ease-in-out infinite;
 }
 
-.vera-container.monster .vera-eyes {
-    background-image: url('assets/vera/vera_monster_eyes_open.png');
-}
+/* Monster eyes removed */
 
 /* ==========================================================================
    WING ANIMATIONS - Smooth flapping

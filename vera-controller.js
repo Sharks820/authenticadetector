@@ -317,7 +317,6 @@
         bodyLayer: null,
         wingsLayer: null,
         hairLayer: null,
-        eyesLayer: null,
         overlay: null,
         sparkleContainer: null,
         speech: null,
@@ -331,7 +330,6 @@
         idleTimers: [],
         blinkTimer: null,
         speechTimer: null,
-        eyesOpen: true,
 
         // Position for movement
         position: { x: null, y: null },
@@ -461,16 +459,12 @@
             this.hairLayer = document.createElement('div');
             this.hairLayer.className = 'vera-layer vera-hair';
 
-            this.eyesLayer = document.createElement('div');
-            this.eyesLayer.className = 'vera-layer vera-eyes';
-
             this.overlay = document.createElement('div');
             this.overlay.className = 'vera-layer vera-overlay';
 
-            // Add layers in correct z-order
+            // Add layers in correct z-order (no eyes layer - those sprites are head crops)
             this.stage.appendChild(this.wingsLayer);
             this.stage.appendChild(this.bodyLayer);
-            this.stage.appendChild(this.eyesLayer);
             this.stage.appendChild(this.hairLayer);
             this.stage.appendChild(this.overlay);
             this.container.appendChild(this.stage);
@@ -528,45 +522,44 @@
             this.container.style.bottom = 'auto';
         },
 
-        // Move to new position (click to move) - STAYS NEAR EDGES to not obstruct app
+        // Move to new position (click to move) - CORNERS ONLY to not obstruct app
         moveToNewPosition() {
             if (this.isAnimating) return;
             this.isAnimating = true;
 
             const margin = 20;
             const size = 140;
-            const edgeZone = 200; // VERA stays within this distance from edges
 
-            // Define safe zones (edges only - not the middle)
             const screenW = window.innerWidth;
             const screenH = window.innerHeight;
 
-            // Pick a random edge: 0=right, 1=bottom, 2=left, 3=top
-            const edge = Math.floor(Math.random() * 4);
-            let newX, newY;
+            // Only 4 corners - pick one that's different from current position
+            const corners = [
+                { x: screenW - size - margin, y: screenH - size - margin - 60 },  // Bottom-right (default)
+                { x: margin, y: screenH - size - margin - 60 },                    // Bottom-left
+                { x: screenW - size - margin, y: margin + 80 },                    // Top-right
+                { x: margin, y: margin + 80 }                                      // Top-left
+            ];
 
-            switch (edge) {
-                case 0: // Right edge
-                    newX = screenW - size - margin - Math.random() * (edgeZone - size);
-                    newY = margin + 80 + Math.random() * (screenH - size - margin - 160);
-                    break;
-                case 1: // Bottom edge
-                    newX = margin + Math.random() * (screenW - size - margin * 2);
-                    newY = screenH - size - margin - 80 - Math.random() * (edgeZone - size);
-                    break;
-                case 2: // Left edge
-                    newX = margin + Math.random() * (edgeZone - size);
-                    newY = margin + 80 + Math.random() * (screenH - size - margin - 160);
-                    break;
-                case 3: // Top edge (below header)
-                    newX = margin + Math.random() * (screenW - size - margin * 2);
-                    newY = margin + 80 + Math.random() * (edgeZone - size);
-                    break;
-            }
+            // Find current corner index
+            let currentCorner = 0;
+            let minDist = Infinity;
+            corners.forEach((c, i) => {
+                const dist = Math.abs(c.x - this.position.x) + Math.abs(c.y - this.position.y);
+                if (dist < minDist) {
+                    minDist = dist;
+                    currentCorner = i;
+                }
+            });
 
-            // Ensure bounds
-            newX = Math.max(margin, Math.min(screenW - size - margin, newX));
-            newY = Math.max(margin + 60, Math.min(screenH - size - margin - 60, newY));
+            // Pick a different corner
+            let newCorner;
+            do {
+                newCorner = Math.floor(Math.random() * 4);
+            } while (newCorner === currentCorner);
+
+            let newX = corners[newCorner].x;
+            let newY = corners[newCorner].y;
 
             // Add flying animation class
             this.container.classList.add('flying');
@@ -840,16 +833,20 @@
         },
 
         // Blinking animation
+        // Blink animation - subtle body squash effect
         startBlinking() {
             const blink = () => {
                 if (this.currentState === 'fairy' || this.currentState === 'partial') {
-                    this.eyesOpen = false;
-                    this.eyesLayer.classList.add('closed');
+                    // Quick squash-stretch blink effect on body
+                    this.bodyLayer.style.transition = 'transform 0.08s ease-in-out';
+                    this.bodyLayer.style.transform = 'scaleY(0.97) scaleX(1.01)';
 
                     setTimeout(() => {
-                        this.eyesOpen = true;
-                        this.eyesLayer.classList.remove('closed');
-                    }, 150);
+                        this.bodyLayer.style.transform = 'scaleY(1) scaleX(1)';
+                        setTimeout(() => {
+                            this.bodyLayer.style.transition = '';
+                        }, 100);
+                    }, 80);
                 }
 
                 const nextBlink = CONFIG.blinkInterval + (Math.random() * 2000 - 1000);
