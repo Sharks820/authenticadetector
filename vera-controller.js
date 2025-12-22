@@ -24,6 +24,9 @@
         clickWindowShort: 2000,
         clickWindowLong: 4000,
 
+        // Long-press for monster (easier trigger)
+        longPressTime: 1500,
+
         // Animation timing
         blinkInterval: 3500,
         speechInterval: 12000,
@@ -53,17 +56,27 @@
             if (this.ctx?.state === 'suspended') this.ctx.resume();
         },
 
-        // Gentle fairy chime - musical and pleasant
+        // Magical fairy twinkle - sparkly and ethereal
         playChime() {
             if (!this.enabled || !this.ctx) return;
             this.resume();
 
-            const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+            // High sparkly notes with harmonics for twinkle effect
+            const notes = [1318.51, 1567.98, 2093.00, 2637.02]; // E6, G6, C7, E7 (higher = more sparkly)
             const now = this.ctx.currentTime;
 
             notes.forEach((freq, i) => {
+                // Main tone
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
+
+                // Add shimmer with slight frequency modulation
+                const lfo = this.ctx.createOscillator();
+                const lfoGain = this.ctx.createGain();
+                lfo.frequency.value = 8 + Math.random() * 4; // Subtle vibrato
+                lfoGain.gain.value = freq * 0.01;
+                lfo.connect(lfoGain);
+                lfoGain.connect(osc.frequency);
 
                 osc.connect(gain);
                 gain.connect(this.ctx.destination);
@@ -71,21 +84,41 @@
                 osc.type = 'sine';
                 osc.frequency.value = freq;
 
-                const startTime = now + (i * 0.08);
+                const startTime = now + (i * 0.06);
+                // Soft attack, long sparkly decay
                 gain.gain.setValueAtTime(0, startTime);
-                gain.gain.linearRampToValueAtTime(this.masterVolume * 0.4, startTime + 0.02);
-                gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.4);
+                gain.gain.linearRampToValueAtTime(this.masterVolume * 0.25, startTime + 0.01);
+                gain.gain.exponentialRampToValueAtTime(this.masterVolume * 0.15, startTime + 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.6);
 
                 osc.start(startTime);
-                osc.stop(startTime + 0.4);
+                lfo.start(startTime);
+                osc.stop(startTime + 0.6);
+                lfo.stop(startTime + 0.6);
             });
+
+            // Add high sparkle overlay
+            const sparkle = this.ctx.createOscillator();
+            const sparkleGain = this.ctx.createGain();
+            sparkle.type = 'sine';
+            sparkle.frequency.value = 3951.07; // B7 - very high twinkle
+            sparkle.connect(sparkleGain);
+            sparkleGain.connect(this.ctx.destination);
+            sparkleGain.gain.setValueAtTime(0, now);
+            sparkleGain.gain.linearRampToValueAtTime(this.masterVolume * 0.1, now + 0.005);
+            sparkleGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+            sparkle.start(now);
+            sparkle.stop(now + 0.3);
         },
 
-        // Soft poke/boop sound
+        // Soft fairy poke - gentle magical "boop"
         playPoke() {
             if (!this.enabled || !this.ctx) return;
             this.resume();
 
+            const now = this.ctx.currentTime;
+
+            // Soft high-pitched boop
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
 
@@ -93,14 +126,28 @@
             gain.connect(this.ctx.destination);
 
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(800, this.ctx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(400, this.ctx.currentTime + 0.1);
+            osc.frequency.setValueAtTime(1200, now);
+            osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
 
-            gain.gain.setValueAtTime(this.masterVolume * 0.3, this.ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.15);
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(this.masterVolume * 0.2, now + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
 
-            osc.start();
-            osc.stop(this.ctx.currentTime + 0.15);
+            osc.start(now);
+            osc.stop(now + 0.12);
+
+            // Add tiny twinkle accent
+            const twinkle = this.ctx.createOscillator();
+            const twinkleGain = this.ctx.createGain();
+            twinkle.type = 'sine';
+            twinkle.frequency.value = 2400;
+            twinkle.connect(twinkleGain);
+            twinkleGain.connect(this.ctx.destination);
+            twinkleGain.gain.setValueAtTime(0, now + 0.02);
+            twinkleGain.gain.linearRampToValueAtTime(this.masterVolume * 0.08, now + 0.03);
+            twinkleGain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+            twinkle.start(now + 0.02);
+            twinkle.stop(now + 0.15);
         },
 
         // Whoosh for movement
@@ -195,54 +242,97 @@
             osc2.stop(now + 0.5);
         },
 
-        // Monster ROAR
+        // Monster ROAR - deep, rumbling, terrifying
         playRoar() {
             if (!this.enabled || !this.ctx) return;
             this.resume();
 
-            const duration = 0.7;
+            const duration = 1.0;
             const now = this.ctx.currentTime;
 
-            // Low rumble
+            // Sub-bass foundation (30-50Hz) - feel it in your chest
+            const subBass = this.ctx.createOscillator();
+            const subGain = this.ctx.createGain();
+            subBass.type = 'sine';
+            subBass.frequency.setValueAtTime(40, now);
+            subBass.frequency.exponentialRampToValueAtTime(25, now + duration);
+            subBass.connect(subGain);
+            subGain.connect(this.ctx.destination);
+            subGain.gain.setValueAtTime(this.masterVolume * 0.5, now);
+            subGain.gain.linearRampToValueAtTime(0.001, now + duration);
+            subBass.start(now);
+            subBass.stop(now + duration);
+
+            // Low growl oscillators
             const osc = this.ctx.createOscillator();
             const osc2 = this.ctx.createOscillator();
+            const osc3 = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             const filter = this.ctx.createBiquadFilter();
             const distortion = this.ctx.createWaveShaper();
 
-            // Create distortion curve
+            // Heavy distortion curve for growl texture
             const curve = new Float32Array(256);
             for (let i = 0; i < 256; i++) {
                 const x = (i / 128) - 1;
-                curve[i] = Math.tanh(x * 2);
+                curve[i] = Math.tanh(x * 3) * 0.8; // More aggressive distortion
             }
             distortion.curve = curve;
 
             osc.connect(distortion);
             osc2.connect(distortion);
+            osc3.connect(distortion);
             distortion.connect(filter);
             filter.connect(gain);
             gain.connect(this.ctx.destination);
 
             filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(600, now);
-            filter.frequency.linearRampToValueAtTime(200, now + duration);
+            filter.frequency.setValueAtTime(400, now);
+            filter.frequency.linearRampToValueAtTime(120, now + duration);
+            filter.Q.value = 2; // Some resonance for menace
 
             osc.type = 'sawtooth';
             osc2.type = 'square';
+            osc3.type = 'triangle';
 
-            osc.frequency.setValueAtTime(150, now);
-            osc.frequency.exponentialRampToValueAtTime(60, now + duration);
-            osc2.frequency.setValueAtTime(155, now);
-            osc2.frequency.exponentialRampToValueAtTime(55, now + duration);
+            // Very low frequencies for deep roar
+            osc.frequency.setValueAtTime(80, now);
+            osc.frequency.exponentialRampToValueAtTime(35, now + duration);
+            osc2.frequency.setValueAtTime(85, now);
+            osc2.frequency.exponentialRampToValueAtTime(32, now + duration);
+            osc3.frequency.setValueAtTime(77, now);
+            osc3.frequency.exponentialRampToValueAtTime(30, now + duration);
 
-            gain.gain.setValueAtTime(this.masterVolume * 0.4, now);
+            // Attack, sustain, release for dramatic roar
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(this.masterVolume * 0.5, now + 0.05);
+            gain.gain.setValueAtTime(this.masterVolume * 0.45, now + 0.3);
             gain.gain.linearRampToValueAtTime(0.001, now + duration);
 
-            osc.start();
-            osc2.start();
+            osc.start(now);
+            osc2.start(now);
+            osc3.start(now);
             osc.stop(now + duration);
             osc2.stop(now + duration);
+            osc3.stop(now + duration);
+
+            // Add some rumble noise
+            const noiseBuffer = this.ctx.createBuffer(1, this.ctx.sampleRate * 0.8, this.ctx.sampleRate);
+            const noiseData = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < noiseData.length; i++) {
+                noiseData[i] = (Math.random() * 2 - 1) * Math.exp(-i / (this.ctx.sampleRate * 0.3));
+            }
+            const noise = this.ctx.createBufferSource();
+            noise.buffer = noiseBuffer;
+            const noiseFilter = this.ctx.createBiquadFilter();
+            noiseFilter.type = 'lowpass';
+            noiseFilter.frequency.value = 200;
+            const noiseGain = this.ctx.createGain();
+            noiseGain.gain.value = this.masterVolume * 0.15;
+            noise.connect(noiseFilter);
+            noiseFilter.connect(noiseGain);
+            noiseGain.connect(this.ctx.destination);
+            noise.start(now + 0.02);
         },
 
         // Monster snarl/hiss
@@ -278,17 +368,26 @@
             noise.start();
         },
 
-        // Calming down sound
+        // Calming down sound - gentle descending twinkle
         playCalm() {
             if (!this.enabled || !this.ctx) return;
             this.resume();
 
-            const notes = [392, 523.25, 659.25, 783.99]; // G4, C5, E5, G5
+            // Descending gentle sparkle notes - relief/calm feeling
+            const notes = [2093.00, 1567.98, 1318.51, 1046.50, 783.99]; // C7, G6, E6, C6, G5 - descending
             const now = this.ctx.currentTime;
 
             notes.forEach((freq, i) => {
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
+
+                // Add gentle shimmer
+                const lfo = this.ctx.createOscillator();
+                const lfoGain = this.ctx.createGain();
+                lfo.frequency.value = 6;
+                lfoGain.gain.value = freq * 0.008;
+                lfo.connect(lfoGain);
+                lfoGain.connect(osc.frequency);
 
                 osc.connect(gain);
                 gain.connect(this.ctx.destination);
@@ -296,14 +395,32 @@
                 osc.type = 'sine';
                 osc.frequency.value = freq;
 
-                const startTime = now + (i * 0.12);
+                const startTime = now + (i * 0.15);
+                // Soft attack, gentle decay
                 gain.gain.setValueAtTime(0, startTime);
-                gain.gain.linearRampToValueAtTime(this.masterVolume * 0.3, startTime + 0.05);
-                gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.5);
+                gain.gain.linearRampToValueAtTime(this.masterVolume * 0.2, startTime + 0.02);
+                gain.gain.exponentialRampToValueAtTime(this.masterVolume * 0.1, startTime + 0.2);
+                gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.7);
 
                 osc.start(startTime);
-                osc.stop(startTime + 0.5);
+                lfo.start(startTime);
+                osc.stop(startTime + 0.7);
+                lfo.stop(startTime + 0.7);
             });
+
+            // Add soft wind-down pad
+            const pad = this.ctx.createOscillator();
+            const padGain = this.ctx.createGain();
+            pad.type = 'sine';
+            pad.frequency.setValueAtTime(523.25, now); // C5
+            pad.frequency.exponentialRampToValueAtTime(261.63, now + 1.2); // Down to C4
+            pad.connect(padGain);
+            padGain.connect(this.ctx.destination);
+            padGain.gain.setValueAtTime(0, now);
+            padGain.gain.linearRampToValueAtTime(this.masterVolume * 0.08, now + 0.1);
+            padGain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+            pad.start(now);
+            pad.stop(now + 1.2);
         }
     };
 
@@ -333,6 +450,11 @@
 
         // Position for movement
         position: { x: null, y: null },
+        currentCorner: 'bottom-right', // Track which corner for speech positioning
+
+        // Long-press state
+        longPressTimer: null,
+        isLongPress: false,
 
         // Dialogue lines
         dialogue: {
@@ -534,6 +656,7 @@
             const screenH = window.innerHeight;
 
             // Only 4 corners - pick one that's different from current position
+            const cornerNames = ['bottom-right', 'bottom-left', 'top-right', 'top-left'];
             const corners = [
                 { x: screenW - size - margin, y: screenH - size - margin - 60 },  // Bottom-right (default)
                 { x: margin, y: screenH - size - margin - 60 },                    // Bottom-left
@@ -542,24 +665,27 @@
             ];
 
             // Find current corner index
-            let currentCorner = 0;
+            let currentCornerIdx = 0;
             let minDist = Infinity;
             corners.forEach((c, i) => {
                 const dist = Math.abs(c.x - this.position.x) + Math.abs(c.y - this.position.y);
                 if (dist < minDist) {
                     minDist = dist;
-                    currentCorner = i;
+                    currentCornerIdx = i;
                 }
             });
 
             // Pick a different corner
-            let newCorner;
+            let newCornerIdx;
             do {
-                newCorner = Math.floor(Math.random() * 4);
-            } while (newCorner === currentCorner);
+                newCornerIdx = Math.floor(Math.random() * 4);
+            } while (newCornerIdx === currentCornerIdx);
 
-            let newX = corners[newCorner].x;
-            let newY = corners[newCorner].y;
+            // Track corner for speech positioning
+            this.currentCorner = cornerNames[newCornerIdx];
+
+            let newX = corners[newCornerIdx].x;
+            let newY = corners[newCornerIdx].y;
 
             // Add flying animation class
             this.container.classList.add('flying');
@@ -581,9 +707,30 @@
 
         // Bind events
         bindEvents() {
+            // Long-press detection for monster mode (easier than spam clicking)
+            this.container.addEventListener('mousedown', (e) => {
+                if (e.target === this.badge || e.target.closest('.vera-badge')) return;
+                this.startLongPress();
+            });
+            this.container.addEventListener('mouseup', () => this.cancelLongPress());
+            this.container.addEventListener('mouseleave', () => this.cancelLongPress());
+
+            // Touch support for long-press
+            this.container.addEventListener('touchstart', (e) => {
+                if (e.target === this.badge || e.target.closest('.vera-badge')) return;
+                this.startLongPress();
+            }, { passive: true });
+            this.container.addEventListener('touchend', () => this.cancelLongPress());
+            this.container.addEventListener('touchcancel', () => this.cancelLongPress());
+
             this.container.addEventListener('click', (e) => {
                 if (e.target === this.badge || e.target.closest('.vera-badge')) {
                     this.openHelp();
+                    return;
+                }
+                // Don't handle click if it was a long-press
+                if (this.isLongPress) {
+                    this.isLongPress = false;
                     return;
                 }
                 this.handleClick();
@@ -668,6 +815,38 @@
             if (clicksIn2s >= 2 && this.currentState === 'fairy') {
                 SoundFX.playWorried();
             }
+        },
+
+        // Long-press handling for monster mode
+        startLongPress() {
+            this.cancelLongPress(); // Clear any existing
+            this.container.classList.add('charging');
+
+            this.longPressTimer = setTimeout(() => {
+                this.isLongPress = true;
+                this.container.classList.remove('charging');
+
+                // Trigger monster mode!
+                if (this.currentState !== 'monster') {
+                    this.showSpeech("You... HELD ME DOWN?! NOW FACE MY WRATH!");
+                    this.setState('monster');
+
+                    // Auto calm down after duration
+                    setTimeout(() => {
+                        if (this.currentState === 'monster') {
+                            this.calmDown();
+                        }
+                    }, CONFIG.monsterDuration);
+                }
+            }, CONFIG.longPressTime);
+        },
+
+        cancelLongPress() {
+            if (this.longPressTimer) {
+                clearTimeout(this.longPressTimer);
+                this.longPressTimer = null;
+            }
+            this.container.classList.remove('charging');
         },
 
         // Set state
@@ -794,7 +973,7 @@
             return lines[Math.floor(Math.random() * lines.length)];
         },
 
-        // Show speech bubble
+        // Show speech bubble with smart positioning based on corner
         showSpeech(text) {
             const titleEl = this.speech.querySelector('.vera-speech-title');
 
@@ -813,6 +992,11 @@
             }
 
             this.speechText.textContent = text;
+
+            // Position speech bubble based on corner to prevent cutoff
+            this.speech.classList.remove('pos-top-left', 'pos-top-right', 'pos-bottom-left', 'pos-bottom-right');
+            this.speech.classList.add('pos-' + this.currentCorner);
+
             this.speech.classList.add('visible');
 
             clearTimeout(this.speechHideTimer);
