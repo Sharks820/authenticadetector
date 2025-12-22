@@ -1,0 +1,451 @@
+/* =============================================================================
+   VERA ANIMATION CONTROLLER - CSS
+   Complete layered sprite animation system for VERA fairy/monster mascot
+   ============================================================================= */
+
+/* Container - The floating orb */
+.vera-container {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 140px;
+    height: 140px;
+    z-index: 1000;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.vera-container:hover {
+    transform: scale(1.08);
+}
+
+.vera-container:active {
+    transform: scale(0.95);
+}
+
+/* Aura glow behind VERA */
+.vera-aura {
+    position: absolute;
+    inset: -20px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%,
+        rgba(103, 232, 249, 0.4) 0%,
+        rgba(168, 85, 247, 0.2) 40%,
+        rgba(244, 114, 182, 0.1) 70%,
+        transparent 100%);
+    animation: veraAuraPulse 3s ease-in-out infinite;
+    pointer-events: none;
+    filter: blur(8px);
+}
+
+.vera-container.monster .vera-aura {
+    background: radial-gradient(circle at 40% 35%,
+        rgba(255, 60, 60, 0.5) 0%,
+        rgba(255, 100, 0, 0.3) 40%,
+        rgba(139, 0, 0, 0.15) 70%,
+        transparent 100%);
+    animation: veraAuraPulseMonster 1.5s ease-in-out infinite;
+}
+
+.vera-container.partial .vera-aura,
+.vera-container.takeover .vera-aura {
+    background: radial-gradient(circle at 40% 35%,
+        rgba(255, 150, 100, 0.4) 0%,
+        rgba(200, 80, 200, 0.25) 40%,
+        rgba(255, 60, 60, 0.15) 70%,
+        transparent 100%);
+    animation: veraAuraPulseTransform 2s ease-in-out infinite;
+}
+
+@keyframes veraAuraPulse {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes veraAuraPulseMonster {
+    0%, 100% { opacity: 0.8; transform: scale(1); filter: blur(8px); }
+    50% { opacity: 1; transform: scale(1.15); filter: blur(12px); }
+}
+
+@keyframes veraAuraPulseTransform {
+    0%, 100% { opacity: 0.6; transform: scale(1) rotate(0deg); }
+    50% { opacity: 0.9; transform: scale(1.12) rotate(3deg); }
+}
+
+/* Main sprite stage */
+.vera-stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    animation: veraFloat 2.8s ease-in-out infinite;
+}
+
+@keyframes veraFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* Monster shake */
+.vera-container.monster .vera-stage,
+.vera-container.takeover .vera-stage {
+    animation: veraFloat 2.2s ease-in-out infinite, veraShake 0.4s linear infinite;
+}
+
+@keyframes veraShake {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-6px) rotate(-1deg); }
+    50% { transform: translateY(-8px) rotate(0deg); }
+    75% { transform: translateY(-6px) rotate(1deg); }
+}
+
+/* Layered sprites - stacked absolutely */
+.vera-layer {
+    position: absolute;
+    inset: 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    pointer-events: none;
+}
+
+/* Layer order: wings (back) -> body (middle) -> hair (front) */
+.vera-wings { z-index: 1; }
+.vera-body { z-index: 2; }
+.vera-hair { z-index: 3; }
+.vera-overlay { z-index: 4; opacity: 0; transition: opacity 0.3s ease; }
+
+/* FAIRY STATE */
+.vera-container.fairy .vera-body {
+    background-image: url('assets/vera/vera_fairy_body_HQ.webp');
+}
+.vera-container.fairy .vera-wings {
+    background-image: url('assets/vera/vera_fairy_wings_HQ.webp');
+    transform-origin: 50% 46%;
+    animation: wingFlap 1.1s ease-in-out infinite;
+}
+.vera-container.fairy .vera-hair {
+    background-image: url('assets/vera/vera_fairy_hair_HQ.webp');
+    transform-origin: 52% 18%;
+    animation: hairSway 2.8s ease-in-out infinite;
+}
+
+/* PARTIAL STATE */
+.vera-container.partial .vera-body {
+    background-image: url('assets/vera/vera_partial_transform_body_HQ.webp');
+}
+.vera-container.partial .vera-wings {
+    background-image: url('assets/vera/vera_partial_transform_wings_HQ.webp');
+    transform-origin: 50% 48%;
+    animation: wingFlap 0.9s ease-in-out infinite;
+}
+.vera-container.partial .vera-hair {
+    background-image: url('assets/vera/vera_partial_transform_hair_HQ.webp');
+    transform-origin: 52% 18%;
+    animation: hairSway 2s ease-in-out infinite;
+}
+
+/* TAKEOVER STATE */
+.vera-container.takeover .vera-body {
+    background-image: url('assets/vera/vera_hybrid_takeover_body.webp');
+}
+.vera-container.takeover .vera-wings {
+    background-image: url('assets/vera/vera_hybrid_takeover_wings.webp');
+    transform-origin: 50% 48%;
+    animation: wingFlapFast 0.7s ease-in-out infinite;
+}
+.vera-container.takeover .vera-hair {
+    background-image: url('assets/vera/vera_hybrid_takeover_hair.webp');
+    transform-origin: 52% 18%;
+    animation: hairSwayWild 1.5s ease-in-out infinite;
+}
+
+/* MONSTER STATE */
+.vera-container.monster .vera-body {
+    background-image: url('assets/vera/vera_monster_body_HQ.webp');
+}
+.vera-container.monster .vera-wings {
+    background-image: url('assets/vera/vera_monster_wings_HQ.webp');
+    transform-origin: 50% 48%;
+    animation: wingFlapMonster 0.6s ease-in-out infinite;
+}
+.vera-container.monster .vera-hair {
+    background-image: url('assets/vera/vera_monster_hair_HQ.webp');
+    transform-origin: 50% 16%;
+    animation: hairSwayWild 1.2s ease-in-out infinite;
+}
+
+/* Wing animations */
+@keyframes wingFlap {
+    0%, 100% { transform: scaleY(1) rotate(-2deg); }
+    50% { transform: scaleY(0.92) rotate(3deg); }
+}
+
+@keyframes wingFlapFast {
+    0%, 100% { transform: scaleY(1) rotate(-3deg); }
+    50% { transform: scaleY(0.88) rotate(4deg); }
+}
+
+@keyframes wingFlapMonster {
+    0%, 100% { transform: scaleY(1.05) rotate(-4deg); }
+    50% { transform: scaleY(0.85) rotate(5deg); }
+}
+
+/* Hair animations */
+@keyframes hairSway {
+    0%, 100% { transform: rotate(-1.5deg) translateY(0); }
+    50% { transform: rotate(2deg) translateY(2px); }
+}
+
+@keyframes hairSwayWild {
+    0%, 100% { transform: rotate(-3deg) translateY(0) scaleX(1); }
+    25% { transform: rotate(2deg) translateY(1px) scaleX(1.02); }
+    50% { transform: rotate(4deg) translateY(3px) scaleX(1); }
+    75% { transform: rotate(-1deg) translateY(1px) scaleX(0.98); }
+}
+
+/* Face pop overlay */
+.vera-overlay.active {
+    opacity: 1;
+    animation: facePopIn 0.4s ease-out;
+}
+
+.vera-container .vera-overlay.facepop {
+    background-image: url('assets/vera/vera_hybrid_face_pop.webp');
+}
+
+.vera-container .vera-overlay.facepop-extreme {
+    background-image: url('assets/vera/vera_hybrid_face_pop_EXTREME.webp');
+}
+
+@keyframes facePopIn {
+    0% { opacity: 0; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.05); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* Particle canvas */
+.vera-particles {
+    position: absolute;
+    inset: -30px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* CSS Sparkle fallback particles */
+.vera-sparkles {
+    position: absolute;
+    inset: -20px;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.vera-sparkle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 0%, #67e8f9 50%, transparent 70%);
+    animation: sparkleFloat 3s ease-in-out infinite;
+    opacity: 0;
+}
+
+.vera-container.monster .vera-sparkle {
+    background: radial-gradient(circle, #fff 0%, #ff6b35 50%, transparent 70%);
+}
+
+.vera-sparkle:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
+.vera-sparkle:nth-child(2) { top: 15%; right: 15%; animation-delay: 0.5s; }
+.vera-sparkle:nth-child(3) { bottom: 25%; left: 10%; animation-delay: 1s; }
+.vera-sparkle:nth-child(4) { bottom: 20%; right: 20%; animation-delay: 1.5s; }
+.vera-sparkle:nth-child(5) { top: 40%; left: 5%; animation-delay: 0.3s; }
+.vera-sparkle:nth-child(6) { top: 35%; right: 8%; animation-delay: 0.8s; }
+
+@keyframes sparkleFloat {
+    0%, 100% { opacity: 0; transform: scale(0.5) translateY(0); }
+    20% { opacity: 1; transform: scale(1) translateY(-5px); }
+    80% { opacity: 1; transform: scale(1.2) translateY(-15px); }
+    100% { opacity: 0; transform: scale(0.5) translateY(-20px); }
+}
+
+/* Help badge */
+.vera-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 900;
+    color: #fff;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(255, 71, 87, 0.5);
+    transition: all 0.2s ease;
+    animation: badgePulse 2s ease-in-out infinite;
+}
+
+.vera-badge:hover {
+    transform: scale(1.15);
+    box-shadow: 0 4px 16px rgba(255, 71, 87, 0.7);
+}
+
+@keyframes badgePulse {
+    0%, 100% { box-shadow: 0 2px 8px rgba(255, 71, 87, 0.5); }
+    50% { box-shadow: 0 2px 16px rgba(255, 71, 87, 0.8), 0 0 20px rgba(255, 71, 87, 0.3); }
+}
+
+/* Speech bubble */
+.vera-speech {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    right: 0;
+    width: 220px;
+    padding: 12px 14px;
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(103, 232, 249, 0.3);
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #e2e8f0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.vera-speech::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    right: 20px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid rgba(15, 23, 42, 0.95);
+}
+
+.vera-container:hover .vera-speech,
+.vera-speech.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.vera-speech-title {
+    font-weight: 700;
+    color: #67e8f9;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.vera-container.monster .vera-speech-title {
+    color: #ff6b6b;
+}
+
+/* Screen flash effect */
+.vera-screen-flash {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    animation: screenFlash 0.3s ease-out forwards;
+}
+
+.vera-screen-flash.fairy {
+    background: radial-gradient(circle at center, rgba(103, 232, 249, 0.4) 0%, transparent 70%);
+}
+
+.vera-screen-flash.monster {
+    background: radial-gradient(circle at center, rgba(255, 60, 60, 0.5) 0%, transparent 70%);
+}
+
+@keyframes screenFlash {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Screen shake */
+@keyframes screenShake {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-3px, -2px); }
+    20% { transform: translate(3px, 2px); }
+    30% { transform: translate(-2px, 3px); }
+    40% { transform: translate(2px, -3px); }
+    50% { transform: translate(-3px, 2px); }
+    60% { transform: translate(3px, -2px); }
+    70% { transform: translate(-2px, -3px); }
+    80% { transform: translate(2px, 3px); }
+    90% { transform: translate(-3px, -2px); }
+}
+
+body.vera-shake {
+    animation: screenShake 0.5s ease-in-out;
+}
+
+/* Transformation effect */
+.vera-container.transforming .vera-stage {
+    animation: transformPulse 0.5s ease-in-out;
+}
+
+@keyframes transformPulse {
+    0% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+    25% { transform: scale(1.15) rotate(-5deg); filter: brightness(1.3) hue-rotate(20deg); }
+    50% { transform: scale(0.9) rotate(5deg); filter: brightness(1.5) hue-rotate(-20deg); }
+    75% { transform: scale(1.1) rotate(-3deg); filter: brightness(1.2); }
+    100% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+}
+
+/* PNG fallback for browsers without webp */
+@supports not (background-image: url('test.webp')) {
+    .vera-container.fairy .vera-body { background-image: url('assets/vera/vera_fairy_body_HQ.png'); }
+    .vera-container.fairy .vera-wings { background-image: url('assets/vera/vera_fairy_wings_HQ.png'); }
+    .vera-container.fairy .vera-hair { background-image: url('assets/vera/vera_fairy_hair_HQ.png'); }
+    .vera-container.partial .vera-body { background-image: url('assets/vera/vera_partial_transform_body_HQ.png'); }
+    .vera-container.partial .vera-wings { background-image: url('assets/vera/vera_partial_transform_wings_HQ.png'); }
+    .vera-container.partial .vera-hair { background-image: url('assets/vera/vera_partial_transform_hair_HQ.png'); }
+    .vera-container.takeover .vera-body { background-image: url('assets/vera/vera_hybrid_takeover_body.png'); }
+    .vera-container.takeover .vera-wings { background-image: url('assets/vera/vera_hybrid_takeover_wings.png'); }
+    .vera-container.takeover .vera-hair { background-image: url('assets/vera/vera_hybrid_takeover_hair.png'); }
+    .vera-container.monster .vera-body { background-image: url('assets/vera/vera_monster_body_HQ.png'); }
+    .vera-container.monster .vera-wings { background-image: url('assets/vera/vera_monster_wings_HQ.png'); }
+    .vera-container.monster .vera-hair { background-image: url('assets/vera/vera_monster_hair_HQ.png'); }
+}
+
+/* Responsive sizing */
+@media (max-width: 480px) {
+    .vera-container {
+        width: 100px;
+        height: 100px;
+        bottom: 70px;
+        right: 15px;
+    }
+
+    .vera-speech {
+        width: 180px;
+        font-size: 12px;
+        right: -10px;
+    }
+
+    .vera-badge {
+        width: 24px;
+        height: 24px;
+        font-size: 14px;
+    }
+}
+
+/* Hide during keyboard on mobile */
+@media (max-height: 500px) {
+    .vera-container {
+        display: none;
+    }
+}

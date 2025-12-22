@@ -1,0 +1,131 @@
+{
+  "version": "vera-pack-1",
+  "notes": "Approximate layer separation (wings/hair/body) for quick animation. For perfect rigging, redraw as layered art.",
+  "fairy": {
+    "size_px": [
+      560,
+      744
+    ],
+    "origins": {
+      "wings": {
+        "x": 0.5,
+        "y": 0.45
+      },
+      "hair": {
+        "x": 0.52,
+        "y": 0.18
+      },
+      "body": {
+        "x": 0.5,
+        "y": 0.55
+      }
+    },
+    "files": {
+      "full_png": "vera_fairy_flying.png",
+      "full_webp": "vera_fairy_flying.webp",
+      "wings_png": "vera_fairy_wings.png",
+      "hair_png": "vera_fairy_hair.png",
+      "body_png": "vera_fairy_body.png"
+    }
+  },
+  "monster": {
+    "size_px": [
+      560,
+      766
+    ],
+    "origins": {
+      "wings": {
+        "x": 0.5,
+        "y": 0.48
+      },
+      "hair": {
+        "x": 0.5,
+        "y": 0.16
+      },
+      "body": {
+        "x": 0.5,
+        "y": 0.58
+      }
+    },
+    "files": {
+      "full_png": "vera_monster_flying.png",
+      "full_webp": "vera_monster_flying.webp",
+      "wings_png": "vera_monster_wings.png",
+      "hair_png": "vera_monster_hair.png",
+      "body_png": "vera_monster_body.png"
+    }
+  },
+  "particles": {
+    "fairy_sheet": {
+      "png": "particles_fairy_sheet.png",
+      "webp": "particles_fairy_sheet.webp",
+      "frames": 8,
+      "cell": 128
+    },
+    "monster_sheet": {
+      "png": "particles_monster_sheet.png",
+      "webp": "particles_monster_sheet.webp",
+      "frames": 8,
+      "cell": 128
+    }
+  },
+  "hybrid_variants": {
+    "subtle": {
+      "png": "vera_hybrid_face_pop.png",
+      "webp": "vera_hybrid_face_pop.webp"
+    },
+    "extreme": {
+      "png": "vera_hybrid_face_pop_EXTREME.png",
+      "webp": "vera_hybrid_face_pop_EXTREME.webp"
+    },
+    "notes": "Hybrid overlay: monster face breaking through fairy form. Use as idle/event/anger state.",
+    "full_takeover": {
+      "png": "vera_hybrid_takeover.png",
+      "webp": "vera_hybrid_takeover.webp",
+      "layers": {
+        "body_png": "vera_hybrid_takeover_body.png",
+        "wings_png": "vera_hybrid_takeover_wings.png",
+        "hair_png": "vera_hybrid_takeover_hair.png"
+      },
+      "origins": {
+        "wings": {
+          "x": 0.5,
+          "y": 0.48
+        },
+        "hair": {
+          "x": 0.52,
+          "y": 0.16
+        },
+        "body": {
+          "x": 0.5,
+          "y": 0.58
+        }
+      },
+      "notes": "Hybrid full-face takeover while keeping fairy body. Use as anger/idle escalation. Layer separation is approximate."
+    }
+  },
+  "hq_variants": {
+    "fairy": {
+      "full_png": "vera_fairy_flying_HQ.png",
+      "full_webp": "vera_fairy_flying_HQ.webp",
+      "body_png": "vera_fairy_body_HQ.png",
+      "wings_png": "vera_fairy_wings_HQ.png",
+      "hair_png": "vera_fairy_hair_HQ.png"
+    },
+    "monster": {
+      "full_png": "vera_monster_flying_HQ.png",
+      "full_webp": "vera_monster_flying_HQ.webp",
+      "body_png": "vera_monster_body_HQ.png",
+      "wings_png": "vera_monster_wings_HQ.png",
+      "hair_png": "vera_monster_hair_HQ.png"
+    },
+    "partial_transform": {
+      "full_png": "vera_partial_transform_HQ.png",
+      "full_webp": "vera_partial_transform_HQ.webp",
+      "body_png": "vera_partial_transform_body_HQ.png",
+      "wings_png": "vera_partial_transform_wings_HQ.png",
+      "hair_png": "vera_partial_transform_hair_HQ.png",
+      "notes": "Mid-state: fairy body with full-face monster takeover. Use for escalation before full monster."
+    }
+  }
+}
