@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VERA Icon Pack - Cyberpunk Edition</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0a0f1a 0%, #0f172a 50%, #0c1929 100%);
+      min-height: 100vh;
+      color: #e0e7ff;
+      padding: 40px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      background: linear-gradient(90deg, #22d3ee, #14b8a6, #f97316);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #64748b;
+      margin-bottom: 40px;
+    }
+    h2 {
+      font-size: 1.2rem;
+      color: #22d3ee;
+      margin: 30px 0 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #164e63;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h2::before {
+      content: "";
+      width: 4px;
+      height: 20px;
+      background: linear-gradient(180deg, #22d3ee, #14b8a6);
+      border-radius: 2px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 16px;
+    }
+    .icon-card {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid #1e3a5f;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .icon-card:hover {
+      transform: translateY(-4px);
+      border-color: #22d3ee;
+      box-shadow: 0 8px 32px rgba(34, 211, 238, 0.2);
+    }
+    .icon-card img {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 8px;
+    }
+    .icon-card span {
+      display: block;
+      font-size: 0.7rem;
+      color: #64748b;
+      word-break: break-word;
+    }
+    .size-demo {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      justify-content: center;
+      margin: 30px 0;
+      padding: 24px;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 16px;
+      border: 1px solid #1e3a5f;
+    }
+    .size-demo img { transition: transform 0.3s; }
+    .size-demo img:hover { transform: scale(1.1); }
+    .size-label {
+      font-size: 10px;
+      color: #64748b;
+      text-align: center;
+      margin-top: 4px;
+    }
+    .dark-test {
+      background: #000;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+    .dark-test h3 {
+      color: #22d3ee;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>VERA Icon Pack</h1>
+  <p class="subtitle">Cyberpunk × Anime × AI Corruption</p>
+
+  <h2>Size Scaling</h2>
+  <div class="size-demo">
+    <div><img src="currency-coin.svg" width="24" height="24" alt="24px"><div class="size-label">24px</div></div>
+    <div><img src="currency-coin.svg" width="32" height="32" alt="32px"><div class="size-label">32px</div></div>
+    <div><img src="currency-coin.svg" width="48" height="48" alt="48px"><div class="size-label">48px</div></div>
+    <div><img src="currency-coin.svg" width="64" height="64" alt="64px"><div class="size-label">64px</div></div>
+    <div><img src="currency-coin.svg" width="96" height="96" alt="96px"><div class="size-label">96px</div></div>
+  </div>
+
+  <h2>Navigation</h2>
+  <div class="grid">
+    <div class="icon-card"><img src="nav-home.svg" alt="Home"><span>home</span></div>
+    <div class="icon-card"><img src="nav-history.svg" alt="History"><span>history</span></div>
+    <div class="icon-card"><img src="nav-ranks.svg" alt="Ranks"><span>ranks</span></div>
+    <div class="icon-card"><img src="nav-shop.svg" alt="Shop"><span>shop</span></div>
+    <div class="icon-card"><img src="nav-vera.svg" alt="VERA"><span>vera</span></div>
+  </div>
+
+  <h2>Currency</h2>
+  <div class="grid">
+    <div class="icon-card"><img src="currency-coin.svg" alt="Coin"><span>coin</span></div>
+    <div class="icon-card"><img src="currency-crystal.svg" alt="Crystal"><span>crystal</span></div>
+    <div class="icon-card"><img src="currency-key.svg" alt="Key"><span>key</span></div>
+  </div>
+
+  <h2>Actions</h2>
+  <div class="grid">
+    <div class="icon-card"><img src="action-attack.svg" alt="Attack"><span>attack</span></div>
+    <div class="icon-card"><img src="action-hunt.svg" alt="Hunt"><span>hunt</span></div>
+    <div class="icon-card"><img src="action-verify.svg" alt="Verify"><span>verify</span></div>
+  </div>
+
+  <h2>UI Elements</h2>
+  <div class="grid">
+    <div class="icon-card"><img src="ui-back.svg" alt="Back"><span>back</span></div>
+    <div class="icon-card"><img src="ui-menu.svg" alt="Menu"><span>menu</span></div>
+    <div class="icon-card"><img src="ui-settings.svg" alt="Settings"><span>settings</span></div>
+    <div class="icon-card"><img src="ui-profile.svg" alt="Profile"><span>profile</span></div>
+    <div class="icon-card"><img src="ui-install.svg" alt="Install"><span>install</span></div>
+    <div class="icon-card"><img src="ui-tank.svg" alt="Tank"><span>tank</span></div>
+  </div>
+
+  <h2>Special</h2>
+  <div class="grid">
+    <div class="icon-card"><img src="special-demon-eye.svg" alt="Demon Eye"><span>demon-eye</span></div>
+    <div class="icon-card"><img src="special-corruption.svg" alt="Corruption"><span>corruption</span></div>
+    <div class="icon-card"><img src="special-fairy-dust.svg" alt="Fairy Dust"><span>fairy-dust</span></div>
+    <div class="icon-card"><img src="special-wings.svg" alt="Wings"><span>wings</span></div>
+  </div>
+
+  <h2>On Pure Black (Dark Mode Test)</h2>
+  <div class="dark-test">
+    <h3>Glow visibility check</h3>
+    <div class="grid">
+      <div class="icon-card" style="background:#000;border-color:#111"><img src="nav-home.svg"><span>home</span></div>
+      <div class="icon-card" style="background:#000;border-color:#111"><img src="currency-coin.svg"><span>coin</span></div>
+      <div class="icon-card" style="background:#000;border-color:#111"><img src="action-attack.svg"><span>attack</span></div>
+      <div class="icon-card" style="background:#000;border-color:#111"><img src="currency-crystal.svg"><span>crystal</span></div>
+    </div>
+  </div>
+</body>
+</html>
