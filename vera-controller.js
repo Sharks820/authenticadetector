@@ -874,6 +874,11 @@
                 this.showFacePop(false);
             } else if (newState === 'fairy' && (oldState === 'monster' || oldState === 'takeover')) {
                 this.screenFlash('fairy');
+                // Hide monster speech quickly when calming down
+                clearTimeout(this.speechHideTimer);
+                this.speechHideTimer = setTimeout(() => {
+                    this.speech.classList.remove('visible');
+                }, 1500); // Show calming message briefly then hide
             }
 
             // Transformation animation
