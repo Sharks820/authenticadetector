@@ -10,9 +10,11 @@
     position: fixed;
     width: 140px;
     height: 140px;
-    z-index: 1000;
+    z-index: 9990;  /* High enough to be above UI (1000) but below modals (9999+) */
     cursor: pointer;
     /* Remove default right/bottom positioning - JS handles position */
+    /* Prevent clipping by parent elements */
+    contain: none;
 }
 
 .vera-container:hover {
