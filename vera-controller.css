@@ -385,17 +385,17 @@
    FAIRY STATE SPRITES
    ========================================================================== */
 .vera-container.fairy .vera-body {
-    background-image: url('assets/vera/vera_fairy_body_HQ.webp');
+    background-image: url('assets/vera/vera_fairy_body_HQ.png');
 }
 
 .vera-container.fairy .vera-wings {
-    background-image: url('assets/vera/vera_fairy_wings_HQ.webp');
+    background-image: url('assets/vera/vera_fairy_wings_HQ.png');
     transform-origin: 50% 50%;
     animation: wingFlapFairy 1.4s cubic-bezier(0.37, 0, 0.63, 1) infinite;
 }
 
 .vera-container.fairy .vera-hair {
-    background-image: url('assets/vera/vera_fairy_hair_HQ.webp');
+    background-image: url('assets/vera/vera_fairy_hair_HQ.png');
     transform-origin: 50% 20%;
     animation: hairSwayGentle 4s ease-in-out infinite;
 }
@@ -406,17 +406,17 @@
    PARTIAL STATE SPRITES
    ========================================================================== */
 .vera-container.partial .vera-body {
-    background-image: url('assets/vera/vera_partial_transform_body_HQ.webp');
+    background-image: url('assets/vera/vera_partial_transform_body_HQ.png');
 }
 
 .vera-container.partial .vera-wings {
-    background-image: url('assets/vera/vera_partial_transform_wings_HQ.webp');
+    background-image: url('assets/vera/vera_partial_transform_wings_HQ.png');
     transform-origin: 50% 50%;
     animation: wingFlapPartial 1.1s cubic-bezier(0.37, 0, 0.63, 1) infinite;
 }
 
 .vera-container.partial .vera-hair {
-    background-image: url('assets/vera/vera_partial_transform_hair_HQ.webp');
+    background-image: url('assets/vera/vera_partial_transform_hair_HQ.png');
     transform-origin: 50% 20%;
     animation: hairSwayUneasy 2.5s ease-in-out infinite;
 }
@@ -427,17 +427,17 @@
    TAKEOVER STATE SPRITES
    ========================================================================== */
 .vera-container.takeover .vera-body {
-    background-image: url('assets/vera/vera_hybrid_takeover_body.webp');
+    background-image: url('assets/vera/vera_hybrid_takeover_body.png');
 }
 
 .vera-container.takeover .vera-wings {
-    background-image: url('assets/vera/vera_hybrid_takeover_wings.webp');
+    background-image: url('assets/vera/vera_hybrid_takeover_wings.png');
     transform-origin: 50% 50%;
     animation: wingFlapAngry 0.8s cubic-bezier(0.37, 0, 0.63, 1) infinite;
 }
 
 .vera-container.takeover .vera-hair {
-    background-image: url('assets/vera/vera_hybrid_takeover_hair.webp');
+    background-image: url('assets/vera/vera_hybrid_takeover_hair.png');
     transform-origin: 50% 15%;
     animation: hairSwayWild 1.5s ease-in-out infinite;
 }
@@ -448,17 +448,17 @@
    MONSTER STATE SPRITES
    ========================================================================== */
 .vera-container.monster .vera-body {
-    background-image: url('assets/vera/vera_monster_body_HQ.webp');
+    background-image: url('assets/vera/vera_monster_body_HQ.png');
 }
 
 .vera-container.monster .vera-wings {
-    background-image: url('assets/vera/vera_monster_wings_HQ.webp');
+    background-image: url('assets/vera/vera_monster_wings_HQ.png');
     transform-origin: 50% 50%;
     animation: wingFlapMonster 1.8s cubic-bezier(0.37, 0, 0.63, 1) infinite;
 }
 
 .vera-container.monster .vera-hair {
-    background-image: url('assets/vera/vera_monster_hair_HQ.webp');
+    background-image: url('assets/vera/vera_monster_hair_HQ.png');
     transform-origin: 50% 12%;
     animation: hairSwayMonster 2.5s ease-in-out infinite;
 }
@@ -595,11 +595,11 @@
 }
 
 .vera-container .vera-overlay.facepop {
-    background-image: url('assets/vera/vera_hybrid_face_pop.webp');
+    background-image: url('assets/vera/vera_hybrid_face_pop.png');
 }
 
 .vera-container .vera-overlay.facepop-extreme {
-    background-image: url('assets/vera/vera_hybrid_face_pop_EXTREME.webp');
+    background-image: url('assets/vera/vera_hybrid_face_pop_EXTREME.png');
 }
 
 @keyframes facePopBurst {
