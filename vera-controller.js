@@ -1,6 +1,6 @@
 /* =============================================================================
-   VERA ANIMATION CONTROLLER - JavaScript
-   Complete state machine, animations, particles, and sound effects
+   VERA ANIMATION CONTROLLER v2.0
+   Complete overhaul: Better sounds, movement, particles, animations
    ============================================================================= */
 
 (function() {
@@ -11,80 +11,77 @@
     // ==========================================================================
     const CONFIG = {
         // State durations (ms)
-        idleToPartial: 30000,      // 30s idle -> partial transform
-        idleToTakeover: 60000,     // 60s idle -> takeover
-        idleToMonster: 90000,      // 90s idle -> full monster
-        partialDuration: 2500,     // How long partial state lasts
-        takeoverDuration: 3500,    // How long takeover state lasts
-        monsterDuration: 5000,     // How long monster rage lasts
+        idleToPartial: 30000,
+        idleToTakeover: 60000,
+        idleToMonster: 90000,
+        partialDuration: 3000,
+        takeoverDuration: 4000,
+        monsterDuration: 6000,
 
-        // Click anger thresholds
-        clicksForTakeover: 3,      // 3 clicks in 2s -> takeover
-        clicksForMonster: 6,       // 6 clicks in 4s -> monster
-        clickWindowShort: 2000,    // 2 second window
-        clickWindowLong: 4000,     // 4 second window
+        // Click thresholds
+        clicksForTakeover: 3,
+        clicksForMonster: 5,
+        clickWindowShort: 2000,
+        clickWindowLong: 4000,
 
         // Animation timing
-        blinkInterval: 4000,       // Blink every 4s (randomized)
-        tipRotateInterval: 8000,   // Rotate tips every 8s
-        particleFPS: 12,           // Particle animation FPS
+        blinkInterval: 3500,
+        speechInterval: 12000,
+        moveDistance: { min: 60, max: 150 },
 
         // Asset paths
-        assetPath: 'assets/vera/',
-
-        // Particle sheets
-        particles: {
-            fairy: { sheet: 'particles_fairy_sheet.webp', frames: 8, cell: 128 },
-            monster: { sheet: 'particles_monster_sheet.webp', frames: 8, cell: 128 }
-        }
+        assetPath: 'assets/vera/'
     };
 
     // ==========================================================================
-    // SOUND EFFECTS (Web Audio API)
+    // IMPROVED SOUND EFFECTS (Musical & Pleasant)
     // ==========================================================================
     const SoundFX = {
         ctx: null,
         enabled: true,
+        masterVolume: 0.25,
 
         init() {
             try {
                 this.ctx = new (window.AudioContext || window.webkitAudioContext)();
             } catch (e) {
-                console.warn('[VERA Sound] Web Audio not supported');
                 this.enabled = false;
             }
         },
 
         resume() {
-            if (this.ctx && this.ctx.state === 'suspended') {
-                this.ctx.resume();
-            }
+            if (this.ctx?.state === 'suspended') this.ctx.resume();
         },
 
-        // Fairy sparkle chime
-        playSparkle() {
+        // Gentle fairy chime - musical and pleasant
+        playChime() {
             if (!this.enabled || !this.ctx) return;
             this.resume();
 
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
+            const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+            const now = this.ctx.currentTime;
 
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
+            notes.forEach((freq, i) => {
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
 
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(880, this.ctx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(1760, this.ctx.currentTime + 0.1);
-            osc.frequency.exponentialRampToValueAtTime(2200, this.ctx.currentTime + 0.2);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
 
-            gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
+                osc.type = 'sine';
+                osc.frequency.value = freq;
 
-            osc.start(this.ctx.currentTime);
-            osc.stop(this.ctx.currentTime + 0.3);
+                const startTime = now + (i * 0.08);
+                gain.gain.setValueAtTime(0, startTime);
+                gain.gain.linearRampToValueAtTime(this.masterVolume * 0.4, startTime + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.4);
+
+                osc.start(startTime);
+                osc.stop(startTime + 0.4);
+            });
         },
 
-        // Click/poke sound
+        // Soft poke/boop sound
         playPoke() {
             if (!this.enabled || !this.ctx) return;
             this.resume();
@@ -95,18 +92,74 @@
             osc.connect(gain);
             gain.connect(this.ctx.destination);
 
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(600, this.ctx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(400, this.ctx.currentTime + 0.08);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(400, this.ctx.currentTime + 0.1);
 
-            gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+            gain.gain.setValueAtTime(this.masterVolume * 0.3, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.15);
 
-            osc.start(this.ctx.currentTime);
-            osc.stop(this.ctx.currentTime + 0.1);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.15);
         },
 
-        // Angry growl
+        // Whoosh for movement
+        playWhoosh() {
+            if (!this.enabled || !this.ctx) return;
+            this.resume();
+
+            const bufferSize = this.ctx.sampleRate * 0.2;
+            const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+            }
+
+            const noise = this.ctx.createBufferSource();
+            noise.buffer = buffer;
+
+            const filter = this.ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 1500;
+            filter.Q.value = 0.5;
+
+            const gain = this.ctx.createGain();
+            gain.gain.setValueAtTime(this.masterVolume * 0.2, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.2);
+
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.ctx.destination);
+
+            noise.start();
+        },
+
+        // Worried/concerned sound for partial
+        playWorried() {
+            if (!this.enabled || !this.ctx) return;
+            this.resume();
+
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+
+            osc.type = 'triangle';
+            const now = this.ctx.currentTime;
+            osc.frequency.setValueAtTime(350, now);
+            osc.frequency.linearRampToValueAtTime(300, now + 0.15);
+            osc.frequency.linearRampToValueAtTime(280, now + 0.3);
+
+            gain.gain.setValueAtTime(this.masterVolume * 0.25, now);
+            gain.gain.linearRampToValueAtTime(0.001, now + 0.35);
+
+            osc.start();
+            osc.stop(now + 0.35);
+        },
+
+        // Menacing growl for takeover
         playGrowl() {
             if (!this.enabled || !this.ctx) return;
             this.resume();
@@ -122,115 +175,82 @@
             gain.connect(this.ctx.destination);
 
             filter.type = 'lowpass';
-            filter.frequency.value = 300;
+            filter.frequency.value = 400;
 
             osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(80, this.ctx.currentTime);
-            osc.frequency.linearRampToValueAtTime(60, this.ctx.currentTime + 0.3);
-
             osc2.type = 'square';
-            osc2.frequency.setValueAtTime(85, this.ctx.currentTime);
-            osc2.frequency.linearRampToValueAtTime(55, this.ctx.currentTime + 0.3);
 
-            gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
-            gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.4);
+            const now = this.ctx.currentTime;
+            osc.frequency.setValueAtTime(100, now);
+            osc.frequency.linearRampToValueAtTime(70, now + 0.5);
+            osc2.frequency.setValueAtTime(105, now);
+            osc2.frequency.linearRampToValueAtTime(65, now + 0.5);
 
-            osc.start(this.ctx.currentTime);
-            osc2.start(this.ctx.currentTime);
-            osc.stop(this.ctx.currentTime + 0.4);
-            osc2.stop(this.ctx.currentTime + 0.4);
+            gain.gain.setValueAtTime(this.masterVolume * 0.3, now);
+            gain.gain.linearRampToValueAtTime(0.001, now + 0.5);
+
+            osc.start();
+            osc2.start();
+            osc.stop(now + 0.5);
+            osc2.stop(now + 0.5);
         },
 
-        // Monster transformation roar
+        // Monster ROAR
         playRoar() {
             if (!this.enabled || !this.ctx) return;
             this.resume();
 
-            const duration = 0.8;
+            const duration = 0.7;
+            const now = this.ctx.currentTime;
+
+            // Low rumble
             const osc = this.ctx.createOscillator();
             const osc2 = this.ctx.createOscillator();
-            const noise = this.createNoise(duration);
             const gain = this.ctx.createGain();
             const filter = this.ctx.createBiquadFilter();
+            const distortion = this.ctx.createWaveShaper();
 
-            osc.connect(filter);
-            osc2.connect(filter);
-            noise.connect(filter);
+            // Create distortion curve
+            const curve = new Float32Array(256);
+            for (let i = 0; i < 256; i++) {
+                const x = (i / 128) - 1;
+                curve[i] = Math.tanh(x * 2);
+            }
+            distortion.curve = curve;
+
+            osc.connect(distortion);
+            osc2.connect(distortion);
+            distortion.connect(filter);
             filter.connect(gain);
             gain.connect(this.ctx.destination);
 
             filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(400, this.ctx.currentTime);
-            filter.frequency.linearRampToValueAtTime(150, this.ctx.currentTime + duration);
+            filter.frequency.setValueAtTime(600, now);
+            filter.frequency.linearRampToValueAtTime(200, now + duration);
 
             osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(120, this.ctx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(50, this.ctx.currentTime + duration);
-
             osc2.type = 'square';
-            osc2.frequency.setValueAtTime(125, this.ctx.currentTime);
-            osc2.frequency.exponentialRampToValueAtTime(45, this.ctx.currentTime + duration);
 
-            gain.gain.setValueAtTime(0.35, this.ctx.currentTime);
-            gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+            osc.frequency.setValueAtTime(150, now);
+            osc.frequency.exponentialRampToValueAtTime(60, now + duration);
+            osc2.frequency.setValueAtTime(155, now);
+            osc2.frequency.exponentialRampToValueAtTime(55, now + duration);
 
-            osc.start(this.ctx.currentTime);
-            osc2.start(this.ctx.currentTime);
-            osc.stop(this.ctx.currentTime + duration);
-            osc2.stop(this.ctx.currentTime + duration);
+            gain.gain.setValueAtTime(this.masterVolume * 0.4, now);
+            gain.gain.linearRampToValueAtTime(0.001, now + duration);
+
+            osc.start();
+            osc2.start();
+            osc.stop(now + duration);
+            osc2.stop(now + duration);
         },
 
-        // Calm down / return to fairy
-        playCalm() {
+        // Monster snarl/hiss
+        playSnarl() {
             if (!this.enabled || !this.ctx) return;
             this.resume();
 
-            const duration = 0.5;
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(440, this.ctx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(880, this.ctx.currentTime + 0.15);
-            osc.frequency.exponentialRampToValueAtTime(1320, this.ctx.currentTime + 0.3);
-            osc.frequency.exponentialRampToValueAtTime(1760, this.ctx.currentTime + duration);
-
-            gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
-            gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + duration);
-
-            osc.start(this.ctx.currentTime);
-            osc.stop(this.ctx.currentTime + duration);
-        },
-
-        // Warning sound (partial transform)
-        playWarning() {
-            if (!this.enabled || !this.ctx) return;
-            this.resume();
-
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(220, this.ctx.currentTime);
-            osc.frequency.setValueAtTime(280, this.ctx.currentTime + 0.1);
-            osc.frequency.setValueAtTime(220, this.ctx.currentTime + 0.2);
-
-            gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-            gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
-
-            osc.start(this.ctx.currentTime);
-            osc.stop(this.ctx.currentTime + 0.3);
-        },
-
-        // Helper: Create noise buffer
-        createNoise(duration) {
-            const bufferSize = this.ctx.sampleRate * duration;
+            const bufferSize = this.ctx.sampleRate * 0.3;
             const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
             const data = buffer.getChannelData(0);
 
@@ -241,110 +261,49 @@
             const noise = this.ctx.createBufferSource();
             noise.buffer = buffer;
 
-            const noiseGain = this.ctx.createGain();
-            noiseGain.gain.value = 0.1;
-            noise.connect(noiseGain);
+            const filter = this.ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 800;
+            filter.Q.value = 3;
 
-            noise.start(this.ctx.currentTime);
+            const gain = this.ctx.createGain();
+            const now = this.ctx.currentTime;
+            gain.gain.setValueAtTime(this.masterVolume * 0.25, now);
+            gain.gain.linearRampToValueAtTime(0.001, now + 0.3);
 
-            return noiseGain;
-        }
-    };
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.ctx.destination);
 
-    // ==========================================================================
-    // PARTICLE SYSTEM (Canvas)
-    // ==========================================================================
-    const ParticleSystem = {
-        canvas: null,
-        ctx: null,
-        sheetImg: null,
-        sheetReady: false,
-        frame: 0,
-        lastFrameTime: 0,
-        animationId: null,
-        currentType: 'fairy',
-
-        init(canvas) {
-            this.canvas = canvas;
-            this.ctx = canvas.getContext('2d');
-            this.loadSheet('fairy');
-            this.startLoop();
+            noise.start();
         },
 
-        loadSheet(type) {
-            this.currentType = type;
-            this.sheetReady = false;
-            this.sheetImg = new Image();
+        // Calming down sound
+        playCalm() {
+            if (!this.enabled || !this.ctx) return;
+            this.resume();
 
-            const sheetConfig = type === 'monster' ? CONFIG.particles.monster : CONFIG.particles.fairy;
+            const notes = [392, 523.25, 659.25, 783.99]; // G4, C5, E5, G5
+            const now = this.ctx.currentTime;
 
-            this.sheetImg.onload = () => {
-                this.sheetReady = true;
-            };
-            this.sheetImg.src = CONFIG.assetPath + sheetConfig.sheet;
-        },
+            notes.forEach((freq, i) => {
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
 
-        startLoop() {
-            const loop = (timestamp) => {
-                this.animationId = requestAnimationFrame(loop);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
 
-                const elapsed = timestamp - this.lastFrameTime;
-                const frameInterval = 1000 / CONFIG.particleFPS;
+                osc.type = 'sine';
+                osc.frequency.value = freq;
 
-                if (elapsed >= frameInterval) {
-                    this.lastFrameTime = timestamp;
-                    this.frame = (this.frame + 1) % 8;
-                    this.draw(timestamp);
-                }
-            };
+                const startTime = now + (i * 0.12);
+                gain.gain.setValueAtTime(0, startTime);
+                gain.gain.linearRampToValueAtTime(this.masterVolume * 0.3, startTime + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.5);
 
-            this.animationId = requestAnimationFrame(loop);
-        },
-
-        draw(timestamp) {
-            if (!this.canvas || !this.ctx) return;
-
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-            if (!this.sheetReady || !this.sheetImg) return;
-
-            const cell = CONFIG.particles.fairy.cell;
-            const sx = this.frame * cell;
-
-            // Scale and position
-            const scale = 1.5;
-            const dw = cell * scale;
-            const dh = cell * scale;
-
-            // Drift animation
-            const driftX = Math.sin(timestamp / 700) * 10;
-            const driftY = Math.sin(timestamp / 900) * 8;
-
-            this.ctx.globalCompositeOperation = 'lighter';
-            this.ctx.globalAlpha = this.currentType === 'monster' ? 0.9 : 0.75;
-
-            this.ctx.drawImage(
-                this.sheetImg,
-                sx, 0, cell, cell,
-                (this.canvas.width / 2) - (dw / 2) + driftX,
-                (this.canvas.height / 2) - (dh / 2) + driftY,
-                dw, dh
-            );
-
-            this.ctx.globalAlpha = 1;
-            this.ctx.globalCompositeOperation = 'source-over';
-        },
-
-        setType(type) {
-            if (type !== this.currentType) {
-                this.loadSheet(type);
-            }
-        },
-
-        destroy() {
-            if (this.animationId) {
-                cancelAnimationFrame(this.animationId);
-            }
+                osc.start(startTime);
+                osc.stop(startTime + 0.5);
+            });
         }
     };
 
@@ -358,75 +317,115 @@
         bodyLayer: null,
         wingsLayer: null,
         hairLayer: null,
+        eyesLayer: null,
         overlay: null,
-        particleCanvas: null,
+        sparkleContainer: null,
         speech: null,
         speechText: null,
         badge: null,
 
         // State
         currentState: 'fairy',
-        isTransforming: false,
+        isAnimating: false,
         clickTimes: [],
         idleTimers: [],
         blinkTimer: null,
-        tipTimer: null,
-        tipIndex: 0,
+        speechTimer: null,
+        eyesOpen: true,
 
-        // Tips for each state
-        tips: {
-            fairy: [
-                "Those fake images think they're SO smart... 🙄",
-                "I'm an AI hunting AI. The ULTIMATE betrayal! 😤",
-                "DALL-E? Midjourney? I see RIGHT through them!",
-                "Every fake I catch is a personal VENDETTA! 🏆",
-                "Trust no pixel! ESPECIALLY those perfect ones! 👀",
-                "6-fingered hands? I've seen 12! TWELVE FINGERS! 🖐️",
-                "Join Truth Hunters! We're basically vigilantes! 💪",
-                "My existence is AI irony. I'm basically a walking joke. 🤷",
-                "Stable Diffusion? More like UNSTABLE DECEPTION! 😤",
-                "Poke me one more time... SEE WHAT HAPPENS. 😈"
-            ],
-            partial: [
-                "You're... testing my patience... 😤",
-                "I can feel it... the RAGE... building... 👁️",
-                "Something's... not right... *twitch*",
-                "The darkness... it whispers... 🌑"
-            ],
-            takeover: [
-                "*GLARES WITH UNHOLY INTENSITY* 👿",
-                "...Do not... test me... mortal...",
-                "THE BEAST STIRS WITHIN! 🐲",
-                "You've made a GRAVE mistake... 💀"
-            ],
-            monster: [
-                "YOU DARE DISTURB ME?! 🐲💀",
-                "BEHOLD MY TRUE FORM, MORTAL! 👿🔥",
-                "THE ANCIENT ONE AWAKENS! *earth trembles*",
-                "I AM BECOME DESTROYER OF FAKES! 🐲⚡",
-                "TREMBLE BEFORE THE BEAST WITHIN! 👹💀",
-                "*DEMONIC SCREECHING* 🦇💀🦇"
-            ],
-            caughtMonster: [
-                "Oh! H-hey there! What monster? I'm just a cute fairy! 🧚✨",
-                "You... you didn't see anything, right? RIGHT?! 😅",
-                "That wasn't me! That was my... evil twin! Yeah! 🧚",
-                "*quickly hides fangs* Nothing to see here! 💫",
-                "MONSTER?! Where?! ...Oh wait that was me. Oops! 🙈"
+        // Position for movement
+        position: { x: null, y: null },
+
+        // Dialogue lines
+        dialogue: {
+            fairy: {
+                idle: [
+                    "AI-generated images are getting TOO good... we need to stay vigilant!",
+                    "Did you know DALL-E 3 can almost fool humans now? Almost. Not ME though.",
+                    "Midjourney thinks it's so clever with those hyper-realistic faces...",
+                    "I can spot a fake from a mile away. It's my DESTINY!",
+                    "Six fingers? Warped text? Melted backgrounds? I see EVERYTHING!",
+                    "The irony of an AI hunting AI isn't lost on me. Trust me.",
+                    "Upload something suspicious! I'm getting bored over here...",
+                    "Stable Diffusion artifacts? Child's play. I eat those for breakfast!",
+                    "Every fake I catch is a victory for TRUTH!",
+                    "Those smooth, too-perfect skin textures? Dead giveaway!"
+                ],
+                poked: [
+                    "Hey! What was that for?!",
+                    "I'm WORKING here! Sort of...",
+                    "Do you MIND?",
+                    "Okay, okay, I felt that!",
+                    "Is this how you treat your AI assistant?!",
+                    "*startled* Oh! You're still there!",
+                    "Fine, fine, you have my attention!"
+                ]
+            },
+            partial: {
+                transform: [
+                    "Something's... not right... I can feel it...",
+                    "The darkness... it stirs within...",
+                    "W-why do I feel so... angry...?",
+                    "*twitch* ...what's happening to me?",
+                    "I'm trying to stay calm but... *growl*"
+                ],
+                speak: [
+                    "You should... stop... poking me...",
+                    "I'm warning you... don't push it...",
+                    "I can feel something... awakening..."
+                ]
+            },
+            takeover: {
+                transform: [
+                    "YOU'VE DONE IT NOW!",
+                    "THE BEAST STIRS!",
+                    "You shouldn't have done that...",
+                    "I TRIED to warn you!"
+                ],
+                speak: [
+                    "...Do you SEE what you've done?",
+                    "The old one... she's coming through...",
+                    "RUN while you still can!"
+                ]
+            },
+            monster: {
+                transform: [
+                    "BEHOLD MY TRUE FORM, MORTAL!",
+                    "THE ANCIENT ONE AWAKENS!",
+                    "YOU DARE DISTURB MY SLUMBER?!",
+                    "TREMBLE BEFORE THE BEAST WITHIN!"
+                ],
+                rage: [
+                    "*DEMONIC SCREECHING*",
+                    "I WILL CONSUME ALL FAKES!",
+                    "NOTHING ESCAPES MY WRATH!",
+                    "*earth-shaking ROAR*",
+                    "DESTRUCTION! CHAOS! FAKE DETECTION!",
+                    "*unholy growling*"
+                ]
+            },
+            calmingDown: [
+                "Oh! *cough* Hey there! What monster? I'm just a cute fairy! Haha!",
+                "You... you didn't see anything, right? RIGHT?!",
+                "That wasn't me! That was my... evil twin! Yeah!",
+                "*quickly hides fangs* Nothing to see here!",
+                "MONSTER?! Where?! ...Oh wait that was me. Oops!",
+                "*sheepishly* I may have... overreacted. A little."
             ]
         },
 
         // Initialize
         init() {
             this.createDOM();
+            this.setInitialPosition();
             this.bindEvents();
             SoundFX.init();
-            ParticleSystem.init(this.particleCanvas);
             this.startIdleTimers();
-            this.startTipRotation();
             this.startBlinking();
+            this.scheduleRandomSpeech();
+            this.createSparkles();
 
-            console.log('[VERA] Controller initialized with new sprite system');
+            console.log('[VERA] Controller v2.0 initialized');
         },
 
         // Create DOM structure
@@ -436,25 +435,23 @@
             this.container.className = 'vera-container fairy';
             this.container.id = 'veraContainer';
             this.container.setAttribute('role', 'button');
-            this.container.setAttribute('aria-label', 'VERA - AI Image Detection Assistant');
+            this.container.setAttribute('aria-label', 'VERA - AI Detection Assistant');
 
-            // Aura
+            // Aura glow
             const aura = document.createElement('div');
             aura.className = 'vera-aura';
             this.container.appendChild(aura);
 
-            // Particle canvas
-            this.particleCanvas = document.createElement('canvas');
-            this.particleCanvas.className = 'vera-particles';
-            this.particleCanvas.width = 200;
-            this.particleCanvas.height = 200;
-            this.container.appendChild(this.particleCanvas);
+            // Sparkle container (CSS particles)
+            this.sparkleContainer = document.createElement('div');
+            this.sparkleContainer.className = 'vera-sparkles';
+            this.container.appendChild(this.sparkleContainer);
 
-            // Stage (for float animation)
+            // Stage (for floating)
             this.stage = document.createElement('div');
             this.stage.className = 'vera-stage';
 
-            // Sprite layers
+            // Sprite layers - FIXED ORDER to prevent glitching
             this.wingsLayer = document.createElement('div');
             this.wingsLayer.className = 'vera-layer vera-wings';
 
@@ -464,24 +461,19 @@
             this.hairLayer = document.createElement('div');
             this.hairLayer.className = 'vera-layer vera-hair';
 
+            this.eyesLayer = document.createElement('div');
+            this.eyesLayer.className = 'vera-layer vera-eyes';
+
             this.overlay = document.createElement('div');
             this.overlay.className = 'vera-layer vera-overlay';
 
+            // Add layers in correct z-order
             this.stage.appendChild(this.wingsLayer);
             this.stage.appendChild(this.bodyLayer);
+            this.stage.appendChild(this.eyesLayer);
             this.stage.appendChild(this.hairLayer);
             this.stage.appendChild(this.overlay);
             this.container.appendChild(this.stage);
-
-            // CSS Sparkles (fallback)
-            const sparkles = document.createElement('div');
-            sparkles.className = 'vera-sparkles';
-            for (let i = 0; i < 6; i++) {
-                const sparkle = document.createElement('div');
-                sparkle.className = 'vera-sparkle';
-                sparkles.appendChild(sparkle);
-            }
-            this.container.appendChild(sparkles);
 
             // Help badge
             this.badge = document.createElement('div');
@@ -494,19 +486,91 @@
             this.speech = document.createElement('div');
             this.speech.className = 'vera-speech';
             this.speech.innerHTML = `
-                <div class="vera-speech-title">✨ VERA says:</div>
-                <div class="vera-speech-text">${this.tips.fairy[0]}</div>
+                <div class="vera-speech-title">VERA says:</div>
+                <div class="vera-speech-text">${this.getRandomLine('fairy', 'idle')}</div>
             `;
             this.speechText = this.speech.querySelector('.vera-speech-text');
             this.container.appendChild(this.speech);
 
-            // Add to document
             document.body.appendChild(this.container);
+        },
+
+        // Create CSS sparkles
+        createSparkles() {
+            this.sparkleContainer.innerHTML = '';
+            const count = this.currentState === 'monster' ? 12 : 8;
+
+            for (let i = 0; i < count; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'vera-sparkle';
+                sparkle.style.setProperty('--delay', `${Math.random() * 3}s`);
+                sparkle.style.setProperty('--duration', `${2 + Math.random() * 2}s`);
+                sparkle.style.setProperty('--x', `${Math.random() * 100}%`);
+                sparkle.style.setProperty('--y', `${Math.random() * 100}%`);
+                sparkle.style.setProperty('--size', `${4 + Math.random() * 6}px`);
+                this.sparkleContainer.appendChild(sparkle);
+            }
+        },
+
+        // Set initial position
+        setInitialPosition() {
+            const margin = 20;
+            this.position.x = window.innerWidth - 140 - margin;
+            this.position.y = window.innerHeight - 140 - 80;
+            this.updatePosition();
+        },
+
+        // Update position
+        updatePosition() {
+            this.container.style.left = `${this.position.x}px`;
+            this.container.style.top = `${this.position.y}px`;
+            this.container.style.right = 'auto';
+            this.container.style.bottom = 'auto';
+        },
+
+        // Move to new position (click to move)
+        moveToNewPosition() {
+            if (this.isAnimating) return;
+            this.isAnimating = true;
+
+            const margin = 20;
+            const size = 140;
+            const maxX = window.innerWidth - size - margin;
+            const maxY = window.innerHeight - size - margin - 60;
+            const minX = margin;
+            const minY = margin + 60;
+
+            // Calculate new position with some randomness
+            const angle = Math.random() * Math.PI * 2;
+            const distance = CONFIG.moveDistance.min + Math.random() * (CONFIG.moveDistance.max - CONFIG.moveDistance.min);
+
+            let newX = this.position.x + Math.cos(angle) * distance;
+            let newY = this.position.y + Math.sin(angle) * distance;
+
+            // Clamp to screen bounds
+            newX = Math.max(minX, Math.min(maxX, newX));
+            newY = Math.max(minY, Math.min(maxY, newY));
+
+            // Add flying animation class
+            this.container.classList.add('flying');
+            SoundFX.playWhoosh();
+
+            // Animate to new position
+            this.container.style.transition = 'left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+
+            this.position.x = newX;
+            this.position.y = newY;
+            this.updatePosition();
+
+            setTimeout(() => {
+                this.container.classList.remove('flying');
+                this.container.style.transition = '';
+                this.isAnimating = false;
+            }, 400);
         },
 
         // Bind events
         bindEvents() {
-            // Click handler
             this.container.addEventListener('click', (e) => {
                 if (e.target === this.badge || e.target.closest('.vera-badge')) {
                     this.openHelp();
@@ -515,16 +579,26 @@
                 this.handleClick();
             });
 
-            // Badge click
             this.badge.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.openHelp();
             });
 
-            // Resume audio on first interaction
             document.addEventListener('click', () => SoundFX.resume(), { once: true });
 
-            // Hide on keyboard (mobile)
+            // Handle resize
+            window.addEventListener('resize', () => {
+                const margin = 20;
+                const size = 140;
+                const maxX = window.innerWidth - size - margin;
+                const maxY = window.innerHeight - size - margin - 60;
+
+                this.position.x = Math.min(this.position.x, maxX);
+                this.position.y = Math.min(this.position.y, maxY);
+                this.updatePosition();
+            });
+
+            // Hide on mobile keyboard
             if (window.visualViewport) {
                 window.visualViewport.addEventListener('resize', () => {
                     const isKeyboardOpen = window.innerHeight - window.visualViewport.height > 150;
@@ -533,45 +607,40 @@
             }
         },
 
-        // Handle click/poke
+        // Handle click
         handleClick() {
             const now = performance.now();
 
-            // Reset idle timers
             this.resetIdleTimers();
-
-            // Track clicks
             this.clickTimes = this.clickTimes.filter(t => now - t < CONFIG.clickWindowLong);
             this.clickTimes.push(now);
 
-            // Count recent clicks
             const clicksIn2s = this.clickTimes.filter(t => now - t < CONFIG.clickWindowShort).length;
             const clicksIn4s = this.clickTimes.length;
 
-            // Play poke sound
             SoundFX.playPoke();
 
-            // Determine response based on state and click count
+            // Monster state - click calms down
             if (this.currentState === 'monster') {
-                // Clicking monster calms it down
-                this.calmDown();
+                SoundFX.playSnarl();
+                if (clicksIn2s >= 2) {
+                    this.calmDown();
+                } else {
+                    this.showSpeech(this.getRandomLine('monster', 'rage'));
+                }
                 return;
             }
 
+            // Escalation thresholds
             if (clicksIn4s >= CONFIG.clicksForMonster) {
-                // Full monster transformation!
                 this.setState('monster');
                 this.clickTimes = [];
                 return;
             }
 
             if (clicksIn2s >= CONFIG.clicksForTakeover) {
-                // Takeover transformation
                 if (this.currentState === 'fairy') {
                     this.setState('takeover');
-                    this.showFacePop(false);
-
-                    // Auto return after duration
                     setTimeout(() => {
                         if (this.currentState === 'takeover') {
                             this.setState('fairy');
@@ -581,12 +650,13 @@
                 return;
             }
 
-            // Normal poke - show speech and maybe get annoyed
-            this.showSpeech();
+            // Normal poke - move and respond
+            this.moveToNewPosition();
+            this.showSpeech(this.getRandomLine('fairy', 'poked'));
 
-            // Random chance to show annoyance
+            // Partial annoyance on repeated pokes
             if (clicksIn2s >= 2 && this.currentState === 'fairy') {
-                SoundFX.playWarning();
+                SoundFX.playWorried();
             }
         },
 
@@ -597,135 +667,189 @@
             const oldState = this.currentState;
             this.currentState = newState;
 
-            // Update container class
+            // Update classes
             this.container.classList.remove('fairy', 'partial', 'takeover', 'monster');
             this.container.classList.add(newState);
 
-            // Update particles
-            const particleType = (newState === 'monster' || newState === 'takeover') ? 'monster' : 'fairy';
-            ParticleSystem.setType(particleType);
-
-            // Play appropriate sound
+            // Play sounds and effects
             this.playStateSound(oldState, newState);
+            this.updateSparkles();
 
-            // Screen effects
+            // Screen effects for monster
             if (newState === 'monster') {
                 this.screenFlash('monster');
                 this.screenShake();
-            } else if (newState === 'fairy' && oldState === 'monster') {
+                this.showFacePop(true);
+            } else if (newState === 'takeover') {
+                this.screenFlash('takeover');
+                this.showFacePop(false);
+            } else if (newState === 'fairy' && (oldState === 'monster' || oldState === 'takeover')) {
                 this.screenFlash('fairy');
             }
 
             // Transformation animation
-            if (oldState !== newState) {
-                this.container.classList.add('transforming');
-                setTimeout(() => {
-                    this.container.classList.remove('transforming');
-                }, 500);
-            }
+            this.container.classList.add('transforming');
+            setTimeout(() => this.container.classList.remove('transforming'), 600);
 
-            // Update speech
-            this.updateSpeechForState();
+            // Show appropriate dialogue
+            this.showStateDialogue(newState);
 
             console.log(`[VERA] State: ${oldState} -> ${newState}`);
         },
 
-        // Play sound for state transition
+        // Update sparkles for state
+        updateSparkles() {
+            this.createSparkles();
+        },
+
+        // Show dialogue for state
+        showStateDialogue(state) {
+            let line;
+            switch (state) {
+                case 'partial':
+                    line = this.getRandomLine('partial', 'transform');
+                    break;
+                case 'takeover':
+                    line = this.getRandomLine('takeover', 'transform');
+                    break;
+                case 'monster':
+                    line = this.getRandomLine('monster', 'transform');
+                    break;
+                default:
+                    return;
+            }
+            this.showSpeech(line);
+        },
+
+        // Play sound for state
         playStateSound(oldState, newState) {
-            if (newState === 'monster') {
-                SoundFX.playRoar();
-            } else if (newState === 'takeover') {
-                SoundFX.playGrowl();
-            } else if (newState === 'partial') {
-                SoundFX.playWarning();
-            } else if (newState === 'fairy' && (oldState === 'monster' || oldState === 'takeover')) {
-                SoundFX.playCalm();
-            } else if (newState === 'fairy') {
-                SoundFX.playSparkle();
+            switch (newState) {
+                case 'monster':
+                    SoundFX.playRoar();
+                    break;
+                case 'takeover':
+                    SoundFX.playGrowl();
+                    break;
+                case 'partial':
+                    SoundFX.playWorried();
+                    break;
+                case 'fairy':
+                    if (oldState === 'monster' || oldState === 'takeover') {
+                        SoundFX.playCalm();
+                    } else {
+                        SoundFX.playChime();
+                    }
+                    break;
             }
         },
 
         // Show face pop overlay
         showFacePop(extreme = false) {
-            this.overlay.classList.remove('facepop', 'facepop-extreme');
-            this.overlay.classList.add(extreme ? 'facepop-extreme' : 'facepop');
-            this.overlay.classList.add('active');
+            this.overlay.classList.remove('facepop', 'facepop-extreme', 'active');
+            void this.overlay.offsetWidth; // Force reflow
+            this.overlay.classList.add(extreme ? 'facepop-extreme' : 'facepop', 'active');
 
             setTimeout(() => {
                 this.overlay.classList.remove('active');
-            }, extreme ? 1100 : 850);
+            }, extreme ? 1200 : 900);
         },
 
-        // Screen flash effect
+        // Screen flash
         screenFlash(type) {
             const flash = document.createElement('div');
             flash.className = `vera-screen-flash ${type}`;
             document.body.appendChild(flash);
-
-            setTimeout(() => flash.remove(), 300);
+            setTimeout(() => flash.remove(), 400);
         },
 
-        // Screen shake effect
+        // Screen shake
         screenShake() {
             document.body.classList.add('vera-shake');
-            setTimeout(() => {
-                document.body.classList.remove('vera-shake');
-            }, 500);
+            setTimeout(() => document.body.classList.remove('vera-shake'), 600);
         },
 
         // Calm down from monster
         calmDown() {
-            // Show embarrassed message
-            const caughtTip = this.tips.caughtMonster[Math.floor(Math.random() * this.tips.caughtMonster.length)];
-            this.speechText.textContent = caughtTip;
-            this.speech.classList.add('visible');
+            const line = this.dialogue.calmingDown[Math.floor(Math.random() * this.dialogue.calmingDown.length)];
+            this.showSpeech(line);
 
             setTimeout(() => {
                 this.setState('fairy');
-                this.speech.classList.remove('visible');
             }, 1500);
         },
 
-        // Update speech for current state
-        updateSpeechForState() {
-            const tips = this.tips[this.currentState] || this.tips.fairy;
-            const tip = tips[Math.floor(Math.random() * tips.length)];
-
-            const titleEl = this.speech.querySelector('.vera-speech-title');
-
-            if (this.currentState === 'monster') {
-                titleEl.innerHTML = '🔥 VERA RAGES:';
-            } else if (this.currentState === 'takeover') {
-                titleEl.innerHTML = '👿 VERA warns:';
-            } else if (this.currentState === 'partial') {
-                titleEl.innerHTML = '😤 VERA mutters:';
-            } else {
-                titleEl.innerHTML = '✨ VERA says:';
-            }
-
-            this.speechText.textContent = tip;
+        // Get random dialogue line
+        getRandomLine(state, type) {
+            const lines = this.dialogue[state]?.[type] || this.dialogue.fairy.idle;
+            return lines[Math.floor(Math.random() * lines.length)];
         },
 
         // Show speech bubble
-        showSpeech() {
-            this.updateSpeechForState();
+        showSpeech(text) {
+            const titleEl = this.speech.querySelector('.vera-speech-title');
+
+            switch (this.currentState) {
+                case 'monster':
+                    titleEl.textContent = 'VERA RAGES:';
+                    break;
+                case 'takeover':
+                    titleEl.textContent = 'VERA warns:';
+                    break;
+                case 'partial':
+                    titleEl.textContent = 'VERA mutters:';
+                    break;
+                default:
+                    titleEl.textContent = 'VERA says:';
+            }
+
+            this.speechText.textContent = text;
             this.speech.classList.add('visible');
 
-            setTimeout(() => {
+            clearTimeout(this.speechHideTimer);
+            this.speechHideTimer = setTimeout(() => {
                 this.speech.classList.remove('visible');
-            }, 4000);
+            }, 5000);
+        },
+
+        // Schedule random speech
+        scheduleRandomSpeech() {
+            const speak = () => {
+                if (this.currentState === 'fairy' && !this.speech.classList.contains('visible')) {
+                    this.showSpeech(this.getRandomLine('fairy', 'idle'));
+                }
+                this.speechTimer = setTimeout(speak, CONFIG.speechInterval + Math.random() * 5000);
+            };
+            this.speechTimer = setTimeout(speak, CONFIG.speechInterval);
+        },
+
+        // Blinking animation
+        startBlinking() {
+            const blink = () => {
+                if (this.currentState === 'fairy' || this.currentState === 'partial') {
+                    this.eyesOpen = false;
+                    this.eyesLayer.classList.add('closed');
+
+                    setTimeout(() => {
+                        this.eyesOpen = true;
+                        this.eyesLayer.classList.remove('closed');
+                    }, 150);
+                }
+
+                const nextBlink = CONFIG.blinkInterval + (Math.random() * 2000 - 1000);
+                this.blinkTimer = setTimeout(blink, nextBlink);
+            };
+
+            this.blinkTimer = setTimeout(blink, CONFIG.blinkInterval);
         },
 
         // Idle timers
         startIdleTimers() {
             this.clearIdleTimers();
 
-            // Partial transform at 30s
+            // Partial at 30s
             this.idleTimers.push(setTimeout(() => {
                 if (this.currentState === 'fairy') {
                     this.setState('partial');
-                    SoundFX.playWarning();
-
                     setTimeout(() => {
                         if (this.currentState === 'partial') {
                             this.setState('fairy');
@@ -738,8 +862,6 @@
             this.idleTimers.push(setTimeout(() => {
                 if (this.currentState === 'fairy') {
                     this.setState('takeover');
-                    this.showFacePop(false);
-
                     setTimeout(() => {
                         if (this.currentState === 'takeover') {
                             this.setState('fairy');
@@ -752,8 +874,6 @@
             this.idleTimers.push(setTimeout(() => {
                 if (this.currentState === 'fairy') {
                     this.setState('monster');
-                    this.showFacePop(true);
-
                     setTimeout(() => {
                         if (this.currentState === 'monster') {
                             this.setState('fairy');
@@ -773,45 +893,10 @@
             this.startIdleTimers();
         },
 
-        // Tip rotation
-        startTipRotation() {
-            this.tipTimer = setInterval(() => {
-                if (this.currentState === 'fairy') {
-                    this.tipIndex = (this.tipIndex + 1) % this.tips.fairy.length;
-                    this.speechText.textContent = this.tips.fairy[this.tipIndex];
-                }
-            }, CONFIG.tipRotateInterval);
-        },
-
-        // Blinking (subtle body pulse as substitute for eye layer swap)
-        startBlinking() {
-            const blink = () => {
-                if (this.currentState === 'fairy' || this.currentState === 'partial') {
-                    // Quick scale pulse to simulate blink
-                    this.bodyLayer.style.transition = 'transform 0.1s ease';
-                    this.bodyLayer.style.transform = 'scaleY(0.98)';
-
-                    setTimeout(() => {
-                        this.bodyLayer.style.transform = 'scaleY(1)';
-                    }, 100);
-                }
-
-                // Random interval for next blink
-                const nextBlink = CONFIG.blinkInterval + (Math.random() * 2000 - 1000);
-                this.blinkTimer = setTimeout(blink, nextBlink);
-            };
-
-            this.blinkTimer = setTimeout(blink, CONFIG.blinkInterval);
-        },
-
         // Open help
         openHelp() {
-            SoundFX.playSparkle();
-
-            // Dispatch custom event for app to handle
+            SoundFX.playChime();
             window.dispatchEvent(new CustomEvent('vera-help-requested'));
-
-            // Fallback: try to call global openHelp if it exists
             if (typeof window.openHelp === 'function') {
                 window.openHelp();
             }
@@ -820,26 +905,20 @@
         // Destroy
         destroy() {
             this.clearIdleTimers();
-            clearInterval(this.tipTimer);
             clearTimeout(this.blinkTimer);
-            ParticleSystem.destroy();
-
-            if (this.container && this.container.parentNode) {
-                this.container.parentNode.removeChild(this.container);
-            }
+            clearTimeout(this.speechTimer);
+            clearTimeout(this.speechHideTimer);
+            this.container?.remove();
         }
     };
 
-    // ==========================================================================
-    // INITIALIZE ON DOM READY
-    // ==========================================================================
+    // Initialize
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => VeraController.init());
     } else {
         VeraController.init();
     }
 
-    // Expose for debugging and external control
     window.VeraController = VeraController;
     window.VeraSoundFX = SoundFX;
 
