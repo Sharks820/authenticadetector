@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="cyberGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+    <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feFlood flood-color="#22d3ee" flood-opacity="0.6"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Arrow - bold cyber style -->
+  <path d="M30 8L14 24l16 16" stroke="url(#cyberGlow)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#neonGlow)"/>
+  <!-- Speed lines -->
+  <path d="M36 20h-8M38 24h-10M36 28h-8" stroke="#14b8a6" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+  <!-- Energy trail -->
+  <circle cx="14" cy="24" r="3" fill="#22d3ee" opacity="0.6"/>
+</svg>

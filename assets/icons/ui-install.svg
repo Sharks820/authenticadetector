@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="downloadGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+    <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feFlood flood-color="#22d3ee" flood-opacity="0.6"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Download arrow -->
+  <path d="M24 6v24" stroke="url(#downloadGrad)" stroke-width="4" stroke-linecap="round" filter="url(#neonGlow)"/>
+  <path d="M14 22l10 12 10-12" stroke="url(#downloadGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#neonGlow)"/>
+  <!-- Base platform -->
+  <path d="M8 38h32" stroke="#14b8a6" stroke-width="3" stroke-linecap="round"/>
+  <!-- Side brackets -->
+  <path d="M8 38v-6M40 38v-6" stroke="#0891b2" stroke-width="2" stroke-linecap="round"/>
+  <!-- Speed lines -->
+  <path d="M18 10h-4M30 10h4M16 16h-4M32 16h4" stroke="#67e8f9" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+  <!-- Plus indicator -->
+  <circle cx="40" cy="10" r="5" fill="#14b8a6"/>
+  <path d="M40 7v6M37 10h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+</svg>

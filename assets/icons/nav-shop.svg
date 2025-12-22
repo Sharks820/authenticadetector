@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="cyberGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+    <linearGradient id="cartGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#67e8f9"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+    <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feFlood flood-color="#22d3ee" flood-opacity="0.6"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Shop storefront - cyberpunk style -->
+  <path d="M6 18L10 6h28l4 12" stroke="url(#cyberGlow)" stroke-width="2.5" fill="none" filter="url(#neonGlow)"/>
+  <!-- Awning segments -->
+  <ellipse cx="12" cy="18" rx="6" ry="4" fill="#0891b2" stroke="#22d3ee" stroke-width="1"/>
+  <ellipse cx="24" cy="18" rx="6" ry="4" fill="#0e7490" stroke="#22d3ee" stroke-width="1"/>
+  <ellipse cx="36" cy="18" rx="6" ry="4" fill="#0891b2" stroke="#22d3ee" stroke-width="1"/>
+  <!-- Store body -->
+  <rect x="8" y="22" width="32" height="20" rx="2" fill="#0a1628" stroke="url(#cyberGlow)" stroke-width="2"/>
+  <!-- Display window -->
+  <rect x="12" y="26" width="10" height="12" rx="1" fill="#164e63" stroke="#22d3ee" stroke-width="1"/>
+  <!-- Door -->
+  <rect x="26" y="26" width="10" height="16" rx="1" fill="#0c4a6e" stroke="#22d3ee" stroke-width="1"/>
+  <circle cx="34" cy="34" r="1" fill="#22d3ee"/>
+  <!-- Neon sign -->
+  <rect x="14" y="28" width="6" height="3" rx="0.5" fill="#f97316"/>
+  <!-- Sparkle/sale indicator -->
+  <circle cx="40" cy="10" r="4" fill="#f97316"/>
+  <text x="40" y="12" font-size="6" font-weight="bold" fill="#fff" text-anchor="middle">$</text>
+</svg>

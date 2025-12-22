@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="cyberGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+    <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feFlood flood-color="#22d3ee" flood-opacity="0.6"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Menu bars - cyber style with varying lengths -->
+  <rect x="8" y="10" width="32" height="4" rx="2" fill="url(#cyberGlow)" filter="url(#neonGlow)"/>
+  <rect x="8" y="22" width="24" height="4" rx="2" fill="url(#cyberGlow)" filter="url(#neonGlow)"/>
+  <rect x="8" y="34" width="28" height="4" rx="2" fill="url(#cyberGlow)" filter="url(#neonGlow)"/>
+  <!-- Tech dots at ends -->
+  <circle cx="42" cy="12" r="2" fill="#14b8a6"/>
+  <circle cx="34" cy="24" r="2" fill="#0891b2"/>
+  <circle cx="38" cy="36" r="2" fill="#06b6d4"/>
+  <!-- Corner accent -->
+  <path d="M40 8l4-4M44 12l-4-4" stroke="#67e8f9" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+</svg>

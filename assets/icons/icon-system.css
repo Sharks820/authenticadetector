@@ -1,0 +1,167 @@
+/* =============================================================================
+   AUTHENTICADETECTOR ICON SYSTEM
+   Theme: Anime x Demon Hunter x AI Corruption
+   Style: Glowing gradients, sharp edges, mystical effects
+   ============================================================================= */
+
+:root {
+    /* Fairy/Good colors */
+    --icon-fairy-primary: #00d4ff;
+    --icon-fairy-secondary: #7b68ee;
+    --icon-fairy-glow: rgba(0, 212, 255, 0.6);
+
+    /* Monster/Danger colors */
+    --icon-monster-primary: #ff4757;
+    --icon-monster-secondary: #ff6b81;
+    --icon-monster-glow: rgba(255, 71, 87, 0.6);
+
+    /* Neutral/UI colors */
+    --icon-gold: #ffd700;
+    --icon-silver: #c0c0c0;
+    --icon-crystal: #00ffcc;
+    --icon-essence: #9b59b6;
+}
+
+/* Base icon styles */
+.ad-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ad-icon svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 4px var(--icon-fairy-glow));
+}
+
+.ad-icon:hover svg {
+    filter: drop-shadow(0 0 8px var(--icon-fairy-glow)) brightness(1.2);
+    transform: scale(1.1);
+}
+
+/* Size variants */
+.ad-icon-sm { width: 20px; height: 20px; }
+.ad-icon-md { width: 32px; height: 32px; }
+.ad-icon-lg { width: 48px; height: 48px; }
+.ad-icon-xl { width: 64px; height: 64px; }
+
+/* Color variants */
+.ad-icon-fairy svg { filter: drop-shadow(0 0 6px var(--icon-fairy-glow)); }
+.ad-icon-monster svg { filter: drop-shadow(0 0 6px var(--icon-monster-glow)); }
+.ad-icon-gold svg { filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.6)); }
+.ad-icon-crystal svg { filter: drop-shadow(0 0 6px rgba(0, 255, 204, 0.6)); }
+
+/* Animated glow pulse */
+.ad-icon-pulse svg {
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+    0%, 100% { filter: drop-shadow(0 0 4px var(--icon-fairy-glow)); }
+    50% { filter: drop-shadow(0 0 12px var(--icon-fairy-glow)) brightness(1.15); }
+}
+
+/* Navigation icon specific styles */
+.nav-icon {
+    position: relative;
+}
+
+.nav-icon::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--icon-fairy-primary), transparent);
+    transition: transform 0.3s ease;
+}
+
+.nav-icon:hover::after,
+.nav-icon.active::after {
+    transform: translateX(-50%) scaleX(1);
+}
+
+/* Currency display */
+.currency-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(30, 30, 50, 0.8));
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 20px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.currency-display .ad-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Alert icon animations */
+.ad-icon-alert {
+    animation: alertBounce 0.5s ease-in-out;
+}
+
+@keyframes alertBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* VERA Popup Styles */
+.vera-popup-reaction {
+    position: fixed;
+    z-index: 10000;
+    pointer-events: none;
+    animation: veraPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.vera-popup-reaction img,
+.vera-popup-reaction svg {
+    width: 80px;
+    height: 80px;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+}
+
+.vera-popup-reaction .speech {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid var(--icon-fairy-primary);
+    border-radius: 12px;
+    padding: 8px 14px;
+    font-size: 12px;
+    color: #fff;
+    white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.vera-popup-reaction .speech::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid rgba(15, 23, 42, 0.95);
+}
+
+@keyframes veraPopIn {
+    0% { opacity: 0; transform: scale(0.5) translateY(20px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes veraPopOut {
+    0% { opacity: 1; transform: scale(1) translateY(0); }
+    100% { opacity: 0; transform: scale(0.8) translateY(-10px); }
+}

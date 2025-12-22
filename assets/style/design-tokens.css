@@ -1,25 +1,44 @@
 :root {
   --ad-bg: #0a0d14;
-  --ad-surface-1: #12161f;
+  --ad-surface-1: #0f172a;
   --ad-surface-2: #1a1f2e;
   --ad-surface-3: #242b3d;
-  --ad-border: rgba(255, 255, 255, 0.1);
+  --ad-border: rgba(94, 234, 212, 0.1);
+  --ad-border-bright: rgba(94, 234, 212, 0.25);
 
   --ad-text-1: #f8fafc;
-  --ad-text-2: #b4bcd0;
-  --ad-text-3: #7c859f;
+  --ad-text-2: #cbd5e1;
+  --ad-text-3: #64748b;
 
-  --ad-accent-purple: #7c4dff;
-  --ad-accent-green: #22d3a6;
-  --ad-accent-pink: #f472b6;
-  --ad-accent-blue: #4f8bff;
+  /* VERA Teal/Cyan - primary accent */
+  --ad-accent-teal: #14b8a6;
+  --ad-accent-teal-bright: #5eead4;
+  --ad-accent-teal-dim: #0d9488;
+  --ad-accent-cyan: #22d3ee;
+
+  /* VERA Purple - demon/monster accent */
+  --ad-accent-purple: #7c3aed;
+  --ad-accent-purple-bright: #8b5cf6;
+  --ad-accent-purple-dim: #6366f1;
+  --ad-accent-purple-dark: #581c87;
+
+  /* Legacy aliases */
+  --ad-accent-green: #14b8a6;
+  --ad-accent-pink: #c4b5fd;
+  --ad-accent-blue: #22d3ee;
+
+  /* VERA Gold - warm anime gold */
+  --ad-gold: #fcd34d;
+  --ad-gold-bright: #fef3c7;
+  --ad-gold-dim: #f59e0b;
 
   --ad-success: #22c55e;
   --ad-warning: #f59e0b;
-  --ad-danger: #ef4444;
+  --ad-danger: #dc2626;
 
-  --ad-skin: #f6c7a2;
-  --ad-metal: #f1d07a;
+  --ad-skin: #fef3c7;
+  --ad-skin-dim: #fde68a;
+  --ad-metal: #fcd34d;
 
   --ad-radius-1: 6px;
   --ad-radius-2: 10px;
@@ -33,10 +52,14 @@
   --ad-space-5: 24px;
   --ad-space-6: 32px;
 
-  --ad-shadow-1: 0 6px 16px rgba(0, 0, 0, 0.35);
-  --ad-shadow-2: 0 10px 30px rgba(0, 0, 0, 0.45);
-  --ad-glow-green: 0 0 18px rgba(34, 211, 166, 0.35);
-  --ad-glow-purple: 0 0 18px rgba(124, 77, 255, 0.35);
+  --ad-shadow-1: 0 6px 16px rgba(0, 0, 0, 0.4);
+  --ad-shadow-2: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --ad-glow-teal: 0 0 20px rgba(94, 234, 212, 0.35);
+  --ad-glow-cyan: 0 0 20px rgba(34, 211, 238, 0.4);
+  --ad-glow-purple: 0 0 20px rgba(124, 58, 237, 0.35);
+  --ad-glow-gold: 0 0 20px rgba(252, 211, 77, 0.4);
+  /* Legacy alias */
+  --ad-glow-green: 0 0 20px rgba(94, 234, 212, 0.35);
 
   --ad-font-sans: "Space Grotesk", "Inter", system-ui, sans-serif;
   --ad-font-xs: 12px;

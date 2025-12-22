@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="cyberGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+    <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feFlood flood-color="#22d3ee" flood-opacity="0.6"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Outer ring - bold -->
+  <circle cx="24" cy="24" r="18" fill="none" stroke="url(#cyberGlow)" stroke-width="3" filter="url(#neonGlow)"/>
+  <!-- Inner tech ring -->
+  <circle cx="24" cy="24" r="14" fill="none" stroke="#14b8a6" stroke-width="1" stroke-dasharray="4 2" opacity="0.5"/>
+  <!-- Clock hands - bold anime style -->
+  <path d="M24 12v12l8 8" stroke="#67e8f9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#neonGlow)"/>
+  <!-- Center core -->
+  <circle cx="24" cy="24" r="3" fill="#22d3ee"/>
+  <circle cx="24" cy="24" r="1.5" fill="#0a1628"/>
+  <!-- Hour markers -->
+  <circle cx="24" cy="8" r="1.5" fill="#14b8a6"/>
+  <circle cx="40" cy="24" r="1.5" fill="#14b8a6"/>
+  <circle cx="24" cy="40" r="1.5" fill="#14b8a6"/>
+  <circle cx="8" cy="24" r="1.5" fill="#14b8a6"/>
+  <!-- Rewind arrow -->
+  <path d="M8 16c4-6 10-10 18-10" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M6 10l2 6 6-2" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

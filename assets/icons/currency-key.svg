@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="keyGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef3c7"/>
+      <stop offset="50%" stop-color="#fcd34d"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="keyTeal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+  </defs>
+  <!-- Key head - centered better -->
+  <circle cx="14" cy="24" r="10" fill="none" stroke="url(#keyGold)" stroke-width="4"/>
+  <circle cx="14" cy="24" r="5" fill="#0f172a"/>
+  <circle cx="14" cy="24" r="3" fill="url(#keyTeal)"/>
+  <circle cx="13" cy="23" r="1" fill="#fff" opacity="0.7"/>
+  <!-- Key shaft -->
+  <rect x="22" y="21" width="22" height="6" rx="2" fill="url(#keyGold)"/>
+  <!-- Key teeth -->
+  <rect x="36" y="27" width="3" height="5" rx="1" fill="url(#keyGold)"/>
+  <rect x="40" y="27" width="4" height="7" rx="1" fill="url(#keyGold)"/>
+</svg>

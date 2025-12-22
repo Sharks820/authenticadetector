@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fcd34d"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="silverGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="100%" stop-color="#64748b"/>
+    </linearGradient>
+    <linearGradient id="bronzeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fdba74"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Podium bars - bold 3D style -->
+  <rect x="4" y="24" width="12" height="20" rx="2" fill="url(#silverGrad)" filter="url(#glow)"/>
+  <rect x="18" y="12" width="12" height="32" rx="2" fill="url(#goldGrad)" filter="url(#glow)"/>
+  <rect x="32" y="30" width="12" height="14" rx="2" fill="url(#bronzeGrad)" filter="url(#glow)"/>
+  <!-- Rank numbers -->
+  <text x="10" y="38" font-size="10" font-weight="900" fill="#1e293b" text-anchor="middle" font-family="system-ui">2</text>
+  <text x="24" y="28" font-size="12" font-weight="900" fill="#1e293b" text-anchor="middle" font-family="system-ui">1</text>
+  <text x="38" y="40" font-size="9" font-weight="900" fill="#1e293b" text-anchor="middle" font-family="system-ui">3</text>
+  <!-- Crown on #1 -->
+  <path d="M18 10l3-6 3 4 3-4 3 6z" fill="#fcd34d" stroke="#f59e0b" stroke-width="0.5"/>
+  <circle cx="21" cy="5" r="1" fill="#fcd34d"/>
+  <circle cx="24" cy="3" r="1" fill="#fcd34d"/>
+  <circle cx="27" cy="5" r="1" fill="#fcd34d"/>
+  <!-- Glow accents -->
+  <rect x="18" y="12" width="12" height="2" fill="#fef3c7" opacity="0.5"/>
+</svg>

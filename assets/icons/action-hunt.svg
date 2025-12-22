@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="crosshairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </linearGradient>
+    <linearGradient id="cyberGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+    <filter id="targetGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feFlood flood-color="#f97316" flood-opacity="0.6"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Outer targeting ring -->
+  <circle cx="24" cy="24" r="18" fill="none" stroke="url(#crosshairGrad)" stroke-width="2.5" filter="url(#targetGlow)"/>
+  <!-- Inner rings -->
+  <circle cx="24" cy="24" r="12" fill="none" stroke="url(#cyberGlow)" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <circle cx="24" cy="24" r="6" fill="none" stroke="url(#crosshairGrad)" stroke-width="2"/>
+  <!-- Crosshairs -->
+  <path d="M24 4v8M24 36v8M4 24h8M36 24h8" stroke="url(#crosshairGrad)" stroke-width="3" stroke-linecap="round" filter="url(#targetGlow)"/>
+  <!-- Corner brackets - tech style -->
+  <path d="M8 8l6 0 0 6M40 8l-6 0 0 6M8 40l6 0 0-6M40 40l-6 0 0-6" stroke="url(#cyberGlow)" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <!-- Center target dot -->
+  <circle cx="24" cy="24" r="3" fill="#dc2626"/>
+  <circle cx="24" cy="24" r="1.5" fill="#fff"/>
+  <!-- Lock-on indicators -->
+  <circle cx="18" cy="18" r="1.5" fill="#22d3ee"/>
+  <circle cx="30" cy="18" r="1.5" fill="#22d3ee"/>
+  <circle cx="18" cy="30" r="1.5" fill="#22d3ee"/>
+  <circle cx="30" cy="30" r="1.5" fill="#22d3ee"/>
+</svg>

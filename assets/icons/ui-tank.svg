@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="tankGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#64748b"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </linearGradient>
+    <linearGradient id="cannonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#475569"/>
+    </linearGradient>
+    <linearGradient id="energyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </linearGradient>
+    <filter id="tankGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feFlood flood-color="#f97316" flood-opacity="0.4"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Tank body -->
+  <rect x="6" y="26" width="36" height="12" rx="3" fill="url(#tankGrad)" stroke="#475569" stroke-width="1"/>
+  <!-- Turret -->
+  <ellipse cx="24" cy="24" rx="10" ry="6" fill="url(#tankGrad)" stroke="#64748b" stroke-width="1"/>
+  <!-- Cannon -->
+  <rect x="30" y="22" width="16" height="4" rx="1" fill="url(#cannonGrad)" filter="url(#tankGlow)"/>
+  <!-- Cannon tip glow -->
+  <circle cx="46" cy="24" r="3" fill="url(#energyGrad)" opacity="0.8"/>
+  <!-- Treads -->
+  <ellipse cx="12" cy="38" rx="6" ry="4" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+  <ellipse cx="36" cy="38" rx="6" ry="4" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+  <!-- Tread details -->
+  <path d="M8 38h8M32 38h8" stroke="#64748b" stroke-width="1"/>
+  <!-- Viewport -->
+  <ellipse cx="24" cy="22" rx="3" ry="2" fill="#22d3ee" opacity="0.8"/>
+  <!-- Armor plates -->
+  <path d="M10 30h28" stroke="#475569" stroke-width="0.5"/>
+</svg>

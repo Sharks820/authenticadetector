@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="errorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f87171"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <circle cx="24" cy="24" r="18" fill="url(#errorGrad)" filter="url(#glow)"/>
+  <path d="M16 16l16 16M32 16l-16 16" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+  <path d="M12 8l-3-4M36 8l3-4M8 12l-4-3M40 12l4-3" stroke="#f87171" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+</svg>

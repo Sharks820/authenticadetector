@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="emailGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+    <linearGradient id="checkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4ade80"/>
+      <stop offset="100%" stop-color="#16a34a"/>
+    </linearGradient>
+    <filter id="emailGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feFlood flood-color="#22d3ee" flood-opacity="0.5"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Email envelope -->
+  <rect x="4" y="12" width="32" height="24" rx="3" fill="#0f172a" stroke="url(#emailGrad)" stroke-width="2.5" filter="url(#emailGlow)"/>
+  <!-- Envelope flap -->
+  <path d="M4 14l16 12 16-12" stroke="url(#emailGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Envelope bottom fold hint -->
+  <path d="M6 34l10-8M30 34l-10-8" stroke="#0891b2" stroke-width="1" opacity="0.5"/>
+  <!-- Verified badge circle -->
+  <circle cx="38" cy="34" r="10" fill="#0f172a" stroke="url(#checkGrad)" stroke-width="2.5"/>
+  <!-- Check mark -->
+  <path d="M33 34l3 3 6-7" stroke="url(#checkGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Sparkle -->
+  <circle cx="42" cy="12" r="2" fill="#4ade80" opacity="0.7"/>
+</svg>

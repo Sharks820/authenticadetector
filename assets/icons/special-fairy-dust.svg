@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <radialGradient id="dustGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#c4b5fd" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sparkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcd34d"/>
+      <stop offset="50%" stop-color="#c4b5fd"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <circle cx="24" cy="24" r="18" fill="url(#dustGlow)"/>
+  <polygon points="24,6 26,20 40,22 26,24 24,38 22,24 8,22 22,20" fill="url(#sparkGrad)" filter="url(#glow)"/>
+  <circle cx="12" cy="12" r="3" fill="#fcd34d" opacity="0.8" filter="url(#glow)"/>
+  <circle cx="36" cy="14" r="2" fill="#c4b5fd" opacity="0.9" filter="url(#glow)"/>
+  <circle cx="10" cy="34" r="2.5" fill="#06b6d4" opacity="0.7" filter="url(#glow)"/>
+  <circle cx="38" cy="32" r="2" fill="#ec4899" opacity="0.8" filter="url(#glow)"/>
+  <circle cx="18" cy="38" r="1.5" fill="#fcd34d" opacity="0.6"/>
+  <circle cx="32" cy="8" r="1.5" fill="#c4b5fd" opacity="0.7"/>
+</svg>

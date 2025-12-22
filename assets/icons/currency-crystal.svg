@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="crystalMain" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#67e8f9"/>
+      <stop offset="30%" stop-color="#22d3ee"/>
+      <stop offset="70%" stop-color="#0891b2"/>
+      <stop offset="100%" stop-color="#0e7490"/>
+    </linearGradient>
+    <linearGradient id="crystalFace" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#a5f3fc"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="crystalDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0e7490"/>
+      <stop offset="100%" stop-color="#164e63"/>
+    </linearGradient>
+    <filter id="crystalGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#22d3ee" flood-opacity="0.7"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Main crystal body -->
+  <polygon points="24,2 34,14 34,34 24,46 14,34 14,14" fill="url(#crystalMain)" filter="url(#crystalGlow)"/>
+  <!-- Front face - lighter -->
+  <polygon points="24,2 34,14 24,20 14,14" fill="url(#crystalFace)"/>
+  <!-- Right face - medium -->
+  <polygon points="34,14 34,34 24,40 24,20" fill="#0891b2"/>
+  <!-- Left face - darker -->
+  <polygon points="14,14 24,20 24,40 14,34" fill="url(#crystalDark)"/>
+  <!-- Bottom point -->
+  <polygon points="24,40 34,34 24,46 14,34" fill="#164e63"/>
+  <!-- Inner energy lines -->
+  <path d="M24 8v32" stroke="#a5f3fc" stroke-width="0.5" opacity="0.5"/>
+  <path d="M18 16l12 16" stroke="#a5f3fc" stroke-width="0.5" opacity="0.4"/>
+  <path d="M30 16l-12 16" stroke="#a5f3fc" stroke-width="0.5" opacity="0.4"/>
+  <!-- Highlight -->
+  <polygon points="20,8 24,2 26,10 22,14" fill="#fff" opacity="0.6"/>
+  <!-- Sparkles -->
+  <circle cx="18" cy="10" r="1.5" fill="#fff" opacity="0.8"/>
+  <circle cx="32" cy="22" r="1" fill="#a5f3fc" opacity="0.7"/>
+</svg>

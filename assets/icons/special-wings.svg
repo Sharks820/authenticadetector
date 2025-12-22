@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="wingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c4b5fd"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="wingInner" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#e0e7ff"/>
+      <stop offset="100%" stop-color="#a5b4fc"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <path d="M24 24c-6-12-18-16-20-10 0 8 8 14 14 16-6 2-14 8-14 16 2 6 14-2 20-10" fill="url(#wingGrad)" stroke="#4f46e5" stroke-width="1" filter="url(#glow)"/>
+  <path d="M24 24c6-12 18-16 20-10 0 8-8 14-14 16 6 2 14 8 14 16-2 6-14-2-20-10" fill="url(#wingGrad)" stroke="#4f46e5" stroke-width="1" filter="url(#glow)"/>
+  <path d="M24 24c-3-6-10-9-12-6 0 4 5 8 9 10M24 24c3-6 10-9 12-6 0 4-5 8-9 10" fill="url(#wingInner)" opacity="0.6"/>
+  <circle cx="24" cy="24" r="3" fill="#c4b5fd"/>
+</svg>
