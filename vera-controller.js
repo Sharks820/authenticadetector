@@ -932,15 +932,25 @@
             }
         },
 
-        // Show face pop overlay
+        // Show face pop overlay - quick burst then smooth fade
         showFacePop(extreme = false) {
-            this.overlay.classList.remove('facepop', 'facepop-extreme', 'active');
+            // Clear any existing
+            this.overlay.classList.remove('facepop', 'facepop-extreme', 'active', 'fading');
             void this.overlay.offsetWidth; // Force reflow
+
+            // Show the pop
             this.overlay.classList.add(extreme ? 'facepop-extreme' : 'facepop', 'active');
 
+            // Start fading after brief display (shorter time - don't linger)
+            const displayTime = extreme ? 400 : 300;
             setTimeout(() => {
-                this.overlay.classList.remove('active');
-            }, extreme ? 1200 : 900);
+                this.overlay.classList.add('fading');
+            }, displayTime);
+
+            // Fully remove after fade completes
+            setTimeout(() => {
+                this.overlay.classList.remove('facepop', 'facepop-extreme', 'active', 'fading');
+            }, displayTime + 400);
         },
 
         // Screen flash

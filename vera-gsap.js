@@ -4,8 +4,13 @@
    Replaces glitchy CSS animations with silky smooth GSAP timelines
    ============================================================================= */
 
+console.log('[VERA GSAP] Script loaded, checking for GSAP...');
+
 (function() {
     'use strict';
+
+    // Immediate check
+    console.log('[VERA GSAP] GSAP available:', typeof gsap !== 'undefined');
 
     const VeraGSAP = {
         // Timeline references

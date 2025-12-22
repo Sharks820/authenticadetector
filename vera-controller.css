@@ -316,9 +316,9 @@
     animation: floatAngry 2s ease-in-out infinite;
 }
 
-/* Monster float - violent shaking */
+/* Monster float - powerful, menacing hover (NOT glitchy shake) */
 .vera-container.monster .vera-stage {
-    animation: floatRage 0.8s ease-in-out infinite;
+    animation: floatMenacing 3s ease-in-out infinite;
 }
 
 @keyframes floatGentle {
@@ -346,17 +346,25 @@
     87.5% { transform: translateY(-2px) rotate(0.5deg); }
 }
 
-@keyframes floatRage {
-    0%, 100% { transform: translateY(-2px) rotate(-2deg); }
-    10% { transform: translateY(-4px) rotate(3deg); }
-    20% { transform: translateY(-6px) rotate(-2.5deg); }
-    30% { transform: translateY(-3px) rotate(2deg); }
-    40% { transform: translateY(-8px) rotate(-3deg); }
-    50% { transform: translateY(-5px) rotate(2.5deg); }
-    60% { transform: translateY(-7px) rotate(-2deg); }
-    70% { transform: translateY(-4px) rotate(3deg); }
-    80% { transform: translateY(-6px) rotate(-2.5deg); }
-    90% { transform: translateY(-3px) rotate(2deg); }
+/* OLD floatRage removed - was too glitchy */
+
+/* NEW: Powerful menacing hover - slow, deliberate, intimidating */
+@keyframes floatMenacing {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+    20% {
+        transform: translateY(-6px) rotate(-1deg) scale(1.02);
+    }
+    40% {
+        transform: translateY(-12px) rotate(0.5deg) scale(1.04);
+    }
+    60% {
+        transform: translateY(-8px) rotate(-0.5deg) scale(1.03);
+    }
+    80% {
+        transform: translateY(-4px) rotate(1deg) scale(1.01);
+    }
 }
 
 /* ==========================================================================
@@ -455,13 +463,13 @@
 .vera-container.monster .vera-wings {
     background-image: url('assets/vera/vera_monster_wings_HQ.webp');
     transform-origin: 50% 50%;
-    animation: wingFlapRage 0.5s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+    animation: wingFlapMonster 1.8s cubic-bezier(0.37, 0, 0.63, 1) infinite;
 }
 
 .vera-container.monster .vera-hair {
     background-image: url('assets/vera/vera_monster_hair_HQ.webp');
     transform-origin: 50% 12%;
-    animation: hairSwayRage 0.8s ease-in-out infinite;
+    animation: hairSwayMonster 2.5s ease-in-out infinite;
 }
 
 /* Monster eyes removed */
@@ -544,50 +552,25 @@
     }
 }
 
-@keyframes wingFlapRage {
-    0% {
-        transform: scaleY(1.05) scaleX(0.95) rotate(-5deg);
-        filter: brightness(1);
+/* OLD wingFlapRage removed - was too glitchy/frantic */
+
+/* NEW: Powerful monster wing flaps - slow, deliberate, menacing */
+@keyframes wingFlapMonster {
+    0%, 100% {
+        transform: scaleY(1) scaleX(1) rotate(-2deg);
+        filter: brightness(1) drop-shadow(0 0 8px rgba(220, 38, 38, 0.3));
     }
-    10% {
-        transform: scaleY(0.85) scaleX(1.1) rotate(3deg);
-        filter: brightness(1.1);
-    }
-    20% {
-        transform: scaleY(0.7) scaleX(1.15) rotate(7deg);
-        filter: brightness(1.2);
-    }
-    30% {
-        transform: scaleY(0.8) scaleX(1.1) rotate(4deg);
-        filter: brightness(1.1);
-    }
-    40% {
-        transform: scaleY(0.72) scaleX(1.14) rotate(8deg);
-        filter: brightness(1.15);
+    25% {
+        transform: scaleY(0.85) scaleX(1.08) rotate(2deg);
+        filter: brightness(1.1) drop-shadow(0 0 12px rgba(220, 38, 38, 0.5));
     }
     50% {
-        transform: scaleY(0.78) scaleX(1.12) rotate(5deg);
-        filter: brightness(1.05);
+        transform: scaleY(0.75) scaleX(1.12) rotate(4deg);
+        filter: brightness(1.15) drop-shadow(0 0 16px rgba(220, 38, 38, 0.6));
     }
-    60% {
-        transform: scaleY(0.7) scaleX(1.16) rotate(9deg);
-        filter: brightness(1.2);
-    }
-    70% {
-        transform: scaleY(0.82) scaleX(1.08) rotate(3deg);
-        filter: brightness(1.1);
-    }
-    80% {
-        transform: scaleY(0.9) scaleX(1.04) rotate(0deg);
-        filter: brightness(1.05);
-    }
-    90% {
-        transform: scaleY(0.98) scaleX(0.98) rotate(-3deg);
-        filter: brightness(1);
-    }
-    100% {
-        transform: scaleY(1.05) scaleX(0.95) rotate(-5deg);
-        filter: brightness(1);
+    75% {
+        transform: scaleY(0.88) scaleX(1.05) rotate(1deg);
+        filter: brightness(1.08) drop-shadow(0 0 10px rgba(220, 38, 38, 0.4));
     }
 }
 
@@ -639,33 +622,42 @@
     }
 }
 
-@keyframes hairSwayRage {
+/* OLD hairSwayRage removed - was too glitchy */
+
+/* NEW: Menacing monster hair - flowing with dark energy */
+@keyframes hairSwayMonster {
     0%, 100% {
-        transform: rotate(-5deg) translateX(-3px) scaleY(1);
-    }
-    16% {
-        transform: rotate(4deg) translateX(4px) scaleY(1.02);
+        transform: rotate(-3deg) translateX(-2px) scaleY(1);
+        filter: brightness(1);
     }
     33% {
-        transform: rotate(-3deg) translateX(-2px) scaleY(0.99);
-    }
-    50% {
-        transform: rotate(6deg) translateX(5px) scaleY(1.03);
+        transform: rotate(2deg) translateX(3px) scaleY(1.02);
+        filter: brightness(1.1);
     }
     66% {
-        transform: rotate(-4deg) translateX(-3px) scaleY(1);
-    }
-    83% {
-        transform: rotate(3deg) translateX(2px) scaleY(1.01);
+        transform: rotate(-2deg) translateX(-1px) scaleY(1.01);
+        filter: brightness(1.05);
     }
 }
 
 /* ==========================================================================
    FACE POP OVERLAY
    ========================================================================== */
+/* Face pop overlay - appears BRIEFLY during transition then fades */
+.vera-overlay {
+    z-index: 10 !important; /* Above all other layers */
+    transition: opacity 0.3s ease-out;
+}
+
 .vera-overlay.active {
     opacity: 1;
-    animation: facePopBurst 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: facePopBurst 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Auto-fade after showing */
+.vera-overlay.fading {
+    opacity: 0 !important;
+    transition: opacity 0.4s ease-out;
 }
 
 .vera-container .vera-overlay.facepop {
@@ -679,16 +671,21 @@
 @keyframes facePopBurst {
     0% {
         opacity: 0;
-        transform: scale(0.7);
-        filter: brightness(2);
+        transform: scale(0.5);
+        filter: brightness(2.5);
     }
-    40% {
+    30% {
         opacity: 1;
-        transform: scale(1.15);
-        filter: brightness(1.3);
+        transform: scale(1.2);
+        filter: brightness(1.5);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1);
+        filter: brightness(1.2);
     }
     100% {
-        opacity: 1;
+        opacity: 0.8;
         transform: scale(1);
         filter: brightness(1);
     }
