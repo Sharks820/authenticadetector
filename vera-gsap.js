@@ -87,56 +87,25 @@ console.log('[VERA GSAP] Script loaded, checking for GSAP...');
             });
         },
 
-        // Wing flapping animation - organic butterfly-like motion
+        // Wing flapping animation - rotation only (NO scaling to prevent clipping)
         createWingAnimation() {
             if (this.wingTimeline) this.wingTimeline.kill();
 
             const speed = this.speeds[this.currentState].wing;
 
-            this.wingTimeline = gsap.timeline({ repeat: -1, yoyo: false });
+            this.wingTimeline = gsap.timeline({ repeat: -1, yoyo: true });
 
-            // Organic wing flap cycle
+            // Simple rotation + translateY only
             this.wingTimeline
                 .to(this.wings, {
-                    scaleY: 0.88,
-                    scaleX: 1.05,
-                    rotation: 3,
-                    y: -2,
-                    duration: speed * 0.25,
+                    rotation: 4,
+                    y: -3,
+                    duration: speed * 0.5,
                     ease: 'sine.inOut'
-                })
-                .to(this.wings, {
-                    scaleY: 0.92,
-                    scaleX: 1.03,
-                    rotation: 1.5,
-                    y: 0,
-                    duration: speed * 0.2,
-                    ease: 'sine.out'
-                })
-                .to(this.wings, {
-                    scaleY: 1,
-                    scaleX: 1,
-                    rotation: -1,
-                    y: 1,
-                    duration: speed * 0.3,
-                    ease: 'sine.inOut'
-                })
-                .to(this.wings, {
-                    scaleY: 0.96,
-                    scaleX: 1.02,
-                    rotation: 0.5,
-                    y: -1,
-                    duration: speed * 0.25,
-                    ease: 'sine.in'
                 });
-
-            // Adjust for monster state - more aggressive
-            if (this.currentState === 'monster' || this.currentState === 'takeover') {
-                this.wingTimeline.timeScale(1.5);
-            }
         },
 
-        // Hair swaying animation - natural follow-through
+        // Hair swaying animation - rotation only (NO scaling)
         createHairAnimation() {
             if (this.hairTimeline) this.hairTimeline.kill();
 
@@ -144,42 +113,17 @@ console.log('[VERA GSAP] Script loaded, checking for GSAP...');
 
             this.hairTimeline = gsap.timeline({ repeat: -1, yoyo: true });
 
+            // Simple rotation + translateX only
             this.hairTimeline
                 .to(this.hair, {
-                    rotation: 1.5,
-                    x: 2,
-                    duration: speed * 0.5,
-                    ease: 'sine.inOut'
-                })
-                .to(this.hair, {
-                    rotation: -1.2,
-                    x: -1,
+                    rotation: 3,
+                    x: 3,
                     duration: speed * 0.5,
                     ease: 'sine.inOut'
                 });
-
-            // More dramatic for angry states
-            if (this.currentState === 'monster') {
-                this.hairTimeline
-                    .clear()
-                    .to(this.hair, {
-                        rotation: 5,
-                        x: 4,
-                        scaleX: 1.02,
-                        duration: 0.15,
-                        ease: 'power2.inOut'
-                    })
-                    .to(this.hair, {
-                        rotation: -4,
-                        x: -3,
-                        scaleX: 0.99,
-                        duration: 0.15,
-                        ease: 'power2.inOut'
-                    });
-            }
         },
 
-        // Floating animation - gentle hover
+        // Floating animation - gentle hover (NO scaling, NO aggressive shake)
         createFloatAnimation() {
             if (this.floatTimeline) this.floatTimeline.kill();
 
@@ -187,48 +131,25 @@ console.log('[VERA GSAP] Script loaded, checking for GSAP...');
 
             this.floatTimeline = gsap.timeline({ repeat: -1, yoyo: true });
 
-            if (this.currentState === 'monster') {
-                // Aggressive shaking for monster
-                this.floatTimeline
-                    .to(this.stage, {
-                        y: -3,
-                        rotation: -2,
-                        duration: 0.1,
-                        ease: 'power1.inOut'
-                    })
-                    .to(this.stage, {
-                        y: -5,
-                        rotation: 2,
-                        duration: 0.1,
-                        ease: 'power1.inOut'
-                    })
-                    .to(this.stage, {
-                        y: -2,
-                        rotation: -1.5,
-                        duration: 0.1,
-                        ease: 'power1.inOut'
-                    });
-            } else {
-                // Gentle floating
-                this.floatTimeline
-                    .to(this.stage, {
-                        y: -8,
-                        rotation: 0.5,
-                        duration: speed * 0.5,
-                        ease: 'sine.inOut'
-                    });
-            }
+            // Same gentle float for all states - just slower/faster
+            this.floatTimeline
+                .to(this.stage, {
+                    y: -10,
+                    rotation: 1,
+                    duration: speed * 0.5,
+                    ease: 'sine.inOut'
+                });
         },
 
-        // Subtle breathing/pulsing on body
+        // Breathing animation - very subtle, NO scaling (just brightness)
         createBreatheAnimation() {
             if (this.breatheTimeline) this.breatheTimeline.kill();
 
             this.breatheTimeline = gsap.timeline({ repeat: -1, yoyo: true });
 
+            // Just subtle filter change, no scale
             this.breatheTimeline.to(this.body, {
-                scaleY: 1.015,
-                scaleX: 0.99,
+                filter: 'brightness(1.03)',
                 duration: 2,
                 ease: 'sine.inOut'
             });
