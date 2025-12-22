@@ -123,14 +123,32 @@
     opacity: 0;
 }
 
-/* Fairy sparkles - soft blue/white */
+/* Fairy sparkles - pink, lavender, mint pastels (matching sprite sheet) */
 .vera-container.fairy .vera-sparkle {
     background: radial-gradient(circle,
         rgba(255, 255, 255, 1) 0%,
-        rgba(147, 197, 253, 0.8) 40%,
-        rgba(196, 181, 253, 0.4) 70%,
+        rgba(244, 182, 212, 0.85) 40%,
+        rgba(196, 181, 253, 0.5) 70%,
         transparent 100%);
-    box-shadow: 0 0 6px rgba(147, 197, 253, 0.6);
+    box-shadow: 0 0 6px rgba(244, 182, 212, 0.5);
+}
+
+.vera-container.fairy .vera-sparkle:nth-child(2n) {
+    background: radial-gradient(circle,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(196, 181, 253, 0.85) 40%,
+        rgba(167, 243, 208, 0.4) 70%,
+        transparent 100%);
+    box-shadow: 0 0 6px rgba(196, 181, 253, 0.5);
+}
+
+.vera-container.fairy .vera-sparkle:nth-child(3n) {
+    background: radial-gradient(circle,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(167, 243, 208, 0.85) 40%,
+        rgba(244, 182, 212, 0.4) 70%,
+        transparent 100%);
+    box-shadow: 0 0 6px rgba(167, 243, 208, 0.5);
 }
 
 /* Partial sparkles - orange tinted */
@@ -154,15 +172,33 @@
     animation: sparkleEmber var(--duration, 2s) ease-in-out infinite;
 }
 
-/* Monster sparkles - fire and rage */
+/* Monster sparkles - orange, pink, peach (matching sprite sheet) */
 .vera-container.monster .vera-sparkle {
     background: radial-gradient(circle,
-        rgba(255, 200, 100, 1) 0%,
-        rgba(220, 38, 38, 0.9) 40%,
-        rgba(127, 29, 29, 0.6) 70%,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(251, 146, 60, 0.9) 40%,
+        rgba(244, 182, 212, 0.5) 70%,
         transparent 100%);
-    box-shadow: 0 0 12px rgba(220, 38, 38, 0.8), 0 0 20px rgba(185, 28, 28, 0.4);
+    box-shadow: 0 0 10px rgba(251, 146, 60, 0.7);
     animation: sparkleRage var(--duration, 1.5s) ease-in-out infinite;
+}
+
+.vera-container.monster .vera-sparkle:nth-child(2n) {
+    background: radial-gradient(circle,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(244, 182, 212, 0.9) 40%,
+        rgba(251, 146, 60, 0.5) 70%,
+        transparent 100%);
+    box-shadow: 0 0 10px rgba(244, 182, 212, 0.6);
+}
+
+.vera-container.monster .vera-sparkle:nth-child(3n) {
+    background: radial-gradient(circle,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(254, 215, 170, 0.9) 40%,
+        rgba(251, 146, 60, 0.5) 70%,
+        transparent 100%);
+    box-shadow: 0 0 10px rgba(254, 215, 170, 0.6);
 }
 
 @keyframes sparkleFloat {

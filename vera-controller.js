@@ -528,28 +528,45 @@
             this.container.style.bottom = 'auto';
         },
 
-        // Move to new position (click to move)
+        // Move to new position (click to move) - STAYS NEAR EDGES to not obstruct app
         moveToNewPosition() {
             if (this.isAnimating) return;
             this.isAnimating = true;
 
             const margin = 20;
             const size = 140;
-            const maxX = window.innerWidth - size - margin;
-            const maxY = window.innerHeight - size - margin - 60;
-            const minX = margin;
-            const minY = margin + 60;
+            const edgeZone = 200; // VERA stays within this distance from edges
 
-            // Calculate new position with some randomness
-            const angle = Math.random() * Math.PI * 2;
-            const distance = CONFIG.moveDistance.min + Math.random() * (CONFIG.moveDistance.max - CONFIG.moveDistance.min);
+            // Define safe zones (edges only - not the middle)
+            const screenW = window.innerWidth;
+            const screenH = window.innerHeight;
 
-            let newX = this.position.x + Math.cos(angle) * distance;
-            let newY = this.position.y + Math.sin(angle) * distance;
+            // Pick a random edge: 0=right, 1=bottom, 2=left, 3=top
+            const edge = Math.floor(Math.random() * 4);
+            let newX, newY;
 
-            // Clamp to screen bounds
-            newX = Math.max(minX, Math.min(maxX, newX));
-            newY = Math.max(minY, Math.min(maxY, newY));
+            switch (edge) {
+                case 0: // Right edge
+                    newX = screenW - size - margin - Math.random() * (edgeZone - size);
+                    newY = margin + 80 + Math.random() * (screenH - size - margin - 160);
+                    break;
+                case 1: // Bottom edge
+                    newX = margin + Math.random() * (screenW - size - margin * 2);
+                    newY = screenH - size - margin - 80 - Math.random() * (edgeZone - size);
+                    break;
+                case 2: // Left edge
+                    newX = margin + Math.random() * (edgeZone - size);
+                    newY = margin + 80 + Math.random() * (screenH - size - margin - 160);
+                    break;
+                case 3: // Top edge (below header)
+                    newX = margin + Math.random() * (screenW - size - margin * 2);
+                    newY = margin + 80 + Math.random() * (edgeZone - size);
+                    break;
+            }
+
+            // Ensure bounds
+            newX = Math.max(margin, Math.min(screenW - size - margin, newX));
+            newY = Math.max(margin + 60, Math.min(screenH - size - margin - 60, newY));
 
             // Add flying animation class
             this.container.classList.add('flying');
