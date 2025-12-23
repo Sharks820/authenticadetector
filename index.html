@@ -7,11 +7,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="AuthenticaDetector">
-    <meta name="description" content="AuthenticaDetector - Advanced AI Image Detection. Detect AI-generated images with 90%+ accuracy.">
-    <meta property="og:title" content="AuthenticaDetector - AI Image Detection">
-    <meta property="og:description" content="Detect AI-generated images instantly. Free to use.">
+    <meta name="description" content="AuthenticaDetector - Capture beasts, battle waves, and compete in the Veilbreakers arena!">
+    <meta property="og:title" content="AuthenticaDetector - Beast Collection & Tank Battle">
+    <meta property="og:description" content="Collect beasts, battle in your tank, and climb the leaderboards!">
     <meta property="og:image" content="icon-512.png">
-    <title>AuthenticaDetector - AI Image Detection</title>
+    <title>AuthenticaDetector - Beast Collection & Tank Battle</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon-192.png">
     <link rel="apple-touch-icon" href="icon-180.png">
@@ -4635,50 +4635,31 @@
             }
         }
 
-        /* Feature Badge System - Converts to icons on mobile */
+        /* Feature Badge System - Inline with game titles */
         .feature-badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             color: #fff;
-            font-size: 8px;
+            font-size: 9px;
             font-weight: 800;
-            padding: 2px 6px;
-            border-radius: 4px;
+            padding: 3px 8px;
+            border-radius: 6px;
             white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
-        .feature-badge.featured { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        .feature-badge.live { background: linear-gradient(135deg, #22c55e, #16a34a); }
-        .feature-badge.soon { background: linear-gradient(135deg, #10b981, #059669); }
-        .feature-badge.new { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .feature-badge.featured { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 2px 8px rgba(245,158,11,0.4); }
+        .feature-badge.live { background: linear-gradient(135deg, #22c55e, #16a34a); box-shadow: 0 2px 8px rgba(34,197,94,0.4); }
+        .feature-badge.soon { background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 2px 8px rgba(99,102,241,0.4); }
+        .feature-badge.new { background: linear-gradient(135deg, #3b82f6, #2563eb); box-shadow: 0 2px 8px rgba(59,130,246,0.4); }
 
-        /* Mobile: Convert to icon overlays */
+        /* Mobile: Slightly smaller inline badges */
         @media (max-width: 480px) {
-            .game-card-hero {
-                position: relative;
-            }
             .feature-badge {
-                position: absolute !important;
-                top: 8px !important;
-                right: 8px !important;
-                width: 24px;
-                height: 24px;
-                padding: 0;
-                border-radius: 50%;
-                font-size: 12px;
-                z-index: 10;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+                font-size: 8px;
+                padding: 2px 6px;
             }
-            .feature-badge .badge-text { display: none; }
-            .feature-badge .badge-icon { display: flex; }
-            /* Icon-only display */
-            .feature-badge.featured::before { content: '⭐'; }
-            .feature-badge.live::before { content: '🔴'; font-size: 10px; }
-            .feature-badge.soon::before { content: '⏳'; font-size: 10px; }
-            .feature-badge.new::before { content: '✨'; }
-        }
-        @media (min-width: 481px) {
-            .feature-badge::before { display: none; }
         }
 
         /* ═══════════════════════════════════════════════════════════════════ */
@@ -5152,7 +5133,13 @@
     </style>
 <link rel="stylesheet" href="assets/style/design-tokens.css">
 <link rel="stylesheet" href="assets/style/theme.css">
+<link rel="stylesheet" href="phaser-character-creator.css">
 <script src="assets/icons/index.js" defer></script>
+<!-- Phaser.js for character animation -->
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
+<!-- Phaser Spine Plugin (optional - for bone-rigged animations) -->
+<script src="https://cdn.jsdelivr.net/npm/phaser-spine@4.2.0/dist/phaser-spine.umd.min.js" defer></script>
+<script src="phaser-character-creator.js" defer></script>
 </head>
 <body>
 <script>
@@ -5346,8 +5333,6 @@ window.showCreateTrade = function() {
         <!-- ═══════════════════════════════════════════════════════════════ -->
         <div id="heroGameBanner" style="margin-bottom:14px;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.4);border:2px solid rgba(139,92,246,0.35)">
             <div class="game-card-hero" style="position:relative;height:160px;background:linear-gradient(135deg,#0f0a1a 0%,#1a0f2e 25%,#2d1b4e 50%,#3d1f6d 75%,#1a1033 100%);overflow:hidden">
-                <!-- Feature Badge - icon overlay on mobile -->
-                <span class="feature-badge featured">FEATURED</span>
                 <!-- Animated glow effects -->
                 <div style="position:absolute;left:-20%;top:-30%;width:60%;height:80%;background:radial-gradient(circle,rgba(139,92,246,0.35) 0%,transparent 60%);animation:pulse 3s ease-in-out infinite"></div>
                 <div style="position:absolute;right:-15%;bottom:-20%;width:50%;height:60%;background:radial-gradient(circle,rgba(244,114,182,0.2) 0%,transparent 60%);animation:pulse 4s ease-in-out infinite reverse"></div>
@@ -5357,13 +5342,12 @@ window.showCreateTrade = function() {
                 </div>
                 <!-- Title & Description -->
                 <div style="position:absolute;left:16px;bottom:12px;max-width:65%">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
                         <h2 style="margin:0;font-size:24px;font-weight:900;color:#fff;text-shadow:0 3px 20px rgba(139,92,246,0.8)">VEILBREAKERS</h2>
+                        <span class="feature-badge featured">⭐ FEATURED</span>
                     </div>
                     <p style="margin:0;font-size:11px;color:#e2e8f0;line-height:1.4">Hunt, capture, and train mythical beasts. Battle in ranked PvP arenas, evolve your creatures through fusion, and rise through the leaderboards. Build your ultimate beast squad!</p>
                 </div>
-                <!-- Status badge -->
-                <div style="position:absolute;left:16px;top:10px;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);padding:4px 10px;border-radius:6px;font-size:10px;font-weight:700;color:#a78bfa">● Coming Soon</div>
             </div>
             <!-- Game Features -->
             <div style="background:rgba(139,92,246,0.12);padding:10px 14px;display:flex;gap:6px;flex-wrap:wrap">
@@ -5386,17 +5370,16 @@ window.showCreateTrade = function() {
         <!-- ═══════════════════════════════════════════════════════════════ -->
         <div style="border-radius:16px;margin-bottom:14px;overflow:hidden;border:1px solid rgba(220,38,38,0.3);box-shadow:0 6px 24px rgba(0,0,0,0.3)">
             <div class="game-card-hero" style="position:relative;height:100px;background:linear-gradient(135deg,#1a0a0a 0%,#2d1515 50%,#1a0f0f 100%);overflow:hidden">
-                <!-- Feature Badge - icon overlay on mobile -->
-                <span class="feature-badge live">LIVE</span>
                 <div style="position:absolute;right:-10%;top:-20%;width:50%;height:70%;background:radial-gradient(circle,rgba(220,38,38,0.2) 0%,transparent 70%)"></div>
                 <div style="position:absolute;right:16px;top:50%;transform:translateY(-50%)">
                     <img src="assets/icons/ui-tank.svg" alt="Tank" style="width:70px;height:70px;filter:drop-shadow(0 4px 16px rgba(220,38,38,0.5))">
                 </div>
                 <div style="position:absolute;left:16px;top:50%;transform:translateY(-50%)">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-                        <span style="font-size:16px;font-weight:900;color:#fff">AI OUTBREAK: TANK BATTLE</span>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+                        <span style="font-size:16px;font-weight:900;color:#fff">TANK BATTLE</span>
+                        <span class="feature-badge live">🔴 LIVE</span>
                     </div>
-                    <p style="margin:0;font-size:10px;color:#fca5a5;max-width:200px">Destroy AI-generated fakes in action-packed combat!</p>
+                    <p style="margin:0;font-size:10px;color:#fca5a5;max-width:200px">Destroy waves of enemies in action-packed combat!</p>
                 </div>
             </div>
             <div style="padding:10px 14px;background:rgba(0,0,0,0.3);display:flex;gap:6px;flex-wrap:wrap">
@@ -5416,15 +5399,14 @@ window.showCreateTrade = function() {
         <!-- ═══════════════════════════════════════════════════════════════ -->
         <div id="beastTrainingSection" style="border-radius:16px;margin-bottom:14px;overflow:hidden;border:1px solid rgba(16,185,129,0.3);box-shadow:0 6px 24px rgba(0,0,0,0.3)">
             <div class="game-card-hero" style="position:relative;height:100px;background:linear-gradient(135deg,#052e16 0%,#14532d 50%,#064e3b 100%);overflow:hidden">
-                <!-- Feature Badge - icon overlay on mobile -->
-                <span class="feature-badge soon">SOON</span>
                 <div style="position:absolute;right:-10%;top:-20%;width:50%;height:70%;background:radial-gradient(circle,rgba(16,185,129,0.25) 0%,transparent 70%)"></div>
                 <div style="position:absolute;right:16px;top:50%;transform:translateY(-50%)">
                     <img src="assets/icons/nav-pets.svg" alt="Beast" style="width:60px;height:60px;filter:drop-shadow(0 4px 16px rgba(16,185,129,0.5)) hue-rotate(90deg)">
                 </div>
                 <div style="position:absolute;left:16px;top:50%;transform:translateY(-50%)">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-                        <span style="font-size:16px;font-weight:900;color:#fff">Beast Training Center</span>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+                        <span style="font-size:16px;font-weight:900;color:#fff">Beast Training</span>
+                        <span class="feature-badge soon">⏳ SOON</span>
                     </div>
                     <p style="margin:0;font-size:10px;color:#a7f3d0;max-width:200px">Train, purify, and fuse your beasts!</p>
                 </div>
@@ -5564,98 +5546,10 @@ window.showCreateTrade = function() {
             </button>
         </div>
 
-        <!-- Stats Section -->
-        <div class="profile-section-title">📊 Your Stats</div>
-        <div class="profile-stats-extended">
-            <div class="profile-stat-box" onclick="openView('historyView')">
-                <div class="stat-icon-lg">🔍</div>
-                <div class="stat-value-lg" id="statScans">0</div>
-                <div class="stat-label-lg">Total Scans</div>
-            </div>
-            <div class="profile-stat-box">
-                <div class="stat-icon-lg">🤖</div>
-                <div class="stat-value-lg" id="statFound">0</div>
-                <div class="stat-label-lg">AI Detected</div>
-            </div>
-            <div class="profile-stat-box">
-                <div class="stat-icon-lg">🎯</div>
-                <div class="stat-value-lg" id="statAccuracy">--%</div>
-                <div class="stat-label-lg">Accuracy</div>
-            </div>
-            <div class="profile-stat-box" onclick="openLeaderboard()">
-                <div class="stat-icon-lg">🏆</div>
-                <div class="stat-value-lg" id="statRank">#--</div>
-                <div class="stat-label-lg">Global Rank</div>
-            </div>
-            <div class="profile-stat-box" onclick="startTankShooter()">
-                <div class="stat-icon-lg">🎖️</div>
-                <div class="stat-value-lg" id="statHighWave">0</div>
-                <div class="stat-label-lg">Best Wave</div>
-            </div>
-            <div class="profile-stat-box">
-                <div class="stat-icon-lg">🪙</div>
-                <div class="stat-value-lg" id="statLifetimeCoins">0</div>
-                <div class="stat-label-lg">Lifetime Coins</div>
-            </div>
-        </div>
-
         <!-- Badges Section -->
         <div class="profile-section-title">🎖️ Badges <button class="see-all-btn" onclick="openAllBadges()">See All →</button></div>
         <div class="badges-grid-modern" id="badgesPreview">
             <!-- Populated by JS -->
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="profile-section-title">⚡ Quick Actions</div>
-        <div class="profile-actions-grid">
-            <button class="profile-action-card" onclick="openQuestsView()">
-                <div class="action-icon">📋</div>
-                <div class="action-label">Quests</div>
-                <div class="action-badge" id="questsBadge">3</div>
-            </button>
-            <button class="profile-action-card" onclick="openFriendsList()">
-                <div class="action-icon">👥</div>
-                <div class="action-label">Friends</div>
-            </button>
-            <button class="profile-action-card" onclick="openTradingHub()">
-                <div class="action-icon">🔄</div>
-                <div class="action-label">Trade</div>
-            </button>
-            <button class="profile-action-card" onclick="openShop()">
-                <div class="action-icon">🏪</div>
-                <div class="action-label">Shop</div>
-            </button>
-        </div>
-
-        <!-- Settings Menu -->
-        <div class="profile-section-title">⚙️ Settings</div>
-        <div class="settings-menu">
-            <button class="settings-item" onclick="openNotificationSettings()">
-                <span class="settings-icon">🔔</span>
-                <span class="settings-text">Notifications</span>
-                <span class="settings-arrow">→</span>
-            </button>
-            <button class="settings-item" onclick="openPrivacySettings()">
-                <span class="settings-icon">🔒</span>
-                <span class="settings-text">Privacy</span>
-                <span class="settings-arrow">→</span>
-            </button>
-            <button class="settings-item" onclick="openHelp()">
-                <span class="settings-icon">❓</span>
-                <span class="settings-text">Help & FAQ</span>
-                <span class="settings-arrow">→</span>
-            </button>
-            <button class="settings-item" onclick="handleLoginLogout()">
-                <span class="settings-icon" id="loginLogoutIcon">🔑</span>
-                <span class="settings-text" id="loginLogoutText">Sign In</span>
-                <span class="settings-arrow">→</span>
-            </button>
-        </div>
-
-        <!-- App Info -->
-        <div class="app-info">
-            <div class="app-version">AuthenticaDetector v2.0</div>
-            <div class="app-copyright">© 2025 • Built to fight AI misinformation</div>
         </div>
     </div>
 </div>
@@ -5744,8 +5638,42 @@ window.showCreateTrade = function() {
     </div>
     <div class="view-body view-body-padded">
 
-        <!-- Character Stage - Visual Preview -->
-        <div class="character-stage" id="characterStage">
+        <!-- Phaser Character Canvas (Bone-Rigged Animation) -->
+        <div id="phaserCharacterCanvas" class="loading">
+            <div class="drag-hint">Drag to rotate</div>
+        </div>
+
+        <!-- Animation Controls -->
+        <div class="animation-controls">
+            <button class="anim-btn active" onclick="playCharacterAnimation('idle'); this.parentNode.querySelector('.active')?.classList.remove('active'); this.classList.add('active');">
+                <span class="anim-icon">🧘</span>
+                <span class="anim-label">Idle</span>
+            </button>
+            <button class="anim-btn" onclick="playCharacterAnimation('walk'); this.parentNode.querySelector('.active')?.classList.remove('active'); this.classList.add('active');">
+                <span class="anim-icon">🚶</span>
+                <span class="anim-label">Walk</span>
+            </button>
+            <button class="anim-btn" onclick="playCharacterAnimation('attack'); this.parentNode.querySelector('.active')?.classList.remove('active'); this.classList.add('active');">
+                <span class="anim-icon">⚔️</span>
+                <span class="anim-label">Attack</span>
+            </button>
+            <button class="anim-btn" onclick="playCharacterAnimation('victory'); this.parentNode.querySelector('.active')?.classList.remove('active'); this.classList.add('active');">
+                <span class="anim-icon">🎉</span>
+                <span class="anim-label">Victory</span>
+            </button>
+        </div>
+
+        <!-- Color Customization Section -->
+        <div class="color-picker-section">
+            <h4><span class="ad-icon-slot" data-ad-icon="palette" data-ad-size="16"></span> Colors</h4>
+            <div id="skinColorPicker"></div>
+            <div id="hairColorPicker"></div>
+            <div id="eyeColorPicker"></div>
+            <div id="clothesColorPicker"></div>
+        </div>
+
+        <!-- Character Stage - Visual Preview (Legacy Fallback) -->
+        <div class="character-stage" id="characterStage" style="display:none">
             <!-- Mode Toggle -->
             <div class="character-mode-toggle">
                 <button class="mode-btn active" id="standModeBtn" onclick="setCharacterMode('stand')">
@@ -6081,7 +6009,7 @@ window.showCreateTrade = function() {
                 </div>
             </div>
             <h1 class="battle-title" style="font-size:26px;margin-top:20px">OUTBREAK DETECTED</h1>
-            <p class="battle-subtitle" style="font-size:13px">AI-generated threats are invading. Pilot your tank and destroy them all!</p>
+            <p class="battle-subtitle" style="font-size:13px">Digital monsters are invading! Pilot your tank and destroy them all!</p>
         </div>
 
         <!-- Active Outbreak Card -->
@@ -6094,7 +6022,7 @@ window.showCreateTrade = function() {
                 </div>
             </div>
             <p class="outbreak-description" id="outbreakDescription">
-                Waves of AI-generated fakes are attacking! Jump in your tank and blast them before they spread misinformation!
+                Waves of corrupted beasts are attacking! Jump in your tank and blast them before they overwhelm the zone!
             </p>
 
             <!-- Timer -->
@@ -6362,11 +6290,11 @@ window.showCreateTrade = function() {
             <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">🎖️ Badges & Achievements</div><span class="help-toggle">▼</span></div>
             <div class="help-content"><div class="help-text">
                 <p>Earn badges by completing achievements:</p>
-                <p>• <strong>First Scan:</strong> Complete your first image analysis</p>
-                <p>• <strong>AI Hunter:</strong> Find 100 AI-generated images</p>
+                <p>• <strong>First Steps:</strong> Complete your first battle</p>
+                <p>• <strong>Beast Hunter:</strong> Capture 100 beasts in Veilbreakers</p>
                 <p>• <strong>Voting Champion:</strong> Vote on 1000 submissions</p>
                 <p>• <strong>Level Milestones:</strong> Reach levels 5, 10, 20, 50, 100</p>
-                <p>• <strong>Perfect Scanner:</strong> 10 scans with 100% accuracy</p>
+                <p>• <strong>Perfect Warrior:</strong> 10 victories with 100% accuracy</p>
                 <p>And 30+ more badges to collect! Each badge awards coins on first unlock.</p>
             </div></div>
         </div>
@@ -6383,7 +6311,7 @@ window.showCreateTrade = function() {
             <div class="help-header" onclick="toggleHelp(this)"><div class="help-title">💡 Tips & Tricks</div><span class="help-toggle">▼</span></div>
             <div class="help-content"><div class="help-text">
                 <p>🎯 <strong>Complete daily quests</strong> for consistent coin income!</p>
-                <p>⚡ <strong>Use Deep Scan</strong> on suspicious images for best accuracy</p>
+                <p>⚡ <strong>Upgrade your tank</strong> with power-ups for better wave performance</p>
                 <p>🎮 <strong>Play Tank Shooter</strong> during quest cooldowns to earn extra coins</p>
                 <p>🎲 <strong>Save 900 coins</strong> for 10-roll gacha (better value than singles)</p>
                 <p>✨ <strong>Equip legendary cosmetics</strong> to stand out on the leaderboard!</p>
@@ -6630,9 +6558,9 @@ window.showCreateTrade = function() {
         <button class="modal-close" onclick="closeLoginRequired()" style="position:absolute;top:8px;right:8px">✕</button>
         <div style="font-size:40px;margin-bottom:12px">🔒</div>
         <h3 style="margin-bottom:4px;font-size:16px">Feature Locked</h3>
-        <p style="color:var(--text2);font-size:12px;margin-bottom:16px">Deep Scan requires sign in.</p>
+        <p style="color:var(--text2);font-size:12px;margin-bottom:16px">Premium features require sign in.</p>
         <button class="login-submit" onclick="openLoginFromModal()" style="margin-bottom:8px">Sign In / Sign Up</button>
-        <button class="login-guest" onclick="closeLoginRequired()">Use Quick Scan</button>
+        <button class="login-guest" onclick="closeLoginRequired()">Maybe Later</button>
     </div>
 </div>
 
@@ -6696,7 +6624,7 @@ if (window.visualViewport) {
 
 <script type="module">
 // ============================================================
-// AUTHENTICADETECTOR v12 - PRODUCTION AI DETECTION
+// AUTHENTICADETECTOR v12 - VEILBREAKERS & TANK BATTLE
 // ============================================================
 
 const $ = id => document.getElementById(id);
@@ -6798,80 +6726,80 @@ const ANALYSIS_ICON = `<svg viewBox="0 0 72 72" fill="none">
 
 // ==================== WOW FACTS ====================
 const WOW_FACTS = [
-    { icon: 'stats', text: "Your brain processes images in 13 milliseconds - faster than you can blink. That's why AI fakes fool us!" },
-    { icon: 'sparkles', text: "DALL-E 3, Midjourney, and Stable Diffusion create 34 MILLION AI images every single day." },
-    { icon: 'warning', text: "In blind tests, humans correctly identify AI images only 38% of the time. Worse than flipping a coin!" },
-    { icon: 'coins', text: "The deepfake industry hit $534 million in 2024. By 2030, it'll be $6.5 BILLION." },
-    { icon: 'warning', text: "A single AI-generated fake image of a Pentagon explosion caused a real stock market dip in 2023." },
-    { icon: 'search', text: "The 'count fingers' trick? AI fixed it. Modern generators get hands right 94% of the time now." },
-    { icon: 'scan', text: "AI images have invisible 'fingerprints' in their pixel noise. Each generator leaves unique patterns." },
-    { icon: 'chat', text: "60% of people have unknowingly shared AI-generated content on social media." },
-    { icon: 'trophy', text: "In 2024, AI-generated political deepfakes were detected in elections across 40+ countries." },
-    { icon: 'boss', text: "Midjourney v6 creates images so real that professional photographers can't tell the difference." },
-    { icon: 'sparkles', text: "It takes AI just 3 seconds to generate an image. It takes experts 20+ minutes to verify one." },
-    { icon: 'scan', text: "AI detectors like ours analyze 50+ invisible signals humans can't see - pixel patterns, frequency anomalies, compression artifacts." }
+    { icon: 'stats', text: "The Veilbreakers Protocol was designed to train hunters in detecting corrupted digital entities." },
+    { icon: 'sparkles', text: "Over 34 MILLION digital beasts roam the corrupted zones waiting to be captured!" },
+    { icon: 'warning', text: "Veteran hunters report that identifying rare beasts requires training your eye for subtle tells." },
+    { icon: 'coins', text: "The beast collection economy has grown to over 500 million coins traded by active hunters!" },
+    { icon: 'warning', text: "The Great Outbreak of Zone 7 nearly overwhelmed the defense grid before hunters rallied." },
+    { icon: 'search', text: "Modern beasts have evolved! They now mimic authentic patterns 94% more effectively." },
+    { icon: 'scan', text: "Each beast family leaves unique corruption signatures in the digital noise field." },
+    { icon: 'chat', text: "60% of hunters have accidentally released a captured beast back into the wild." },
+    { icon: 'trophy', text: "The 2024 Tournament saw legendary beast battles across 40+ regional arenas." },
+    { icon: 'boss', text: "The Apex Corruption Beast creates illusions so convincing even master hunters struggle." },
+    { icon: 'sparkles', text: "It takes 3 seconds for a beast to spawn. It takes 20+ minutes to properly study and capture one." },
+    { icon: 'scan', text: "Your scanning tools analyze 50+ invisible corruption signals - noise patterns, frequency spikes, data artifacts." }
 ];
 let currentFactIndex = 0;
 
 // ==================== BADGES (Expanded) ====================
 const BADGES = {
     // COMMON
-    first_scan: { id: 'first_scan', name: 'First Steps', desc: 'Complete your first scan', icon: 'scan', req: 1, type: 'total', rarity: 'common', points: 10 },
-    ai_spotter: { id: 'ai_spotter', name: 'AI Spotter', desc: 'Find your first AI image', icon: 'warning', req: 1, type: 'ai', rarity: 'common', points: 15 },
-    first_real: { id: 'first_real', name: 'Reality Check', desc: 'Find your first real image', icon: 'verify', req: 1, type: 'real', rarity: 'common', points: 12 },
-    five_scans: { id: 'five_scans', name: 'Getting Started', desc: 'Complete 5 scans', icon: 'stats', req: 5, type: 'total', rarity: 'common', points: 25 },
-    ten_scans: { id: 'ten_scans', name: 'Double Digits', desc: 'Complete 10 scans', icon: 'stats', req: 10, type: 'total', rarity: 'common', points: 50 },
-    first_deep: { id: 'first_deep', name: 'Deep Thinker', desc: 'First deep scan', icon: 'search', req: 1, type: 'deep', rarity: 'common', points: 20 },
-    first_quick: { id: 'first_quick', name: 'Quick Start', desc: 'First quick scan', icon: 'scan', req: 1, type: 'quick', rarity: 'common', points: 20 },
-    first_forensics: { id: 'first_forensics', name: 'Forensics Initiate', desc: 'First forensics scan', icon: 'info', req: 1, type: 'forensics', rarity: 'common', points: 25 },
-    truth_seeker: { id: 'truth_seeker', name: 'Truth Seeker', desc: 'Find 5 real images', icon: 'shield', req: 5, type: 'real', rarity: 'common', points: 30 },
-    ai_breaker: { id: 'ai_breaker', name: 'AI Breaker', desc: 'Find 5 AI images', icon: 'corruption', req: 5, type: 'ai', rarity: 'common', points: 30 },
-    twenty_scans: { id: 'twenty_scans', name: 'On the Board', desc: 'Complete 20 scans', icon: 'stats', req: 20, type: 'total', rarity: 'common', points: 40 },
-    deep_5: { id: 'deep_5', name: 'Deep Diver', desc: 'Complete 5 deep scans', icon: 'search', req: 5, type: 'deep', rarity: 'common', points: 45 },
+    first_scan: { id: 'first_scan', name: 'First Steps', desc: 'Complete your first battle', icon: 'scan', req: 1, type: 'total', rarity: 'common', points: 10 },
+    ai_spotter: { id: 'ai_spotter', name: 'Beast Spotter', desc: 'Capture your first beast', icon: 'warning', req: 1, type: 'ai', rarity: 'common', points: 15 },
+    first_real: { id: 'first_real', name: 'Reality Check', desc: 'Clear your first wave', icon: 'verify', req: 1, type: 'real', rarity: 'common', points: 12 },
+    five_scans: { id: 'five_scans', name: 'Getting Started', desc: 'Complete 5 battles', icon: 'stats', req: 5, type: 'total', rarity: 'common', points: 25 },
+    ten_scans: { id: 'ten_scans', name: 'Double Digits', desc: 'Complete 10 battles', icon: 'stats', req: 10, type: 'total', rarity: 'common', points: 50 },
+    first_deep: { id: 'first_deep', name: 'Zone Explorer', desc: 'First zone exploration', icon: 'search', req: 1, type: 'deep', rarity: 'common', points: 20 },
+    first_quick: { id: 'first_quick', name: 'Quick Strike', desc: 'First quick battle', icon: 'scan', req: 1, type: 'quick', rarity: 'common', points: 20 },
+    first_forensics: { id: 'first_forensics', name: 'Pattern Tracker', desc: 'First beast analysis', icon: 'info', req: 1, type: 'forensics', rarity: 'common', points: 25 },
+    truth_seeker: { id: 'truth_seeker', name: 'Truth Seeker', desc: 'Clear 5 waves', icon: 'shield', req: 5, type: 'real', rarity: 'common', points: 30 },
+    ai_breaker: { id: 'ai_breaker', name: 'Beast Breaker', desc: 'Capture 5 beasts', icon: 'corruption', req: 5, type: 'ai', rarity: 'common', points: 30 },
+    twenty_scans: { id: 'twenty_scans', name: 'On the Board', desc: 'Complete 20 battles', icon: 'stats', req: 20, type: 'total', rarity: 'common', points: 40 },
+    deep_5: { id: 'deep_5', name: 'Zone Diver', desc: 'Explore 5 zones', icon: 'search', req: 5, type: 'deep', rarity: 'common', points: 45 },
 
     // RARE
-    detective: { id: 'detective', name: 'Detective', desc: 'Complete 25 scans', icon: 'search', req: 25, type: 'total', rarity: 'rare', points: 100 },
-    ai_hunter: { id: 'ai_hunter', name: 'AI Hunter', desc: 'Find 10 AI images', icon: 'crosshair', req: 10, type: 'ai', rarity: 'rare', points: 75 },
-    streak_3: { id: 'streak_3', name: 'On Fire', desc: '3 correct in a row', icon: 'star', req: 3, type: 'streak', rarity: 'rare', points: 50 },
-    forensics_fan: { id: 'forensics_fan', name: 'Forensics Fan', desc: '5 forensics scans', icon: 'info', req: 5, type: 'forensics', rarity: 'rare', points: 60 },
-    daily_scanner: { id: 'daily_scanner', name: 'Daily Scanner', desc: 'Scan 3 days in a row', icon: 'refresh', req: 3, type: 'daily_streak', rarity: 'rare', points: 80 },
-    quick_draw: { id: 'quick_draw', name: 'Quick Draw', desc: '10 quick scans', icon: 'scan', req: 10, type: 'quick', rarity: 'rare', points: 40 },
-    real_guardian: { id: 'real_guardian', name: 'Real Guardian', desc: 'Find 15 real images', icon: 'shield', req: 15, type: 'real', rarity: 'rare', points: 70 },
-    ai_tracker: { id: 'ai_tracker', name: 'AI Tracker', desc: 'Find 20 AI images', icon: 'warning', req: 20, type: 'ai', rarity: 'rare', points: 90 },
-    deep_diver: { id: 'deep_diver', name: 'Deep Diver', desc: 'Complete 10 deep scans', icon: 'search', req: 10, type: 'deep', rarity: 'rare', points: 95 },
-    quick_runner: { id: 'quick_runner', name: 'Quick Runner', desc: 'Complete 20 quick scans', icon: 'scan', req: 20, type: 'quick', rarity: 'rare', points: 85 },
-    forensics_hawk: { id: 'forensics_hawk', name: 'Forensics Hawk', desc: 'Complete 10 forensics scans', icon: 'info', req: 10, type: 'forensics', rarity: 'rare', points: 90 },
-    accuracy_80: { id: 'accuracy_80', name: 'Steady Hand', desc: 'Maintain 80% accuracy', icon: 'stats', req: 80, type: 'accuracy', rarity: 'rare', points: 120 },
-    fifty_scans: { id: 'fifty_scans', name: 'Halfway Hero', desc: 'Complete 50 scans', icon: 'stats', req: 50, type: 'total', rarity: 'rare', points: 110 },
-    week_tracker: { id: 'week_tracker', name: 'Week Tracker', desc: 'Scan 5 days in a row', icon: 'refresh', req: 5, type: 'daily_streak', rarity: 'rare', points: 130 },
+    detective: { id: 'detective', name: 'Hunter Detective', desc: 'Complete 25 battles', icon: 'search', req: 25, type: 'total', rarity: 'rare', points: 100 },
+    ai_hunter: { id: 'ai_hunter', name: 'Beast Hunter', desc: 'Capture 10 beasts', icon: 'crosshair', req: 10, type: 'ai', rarity: 'rare', points: 75 },
+    streak_3: { id: 'streak_3', name: 'On Fire', desc: '3 victories in a row', icon: 'star', req: 3, type: 'streak', rarity: 'rare', points: 50 },
+    forensics_fan: { id: 'forensics_fan', name: 'Pattern Expert', desc: '5 beast analyses', icon: 'info', req: 5, type: 'forensics', rarity: 'rare', points: 60 },
+    daily_scanner: { id: 'daily_scanner', name: 'Daily Hunter', desc: 'Battle 3 days in a row', icon: 'refresh', req: 3, type: 'daily_streak', rarity: 'rare', points: 80 },
+    quick_draw: { id: 'quick_draw', name: 'Quick Draw', desc: '10 quick battles', icon: 'scan', req: 10, type: 'quick', rarity: 'rare', points: 40 },
+    real_guardian: { id: 'real_guardian', name: 'Wave Guardian', desc: 'Clear 15 waves', icon: 'shield', req: 15, type: 'real', rarity: 'rare', points: 70 },
+    ai_tracker: { id: 'ai_tracker', name: 'Beast Tracker', desc: 'Capture 20 beasts', icon: 'warning', req: 20, type: 'ai', rarity: 'rare', points: 90 },
+    deep_diver: { id: 'deep_diver', name: 'Zone Diver', desc: 'Explore 10 zones', icon: 'search', req: 10, type: 'deep', rarity: 'rare', points: 95 },
+    quick_runner: { id: 'quick_runner', name: 'Quick Runner', desc: 'Complete 20 quick battles', icon: 'scan', req: 20, type: 'quick', rarity: 'rare', points: 85 },
+    forensics_hawk: { id: 'forensics_hawk', name: 'Analysis Hawk', desc: 'Complete 10 beast analyses', icon: 'info', req: 10, type: 'forensics', rarity: 'rare', points: 90 },
+    accuracy_80: { id: 'accuracy_80', name: 'Steady Aim', desc: 'Maintain 80% victory rate', icon: 'stats', req: 80, type: 'accuracy', rarity: 'rare', points: 120 },
+    fifty_scans: { id: 'fifty_scans', name: 'Halfway Hero', desc: 'Complete 50 battles', icon: 'stats', req: 50, type: 'total', rarity: 'rare', points: 110 },
+    week_tracker: { id: 'week_tracker', name: 'Week Warrior', desc: 'Battle 5 days in a row', icon: 'refresh', req: 5, type: 'daily_streak', rarity: 'rare', points: 130 },
 
     // EPIC
-    master: { id: 'master', name: 'Master Detective', desc: 'Complete 75 scans', icon: 'trophy', req: 75, type: 'total', rarity: 'epic', points: 200 },
-    ai_expert: { id: 'ai_expert', name: 'AI Expert', desc: 'Find 50 AI images', icon: 'boss', req: 50, type: 'ai', rarity: 'epic', points: 150 },
-    streak_5: { id: 'streak_5', name: 'Unstoppable', desc: '5 correct in a row', icon: 'star', req: 5, type: 'streak', rarity: 'epic', points: 100 },
-    centurion: { id: 'centurion', name: 'Centurion', desc: 'Complete 100 scans', icon: 'trophy', req: 100, type: 'total', rarity: 'epic', points: 300 },
-    week_warrior: { id: 'week_warrior', name: 'Week Warrior', desc: 'Scan 7 days straight', icon: 'refresh', req: 7, type: 'daily_streak', rarity: 'epic', points: 200 },
-    sharp_eye: { id: 'sharp_eye', name: 'Sharp Eye', desc: 'Reach 90% accuracy', icon: 'search', req: 90, type: 'accuracy', rarity: 'epic', points: 250 },
-    deep_sage: { id: 'deep_sage', name: 'Deep Sage', desc: 'Complete 25 deep scans', icon: 'wand', req: 25, type: 'deep', rarity: 'epic', points: 220 },
-    quick_strike: { id: 'quick_strike', name: 'Quick Strike', desc: 'Complete 50 quick scans', icon: 'scan', req: 50, type: 'quick', rarity: 'epic', points: 210 },
-    forensics_elite: { id: 'forensics_elite', name: 'Forensics Elite', desc: 'Complete 25 forensics scans', icon: 'info', req: 25, type: 'forensics', rarity: 'epic', points: 230 },
-    real_sentinel: { id: 'real_sentinel', name: 'Real Sentinel', desc: 'Find 50 real images', icon: 'shield', req: 50, type: 'real', rarity: 'epic', points: 240 },
-    ai_slayer: { id: 'ai_slayer', name: 'AI Slayer', desc: 'Find 75 AI images', icon: 'crosshair', req: 75, type: 'ai', rarity: 'epic', points: 260 },
-    streak_7: { id: 'streak_7', name: 'Blazing Streak', desc: '7 correct in a row', icon: 'star', req: 7, type: 'streak', rarity: 'epic', points: 190 },
-    month_guard: { id: 'month_guard', name: 'Month Guard', desc: 'Scan 14 days straight', icon: 'refresh', req: 14, type: 'daily_streak', rarity: 'epic', points: 280 },
-    hundred_fifty: { id: 'hundred_fifty', name: 'One-Fifty Club', desc: 'Complete 150 scans', icon: 'stats', req: 150, type: 'total', rarity: 'epic', points: 320 },
+    master: { id: 'master', name: 'Master Hunter', desc: 'Complete 75 battles', icon: 'trophy', req: 75, type: 'total', rarity: 'epic', points: 200 },
+    ai_expert: { id: 'ai_expert', name: 'Beast Expert', desc: 'Capture 50 beasts', icon: 'boss', req: 50, type: 'ai', rarity: 'epic', points: 150 },
+    streak_5: { id: 'streak_5', name: 'Unstoppable', desc: '5 victories in a row', icon: 'star', req: 5, type: 'streak', rarity: 'epic', points: 100 },
+    centurion: { id: 'centurion', name: 'Centurion', desc: 'Complete 100 battles', icon: 'trophy', req: 100, type: 'total', rarity: 'epic', points: 300 },
+    week_warrior: { id: 'week_warrior', name: 'Week Warrior', desc: 'Battle 7 days straight', icon: 'refresh', req: 7, type: 'daily_streak', rarity: 'epic', points: 200 },
+    sharp_eye: { id: 'sharp_eye', name: 'Sharp Eye', desc: 'Reach 90% victory rate', icon: 'search', req: 90, type: 'accuracy', rarity: 'epic', points: 250 },
+    deep_sage: { id: 'deep_sage', name: 'Zone Sage', desc: 'Explore 25 zones', icon: 'wand', req: 25, type: 'deep', rarity: 'epic', points: 220 },
+    quick_strike: { id: 'quick_strike', name: 'Quick Strike', desc: 'Complete 50 quick battles', icon: 'scan', req: 50, type: 'quick', rarity: 'epic', points: 210 },
+    forensics_elite: { id: 'forensics_elite', name: 'Analysis Elite', desc: 'Complete 25 beast analyses', icon: 'info', req: 25, type: 'forensics', rarity: 'epic', points: 230 },
+    real_sentinel: { id: 'real_sentinel', name: 'Wave Sentinel', desc: 'Clear 50 waves', icon: 'shield', req: 50, type: 'real', rarity: 'epic', points: 240 },
+    ai_slayer: { id: 'ai_slayer', name: 'Beast Slayer', desc: 'Capture 75 beasts', icon: 'crosshair', req: 75, type: 'ai', rarity: 'epic', points: 260 },
+    streak_7: { id: 'streak_7', name: 'Blazing Streak', desc: '7 victories in a row', icon: 'star', req: 7, type: 'streak', rarity: 'epic', points: 190 },
+    month_guard: { id: 'month_guard', name: 'Month Guard', desc: 'Battle 14 days straight', icon: 'refresh', req: 14, type: 'daily_streak', rarity: 'epic', points: 280 },
+    hundred_fifty: { id: 'hundred_fifty', name: 'One-Fifty Club', desc: 'Complete 150 battles', icon: 'stats', req: 150, type: 'total', rarity: 'epic', points: 320 },
 
     // LEGENDARY
-    legend: { id: 'legend', name: 'Legend', desc: 'Complete 250 scans', icon: 'trophy', req: 250, type: 'total', rarity: 'legendary', points: 500 },
-    ai_nemesis: { id: 'ai_nemesis', name: 'AI Nemesis', desc: 'Find 100 AI images', icon: 'boss', req: 100, type: 'ai', rarity: 'legendary', points: 400 },
-    perfect_10: { id: 'perfect_10', name: 'Perfect 10', desc: '10 correct in a row', icon: 'star', req: 10, type: 'streak', rarity: 'legendary', points: 300 },
-    month_master: { id: 'month_master', name: 'Month Master', desc: 'Scan 30 days', icon: 'refresh', req: 30, type: 'daily_streak', rarity: 'legendary', points: 500 },
-    elite_detector: { id: 'elite_detector', name: 'Elite Detector', desc: '95% accuracy (50+ scans)', icon: 'verify', req: 95, type: 'accuracy', rarity: 'legendary', points: 750 },
+    legend: { id: 'legend', name: 'Legend', desc: 'Complete 250 battles', icon: 'trophy', req: 250, type: 'total', rarity: 'legendary', points: 500 },
+    ai_nemesis: { id: 'ai_nemesis', name: 'Beast Nemesis', desc: 'Capture 100 beasts', icon: 'boss', req: 100, type: 'ai', rarity: 'legendary', points: 400 },
+    perfect_10: { id: 'perfect_10', name: 'Perfect 10', desc: '10 victories in a row', icon: 'star', req: 10, type: 'streak', rarity: 'legendary', points: 300 },
+    month_master: { id: 'month_master', name: 'Month Master', desc: 'Battle 30 days', icon: 'refresh', req: 30, type: 'daily_streak', rarity: 'legendary', points: 500 },
+    elite_detector: { id: 'elite_detector', name: 'Elite Champion', desc: '95% victory rate (50+ battles)', icon: 'verify', req: 95, type: 'accuracy', rarity: 'legendary', points: 750 },
     founding_member: { id: 'founding_member', name: 'Founding Member', desc: 'Beta supporter', icon: 'badges', req: 1, type: 'special', rarity: 'legendary', points: 1000 },
-    deep_oracle: { id: 'deep_oracle', name: 'Deep Oracle', desc: 'Complete 50 deep scans', icon: 'wand', req: 50, type: 'deep', rarity: 'legendary', points: 450 },
-    quick_legend: { id: 'quick_legend', name: 'Quick Legend', desc: 'Complete 100 quick scans', icon: 'scan', req: 100, type: 'quick', rarity: 'legendary', points: 450 },
-    forensics_master: { id: 'forensics_master', name: 'Forensics Master', desc: 'Complete 50 forensics scans', icon: 'info', req: 50, type: 'forensics', rarity: 'legendary', points: 480 },
-    real_paragon: { id: 'real_paragon', name: 'Real Paragon', desc: 'Find 150 real images', icon: 'shield', req: 150, type: 'real', rarity: 'legendary', points: 500 }
+    deep_oracle: { id: 'deep_oracle', name: 'Zone Oracle', desc: 'Explore 50 zones', icon: 'wand', req: 50, type: 'deep', rarity: 'legendary', points: 450 },
+    quick_legend: { id: 'quick_legend', name: 'Quick Legend', desc: 'Complete 100 quick battles', icon: 'scan', req: 100, type: 'quick', rarity: 'legendary', points: 450 },
+    forensics_master: { id: 'forensics_master', name: 'Analysis Master', desc: 'Complete 50 beast analyses', icon: 'info', req: 50, type: 'forensics', rarity: 'legendary', points: 480 },
+    real_paragon: { id: 'real_paragon', name: 'Wave Paragon', desc: 'Clear 150 waves', icon: 'shield', req: 150, type: 'real', rarity: 'legendary', points: 500 }
 };
 
 // ==================== SHOP ITEMS (Expanded catalog) ====================
@@ -7157,7 +7085,7 @@ const SHOP_ITEMS = {
     time_warp: {
         id: 'time_warp',
         name: 'Time Warp',
-        desc: 'Instant deep scan (game-only)',
+        desc: 'Instant zone exploration boost',
         category: 'boosters',
         cost: 800,
         icon: 'refresh',
@@ -7166,7 +7094,7 @@ const SHOP_ITEMS = {
     immunity_shield: {
         id: 'immunity_shield',
         name: 'Immunity Shield',
-        desc: 'Protect 5 scans (game-only)',
+        desc: 'Protect against 5 hits in battle',
         category: 'boosters',
         cost: 700,
         icon: 'shield',
@@ -7554,7 +7482,7 @@ function updateUserUI() {
 async function loadUserStats() {
     if (!user) return;
     
-    let stats = { total: 0, ai: 0, real: 0, deep: 0, quick: 0, forensics: 0, streak: 0, maxStreak: 0, points: 0, accuracy: 0, dailyStreak: 0 };
+    let stats = { total: 0, ai: 0, real: 0, deep: 0, quick: 0, forensics: 0, streak: 0, maxStreak: 0, points: 0, accuracy: 0, dailyStreak: 0 }; // Note: forensics renamed to 'beast_analysis' in UI but kept for DB compatibility
     
     // Try Supabase
     if (!useLocalFallback && supabase) {
@@ -8558,10 +8486,10 @@ if (window.location.hash) {
 
 // Prevent app exit on back button when on home view
 window.addEventListener('beforeunload', (e) => {
-    // Only show warning if user has unsaved work (e.g., mid-scan)
+    // Only show warning if user has unsaved work (e.g., mid-battle)
     if (typeof isScanning !== 'undefined' && isScanning) {
         e.preventDefault();
-        e.returnValue = 'A scan is in progress. Are you sure you want to leave?';
+        e.returnValue = 'A battle is in progress. Are you sure you want to leave?';
     }
 });
 
@@ -9606,7 +9534,42 @@ window.openAvatarView = function() {
     if (typeof initCharacterDesigner === 'function') {
         initCharacterDesigner();
     }
+    // Initialize Phaser Character Creator
+    initPhaserCharacterCreator();
 };
+
+// Initialize Phaser Character Creator
+function initPhaserCharacterCreator() {
+    // Dispatch event for Phaser initialization
+    window.dispatchEvent(new CustomEvent('avatarViewOpened'));
+
+    // Initialize color pickers
+    if (typeof ColorPickerUI !== 'undefined') {
+        const skinContainer = document.getElementById('skinColorPicker');
+        const hairContainer = document.getElementById('hairColorPicker');
+        const eyeContainer = document.getElementById('eyeColorPicker');
+        const clothesContainer = document.getElementById('clothesColorPicker');
+
+        if (skinContainer && !skinContainer.hasChildNodes()) {
+            new ColorPickerUI(skinContainer, 'skin', setCharacterColor);
+        }
+        if (hairContainer && !hairContainer.hasChildNodes()) {
+            new ColorPickerUI(hairContainer, 'hair', setCharacterColor);
+        }
+        if (eyeContainer && !eyeContainer.hasChildNodes()) {
+            new ColorPickerUI(eyeContainer, 'eyes', setCharacterColor);
+        }
+        if (clothesContainer && !clothesContainer.hasChildNodes()) {
+            new ColorPickerUI(clothesContainer, 'clothes', setCharacterColor);
+        }
+    }
+
+    // Remove loading state after Phaser initializes
+    setTimeout(() => {
+        const canvas = document.getElementById('phaserCharacterCanvas');
+        if (canvas) canvas.classList.remove('loading');
+    }, 1500);
+}
 
 // ==================== CHARACTER DESIGNER SYSTEM ====================
 // Full piece-by-piece avatar customization with tank riding mode
@@ -10534,110 +10497,110 @@ const QUEST_DEFINITIONS = {
             target: 1,
             reward: { coins: 25 },
             trackedEvent: 'daily_login',
-            autoComplete: true // This one completes automatically on open
+            autoComplete: true
         },
         {
-            id: 'scan_master',
-            icon: '🔍',
-            title: 'Scan Master',
-            description: 'Scan 5 images',
-            target: 5,
-            reward: { coins: 50 },
-            trackedEvent: 'scan_completed'
-        },
-        {
-            id: 'quick_detector',
-            icon: '⚡',
-            title: 'Quick Detector',
-            description: 'Complete 3 quick scans',
+            id: 'tank_warrior',
+            icon: '🔫',
+            title: 'Tank Warrior',
+            description: 'Clear 3 waves in Tank Battle',
             target: 3,
-            reward: { coins: 30 },
-            trackedEvent: 'quick_scan_completed'
+            reward: { coins: 50 },
+            trackedEvent: 'wave_cleared'
         },
         {
-            id: 'deep_diver',
-            icon: '🔬',
-            title: 'Deep Diver',
-            description: 'Complete 1 deep scan',
-            target: 1,
+            id: 'enemy_slayer',
+            icon: '💥',
+            title: 'Enemy Slayer',
+            description: 'Destroy 50 enemies',
+            target: 50,
             reward: { coins: 40 },
-            trackedEvent: 'deep_scan_completed'
+            trackedEvent: 'enemy_destroyed'
         },
         {
-            id: 'vote_vigilante',
-            icon: '🗳️',
-            title: 'Vote Vigilante',
-            description: 'Vote on 10 submissions',
-            target: 10,
-            reward: { coins: 60 },
-            trackedEvent: 'vote_submitted'
+            id: 'beast_trainer',
+            icon: '🐉',
+            title: 'Beast Trainer',
+            description: 'Train a beast 3 times',
+            target: 3,
+            reward: { coins: 35 },
+            trackedEvent: 'beast_trained'
         },
         {
-            id: 'truth_hunter',
-            icon: '🎯',
-            title: 'Truth Hunter',
-            description: 'Submit 1 suspicious image',
+            id: 'coin_collector',
+            icon: '🪙',
+            title: 'Coin Collector',
+            description: 'Earn 100 coins today',
+            target: 100,
+            reward: { coins: 30 },
+            trackedEvent: 'coins_earned_daily'
+        },
+        {
+            id: 'social_butterfly',
+            icon: '👥',
+            title: 'Social Butterfly',
+            description: 'Add 1 friend',
             target: 1,
             reward: { coins: 50 },
-            trackedEvent: 'image_submitted'
+            trackedEvent: 'friend_added'
         }
     ],
     weekly: [
         {
-            id: 'scan_champion',
+            id: 'wave_master',
             icon: '🏆',
-            title: 'Scan Champion',
-            description: 'Scan 50 images',
+            title: 'Wave Master',
+            description: 'Clear 50 waves total',
             target: 50,
             reward: { coins: 300 },
-            trackedEvent: 'scan_completed'
+            trackedEvent: 'wave_cleared'
         },
         {
-            id: 'ai_finder',
-            icon: '🤖',
-            title: 'AI Finder',
-            description: 'Find 10 AI images',
+            id: 'boss_slayer',
+            icon: '👹',
+            title: 'Boss Slayer',
+            description: 'Defeat 5 bosses',
+            target: 5,
+            reward: { coins: 250 },
+            trackedEvent: 'boss_defeated'
+        },
+        {
+            id: 'beast_collector',
+            icon: '🦴',
+            title: 'Beast Collector',
+            description: 'Capture 10 beasts',
             target: 10,
-            reward: { coins: 200 },
-            trackedEvent: 'ai_detected'
+            reward: { coins: 400 },
+            trackedEvent: 'beast_captured'
         },
         {
-            id: 'voting_marathon',
-            icon: '📊',
-            title: 'Voting Marathon',
-            description: 'Vote on 100 submissions',
-            target: 100,
-            reward: { coins: 500 },
-            trackedEvent: 'vote_submitted'
-        },
-        {
-            id: 'badge_collector',
+            id: 'badge_hunter',
             icon: '🎖️',
-            title: 'Badge Collector',
+            title: 'Badge Hunter',
             description: 'Earn 3 new badges',
             target: 3,
             reward: { cosmetic: 'Special Avatar Border' },
             trackedEvent: 'badge_earned'
         },
         {
-            id: 'coin_hoarder',
-            icon: '🪙',
-            title: 'Coin Hoarder',
-            description: 'Earn 1000 coins total',
-            target: 1000,
-            reward: { cosmetic: 'Legendary Avatar Frame' },
-            trackedEvent: 'coins_earned_total'
+            id: 'powerup_pro',
+            icon: '⚡',
+            title: 'Power-Up Pro',
+            description: 'Use 25 power-ups',
+            target: 25,
+            reward: { coins: 200 },
+            trackedEvent: 'powerup_used'
         }
     ],
     special: [
         {
-            id: 'first_steps',
-            icon: '👣',
-            title: 'First Steps',
-            description: 'Complete your first scan',
+            id: 'first_battle',
+            icon: '🎮',
+            title: 'First Battle',
+            description: 'Complete your first Tank Battle',
             target: 1,
             reward: { coins: 100 },
-            trackedEvent: 'scan_completed'
+            trackedEvent: 'battle_completed'
         },
         {
             id: 'getting_started',
@@ -10649,13 +10612,13 @@ const QUEST_DEFINITIONS = {
             trackedEvent: 'level_reached'
         },
         {
-            id: 'ai_expert',
+            id: 'wave_legend',
             icon: '🎓',
-            title: 'AI Expert',
-            description: 'Reach level 20',
+            title: 'Wave Legend',
+            description: 'Clear wave 20',
             target: 20,
             reward: { cosmetic: 'Epic Avatar + Frame' },
-            trackedEvent: 'level_reached'
+            trackedEvent: 'max_wave_reached'
         }
     ]
 };
