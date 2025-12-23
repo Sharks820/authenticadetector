@@ -1051,7 +1051,13 @@
             animation:toast-in .3s;pointer-events:auto;
         }
         @keyframes toast-in{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-        
+        @keyframes slideInRight{from{opacity:0;transform:translateX(100%)}to{opacity:1;transform:translateX(0)}}
+        @keyframes slideOutRight{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(100%)}}
+        .toast-success,.toast-error,.toast-warning,.toast-info{
+            color:#fff;padding:12px 18px;border-radius:10px;font-weight:600;
+            display:flex;align-items:center;box-shadow:0 6px 25px rgba(0,0,0,.35);
+        }
+
         /* PROFILE - Premium Design */
         @keyframes avatarGlow {
             0%, 100% { box-shadow: 0 0 20px rgba(94,234,212,0.4), 0 0 40px rgba(94,234,212,0.2); }
@@ -2947,6 +2953,96 @@
         /* ====================================
            QUEST SYSTEM STYLES
            ==================================== */
+
+        /* Quests Popup - Floating on Home Screen */
+        .quests-popup {
+            position: fixed;
+            top: 120px;
+            right: 16px;
+            width: 320px;
+            max-width: calc(100vw - 32px);
+            max-height: 70vh;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%);
+            border: 2px solid rgba(94, 234, 212, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(94, 234, 212, 0.15);
+            z-index: 1000;
+            overflow: hidden;
+            animation: popupSlideIn 0.3s ease-out;
+        }
+        @keyframes popupSlideIn {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .quests-popup-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, rgba(94, 234, 212, 0.15) 0%, rgba(20, 184, 166, 0.1) 100%);
+            border-bottom: 1px solid rgba(94, 234, 212, 0.2);
+        }
+        .quests-popup-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary, #5eead4);
+        }
+        .popup-close {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text2, #94a3b8);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .popup-close:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.5);
+            color: #ef4444;
+        }
+        .quests-popup-body {
+            padding: 16px;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        .quests-popup-footer {
+            padding: 12px 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .quests-popup-footer button { width: 100%; }
+        .popup-quest-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+        }
+        .popup-quest-item:hover {
+            background: rgba(94, 234, 212, 0.1);
+            border-color: rgba(94, 234, 212, 0.2);
+        }
+        .popup-quest-item.claimable {
+            border-color: var(--primary, #5eead4);
+            background: rgba(94, 234, 212, 0.15);
+        }
+        .popup-quest-icon { font-size: 24px; width: 40px; text-align: center; }
+        .popup-quest-info { flex: 1; min-width: 0; }
+        .popup-quest-title { font-size: 13px; font-weight: 600; color: var(--text, #f1f5f9); margin-bottom: 4px; }
+        .popup-quest-progress { font-size: 11px; color: var(--text2, #94a3b8); }
+        .popup-quest-reward { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: #fcd34d; }
+        @media (max-width: 480px) {
+            .quests-popup { right: 8px; left: 8px; width: auto; }
+        }
+
         /* ═══════════════════════════════════════════════════════════════════ */
         /* QUESTS VIEW - POLISHED                                               */
         /* ═══════════════════════════════════════════════════════════════════ */
@@ -5195,8 +5291,13 @@ window.showCreateTrade = function() {
         <h1 class="header-title" onclick="window.location.reload()">
             <span class="title-full">AuthenticaDetector</span><span class="title-hub"> Hub</span>
         </h1>
-        <!-- RIGHT: Gift + Settings + Profile -->
+        <!-- RIGHT: Quests + Gift + Settings + Profile -->
         <div style="display:flex;align-items:center;gap:8px">
+            <!-- Quests Button with Badge -->
+            <button onclick="toggleQuestsPopup()" title="Quests" id="headerQuestsBtn" style="position:relative;width:40px;height:40px;border-radius:50%;border:2px solid rgba(94,234,212,0.5);background:linear-gradient(135deg,rgba(94,234,212,0.2),rgba(20,184,166,0.1));cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease">
+                📋
+                <span id="questsBadge" style="position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;background:linear-gradient(135deg,#ef4444,#dc2626);color:white;font-size:10px;font-weight:700;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--bg)">3</span>
+            </button>
             <button onclick="claimDailyBonus()" title="Daily Bonus" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(251,191,36,0.5);background:linear-gradient(135deg,rgba(251,191,36,0.2),rgba(245,158,11,0.1));cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center">🎁</button>
             <button onclick="openSettings()" title="Settings" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(100,116,139,0.4);background:rgba(100,116,139,0.15);cursor:pointer;display:flex;align-items:center;justify-content:center">
                 <img src="assets/icons/ui-settings.svg" alt="Settings" style="width:22px;height:22px">
@@ -5856,6 +5957,20 @@ window.showCreateTrade = function() {
             <button class="btn-primary" onclick="closeGachaResult()">Awesome!</button>
             <button class="btn-secondary" onclick="closeGachaResult(); rollGacha(1)">Roll Again</button>
         </div>
+    </div>
+</div>
+
+<!-- QUESTS POPUP (Floating on Home Screen) -->
+<div class="quests-popup" id="questsPopup" style="display:none">
+    <div class="quests-popup-header">
+        <h3>📋 Daily Quests</h3>
+        <button class="popup-close" onclick="toggleQuestsPopup()">✕</button>
+    </div>
+    <div class="quests-popup-body" id="questsPopupBody">
+        <!-- Quest items populated by JS -->
+    </div>
+    <div class="quests-popup-footer">
+        <button class="btn-secondary" onclick="openQuestsView(); toggleQuestsPopup();">View All Quests</button>
     </div>
 </div>
 
@@ -6547,6 +6662,209 @@ window.showCreateTrade = function() {
     </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SETTINGS VIEW                                                             -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="view" id="settingsView">
+    <div class="view-header">
+        <div style="display:flex;align-items:center;gap:4px">
+            <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
+        </div>
+        <span class="view-title">⚙️ Settings</span>
+        <div style="width:44px"></div>
+    </div>
+    <div class="view-body view-body-padded">
+
+        <!-- Account Section -->
+        <div class="help-section">
+            <div class="help-header" onclick="toggleHelp(this)">
+                <div class="help-title">👤 Account</div>
+                <span class="help-toggle">▼</span>
+            </div>
+            <div class="help-content">
+                <div style="display:flex;flex-direction:column;gap:8px;padding:8px 0">
+                    <button class="cta-btn" onclick="openProfile()" style="width:100%">
+                        👤 View Profile
+                    </button>
+                    <button class="cta-btn" onclick="openAvatarBuilder()" style="width:100%;background:linear-gradient(135deg,var(--secondary),var(--secondary-bright))">
+                        🎨 Edit Avatar
+                    </button>
+                    <button class="cta-btn" onclick="handleLogout()" style="width:100%;background:linear-gradient(135deg,#dc2626,#ef4444)">
+                        🚪 Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Section -->
+        <div class="help-section">
+            <div class="help-header" onclick="toggleHelp(this)">
+                <div class="help-title">🔔 Notifications</div>
+                <span class="help-toggle">▼</span>
+            </div>
+            <div class="help-content">
+                <div class="help-text">
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)">
+                        <div>
+                            <div style="font-weight:600;margin-bottom:4px">📬 Quest Reminders</div>
+                            <div style="font-size:11px;color:var(--text3)">Daily quest notifications</div>
+                        </div>
+                        <label style="position:relative;display:inline-block;width:44px;height:24px">
+                            <input type="checkbox" id="notifQuests" onchange="saveSettings()" style="opacity:0;width:0;height:0">
+                            <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--surface3);border-radius:24px;transition:0.4s"></span>
+                        </label>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)">
+                        <div>
+                            <div style="font-weight:600;margin-bottom:4px">🎮 Game Events</div>
+                            <div style="font-size:11px;color:var(--text3)">Outbreak and boss alerts</div>
+                        </div>
+                        <label style="position:relative;display:inline-block;width:44px;height:24px">
+                            <input type="checkbox" id="notifEvents" onchange="saveSettings()" checked style="opacity:0;width:0;height:0">
+                            <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--primary);border-radius:24px;transition:0.4s"></span>
+                        </label>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0">
+                        <div>
+                            <div style="font-weight:600;margin-bottom:4px">👥 Friend Requests</div>
+                            <div style="font-size:11px;color:var(--text3)">New friend notifications</div>
+                        </div>
+                        <label style="position:relative;display:inline-block;width:44px;height:24px">
+                            <input type="checkbox" id="notifFriends" onchange="saveSettings()" checked style="opacity:0;width:0;height:0">
+                            <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--primary);border-radius:24px;transition:0.4s"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Privacy Section -->
+        <div class="help-section">
+            <div class="help-header" onclick="toggleHelp(this)">
+                <div class="help-title">🔒 Privacy</div>
+                <span class="help-toggle">▼</span>
+            </div>
+            <div class="help-content">
+                <div class="help-text">
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)">
+                        <div>
+                            <div style="font-weight:600;margin-bottom:4px">👁️ Profile Visibility</div>
+                            <div style="font-size:11px;color:var(--text3)">Show profile to all players</div>
+                        </div>
+                        <label style="position:relative;display:inline-block;width:44px;height:24px">
+                            <input type="checkbox" id="privacyProfile" onchange="saveSettings()" checked style="opacity:0;width:0;height:0">
+                            <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--primary);border-radius:24px;transition:0.4s"></span>
+                        </label>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)">
+                        <div>
+                            <div style="font-weight:600;margin-bottom:4px">📊 Show Stats</div>
+                            <div style="font-size:11px;color:var(--text3)">Display stats on leaderboard</div>
+                        </div>
+                        <label style="position:relative;display:inline-block;width:44px;height:24px">
+                            <input type="checkbox" id="privacyStats" onchange="saveSettings()" checked style="opacity:0;width:0;height:0">
+                            <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--primary);border-radius:24px;transition:0.4s"></span>
+                        </label>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0">
+                        <div>
+                            <div style="font-weight:600;margin-bottom:4px">🕵️ Anonymous Mode</div>
+                            <div style="font-size:11px;color:var(--text3)">Hide name from global lists</div>
+                        </div>
+                        <label style="position:relative;display:inline-block;width:44px;height:24px">
+                            <input type="checkbox" id="privacyAnonymous" onchange="saveSettings()" style="opacity:0;width:0;height:0">
+                            <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--surface3);border-radius:24px;transition:0.4s"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help & Support Section -->
+        <div class="help-section">
+            <div class="help-header" onclick="toggleHelp(this)">
+                <div class="help-title">❓ Help & Support</div>
+                <span class="help-toggle">▼</span>
+            </div>
+            <div class="help-content">
+                <div style="display:flex;flex-direction:column;gap:8px;padding:8px 0">
+                    <button class="cta-btn" onclick="openHelp()" style="width:100%">
+                        📖 Help & FAQ
+                    </button>
+                    <button class="cta-btn" onclick="showToast('Contact: support@authenticadetector.com', 'info', 5000)" style="width:100%;background:linear-gradient(135deg,var(--cyan),var(--primary))">
+                        📧 Contact Support
+                    </button>
+                    <button class="cta-btn" onclick="showToast('Version 7.5.0 (Dec 2025)', 'info')" style="width:100%;background:linear-gradient(135deg,#6366f1,var(--secondary))">
+                        ℹ️ About
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- App Preferences Section -->
+        <div class="help-section">
+            <div class="help-header" onclick="toggleHelp(this)">
+                <div class="help-title">🎨 Appearance</div>
+                <span class="help-toggle">▼</span>
+            </div>
+            <div class="help-content">
+                <div class="help-text">
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)">
+                        <div>
+                            <div style="font-weight:600;margin-bottom:4px">🔊 Sound Effects</div>
+                            <div style="font-size:11px;color:var(--text3)">Game and UI sounds</div>
+                        </div>
+                        <label style="position:relative;display:inline-block;width:44px;height:24px">
+                            <input type="checkbox" id="prefSounds" onchange="saveSettings()" checked style="opacity:0;width:0;height:0">
+                            <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--primary);border-radius:24px;transition:0.4s"></span>
+                        </label>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)">
+                        <div>
+                            <div style="font-weight:600;margin-bottom:4px">✨ Animations</div>
+                            <div style="font-size:11px;color:var(--text3)">UI animations and effects</div>
+                        </div>
+                        <label style="position:relative;display:inline-block;width:44px;height:24px">
+                            <input type="checkbox" id="prefAnimations" onchange="saveSettings()" checked style="opacity:0;width:0;height:0">
+                            <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--primary);border-radius:24px;transition:0.4s"></span>
+                        </label>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0">
+                        <div>
+                            <div style="font-weight:600;margin-bottom:4px">🌙 Dark Mode</div>
+                            <div style="font-size:11px;color:var(--text3)">Always enabled (VERA theme)</div>
+                        </div>
+                        <label style="position:relative;display:inline-block;width:44px;height:24px">
+                            <input type="checkbox" checked disabled style="opacity:0;width:0;height:0">
+                            <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--primary);border-radius:24px;opacity:0.5"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="help-section">
+            <div class="help-header" onclick="toggleHelp(this)">
+                <div class="help-title" style="color:var(--danger)">⚠️ Danger Zone</div>
+                <span class="help-toggle">▼</span>
+            </div>
+            <div class="help-content">
+                <div style="display:flex;flex-direction:column;gap:8px;padding:8px 0">
+                    <button class="cta-btn" onclick="confirmClearCache()" style="width:100%;background:linear-gradient(135deg,#f59e0b,#fb923c)">
+                        🗑️ Clear Cache
+                    </button>
+                    <button class="cta-btn" onclick="confirmDeleteAccount()" style="width:100%;background:linear-gradient(135deg,#dc2626,#ef4444)">
+                        💀 Delete Account
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <!-- PUBLIC PROFILE MODAL -->
 <div class="modal-overlay" id="publicProfileModal">
     <div class="modal"><button class="modal-close" onclick="closePublicProfile()">✕</button><div id="publicProfileContent"></div></div>
@@ -7215,6 +7533,112 @@ function toast(msg) {
     const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; c.appendChild(t);
     setTimeout(() => t.remove(), 3000);
 }
+
+// Enhanced toast with type support (success, error, info, warning)
+window.showToast = function(message, type = 'info', duration = 3000) {
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    const toastEl = document.createElement('div');
+    toastEl.className = `toast toast-${type}`;
+
+    // Add icon based on type
+    const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+    };
+
+    toastEl.innerHTML = `<span style="margin-right:8px">${icons[type] || icons.info}</span>${message}`;
+
+    // Type-specific styling
+    const styles = {
+        success: 'background: linear-gradient(135deg, #10b981, #059669); border-left: 4px solid #34d399;',
+        error: 'background: linear-gradient(135deg, #ef4444, #dc2626); border-left: 4px solid #f87171;',
+        warning: 'background: linear-gradient(135deg, #f59e0b, #d97706); border-left: 4px solid #fbbf24;',
+        info: 'background: linear-gradient(135deg, #3b82f6, #2563eb); border-left: 4px solid #60a5fa;'
+    };
+    toastEl.style.cssText = styles[type] || styles.info;
+
+    container.appendChild(toastEl);
+
+    // Animate in
+    toastEl.style.animation = 'slideInRight 0.3s ease-out';
+
+    setTimeout(() => {
+        toastEl.style.animation = 'slideOutRight 0.3s ease-in';
+        setTimeout(() => toastEl.remove(), 300);
+    }, duration);
+};
+
+// Daily Bonus System
+window.claimDailyBonus = function() {
+    const lastClaim = localStorage.getItem('lastDailyBonus');
+    const now = new Date();
+    const today = now.toDateString();
+
+    if (lastClaim === today) {
+        showToast('Daily bonus already claimed! Come back tomorrow.', 'warning');
+        return;
+    }
+
+    // Calculate streak
+    let streak = parseInt(localStorage.getItem('dailyStreak') || '0');
+    const lastClaimDate = lastClaim ? new Date(lastClaim) : null;
+
+    if (lastClaimDate) {
+        const yesterday = new Date(now);
+        yesterday.setDate(yesterday.getDate() - 1);
+        if (lastClaimDate.toDateString() === yesterday.toDateString()) {
+            streak++;
+        } else {
+            streak = 1; // Reset streak if more than a day gap
+        }
+    } else {
+        streak = 1;
+    }
+
+    // Bonus coins based on streak (max 7-day streak cycle)
+    const streakDay = ((streak - 1) % 7) + 1;
+    const bonusAmounts = [50, 75, 100, 150, 200, 300, 500]; // Days 1-7
+    const bonusCoins = bonusAmounts[streakDay - 1];
+
+    // Save claim
+    localStorage.setItem('lastDailyBonus', today);
+    localStorage.setItem('dailyStreak', streak.toString());
+
+    // Award coins
+    const currentCoins = parseInt(localStorage.getItem('truthCoins') || '0');
+    const newCoins = currentCoins + bonusCoins;
+    localStorage.setItem('truthCoins', newCoins.toString());
+
+    // Update displays
+    if (typeof updateAllCoinDisplays === 'function') {
+        updateAllCoinDisplays();
+    }
+
+    // Show celebration
+    showToast(`🎁 Day ${streakDay} Bonus: +${bonusCoins} coins! (${streak} day streak)`, 'success', 4000);
+
+    // Try to sync with database if user is logged in
+    if (window.user && window.supabase) {
+        window.supabase.rpc('award_coins_atomic', {
+            p_user_id: window.user.id,
+            p_amount: bonusCoins
+        }).then(result => {
+            if (result.data) {
+                console.log('[Daily Bonus] Synced to database:', result.data);
+            }
+        }).catch(err => {
+            console.warn('[Daily Bonus] DB sync failed, local only:', err);
+        });
+    }
+};
 
 function showView(id) {
     // Reset navigation state to prevent lockouts
@@ -9502,8 +9926,120 @@ window.openTradingHub = function() {
 };
 
 window.openSettings = function() {
-    showView('profileView');
-    showToast('Settings - Check your profile!', 'info');
+    openView('settingsView');
+    loadSettings();
+};
+
+// Settings management functions
+window.saveSettings = function() {
+    const settings = {
+        notifications: {
+            quests: document.getElementById('notifQuests')?.checked || false,
+            events: document.getElementById('notifEvents')?.checked || true,
+            friends: document.getElementById('notifFriends')?.checked || true
+        },
+        privacy: {
+            profile: document.getElementById('privacyProfile')?.checked || true,
+            stats: document.getElementById('privacyStats')?.checked || true,
+            anonymous: document.getElementById('privacyAnonymous')?.checked || false
+        },
+        preferences: {
+            sounds: document.getElementById('prefSounds')?.checked || true,
+            animations: document.getElementById('prefAnimations')?.checked || true
+        }
+    };
+
+    localStorage.setItem('userSettings', JSON.stringify(settings));
+    if (window.showToast) showToast('Settings saved!', 'success');
+};
+
+window.loadSettings = function() {
+    const saved = localStorage.getItem('userSettings');
+    if (!saved) return;
+
+    try {
+        const settings = JSON.parse(saved);
+
+        // Load notification settings
+        if (settings.notifications) {
+            if (document.getElementById('notifQuests'))
+                document.getElementById('notifQuests').checked = settings.notifications.quests || false;
+            if (document.getElementById('notifEvents'))
+                document.getElementById('notifEvents').checked = settings.notifications.events !== false;
+            if (document.getElementById('notifFriends'))
+                document.getElementById('notifFriends').checked = settings.notifications.friends !== false;
+        }
+
+        // Load privacy settings
+        if (settings.privacy) {
+            if (document.getElementById('privacyProfile'))
+                document.getElementById('privacyProfile').checked = settings.privacy.profile !== false;
+            if (document.getElementById('privacyStats'))
+                document.getElementById('privacyStats').checked = settings.privacy.stats !== false;
+            if (document.getElementById('privacyAnonymous'))
+                document.getElementById('privacyAnonymous').checked = settings.privacy.anonymous || false;
+        }
+
+        // Load preference settings
+        if (settings.preferences) {
+            if (document.getElementById('prefSounds'))
+                document.getElementById('prefSounds').checked = settings.preferences.sounds !== false;
+            if (document.getElementById('prefAnimations'))
+                document.getElementById('prefAnimations').checked = settings.preferences.animations !== false;
+        }
+    } catch (e) {
+        console.error('Error loading settings:', e);
+    }
+};
+
+window.confirmClearCache = function() {
+    if (confirm('Clear all cached data? This will not delete your account or progress.')) {
+        localStorage.removeItem('userSettings');
+        localStorage.removeItem('characterDesignerState');
+        if ('caches' in window) {
+            caches.keys().then(names => {
+                names.forEach(name => caches.delete(name));
+            });
+        }
+        showToast('Cache cleared successfully!', 'success');
+    }
+};
+
+window.confirmDeleteAccount = function() {
+    if (confirm('⚠️ WARNING: This will permanently delete your account and ALL data. This cannot be undone!\n\nAre you absolutely sure?')) {
+        if (confirm('Final confirmation: Delete your account forever?')) {
+            showToast('Account deletion not yet implemented. Contact support@authenticadetector.com', 'error', 5000);
+            // TODO: Implement actual account deletion via Supabase
+        }
+    }
+};
+
+window.handleLogout = async function() {
+    if (!confirm('Are you sure you want to sign out?')) return;
+
+    try {
+        // Sign out from Supabase if available
+        if (window.supabase) {
+            const { error } = await window.supabase.auth.signOut();
+            if (error) console.error('Logout error:', error);
+        }
+
+        // Clear local user data
+        user = null;
+        localStorage.removeItem('user');
+        localStorage.removeItem('userSettings');
+
+        // Update UI
+        updateUIForAuthState(null);
+
+        // Navigate to home
+        openView('homeView');
+
+        showToast('Signed out successfully', 'success');
+    } catch (error) {
+        console.error('Logout failed:', error);
+        showToast('Logout failed. Please try again.', 'error');
+    }
 };
 
 window.openAllBadges = function() {
@@ -9536,6 +10072,22 @@ window.openAvatarView = function() {
     }
     // Initialize Phaser Character Creator
     initPhaserCharacterCreator();
+};
+
+window.openAvatarBuilder = function() {
+    // Alias for openAvatarView - opens character designer
+    openAvatarView();
+};
+
+window.openShop = function() {
+    // Open shop view
+    openView('shopView');
+    // Initialize shop content if function exists
+    if (typeof loadShopItems === 'function') {
+        loadShopItems();
+    }
+    // Update coin display
+    updateAllCoinDisplays();
 };
 
 // Initialize Phaser Character Creator
@@ -11104,6 +11656,86 @@ window.openQuestsView = function() {
 document.addEventListener('DOMContentLoaded', () => {
     initializeQuests();
 });
+
+// Toggle quests popup on home screen
+window.toggleQuestsPopup = function() {
+    const popup = document.getElementById('questsPopup');
+    if (!popup) return;
+
+    if (popup.style.display === 'none' || popup.style.display === '') {
+        // Show popup
+        checkQuestResets();
+        initializeQuests();
+        populateQuestsPopup();
+        popup.style.display = 'block';
+    } else {
+        // Hide popup
+        popup.style.display = 'none';
+    }
+};
+
+// Populate quests popup with daily quests
+function populateQuestsPopup() {
+    const body = document.getElementById('questsPopupBody');
+    if (!body) return;
+
+    const questProgress = JSON.parse(localStorage.getItem('questProgress') || '{}');
+    const dailyQuests = QUEST_DEFINITIONS.daily || [];
+
+    let html = '';
+    let claimableCount = 0;
+
+    dailyQuests.slice(0, 5).forEach(quest => {
+        const progress = questProgress[quest.id] || { current: 0, claimed: false };
+        const isComplete = progress.current >= quest.target;
+        const isClaimable = isComplete && !progress.claimed;
+
+        if (isClaimable) claimableCount++;
+
+        html += `
+            <div class="popup-quest-item ${isClaimable ? 'claimable' : ''}">
+                <div class="popup-quest-icon">${quest.icon}</div>
+                <div class="popup-quest-info">
+                    <div class="popup-quest-title">${quest.title}</div>
+                    <div class="popup-quest-progress">${progress.current}/${quest.target} ${isComplete ? '(Complete!)' : ''}</div>
+                </div>
+                <div class="popup-quest-reward">
+                    <span>🪙</span>
+                    <span>${quest.reward.coins}</span>
+                </div>
+            </div>
+        `;
+    });
+
+    body.innerHTML = html || '<p style="text-align:center;color:var(--text2)">No quests available</p>';
+
+    // Update badge count
+    const badge = document.getElementById('questsBadge');
+    if (badge) {
+        badge.textContent = claimableCount;
+        badge.style.display = claimableCount > 0 ? 'flex' : 'none';
+    }
+}
+
+// Update quests badge on home screen
+function updateQuestsBadge() {
+    const questProgress = JSON.parse(localStorage.getItem('questProgress') || '{}');
+    const dailyQuests = QUEST_DEFINITIONS.daily || [];
+
+    let claimableCount = 0;
+    dailyQuests.forEach(quest => {
+        const progress = questProgress[quest.id] || { current: 0, claimed: false };
+        if (progress.current >= quest.target && !progress.claimed) {
+            claimableCount++;
+        }
+    });
+
+    const badge = document.getElementById('questsBadge');
+    if (badge) {
+        badge.textContent = claimableCount;
+        badge.style.display = claimableCount > 0 ? 'flex' : 'none';
+    }
+}
 
 // Profile stats
 function loadProfileStats() {
