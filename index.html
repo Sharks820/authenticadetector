@@ -3404,31 +3404,468 @@
         }
 
         /* ========== MOBILE RESPONSIVE MEDIA QUERIES ========== */
-        
-        /* Small phones: 320px - 480px */
+        /* 🚨 CRITICAL: MOBILE VIEW IMPROVEMENTS - MAKE EVERYTHING BIGGER!
+         *
+         * USER FEEDBACK: "I ACCESS ON MY PHONE AND I CAN BARELY SEE SOME OF IT, ESPECIALLY THE ICONS"
+         *
+         * IMPROVEMENTS MADE:
+         * ✓ Navigation icons: 16px → 28px (75% bigger)
+         * ✓ Header icons: 34px → 44px (29% bigger)
+         * ✓ Currency icons: ~16px → 24px (50% bigger)
+         * ✓ Action icons: ~20px → 32px (60% bigger)
+         * ✓ Button text: 14-16px → 18-20px (25-40% bigger)
+         * ✓ Body text: 16px minimum (was 14px)
+         * ✓ Labels: 10-11px → 14px (27-40% bigger)
+         * ✓ Buttons: min 52px height (was 40-44px)
+         * ✓ Touch targets: All minimum 48x48px
+         * ✓ Cards: More padding (12px → 20px)
+         * ✓ Icon brightness: +15% for better visibility
+         * ✓ SVG icons (Lucide): All scaled up 20-30%
+         * ✓ Input fields: 16px to prevent iOS zoom
+         * ✓ Progress bars: 8px → 12px (thicker)
+         * ✓ Better tap feedback (scale + opacity)
+         */
+
+        /* Small phones: 320px - 480px - OPTIMIZED FOR VISIBILITY */
         @media (max-width: 480px) {
-            .game-cta-card {
-                margin: 8px;
-                padding: 12px;
+            /* ===== CRITICAL: FIX MOBILE SCROLL ===== */
+            .view-body,
+            .home-content,
+            .view-body-padded {
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                -webkit-overflow-scrolling: touch !important;
+                touch-action: pan-y !important;
+                overscroll-behavior: contain !important;
             }
-            .game-cta-stat-value {
-                font-size: clamp(14px, 4vw, 18px);
+
+            /* ===== NAVIGATION ICONS - MUCH BIGGER ===== */
+            .quick-nav-icon {
+                font-size: 28px !important; /* Was 16px - now 75% bigger */
+                width: 48px !important;
+                height: 48px !important;
             }
-            .game-cta-stat-label {
-                font-size: clamp(8px, 2.5vw, 10px);
+            .quick-nav-label {
+                font-size: 14px !important; /* Was 11px */
+                font-weight: 700;
+            }
+            .quick-nav-btn {
+                padding: 14px 10px !important;
+                min-height: 80px; /* Bigger touch target */
+            }
+
+            /* ===== HEADER - OPTIMIZED FOR MOBILE ===== */
+            .home-header,
+            .view-header {
+                padding: 14px 12px !important;
+                min-height: 64px !important; /* Was 56px */
+            }
+            .logo-icon {
+                width: 40px !important;
+                height: 40px !important;
+            }
+            .logo-text {
+                font-size: 20px !important;
+            }
+
+            /* ===== HEADER ICONS - BIGGER ===== */
+            .icon-btn {
+                width: 44px !important; /* Was 34px */
+                height: 44px !important;
+                font-size: 22px !important; /* Was 15px */
+                border-radius: 12px !important;
+            }
+            .user-btn {
+                width: 44px !important;
+                height: 44px !important;
+            }
+            .header-btns {
+                gap: 8px !important;
+            }
+            .home-btn,
+            .back-btn {
+                width: 44px !important;
+                height: 44px !important;
+                font-size: 22px !important;
+            }
+
+            /* ===== CURRENCY ICONS - MUCH BIGGER ===== */
+            .currency-icon {
+                font-size: 24px !important; /* Was ~16px */
+                width: 28px;
+                height: 28px;
+            }
+            .currency-value {
+                font-size: 18px !important; /* Was ~14px */
+                font-weight: 800;
+            }
+            .currency-item {
+                padding: 12px 16px !important; /* More padding */
+                gap: 10px !important;
+                min-height: 52px; /* Bigger touch target */
+            }
+
+            /* ===== ACTION ICONS IN CARDS - BIGGER ===== */
+            .action-icon-btn {
+                font-size: 32px !important; /* Was ~20px */
+                width: 56px !important;
+                height: 56px !important;
+            }
+
+            /* ===== TEXT - MINIMUM SIZES ===== */
+            body {
+                font-size: 16px !important; /* Base text readable */
+            }
+            .stat-label,
+            .quest-summary-label,
+            .badge-card-label {
+                font-size: 14px !important; /* Was 10-11px */
+            }
+            .stat-value {
+                font-size: 28px !important; /* Was 24px */
+                font-weight: 900;
+            }
+
+            /* ===== BUTTONS - BIGGER TOUCH TARGETS ===== */
+            .cta-btn,
+            .game-cta-btn,
+            .primary-btn,
+            button:not(.icon-btn) {
+                min-height: 52px !important; /* 48px minimum + padding */
+                padding: 16px 24px !important;
+                font-size: 18px !important; /* Was 14-16px */
+                font-weight: 700;
             }
             .game-cta-btn {
-                padding: clamp(12px, 3vw, 16px);
-                font-size: clamp(14px, 3.5vw, 16px);
+                padding: 18px 28px !important;
+                font-size: 20px !important;
+                min-height: 56px !important;
             }
+
+            /* ===== CARDS/PANELS - MORE SPACING ===== */
+            .game-cta-card,
+            .stat-card,
+            .badge-card {
+                padding: 20px !important; /* Was 12px */
+                margin: 12px 8px !important;
+            }
+            .profile-stat-card {
+                padding: 18px 14px !important;
+                min-height: 100px;
+            }
+
+            /* ===== GAME BANNERS - STAND OUT MORE ===== */
+            .game-cta-icon {
+                font-size: 56px !important; /* Was ~40px */
+            }
+            .game-cta-title {
+                font-size: 22px !important; /* Was 18px */
+                font-weight: 900;
+            }
+            .game-cta-stat-value {
+                font-size: 20px !important;
+                font-weight: 900;
+            }
+            .game-cta-stat-label {
+                font-size: 13px !important; /* Was 8-10px */
+            }
+
+            /* ===== PROFILE/STATS - MORE READABLE ===== */
+            .profile-level {
+                font-size: 18px !important;
+                padding: 8px 16px !important;
+            }
+            .profile-name {
+                font-size: 22px !important;
+                font-weight: 800;
+            }
+            .xp-bar {
+                height: 12px !important; /* Was 8px */
+                border-radius: 6px;
+            }
+            .xp-text {
+                font-size: 14px !important;
+                font-weight: 700;
+            }
+
+            /* ===== SHOP ITEMS - BIGGER ===== */
+            .shop-item-icon {
+                font-size: 48px !important; /* Was 36px */
+            }
+            .shop-item-name {
+                font-size: 18px !important;
+                font-weight: 800;
+            }
+            .shop-item-cost {
+                font-size: 18px !important;
+                padding: 12px 20px !important;
+            }
+            .shop-item-cost-icon {
+                font-size: 20px !important;
+            }
+
+            /* ===== BADGES - BIGGER ===== */
+            .badge-card-icon {
+                font-size: 52px !important; /* Was 40px */
+            }
+            .badge-card-title {
+                font-size: 16px !important;
+                font-weight: 800;
+            }
+            .badge-card-desc {
+                font-size: 14px !important;
+            }
+
+            /* ===== LEADERBOARD - MORE READABLE ===== */
+            .leaderboard-rank {
+                font-size: 20px !important;
+                font-weight: 900;
+                min-width: 48px;
+            }
+            .leaderboard-name {
+                font-size: 18px !important;
+                font-weight: 700;
+            }
+            .leaderboard-stat {
+                font-size: 16px !important;
+            }
+
+            /* ===== MODALS - BIGGER ELEMENTS ===== */
+            .modal-title {
+                font-size: 24px !important;
+                font-weight: 900;
+            }
+            .modal-text,
+            .modal p {
+                font-size: 17px !important;
+                line-height: 1.6;
+            }
+            .modal-btn {
+                min-height: 52px !important;
+                font-size: 18px !important;
+            }
+
+            /* ===== VOTE BUTTONS - BIGGER ===== */
             .vote-btn {
-                max-width: 80px;
+                min-height: 56px !important;
+                font-size: 20px !important;
+                padding: 16px 24px !important;
             }
-            .modal {
-                max-width: 90vw;
+
+            /* ===== NAVIGATION - EASIER TO TAP ===== */
+            .menu-item {
+                min-height: 60px !important;
+                padding: 18px 20px !important;
+                font-size: 18px !important;
+            }
+            .menu-icon {
+                font-size: 28px !important;
+                width: 40px;
+            }
+
+            /* ===== GENERAL SPACING IMPROVEMENTS ===== */
+            .view-body-padded {
+                padding: 20px !important;
+            }
+            .section-spacing {
+                margin-bottom: 24px !important;
+            }
+
+            /* ===== CONTRAST IMPROVEMENTS ===== */
+            .icon-btn,
+            .action-icon-btn,
+            .quick-nav-icon {
+                filter: brightness(1.15); /* Slightly brighter icons */
+            }
+
+            /* ===== TAP FEEDBACK - BETTER VISUAL RESPONSE ===== */
+            button:active,
+            .icon-btn:active,
+            .stat-card:active {
+                transform: scale(0.96) !important;
+                opacity: 0.9;
+            }
+
+            /* ===== LUCIDE SVG ICONS - BIGGER ON MOBILE ===== */
+            .lucide-icon {
+                width: 28px !important;
+                height: 28px !important;
+                stroke-width: 2.2;
+            }
+            .lucide-icon-sm {
+                width: 22px !important;
+                height: 22px !important;
+                stroke-width: 2.5;
+            }
+            .lucide-icon-lg {
+                width: 40px !important;
+                height: 40px !important;
+                stroke-width: 1.8;
+            }
+            .quick-nav-icon .lucide-icon {
+                width: 32px !important;
+                height: 32px !important;
+            }
+            .game-cta-btn .lucide-icon {
+                width: 28px !important;
+                height: 28px !important;
+            }
+
+            /* ===== INPUT FIELDS - BIGGER FOR TYPING ===== */
+            input[type="text"],
+            input[type="email"],
+            input[type="password"],
+            textarea {
+                font-size: 16px !important; /* Prevents iOS zoom */
+                min-height: 48px !important;
+                padding: 14px 16px !important;
+            }
+            textarea {
+                min-height: 120px !important;
+            }
+
+            /* ===== LINKS - BIGGER TOUCH TARGETS ===== */
+            a {
+                padding: 8px 4px;
+                margin: -8px -4px;
+            }
+
+            /* ===== TOAST/NOTIFICATIONS - MORE VISIBLE ===== */
+            .toast,
+            .notification {
+                font-size: 16px !important;
+                padding: 16px 20px !important;
+                min-height: 60px;
+            }
+            .toast-title {
+                font-size: 18px !important;
+                font-weight: 800;
+            }
+
+            /* ===== PROGRESS BARS - THICKER ===== */
+            .progress-bar,
+            .xp-bar,
+            .health-bar {
+                height: 12px !important;
+                border-radius: 6px;
+            }
+            .progress-fill {
+                border-radius: 6px;
+            }
+
+            /* ===== CHECKBOXES & RADIO - BIGGER ===== */
+            input[type="checkbox"],
+            input[type="radio"] {
+                width: 24px !important;
+                height: 24px !important;
+                min-width: 24px;
+                min-height: 24px;
+            }
+
+            /* ===== SELECT DROPDOWNS - BIGGER ===== */
+            select {
+                font-size: 16px !important;
+                min-height: 48px !important;
+                padding: 12px 16px !important;
+            }
+
+            /* ===== TABS - EASIER TO TAP ===== */
+            .tab,
+            .tab-btn {
+                min-height: 50px !important;
+                padding: 14px 20px !important;
+                font-size: 16px !important;
+            }
+
+            /* ===== CLOSE BUTTONS - BIGGER TARGET ===== */
+            .close-btn,
+            .view-close,
+            .modal-close {
+                min-width: 48px !important;
+                min-height: 48px !important;
+                font-size: 24px !important;
+            }
+
+            /* ===== AVATAR DISPLAYS - BIGGER ===== */
+            .avatar,
+            .user-avatar {
+                min-width: 48px !important;
+                min-height: 48px !important;
+            }
+            .avatar-lg {
+                min-width: 80px !important;
+                min-height: 80px !important;
+            }
+
+            /* ===== LIST ITEMS - MORE SPACING ===== */
+            .list-item,
+            .history-item,
+            .menu-item {
+                padding: 16px !important;
+                min-height: 64px;
+            }
+
+            /* ===== SCORES/RATINGS - MORE PROMINENT ===== */
+            .score,
+            .rating,
+            .ai-score {
+                font-size: 32px !important;
+                font-weight: 900;
+            }
+
+            /* ===== TIMESTAMPS - READABLE ===== */
+            .timestamp,
+            .date-text,
+            time {
+                font-size: 13px !important;
             }
         }
-        
+
+        /* Medium phones & small tablets: 481px - 768px */
+        @media (min-width: 481px) and (max-width: 768px) {
+            /* ===== ICONS - STILL BIGGER THAN DESKTOP ===== */
+            .quick-nav-icon {
+                font-size: 24px;
+                width: 44px;
+                height: 44px;
+            }
+            .icon-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            .currency-icon {
+                font-size: 22px;
+            }
+            .currency-value {
+                font-size: 16px;
+                font-weight: 700;
+            }
+
+            /* ===== BUTTONS - GOOD TOUCH TARGETS ===== */
+            .cta-btn,
+            .game-cta-btn,
+            button:not(.icon-btn) {
+                min-height: 48px;
+                padding: 14px 20px;
+                font-size: 16px;
+            }
+
+            /* ===== TEXT - READABLE ===== */
+            .stat-value {
+                font-size: 26px;
+            }
+            .stat-label {
+                font-size: 13px;
+            }
+
+            /* ===== CARDS - COMFORTABLE SPACING ===== */
+            .game-cta-card,
+            .stat-card {
+                padding: 18px;
+            }
+        }
+
         /* Tablets: 768px+ */
         @media (min-width: 768px) {
             .vote-btn {
@@ -3832,9 +4269,55 @@
         }
 
         /* ====================================
-           CHARACTER DESIGNER SYSTEM
-           Full piece-by-piece avatar builder
+           AVATAR CUSTOMIZATION SYSTEM - COMPLETE OVERHAUL
+           Professional, mobile-first, easy to use
            ==================================== */
+
+        /* Main Avatar Preview - BIGGER and centered */
+        .avatar-preview-main {
+            position: relative;
+            width: 100%;
+            max-width: 280px;
+            height: 280px;
+            margin: 0 auto 32px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            border-radius: 24px;
+            border: 4px solid rgba(94,234,212,0.5);
+            overflow: visible;
+            box-shadow:
+                0 20px 60px rgba(94,234,212,0.3),
+                inset 0 0 80px rgba(94,234,212,0.1);
+            animation: avatarPreviewGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes avatarPreviewGlow {
+            0%, 100% {
+                box-shadow:
+                    0 20px 60px rgba(94,234,212,0.3),
+                    inset 0 0 80px rgba(94,234,212,0.1);
+            }
+            50% {
+                box-shadow:
+                    0 25px 80px rgba(94,234,212,0.5),
+                    inset 0 0 100px rgba(94,234,212,0.2);
+            }
+        }
+
+        /* Animated background */
+        .avatar-preview-main::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(94,234,212,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139,92,246,0.15) 0%, transparent 50%);
+            animation: backgroundPulse 6s ease-in-out infinite;
+        }
+
+        @keyframes backgroundPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
 
         /* Character Stage - The main preview area */
         .character-stage {
@@ -6450,7 +6933,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">📋 History</span>
+        <span class="view-title"><img src="assets/icons/history.svg" alt="History" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"> History</span>
         <div class="coins-display" id="historyViewCoins">
             <img src="assets/icons/currency-coin.svg" alt="Coins" style="width:16px;height:16px;vertical-align:middle">
             <span>0</span>
@@ -6518,7 +7001,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">👤 Profile</span>
+        <span class="view-title"><img src="assets/icons/profile.svg" alt="Profile" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"> Profile</span>
         <div class="coins-display" id="profileViewCoins">
             <img src="assets/icons/currency-coin.svg" alt="Coins" style="width:16px;height:16px;vertical-align:middle">
             <span id="profileViewCoinsValue">0</span>
@@ -7223,7 +7706,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">❓ Help</span>
+        <span class="view-title"><img src="assets/icons/help.svg" alt="Help" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"> Help</span>
         <div style="width:44px"></div>
     </div>
     <div class="view-body view-body-padded">
@@ -7333,7 +7816,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">🐉 Beast Collection</span>
+        <span class="view-title"><img src="assets/icons/beasts.svg" alt="Beasts" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"> Beast Collection</span>
         <div class="coins-display">
             <img src="assets/icons/currency-coin.svg" alt="Coins" style="width:16px;height:16px;vertical-align:middle">
             <span id="beastViewCoins">0</span>
@@ -7389,7 +7872,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">👥 Friends</span>
+        <span class="view-title"><img src="assets/icons/friends.svg" alt="Friends" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"> Friends</span>
         <button class="icon-btn" onclick="showAddFriend()" title="Add Friend">➕</button>
     </div>
     <div class="view-body view-body-padded">
@@ -7455,7 +7938,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">🔄 Trading Hub</span>
+        <span class="view-title"><img src="assets/icons/refresh.svg" alt="Trade" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"> Trading Hub</span>
         <div class="coins-display">
             <img src="assets/icons/currency-coin.svg" alt="Coins" style="width:16px;height:16px;vertical-align:middle">
             <span id="tradingViewCoins">0</span>
@@ -7518,7 +8001,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">🏪 Truth Shop</span>
+        <span class="view-title"><img src="assets/icons/shop.svg" alt="Shop" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"> Truth Shop</span>
         <div style="display:flex;align-items:center;gap:8px;padding:8px 16px;background:linear-gradient(135deg,rgba(252,211,77,0.15),rgba(251,191,36,0.1));border-radius:12px;border:1px solid rgba(252,211,77,0.3);box-shadow:0 2px 8px rgba(252,211,77,0.2)">
             <span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="18"></span>
             <span id="shopCoinsDisplay" style="font-size:16px;font-weight:800;color:var(--gold-bright)">0</span>
@@ -7625,7 +8108,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title">⚙️ Settings</span>
+        <span class="view-title"><img src="assets/icons/ui-settings.svg" alt="Settings" style="width:16px;height:16px;vertical-align:middle;margin-right:4px"> Settings</span>
         <div style="width:44px"></div>
     </div>
     <div class="view-body view-body-padded">
@@ -7863,11 +8346,14 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
 <link rel="stylesheet" href="vera-controller.css?v=4.0.0">
 <link rel="stylesheet" href="UI_FIXES.css?v=1.0.1">
 <link rel="stylesheet" href="avatar-system-unity.css">
+<!-- AVATAR CUSTOMIZATION OVERHAUL - Professional mobile-first system -->
+<link rel="stylesheet" href="avatar-customization-overhaul.css?v=1.0.0">
 <!-- UI POLISH PASS - PIXEL PERFECT (LOAD LAST FOR OVERRIDES) -->
 <link rel="stylesheet" href="UI_POLISH_PASS.css?v=1.0.0">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script src="tank-shooter-enhanced.js"></script>
+<script src="tank-shop-bridge.js"></script>
 <script src="tank-game-enhancements.js?v=1.0.1"></script>
 <script src="avatar-cosmetics-system.js"></script>
 <script src="ai-cosmetics-gacha.js"></script>
@@ -10970,6 +11456,14 @@ async function purchaseItem(itemId) {
             // Add to owned items
             userOwnedItems.add(itemId);
             saveOwnedItems();
+
+            // Apply tank upgrade effects if this is a tank item
+            if (typeof applyTankPurchase === 'function') {
+                const tankApplied = await applyTankPurchase(itemId);
+                if (tankApplied) {
+                    console.log(`[Shop] Tank upgrade applied for ${itemId}`);
+                }
+            }
 
             // Update UI
             updateCoinsDisplay();
