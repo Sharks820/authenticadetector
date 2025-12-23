@@ -302,7 +302,7 @@
             background:var(--bg);
             display:none;flex-direction:column;
             z-index:10;
-            overflow:hidden;
+            overflow:visible; /* CHANGED: was hidden - blocked all child scrolling! */
             /* Chrome PWA: Use dynamic viewport height */
             height:100dvh;
             /* Smooth page transitions */
@@ -3429,6 +3429,12 @@
         /* Small phones: 320px - 480px - OPTIMIZED FOR VISIBILITY */
         @media (max-width: 480px) {
             /* ===== CRITICAL: FIX MOBILE SCROLL ===== */
+            /* Views must allow child scrolling */
+            .view {
+                overflow: visible !important;
+            }
+
+            /* Scrollable content areas */
             .view-body,
             .home-content,
             .view-body-padded {
@@ -3437,6 +3443,14 @@
                 -webkit-overflow-scrolling: touch !important;
                 touch-action: pan-y !important;
                 overscroll-behavior: contain !important;
+                /* CRUCIAL: min-height:0 allows flex children to scroll */
+                min-height: 0 !important;
+                flex: 1 1 auto !important;
+            }
+
+            /* Prevent body from blocking scroll */
+            body {
+                touch-action: pan-y !important;
             }
 
             /* ===== NAVIGATION ICONS - MUCH BIGGER ===== */
