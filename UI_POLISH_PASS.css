@@ -1,0 +1,918 @@
+/* ============================================================================
+   COMPLETE UI POLISH PASS - AuthenticaDetector
+   Version: 1.0.0
+   Date: 2025-12-23
+
+   EVERY PIXEL PERFECT - Professional visual polish
+   Load LAST to override all other stylesheets
+   ============================================================================ */
+
+/* ============================================================================
+   1. HEADER - Clean & Professional
+   ============================================================================ */
+
+/* Logo enhancement */
+.logo {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.logo:hover {
+    transform: translateY(-1px) !important;
+}
+
+.logo:active {
+    transform: scale(0.98) !important;
+}
+
+.logo-icon {
+    width: 42px !important;
+    height: 42px !important;
+    flex-shrink: 0 !important;
+    filter: drop-shadow(0 0 12px rgba(94,234,212,0.6)) !important;
+    animation: logo-pulse 3s ease-in-out infinite !important;
+}
+
+@keyframes logo-pulse {
+    0%, 100% { filter: drop-shadow(0 0 12px rgba(94,234,212,0.5)); }
+    50% { filter: drop-shadow(0 0 24px rgba(94,234,212,0.9)); }
+}
+
+.logo-text {
+    font-size: 22px !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.5px !important;
+    background: linear-gradient(135deg, #00d4aa 0%, #0984e3 25%, #6c5ce7 50%, #00b894 75%, #00d4aa 100%) !important;
+    background-size: 300% auto !important;
+    animation: text-shimmer 4s linear infinite !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    white-space: nowrap !important;
+}
+
+@keyframes text-shimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 300% center; }
+}
+
+/* Header button polish */
+.home-header button,
+.view-header button {
+    position: relative !important;
+    overflow: hidden !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.home-header button::before,
+.view-header button::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent) !important;
+    transition: left 0.5s ease !important;
+    pointer-events: none !important;
+}
+
+.home-header button:hover::before,
+.view-header button:hover::before {
+    left: 100% !important;
+}
+
+.home-header button:hover,
+.view-header button:hover {
+    transform: translateY(-2px) scale(1.05) !important;
+    filter: brightness(1.15) !important;
+    box-shadow: 0 4px 16px rgba(94,234,212,0.3) !important;
+}
+
+.home-header button:active,
+.view-header button:active {
+    transform: translateY(0) scale(0.98) !important;
+    transition-duration: 0.1s !important;
+}
+
+/* ============================================================================
+   2. CURRENCY BAR - Perfect Alignment & Colors
+   ============================================================================ */
+
+.currency-bar {
+    position: sticky !important;
+    position: -webkit-sticky !important;
+    top: 65px !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 99 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    padding: 10px 16px !important;
+    background: linear-gradient(180deg, rgba(10,13,20,0.98) 0%, rgba(10,13,20,0.95) 100%) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-bottom: 1px solid rgba(94,234,212,0.15) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+}
+
+.currency-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 16px !important;
+    border-radius: 20px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    cursor: pointer !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.currency-item::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent) !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.5s ease !important;
+}
+
+.currency-item:hover::before {
+    transform: translateX(100%) !important;
+}
+
+.currency-item:hover {
+    transform: translateY(-2px) scale(1.05) !important;
+    filter: brightness(1.1) !important;
+}
+
+.currency-item:active {
+    transform: translateY(0) scale(1) !important;
+    transition-duration: 0.1s !important;
+}
+
+/* Currency type-specific styling */
+.currency-item.coins {
+    background: linear-gradient(135deg, rgba(252,211,77,0.15) 0%, rgba(245,158,11,0.1) 100%) !important;
+    border: 1px solid rgba(252,211,77,0.3) !important;
+    color: #fcd34d !important;
+}
+
+.currency-item.coins:hover {
+    box-shadow: 0 0 20px rgba(252,211,77,0.3) !important;
+}
+
+.currency-item.keys {
+    background: linear-gradient(135deg, rgba(34,211,238,0.15) 0%, rgba(6,182,212,0.1) 100%) !important;
+    border: 1px solid rgba(34,211,238,0.3) !important;
+    color: #22d3ee !important;
+}
+
+.currency-item.keys:hover {
+    box-shadow: 0 0 20px rgba(34,211,238,0.3) !important;
+}
+
+.currency-item.gems {
+    background: linear-gradient(135deg, rgba(168,85,247,0.15) 0%, rgba(139,92,246,0.1) 100%) !important;
+    border: 1px solid rgba(168,85,247,0.3) !important;
+    color: #a855f7 !important;
+}
+
+.currency-item.gems:hover {
+    box-shadow: 0 0 20px rgba(168,85,247,0.3) !important;
+}
+
+.currency-icon img {
+    width: 20px !important;
+    height: 20px !important;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)) !important;
+}
+
+.currency-value {
+    font-variant-numeric: tabular-nums !important;
+    min-width: 40px !important;
+    text-align: right !important;
+}
+
+/* ============================================================================
+   3. PROFILE CARD - Polished & Aligned
+   ============================================================================ */
+
+.profile-section {
+    padding: 16px !important;
+    margin: 12px !important;
+    background: linear-gradient(135deg, rgba(99,102,241,0.12) 0%, rgba(139,92,246,0.08) 100%) !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(99,102,241,0.2) !important;
+}
+
+.profile-top-area {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+    margin-bottom: 16px !important;
+}
+
+.profile-avatar-lg {
+    width: 160px !important;
+    height: 160px !important;
+    min-width: 160px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%) !important;
+    border: 6px solid #6366f1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 80px !important;
+    box-shadow: 0 8px 32px rgba(99,102,241,0.5) !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    flex-shrink: 0 !important;
+    overflow: hidden !important;
+}
+
+.profile-avatar-lg:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 12px 40px rgba(99,102,241,0.7) !important;
+}
+
+.profile-avatar-lg:active {
+    transform: scale(1.02) !important;
+}
+
+.profile-middle-col {
+    flex: 1 !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+}
+
+.profile-name-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+}
+
+.profile-username {
+    font-size: 20px !important;
+    font-weight: 900 !important;
+    color: #fff !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+}
+
+.profile-level-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 4px 10px !important;
+    background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%) !important;
+    color: #000 !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(252,211,77,0.4) !important;
+    white-space: nowrap !important;
+}
+
+.profile-title {
+    font-size: 13px !important;
+    color: #a78bfa !important;
+    font-weight: 600 !important;
+    font-style: italic !important;
+}
+
+.profile-xp-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-top: 4px !important;
+}
+
+.profile-xp-bar-container {
+    flex: 1 !important;
+    height: 10px !important;
+    background: rgba(0,0,0,0.4) !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.profile-xp-bar-fill {
+    height: 100% !important;
+    background: linear-gradient(90deg, #22d3ee 0%, #8b5cf6 100%) !important;
+    border-radius: 6px !important;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 0 8px rgba(139,92,246,0.5) !important;
+}
+
+.profile-xp-text {
+    font-size: 11px !important;
+    color: #a3a3a3 !important;
+    white-space: nowrap !important;
+    font-variant-numeric: tabular-nums !important;
+}
+
+/* Profile action buttons */
+.profile-right-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: flex-end !important;
+}
+
+.profile-action-btn {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    background: rgba(255,255,255,0.05) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.profile-action-btn:hover {
+    background: rgba(255,255,255,0.1) !important;
+    transform: translateY(-2px) scale(1.1) !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3) !important;
+}
+
+.profile-action-btn:active {
+    transform: translateY(0) scale(1.05) !important;
+}
+
+.profile-action-btn.customize {
+    background: linear-gradient(135deg, rgba(139,92,246,0.25) 0%, rgba(99,102,241,0.15) 100%) !important;
+    border-color: rgba(139,92,246,0.4) !important;
+}
+
+.profile-action-btn.customize:hover {
+    box-shadow: 0 4px 16px rgba(139,92,246,0.4) !important;
+}
+
+.profile-action-btn.shop {
+    background: linear-gradient(135deg, rgba(34,211,238,0.2) 0%, rgba(6,182,212,0.1) 100%) !important;
+    border-color: rgba(34,211,238,0.4) !important;
+}
+
+.profile-action-btn.shop:hover {
+    box-shadow: 0 4px 16px rgba(34,211,238,0.4) !important;
+}
+
+.profile-action-btn.vera {
+    background: linear-gradient(135deg, rgba(94,234,212,0.2) 0%, rgba(20,184,166,0.1) 100%) !important;
+    border-color: rgba(94,234,212,0.4) !important;
+}
+
+.profile-action-btn.vera:hover {
+    box-shadow: 0 4px 16px rgba(94,234,212,0.4) !important;
+}
+
+/* Profile stats grid */
+.profile-stats-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 10px !important;
+    margin-top: 16px !important;
+}
+
+.profile-stat-card {
+    background: rgba(255,255,255,0.05) !important;
+    padding: 12px 8px !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.profile-stat-card::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, transparent, rgba(94,234,212,0.15), transparent) !important;
+    transition: left 0.5s ease !important;
+    pointer-events: none !important;
+}
+
+.profile-stat-card:hover::before {
+    left: 100% !important;
+}
+
+.profile-stat-card:hover {
+    background: rgba(255,255,255,0.1) !important;
+    transform: translateY(-4px) scale(1.05) !important;
+    border-color: rgba(94,234,212,0.3) !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3), 0 0 16px rgba(94,234,212,0.2) !important;
+}
+
+.profile-stat-card:active {
+    transform: translateY(-2px) scale(1.02) !important;
+    transition-duration: 0.1s !important;
+}
+
+.profile-stat-card .stat-icon {
+    font-size: 20px !important;
+    margin-bottom: 6px !important;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)) !important;
+}
+
+.profile-stat-card .stat-icon img {
+    width: 28px !important;
+    height: 28px !important;
+}
+
+.profile-stat-card .stat-value {
+    font-size: 16px !important;
+    font-weight: 900 !important;
+    background: linear-gradient(135deg, #00d4aa 0%, #0984e3 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    margin-bottom: 2px !important;
+}
+
+.profile-stat-card .stat-label {
+    font-size: 9px !important;
+    color: #a3a3a3 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    font-weight: 600 !important;
+}
+
+.profile-stat-card .tap-hint {
+    font-size: 8px !important;
+    color: #666 !important;
+    margin-top: 2px !important;
+    opacity: 0.7 !important;
+}
+
+/* ============================================================================
+   4. GAME BANNERS - Professional Look
+   ============================================================================ */
+
+.game-cta-card,
+.game-banner,
+.feature-card {
+    margin: 12px 16px !important;
+    padding: 16px !important;
+    border-radius: 16px !important;
+    background: linear-gradient(135deg, rgba(94,234,212,0.12) 0%, rgba(34,211,238,0.08) 100%) !important;
+    border: 1px solid rgba(94,234,212,0.25) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.game-cta-card::before,
+.game-banner::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, transparent, rgba(94,234,212,0.1), transparent) !important;
+    transition: left 0.6s ease !important;
+}
+
+.game-cta-card:hover::before,
+.game-banner:hover::before {
+    left: 100% !important;
+}
+
+.game-cta-card:hover,
+.game-banner:hover {
+    border-color: rgba(94,234,212,0.4) !important;
+    box-shadow: 0 8px 24px rgba(94,234,212,0.3) !important;
+    transform: translateY(-2px) !important;
+}
+
+.game-icon,
+.banner-icon {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 28px !important;
+    border-radius: 12px !important;
+    background: rgba(94,234,212,0.15) !important;
+    border: 1px solid rgba(94,234,212,0.3) !important;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)) !important;
+}
+
+.game-icon img,
+.banner-icon img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+}
+
+.game-content,
+.banner-content {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+.game-title,
+.banner-title {
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    color: #fff !important;
+    margin-bottom: 4px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.game-description,
+.banner-description {
+    font-size: 12px !important;
+    color: #cbd5e1 !important;
+    line-height: 1.4 !important;
+}
+
+.game-cta-btn,
+.banner-btn {
+    padding: 10px 20px !important;
+    border-radius: 12px !important;
+    background: linear-gradient(135deg, #14b8a6 0%, #22d3ee 100%) !important;
+    border: none !important;
+    color: #0a0d14 !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 2px 8px rgba(94,234,212,0.3) !important;
+}
+
+.game-cta-btn:hover,
+.banner-btn:hover {
+    background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%) !important;
+    box-shadow: 0 4px 16px rgba(94,234,212,0.5) !important;
+    transform: translateY(-2px) !important;
+}
+
+.game-cta-btn:active,
+.banner-btn:active {
+    transform: translateY(0) scale(0.98) !important;
+    transition-duration: 0.1s !important;
+}
+
+/* ============================================================================
+   5. BUTTONS - Consistent Styling
+   ============================================================================ */
+
+/* Primary buttons */
+.btn-primary,
+.primary-btn,
+.cta-btn {
+    padding: 12px 24px !important;
+    border-radius: 12px !important;
+    background: linear-gradient(135deg, #14b8a6 0%, #22d3ee 100%) !important;
+    border: none !important;
+    color: #0a0d14 !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 2px 8px rgba(94,234,212,0.3) !important;
+    text-transform: none !important;
+}
+
+.btn-primary:hover,
+.primary-btn:hover,
+.cta-btn:hover {
+    background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%) !important;
+    box-shadow: 0 4px 16px rgba(94,234,212,0.5) !important;
+    transform: translateY(-2px) !important;
+}
+
+.btn-primary:active,
+.primary-btn:active,
+.cta-btn:active {
+    transform: translateY(0) scale(0.98) !important;
+    transition-duration: 0.1s !important;
+}
+
+/* Secondary buttons */
+.btn-secondary,
+.secondary-btn {
+    padding: 10px 20px !important;
+    border-radius: 12px !important;
+    background: rgba(255,255,255,0.05) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    color: #cbd5e1 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.btn-secondary:hover,
+.secondary-btn:hover {
+    background: rgba(255,255,255,0.1) !important;
+    border-color: rgba(94,234,212,0.3) !important;
+    color: #fff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+}
+
+.btn-secondary:active,
+.secondary-btn:active {
+    transform: translateY(0) scale(0.98) !important;
+}
+
+/* Icon buttons */
+.icon-btn {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 12px !important;
+    background: rgba(255,255,255,0.05) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.icon-btn::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: radial-gradient(circle at center, rgba(94,234,212,0.3) 0%, transparent 70%) !important;
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+}
+
+.icon-btn:hover::before {
+    opacity: 1 !important;
+}
+
+.icon-btn:hover {
+    background: rgba(94,234,212,0.15) !important;
+    border-color: rgba(94,234,212,0.3) !important;
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: 0 4px 16px rgba(94,234,212,0.3) !important;
+}
+
+.icon-btn:active {
+    transform: translateY(0) scale(1) !important;
+}
+
+/* ============================================================================
+   6. MODALS - Consistent & Beautiful
+   ============================================================================ */
+
+.modal-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0,0,0,0.8) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    z-index: 10000 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px !important;
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+}
+
+.modal-overlay.show,
+.modal-overlay.active {
+    opacity: 1 !important;
+}
+
+.modal {
+    background: linear-gradient(135deg, rgba(15,23,42,0.98) 0%, rgba(26,31,44,0.98) 100%) !important;
+    border: 1px solid rgba(94,234,212,0.25) !important;
+    border-radius: 24px !important;
+    padding: 24px !important;
+    max-width: 90vw !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(94,234,212,0.1) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    position: relative !important;
+    transform: scale(0.9) !important;
+    opacity: 0 !important;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.modal-overlay.show .modal,
+.modal-overlay.active .modal {
+    transform: scale(1) !important;
+    opacity: 1 !important;
+}
+
+.modal-close {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+    background: rgba(255,255,255,0.05) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    color: #fff !important;
+    font-size: 20px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease !important;
+}
+
+.modal-close:hover {
+    background: rgba(239,68,68,0.2) !important;
+    border-color: rgba(239,68,68,0.4) !important;
+    color: #ef4444 !important;
+    transform: rotate(90deg) scale(1.1) !important;
+}
+
+.modal-close:active {
+    transform: rotate(90deg) scale(0.95) !important;
+}
+
+/* ============================================================================
+   7. MOBILE RESPONSIVE
+   ============================================================================ */
+
+@media (max-width: 480px) {
+    .logo-text {
+        font-size: 18px !important;
+    }
+
+    .logo-icon {
+        width: 36px !important;
+        height: 36px !important;
+    }
+
+    .currency-bar {
+        padding: 8px 12px !important;
+        gap: 8px !important;
+    }
+
+    .currency-item {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+    }
+
+    .currency-icon img {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    .profile-avatar-lg {
+        width: 120px !important;
+        height: 120px !important;
+        min-width: 120px !important;
+        border-width: 4px !important;
+        font-size: 60px !important;
+    }
+
+    .profile-username {
+        font-size: 16px !important;
+    }
+
+    .profile-stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+
+    .game-cta-card,
+    .game-banner {
+        margin: 8px 12px !important;
+        padding: 12px !important;
+        gap: 10px !important;
+    }
+
+    .game-icon,
+    .banner-icon {
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+        font-size: 24px !important;
+    }
+
+    .modal {
+        padding: 16px !important;
+        border-radius: 16px !important;
+        max-width: 95vw !important;
+        max-height: 90vh !important;
+    }
+}
+
+/* ============================================================================
+   8. ACCESSIBILITY
+   ============================================================================ */
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+    outline: 2px solid rgba(94,234,212,0.8) !important;
+    outline-offset: 2px !important;
+}
+
+/* Hide outline for mouse/touch */
+*:focus:not(:focus-visible) {
+    outline: none !important;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================================================
+   9. FINAL POLISH - Smooth Everything
+   ============================================================================ */
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth !important;
+}
+
+/* Better text rendering */
+body {
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    text-rendering: optimizeLegibility !important;
+}
+
+/* Better image rendering */
+img {
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
+}
+
+/* Selection styling */
+::selection {
+    background: rgba(94,234,212,0.3) !important;
+    color: white !important;
+}
+
+::-moz-selection {
+    background: rgba(94,234,212,0.3) !important;
+    color: white !important;
+}
+
+/* Prevent tap highlight on mobile */
+* {
+    -webkit-tap-highlight-color: rgba(94,234,212,0.2) !important;
+}
+
+/* Hardware acceleration for smooth animations */
+.modal,
+.modal-overlay,
+.currency-bar,
+.profile-avatar-lg,
+.game-cta-card,
+.profile-stat-card {
+    will-change: transform !important;
+    transform: translateZ(0) !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+}
+
+/* ============================================================================
+   END OF UI POLISH PASS
+   ============================================================================ */
