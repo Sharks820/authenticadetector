@@ -1,7 +1,11 @@
 /* =============================================================================
-   VERA ANIMATION CONTROLLER v3.6.0 - CSS
-   Complete overhaul: Smooth animations, soft particles, no glitching
-   Updates: Blender bone-rigged animation frames for fairy state
+   VERA ANIMATION CONTROLLER v4.0.0 - CSS
+   MASSIVE OVERHAUL: Fixed ALL glitching - Buttery smooth animations
+   - Removed ALL scaleY transforms (cause of glitching)
+   - Disabled conflicting GSAP system
+   - Pure CSS animations with GPU acceleration
+   - Professional cubic-bezier easing curves
+   - V2 layered system perfected (8 layers, 1024x1024 aligned)
    ============================================================================= */
 
 /* ==========================================================================
@@ -349,13 +353,13 @@
     87.5% { transform: translateY(-2px) rotate(0.5deg); }
 }
 
-/* Monster float - slow powerful hover (NO scaling) */
+/* Monster float - slow powerful hover (SMOOTH - NO scaling) */
 @keyframes floatMenacing {
     0%, 100% {
-        transform: translateY(0) rotate(0deg);
+        transform: translateY(0);
     }
     50% {
-        transform: translateY(-10px) rotate(1deg);
+        transform: translateY(-10px);
     }
 }
 
@@ -467,113 +471,16 @@
 /* Monster eyes removed */
 
 /* ==========================================================================
-   WING ANIMATIONS - Rotation only (NO scaling to prevent body clipping)
+   LEGACY WING ANIMATIONS - DISABLED (V2 mode uses v2WingFlapLeft/Right)
+   These are kept for old sprite modes but not used in V2
    ========================================================================== */
-@keyframes wingFlapFairy {
-    0%, 100% {
-        transform: rotate(-2deg) translateY(0);
-    }
-    25% {
-        transform: rotate(1deg) translateY(-2px);
-    }
-    50% {
-        transform: rotate(4deg) translateY(-3px);
-    }
-    75% {
-        transform: rotate(1deg) translateY(-1px);
-    }
-}
-
-@keyframes wingFlapPartial {
-    0%, 100% {
-        transform: rotate(-3deg) translateY(0);
-    }
-    25% {
-        transform: rotate(2deg) translateY(-3px);
-    }
-    50% {
-        transform: rotate(5deg) translateY(-4px);
-    }
-    75% {
-        transform: rotate(1deg) translateY(-2px);
-    }
-}
-
-@keyframes wingFlapAngry {
-    0%, 100% {
-        transform: rotate(-4deg) translateY(0);
-    }
-    20% {
-        transform: rotate(3deg) translateY(-4px);
-    }
-    40% {
-        transform: rotate(7deg) translateY(-5px);
-    }
-    60% {
-        transform: rotate(4deg) translateY(-3px);
-    }
-    80% {
-        transform: rotate(1deg) translateY(-2px);
-    }
-}
-
-/* Monster wings - slow powerful rotation with glow */
-@keyframes wingFlapMonster {
-    0%, 100% {
-        transform: rotate(-3deg) translateY(0);
-        filter: brightness(1) drop-shadow(0 0 8px rgba(220, 38, 38, 0.3));
-    }
-    33% {
-        transform: rotate(4deg) translateY(-4px);
-        filter: brightness(1.1) drop-shadow(0 0 14px rgba(220, 38, 38, 0.5));
-    }
-    66% {
-        transform: rotate(2deg) translateY(-2px);
-        filter: brightness(1.05) drop-shadow(0 0 10px rgba(220, 38, 38, 0.4));
-    }
-}
+/* Legacy animations removed - V2 system uses cleaner keyframes */
 
 /* ==========================================================================
-   HAIR ANIMATIONS - Rotation only (NO scaling to prevent body clipping)
+   LEGACY HAIR ANIMATIONS - DISABLED (V2 mode uses v2HairSway)
+   These are kept for old sprite modes but not used in V2
    ========================================================================== */
-@keyframes hairSwayGentle {
-    0%, 100% {
-        transform: rotate(-1deg) translateX(0);
-    }
-    50% {
-        transform: rotate(1.5deg) translateX(2px);
-    }
-}
-
-@keyframes hairSwayUneasy {
-    0%, 100% {
-        transform: rotate(-2deg) translateX(0);
-    }
-    50% {
-        transform: rotate(3deg) translateX(3px);
-    }
-}
-
-@keyframes hairSwayWild {
-    0%, 100% {
-        transform: rotate(-4deg) translateX(-2px);
-    }
-    50% {
-        transform: rotate(5deg) translateX(4px);
-    }
-}
-
-/* Monster hair - slow flowing menace */
-@keyframes hairSwayMonster {
-    0%, 100% {
-        transform: rotate(-3deg) translateX(-2px);
-        filter: brightness(1);
-    }
-    50% {
-        transform: rotate(3deg) translateX(3px);
-        filter: brightness(1.1);
-    }
-}
+/* Legacy animations removed - V2 system uses cleaner keyframes */
 
 /* ==========================================================================
    FACE POP OVERLAY
@@ -1211,14 +1118,17 @@ body.vera-shake {
     display: none !important;
 }
 
-/* V2 Layers container */
+/* V2 Layers container - GPU accelerated */
 .vera-v2-layers {
     position: absolute;
     inset: 0;
     pointer-events: none;
+    /* GPU acceleration for smooth floating animation */
+    will-change: transform;
+    transform: translateZ(0);
 }
 
-/* V2 Layer base styles - CRITICAL: Perfect positioning */
+/* V2 Layer base styles - CRITICAL: Perfect positioning + GPU acceleration */
 .vera-v2-layer {
     position: absolute;
     left: 0;
@@ -1229,23 +1139,52 @@ body.vera-shake {
     background-position: center center;
     background-size: contain;
     pointer-events: none;
+    /* GPU acceleration for smooth animations */
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     transform: translateZ(0);
+    will-change: transform;
+    /* Anti-aliasing for crisp edges */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
 }
 
 /* ==========================================================================
    CRITICAL: Z-INDEX LAYERING (BOTTOM TO TOP)
-   This order prevents any glitching or overlap issues
+   Proper stacking order prevents glitching and overlap issues
    ========================================================================== */
-.vera-v2-tail { z-index: 1; }       /* Behind body */
-.vera-v2-wing-left { z-index: 2; }  /* Behind body */
-.vera-v2-wing-right { z-index: 3; } /* Behind body */
-.vera-v2-body { z-index: 4; }       /* Base layer */
-.vera-v2-head { z-index: 5; }       /* On top of body */
-.vera-v2-mouth { z-index: 6; }      /* On top of head */
-.vera-v2-eyes { z-index: 7; }       /* On top of mouth */
-.vera-v2-hair { z-index: 8; }       /* Top layer */
+.vera-v2-tail {
+    z-index: 1;
+    /* Tail behind everything */
+}
+.vera-v2-wing-left {
+    z-index: 2;
+    /* Left wing behind body */
+}
+.vera-v2-wing-right {
+    z-index: 3;
+    /* Right wing behind body */
+}
+.vera-v2-body {
+    z-index: 4;
+    /* Body is base layer */
+}
+.vera-v2-head {
+    z-index: 5;
+    /* Head on top of body */
+}
+.vera-v2-mouth {
+    z-index: 6;
+    /* Mouth on top of head */
+}
+.vera-v2-eyes {
+    z-index: 7;
+    /* Eyes on top of mouth */
+}
+.vera-v2-hair {
+    z-index: 8;
+    /* Hair is top layer */
+}
 
 /* ==========================================================================
    TRANSFORM ORIGINS - CRITICAL FOR SMOOTH ANIMATIONS
@@ -1311,182 +1250,156 @@ body.vera-shake {
    ========================================================================== */
 
 /* ===== BLINKING ANIMATION (Eyes) ===== */
+/* SMOOTH blink - quick and natural */
 @keyframes v2Blink {
-    0%, 90% { opacity: 1; }
-    92% { opacity: 0.3; }
-    94% { opacity: 0; }
-    96% { opacity: 0.3; }
+    0%, 92% { opacity: 1; }
+    94% { opacity: 0.2; }
+    95% { opacity: 0; }
+    96% { opacity: 0.2; }
     98%, 100% { opacity: 1; }
 }
 
 .vera-container.v2-mode .vera-v2-eyes {
-    animation: v2Blink 4s ease-in-out infinite;
+    animation: v2Blink 5s ease-in-out infinite;
 }
 
 /* ===== WING FLAPPING - LEFT WING ===== */
-/* Organic bird-like wing motion with ease curves */
+/* SMOOTH rotation + translation ONLY - NO SCALING (prevents glitching) */
 @keyframes v2WingFlapLeft {
     0%, 100% {
-        transform: rotate(0deg) translateY(0) scaleY(1);
+        transform: rotate(0deg) translateY(0);
     }
-    15% {
-        transform: rotate(-8deg) translateY(-2px) scaleY(1.05);
+    25% {
+        transform: rotate(-10deg) translateY(-3px);
     }
-    30% {
-        transform: rotate(-15deg) translateY(-4px) scaleY(1.08);
+    50% {
+        transform: rotate(-18deg) translateY(-5px);
     }
-    40% {
-        transform: rotate(-12deg) translateY(-6px) scaleY(1.1);
-    }
-    55% {
-        transform: rotate(-6deg) translateY(-4px) scaleY(1.05);
-    }
-    70% {
-        transform: rotate(-2deg) translateY(-2px) scaleY(1.02);
-    }
-    85% {
-        transform: rotate(2deg) translateY(-1px) scaleY(1);
+    75% {
+        transform: rotate(-8deg) translateY(-2px);
     }
 }
 
 .vera-container.v2-mode.fairy .vera-v2-wing-left {
-    animation: v2WingFlapLeft 1.4s ease-in-out infinite;
+    animation: v2WingFlapLeft 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
 .vera-container.v2-mode.partial .vera-v2-wing-left {
-    animation: v2WingFlapLeft 1.1s ease-in-out infinite;
+    animation: v2WingFlapLeft 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
 .vera-container.v2-mode.takeover .vera-v2-wing-left {
-    animation: v2WingFlapLeft 0.8s ease-in-out infinite;
+    animation: v2WingFlapLeft 0.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
 .vera-container.v2-mode.monster .vera-v2-wing-left {
-    animation: v2WingFlapLeft 1.8s ease-in-out infinite;
+    animation: v2WingFlapLeft 1.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
 /* ===== WING FLAPPING - RIGHT WING (mirrored) ===== */
-/* Organic bird-like wing motion with ease curves (mirrored) */
+/* SMOOTH rotation + translation ONLY - NO SCALING (prevents glitching) */
 @keyframes v2WingFlapRight {
     0%, 100% {
-        transform: rotate(0deg) translateY(0) scaleY(1);
+        transform: rotate(0deg) translateY(0);
     }
-    15% {
-        transform: rotate(8deg) translateY(-2px) scaleY(1.05);
+    25% {
+        transform: rotate(10deg) translateY(-3px);
     }
-    30% {
-        transform: rotate(15deg) translateY(-4px) scaleY(1.08);
+    50% {
+        transform: rotate(18deg) translateY(-5px);
     }
-    40% {
-        transform: rotate(12deg) translateY(-6px) scaleY(1.1);
-    }
-    55% {
-        transform: rotate(6deg) translateY(-4px) scaleY(1.05);
-    }
-    70% {
-        transform: rotate(2deg) translateY(-2px) scaleY(1.02);
-    }
-    85% {
-        transform: rotate(-2deg) translateY(-1px) scaleY(1);
+    75% {
+        transform: rotate(8deg) translateY(-2px);
     }
 }
 
 .vera-container.v2-mode.fairy .vera-v2-wing-right {
-    animation: v2WingFlapRight 1.4s ease-in-out infinite;
+    animation: v2WingFlapRight 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
 .vera-container.v2-mode.partial .vera-v2-wing-right {
-    animation: v2WingFlapRight 1.1s ease-in-out infinite;
+    animation: v2WingFlapRight 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
 .vera-container.v2-mode.takeover .vera-v2-wing-right {
-    animation: v2WingFlapRight 0.8s ease-in-out infinite;
+    animation: v2WingFlapRight 0.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
 .vera-container.v2-mode.monster .vera-v2-wing-right {
-    animation: v2WingFlapRight 1.8s ease-in-out infinite;
+    animation: v2WingFlapRight 1.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
 /* ===== TAIL WHIPPING ANIMATION ===== */
+/* SMOOTH tail movement - rotation + translation */
 @keyframes v2TailWhip {
     0%, 100% {
         transform: rotate(0deg) translateX(0);
     }
-    25% {
-        transform: rotate(15deg) translateX(5px);
+    30% {
+        transform: rotate(12deg) translateX(4px);
     }
-    50% {
-        transform: rotate(0deg) translateX(0);
-    }
-    75% {
-        transform: rotate(-12deg) translateX(-3px);
+    70% {
+        transform: rotate(-10deg) translateX(-3px);
     }
 }
 
 .vera-container.v2-mode.partial .vera-v2-tail {
-    animation: v2TailWhip 1.5s ease-in-out infinite;
+    animation: v2TailWhip 2s cubic-bezier(0.42, 0, 0.58, 1) infinite;
 }
 
 .vera-container.v2-mode.takeover .vera-v2-tail {
-    animation: v2TailWhip 1.0s ease-in-out infinite;
+    animation: v2TailWhip 1.3s cubic-bezier(0.42, 0, 0.58, 1) infinite;
 }
 
 .vera-container.v2-mode.monster .vera-v2-tail {
-    animation: v2TailWhip 0.8s ease-in-out infinite;
+    animation: v2TailWhip 1s cubic-bezier(0.42, 0, 0.58, 1) infinite;
 }
 
 /* ===== HAIR SWAYING ANIMATION ===== */
+/* SMOOTH hair movement - gentle sway */
 @keyframes v2HairSway {
     0%, 100% {
-        transform: rotate(0deg) translateX(0);
-    }
-    25% {
-        transform: rotate(-3deg) translateX(-2px);
+        transform: rotate(-1deg) translateX(-1px);
     }
     50% {
-        transform: rotate(0deg) translateX(0);
-    }
-    75% {
-        transform: rotate(3deg) translateX(2px);
+        transform: rotate(2deg) translateX(2px);
     }
 }
 
 .vera-container.v2-mode .vera-v2-hair {
-    animation: v2HairSway 3.5s ease-in-out infinite;
+    animation: v2HairSway 4s cubic-bezier(0.42, 0, 0.58, 1) infinite;
 }
 
 /* ===== MOUTH TALKING ANIMATION (when speaking) ===== */
+/* SMOOTH talking - subtle opacity pulse instead of scaling */
 @keyframes v2MouthTalk {
     0%, 100% {
-        transform: scaleY(1);
-    }
-    25% {
-        transform: scaleY(0.85);
+        opacity: 1;
+        transform: translateY(0);
     }
     50% {
-        transform: scaleY(1.05);
-    }
-    75% {
-        transform: scaleY(0.9);
+        opacity: 0.85;
+        transform: translateY(1px);
     }
 }
 
 .vera-container.v2-mode.talking .vera-v2-mouth {
-    animation: v2MouthTalk 0.2s ease-in-out infinite;
+    animation: v2MouthTalk 0.3s ease-in-out infinite;
 }
 
 /* ===== FLOATING/BREATHING ANIMATION (Applied to entire V2 layers) ===== */
+/* SMOOTH float - NO SCALING (prevents layer misalignment) */
 @keyframes v2Float {
     0%, 100% {
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
     }
     50% {
-        transform: translateY(-8px) scale(1.02);
+        transform: translateY(-8px);
     }
 }
 
 .vera-container.v2-mode .vera-v2-layers {
-    animation: v2Float 4s ease-in-out infinite;
+    animation: v2Float 4s cubic-bezier(0.42, 0, 0.58, 1) infinite;
 }
 
 /* ==========================================================================

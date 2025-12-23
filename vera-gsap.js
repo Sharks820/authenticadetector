@@ -32,47 +32,11 @@ console.log('[VERA GSAP] Script loaded, checking for GSAP...');
             monster: { wing: 0.5, hair: 0.8, float: 0.8 }
         },
 
-        // Initialize GSAP animations
+        // Initialize GSAP animations - DISABLED (conflicts with CSS)
         init() {
-            if (typeof gsap === 'undefined') {
-                console.warn('[VERA GSAP] GSAP not loaded, animations will use CSS fallback');
-                return false;
-            }
-
-            // Wait for VERA container to exist
-            const container = document.getElementById('veraContainer');
-            if (!container) {
-                console.warn('[VERA GSAP] Container not found, retrying...');
-                setTimeout(() => this.init(), 500);
-                return false;
-            }
-
-            // Get layer elements
-            this.wings = container.querySelector('.vera-wings');
-            this.hair = container.querySelector('.vera-hair');
-            this.body = container.querySelector('.vera-body');
-            this.stage = container.querySelector('.vera-stage');
-            this.container = container;
-
-            if (!this.wings || !this.hair || !this.body) {
-                console.warn('[VERA GSAP] Sprite layers not found');
-                return false;
-            }
-
-            // Kill any existing CSS animations
-            this.disableCSSAnimations();
-
-            // Create GSAP timelines
-            this.createWingAnimation();
-            this.createHairAnimation();
-            this.createFloatAnimation();
-            this.createBreatheAnimation();
-            this.createSparkleAnimations();
-
-            this.isInitialized = true;
-            console.log('[VERA GSAP] Smooth animations initialized!');
-
-            return true;
+            console.log('[VERA GSAP] DISABLED - Using pure CSS animations for V2 mode');
+            console.log('[VERA GSAP] CSS animations are more reliable and don\'t conflict with layered system');
+            return false; // Don't initialize - let CSS handle everything
         },
 
         // Disable CSS animations on layers
