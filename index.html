@@ -6830,6 +6830,26 @@ window.showCreateTrade = function() {
                             <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--primary);border-radius:24px;transition:0.4s"></span>
                         </label>
                     </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)">
+                        <div>
+                            <div style="font-weight:600;margin-bottom:4px">🧚 VERA Assistant</div>
+                            <div style="font-size:11px;color:var(--text3)">Show VERA helper on screen</div>
+                        </div>
+                        <label style="position:relative;display:inline-block;width:44px;height:24px">
+                            <input type="checkbox" id="prefVera" onchange="saveSettings();toggleVeraVisibility()" checked style="opacity:0;width:0;height:0">
+                            <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--primary);border-radius:24px;transition:0.4s"></span>
+                        </label>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)">
+                        <div>
+                            <div style="font-weight:600;margin-bottom:4px">🔔 VERA Sounds</div>
+                            <div style="font-size:11px;color:var(--text3)">VERA's voice and sound effects</div>
+                        </div>
+                        <label style="position:relative;display:inline-block;width:44px;height:24px">
+                            <input type="checkbox" id="prefVeraSounds" onchange="saveSettings();toggleVeraSounds()" checked style="opacity:0;width:0;height:0">
+                            <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--primary);border-radius:24px;transition:0.4s"></span>
+                        </label>
+                    </div>
                     <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0">
                         <div>
                             <div style="font-weight:600;margin-bottom:4px">🌙 Dark Mode</div>
@@ -6921,6 +6941,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof initCosmeticsSystem === 'function') {
         console.log('[Init] Starting cosmetics system...');
         initCosmeticsSystem();
+    }
+
+    // Apply VERA settings from localStorage
+    const veraEnabled = localStorage.getItem('veraEnabled');
+    const veraSoundsEnabled = localStorage.getItem('veraSoundsEnabled');
+
+    if (veraEnabled === 'false') {
+        const veraContainer = document.querySelector('.help-bot');
+        if (veraContainer) veraContainer.style.display = 'none';
+    }
+
+    // Store sounds preference for VERA controller to read
+    if (veraSoundsEnabled !== null) {
+        window.veraSoundsEnabled = veraSoundsEnabled !== 'false';
     }
 });
 
@@ -9945,7 +9979,9 @@ window.saveSettings = function() {
         },
         preferences: {
             sounds: document.getElementById('prefSounds')?.checked || true,
-            animations: document.getElementById('prefAnimations')?.checked || true
+            animations: document.getElementById('prefAnimations')?.checked || true,
+            vera: document.getElementById('prefVera')?.checked !== false,
+            veraSounds: document.getElementById('prefVeraSounds')?.checked !== false
         }
     };
 
@@ -9986,9 +10022,62 @@ window.loadSettings = function() {
                 document.getElementById('prefSounds').checked = settings.preferences.sounds !== false;
             if (document.getElementById('prefAnimations'))
                 document.getElementById('prefAnimations').checked = settings.preferences.animations !== false;
+            if (document.getElementById('prefVera'))
+                document.getElementById('prefVera').checked = settings.preferences.vera !== false;
+            if (document.getElementById('prefVeraSounds'))
+                document.getElementById('prefVeraSounds').checked = settings.preferences.veraSounds !== false;
+
+            // Apply VERA settings immediately
+            toggleVeraVisibility();
+            toggleVeraSounds();
         }
     } catch (e) {
         console.error('Error loading settings:', e);
+    }
+};
+
+// VERA visibility toggle
+window.toggleVeraVisibility = function() {
+    const isEnabled = document.getElementById('prefVera')?.checked !== false;
+
+    // Store preference
+    localStorage.setItem('veraEnabled', isEnabled.toString());
+
+    // Try multiple selectors for VERA container
+    const veraContainer = document.querySelector('.vera-container') || document.querySelector('.help-bot');
+
+    if (isEnabled) {
+        // Re-enable VERA
+        if (veraContainer) {
+            veraContainer.style.display = 'block';
+        } else if (window.VeraController && typeof window.VeraController.init === 'function') {
+            // Re-initialize if container doesn't exist
+            window.VeraController.init();
+        }
+    } else {
+        // Disable VERA
+        if (veraContainer) {
+            veraContainer.style.display = 'none';
+        }
+        if (window.VeraController && typeof window.VeraController.setEnabled === 'function') {
+            window.VeraController.setEnabled(false);
+        }
+    }
+};
+
+// VERA sounds toggle
+window.toggleVeraSounds = function() {
+    const isEnabled = document.getElementById('prefVeraSounds')?.checked !== false;
+
+    // Store preference
+    localStorage.setItem('veraSoundsEnabled', isEnabled.toString());
+
+    // Update VERA sound system
+    if (window.VeraSoundFX && typeof window.VeraSoundFX.setEnabled === 'function') {
+        window.VeraSoundFX.setEnabled(isEnabled);
+    }
+    if (window.VeraController && typeof window.VeraController.setSoundsEnabled === 'function') {
+        window.VeraController.setSoundsEnabled(isEnabled);
     }
 };
 

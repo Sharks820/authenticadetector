@@ -47,9 +47,19 @@
         init() {
             try {
                 this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                // Check user preference from Settings
+                const soundsPref = localStorage.getItem('veraSoundsEnabled');
+                if (soundsPref === 'false') {
+                    this.enabled = false;
+                }
             } catch (e) {
                 this.enabled = false;
             }
+        },
+
+        setEnabled(enabled) {
+            this.enabled = enabled;
+            localStorage.setItem('veraSoundsEnabled', enabled.toString());
         },
 
         resume() {
@@ -536,6 +546,13 @@
 
         // Initialize
         init() {
+            // Check if VERA is disabled in settings
+            const veraEnabled = localStorage.getItem('veraEnabled');
+            if (veraEnabled === 'false') {
+                console.log('[VERA] Disabled by user settings');
+                return; // Don't initialize if disabled
+            }
+
             this.createDOM();
             this.setInitialPosition();
             this.bindEvents();
@@ -1129,6 +1146,19 @@
             clearTimeout(this.speechTimer);
             clearTimeout(this.speechHideTimer);
             this.container?.remove();
+        },
+
+        // Enable/disable VERA visibility
+        setEnabled(enabled) {
+            if (this.container) {
+                this.container.style.display = enabled ? 'block' : 'none';
+            }
+            localStorage.setItem('veraEnabled', enabled.toString());
+        },
+
+        // Enable/disable VERA sounds
+        setSoundsEnabled(enabled) {
+            SoundFX.setEnabled(enabled);
         }
     };
 
