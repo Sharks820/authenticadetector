@@ -1005,6 +1005,165 @@
     }
 }
 
+/* ==================== HEADER BUTTON ANIMATIONS ==================== */
+
+/* Universal header button base styles */
+.home-header button,
+.view-header button,
+button[class*="header"],
+.header-btn {
+    position: relative !important;
+    overflow: hidden !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+/* Shimmer sweep effect */
+.home-header button::before,
+.view-header button::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    ) !important;
+    transition: left 0.5s ease !important;
+    pointer-events: none !important;
+}
+
+/* Hover shimmer */
+.home-header button:hover::before,
+.view-header button:hover::before {
+    left: 100% !important;
+}
+
+/* Hover effects */
+.home-header button:hover,
+.view-header button:hover {
+    transform: translateY(-3px) scale(1.1) !important;
+    filter: brightness(1.2) !important;
+    box-shadow:
+        0 6px 20px rgba(99, 102, 241, 0.4),
+        0 0 30px rgba(147, 197, 253, 0.3) !important;
+}
+
+/* Active/pressed effects */
+.home-header button:active,
+.view-header button:active {
+    transform: translateY(0) scale(0.95) !important;
+    filter: brightness(0.95) !important;
+    box-shadow:
+        0 2px 10px rgba(99, 102, 241, 0.3),
+        inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Quests button special glow */
+#headerQuestsBtn:hover {
+    border-color: rgba(94, 234, 212, 0.9) !important;
+    box-shadow:
+        0 6px 25px rgba(94, 234, 212, 0.5),
+        0 0 40px rgba(94, 234, 212, 0.3),
+        inset 0 0 20px rgba(94, 234, 212, 0.1) !important;
+}
+
+/* Daily bonus gift button wobble on hover */
+button[title="Daily Bonus"]:hover {
+    animation: gift-wobble 0.5s ease-in-out !important;
+    border-color: rgba(251, 191, 36, 0.9) !important;
+    box-shadow:
+        0 6px 25px rgba(251, 191, 36, 0.5),
+        0 0 40px rgba(251, 191, 36, 0.3) !important;
+}
+
+@keyframes gift-wobble {
+    0%, 100% { transform: translateY(-3px) scale(1.1) rotate(0deg); }
+    25% { transform: translateY(-3px) scale(1.1) rotate(-10deg); }
+    50% { transform: translateY(-3px) scale(1.1) rotate(0deg); }
+    75% { transform: translateY(-3px) scale(1.1) rotate(10deg); }
+}
+
+/* Settings button spin on hover */
+button[title="Settings"]:hover {
+    border-color: rgba(139, 92, 246, 0.7) !important;
+    box-shadow:
+        0 6px 25px rgba(139, 92, 246, 0.4),
+        0 0 30px rgba(139, 92, 246, 0.2) !important;
+}
+
+button[title="Settings"]:hover img {
+    animation: settings-spin 1s linear !important;
+}
+
+@keyframes settings-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(180deg); }
+}
+
+/* Profile button pulse on hover */
+.user-btn:hover {
+    animation: profile-pulse 0.6s ease-in-out !important;
+    box-shadow:
+        0 6px 25px rgba(99, 102, 241, 0.6),
+        0 0 40px rgba(99, 102, 241, 0.4),
+        inset 0 0 20px rgba(99, 102, 241, 0.2) !important;
+}
+
+@keyframes profile-pulse {
+    0%, 100% { transform: translateY(-3px) scale(1.1); }
+    50% { transform: translateY(-3px) scale(1.15); }
+}
+
+/* Back button special animation */
+.back-btn:hover,
+button[onclick*="closeView"]:hover,
+button[onclick*="goBack"]:hover {
+    transform: translateX(-5px) scale(1.1) !important;
+}
+
+/* All buttons - focus ring for accessibility */
+.home-header button:focus-visible,
+.view-header button:focus-visible {
+    outline: 2px solid rgba(94, 234, 212, 0.8) !important;
+    outline-offset: 3px !important;
+}
+
+/* Quest badge bounce animation */
+#questsBadge {
+    animation: badge-bounce 2s ease-in-out infinite !important;
+}
+
+@keyframes badge-bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+/* Header action buttons (injected into view headers) */
+.header-action-btn {
+    position: relative !important;
+    overflow: hidden !important;
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.header-action-btn:hover {
+    transform: translateY(-2px) scale(1.15) !important;
+    filter: brightness(1.2) !important;
+}
+
+.header-action-btn:active {
+    transform: translateY(0) scale(0.9) !important;
+}
+
+/* Header actions container */
+.header-actions {
+    margin-left: auto !important;
+    margin-right: 8px !important;
+}
+
 /* ==================== ACCESSIBILITY ==================== */
 
 @media (prefers-reduced-motion: reduce) {

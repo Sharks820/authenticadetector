@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <!-- Bell gold gradients -->
+    <linearGradient id="bellGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fefce8"/>
+      <stop offset="15%" stop-color="#fef08a"/>
+      <stop offset="30%" stop-color="#fde047"/>
+      <stop offset="50%" stop-color="#facc15"/>
+      <stop offset="70%" stop-color="#eab308"/>
+      <stop offset="85%" stop-color="#ca8a04"/>
+      <stop offset="100%" stop-color="#a16207"/>
+    </linearGradient>
+    <linearGradient id="bellHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fefce8"/>
+      <stop offset="100%" stop-color="#fde047" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="bellEdge" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#92400e"/>
+      <stop offset="25%" stop-color="#a16207"/>
+      <stop offset="50%" stop-color="#ca8a04"/>
+      <stop offset="75%" stop-color="#a16207"/>
+      <stop offset="100%" stop-color="#92400e"/>
+    </linearGradient>
+    <radialGradient id="bellGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fde047" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#ca8a04" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feOffset in="blur" dx="2" dy="4" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Background glow -->
+  <ellipse cx="64" cy="68" rx="55" ry="50" fill="url(#bellGlow)"/>
+  
+  <!-- Bell body -->
+  <g filter="url(#innerShadow)">
+    <!-- Main bell shape -->
+    <path d="M 64 18 C 42 18, 26 38, 26 62 C 26 78, 28 88, 18 96 L 18 102 L 110 102 L 110 96 C 100 88, 102 78, 102 62 C 102 38, 86 18, 64 18 Z" fill="url(#bellGold)" stroke="#92400e" stroke-width="3.5"/>
+    
+    <!-- Bell opening rim -->
+    <ellipse cx="64" cy="100" rx="48" ry="8" fill="url(#bellEdge)" stroke="#92400e" stroke-width="2"/>
+    
+    <!-- Bell highlight -->
+    <path d="M 44 30 C 52 24, 64 22, 76 26 C 68 24, 54 26, 48 34 L 38 70 C 38 60, 42 42, 44 30 Z" fill="url(#bellHighlight)" opacity="0.5"/>
+    
+    <!-- Inner shadow of bell -->
+    <path d="M 30 90 C 40 85, 55 82, 64 82 C 73 82, 88 85, 98 90 C 95 88, 85 86, 64 86 C 43 86, 33 88, 30 90 Z" fill="#92400e" opacity="0.3"/>
+  </g>
+  
+  <!-- Bell top mount -->
+  <g filter="url(#innerShadow)">
+    <ellipse cx="64" cy="20" rx="12" ry="6" fill="url(#bellGold)" stroke="#92400e" stroke-width="2"/>
+    <ellipse cx="64" cy="20" rx="8" ry="3.5" fill="url(#bellHighlight)" opacity="0.4"/>
+  </g>
+  
+  <!-- Hanging loop at top -->
+  <g filter="url(#innerShadow)">
+    <circle cx="64" cy="10" r="8" fill="none" stroke="url(#bellGold)" stroke-width="5"/>
+    <circle cx="64" cy="10" r="8" fill="none" stroke="#92400e" stroke-width="1.5"/>
+    <!-- Loop highlight -->
+    <path d="M 58 6 C 60 4, 68 4, 70 6" stroke="#fef08a" stroke-width="2" fill="none" opacity="0.6"/>
+  </g>
+  
+  <!-- Clapper (the thing that hangs inside and hits the bell) -->
+  <g filter="url(#strongGlow)">
+    <!-- Clapper string/rod -->
+    <line x1="64" y1="70" x2="64" y2="105" stroke="url(#bellGold)" stroke-width="4" stroke-linecap="round"/>
+    <line x1="64" y1="72" x2="64" y2="90" stroke="#fef08a" stroke-width="1.5" opacity="0.5"/>
+    
+    <!-- Clapper ball -->
+    <circle cx="64" cy="112" r="10" fill="url(#bellGold)" stroke="#92400e" stroke-width="2.5"/>
+    <ellipse cx="61" cy="109" rx="4" ry="3" fill="#fefce8" opacity="0.5"/>
+  </g>
+  
+  <!-- Sound waves -->
+  <g stroke="#fde047" stroke-width="2.5" fill="none" opacity="0.6" filter="url(#softGlow)">
+    <path d="M 14 70 C 10 60, 10 50, 14 40"/>
+    <path d="M 6 75 C 0 60, 0 45, 6 30"/>
+    <path d="M 114 70 C 118 60, 118 50, 114 40"/>
+    <path d="M 122 75 C 128 60, 128 45, 122 30"/>
+  </g>
+  
+  <!-- NOTIFICATION BADGE - uses data attribute for scripting -->
+  <g id="notification-badge" filter="url(#strongGlow)" data-count="3">
+    <circle cx="98" cy="28" r="18" fill="#ef4444" stroke="#b91c1c" stroke-width="3"/>
+    <!-- Inner highlight -->
+    <ellipse cx="94" cy="24" rx="6" ry="4" fill="#fca5a5" opacity="0.4"/>
+    <!-- Count text - can be updated via script -->
+    <text id="notification-count" x="98" y="34" font-size="18" font-weight="bold" fill="#fff" text-anchor="middle" font-family="Arial Black, sans-serif">3</text>
+  </g>
+  
+  <!-- Sparkles -->
+  <g fill="#fefce8" filter="url(#softGlow)">
+    <circle cx="28" cy="24" r="3"/>
+    <circle cx="44" cy="8" r="2.5"/>
+    <circle cx="84" cy="8" r="2.5"/>
+  </g>
+</svg>

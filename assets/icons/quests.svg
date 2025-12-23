@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <!-- Parchment gradients -->
+    <linearGradient id="parchment" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef3c7"/>
+      <stop offset="20%" stop-color="#fde68a"/>
+      <stop offset="50%" stop-color="#fcd34d"/>
+      <stop offset="80%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="parchmentLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fffbeb"/>
+      <stop offset="100%" stop-color="#fef3c7" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="parchmentDark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d97706" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#92400e"/>
+    </linearGradient>
+    
+    <!-- Roll gradient -->
+    <linearGradient id="rollShade" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="30%" stop-color="#fcd34d"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="70%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#92400e"/>
+    </linearGradient>
+    
+    <!-- Seal gradients -->
+    <radialGradient id="sealWax" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#fca5a5"/>
+      <stop offset="30%" stop-color="#ef4444"/>
+      <stop offset="60%" stop-color="#dc2626"/>
+      <stop offset="100%" stop-color="#7f1d1d"/>
+    </radialGradient>
+    
+    <!-- Magic glow -->
+    <radialGradient id="magicGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fcd34d" stop-opacity="0.5"/>
+      <stop offset="50%" stop-color="#7c3aed" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    
+    <!-- Star gradient -->
+    <radialGradient id="starGold" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#fcd34d"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </radialGradient>
+    
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="innerShadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+      <feOffset in="blur" dx="2" dy="3"/>
+      <feComposite in="SourceGraphic" operator="over"/>
+    </filter>
+    <filter id="paperTexture">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise"/>
+      <feDiffuseLighting in="noise" lighting-color="#fef3c7" surfaceScale="1" result="light">
+        <feDistantLight azimuth="45" elevation="60"/>
+      </feDiffuseLighting>
+      <feBlend in="SourceGraphic" in2="light" mode="multiply"/>
+    </filter>
+  </defs>
+  
+  <!-- Background glow -->
+  <ellipse cx="64" cy="70" rx="55" ry="50" fill="url(#magicGlow)"/>
+  
+  <!-- === SCROLL BODY === -->
+  <g filter="url(#innerShadow)">
+    <!-- Main parchment body -->
+    <path d="
+      M 30 30
+      L 98 30
+      L 98 105
+      L 30 105
+      Z
+    " fill="url(#parchment)" stroke="#b45309" stroke-width="2"/>
+    
+    <!-- Parchment highlight -->
+    <path d="M 32 32 L 96 32 L 96 50 L 32 50 Z" fill="url(#parchmentLight)" opacity="0.6"/>
+    
+    <!-- Parchment shadow -->
+    <path d="M 32 90 L 96 90 L 96 103 L 32 103 Z" fill="url(#parchmentDark)" opacity="0.4"/>
+    
+    <!-- Aged paper texture lines -->
+    <g stroke="#d97706" stroke-width="0.5" opacity="0.3">
+      <path d="M 35 45 C 50 43, 70 47, 93 44"/>
+      <path d="M 33 60 C 55 58, 80 62, 95 59"/>
+      <path d="M 35 75 C 48 73, 75 77, 92 74"/>
+      <path d="M 34 90 C 60 88, 85 92, 94 89"/>
+    </g>
+    
+    <!-- === TOP ROLL === -->
+    <ellipse cx="64" cy="25" rx="38" ry="8" fill="url(#rollShade)" stroke="#92400e" stroke-width="1.5"/>
+    <ellipse cx="64" cy="25" rx="35" ry="6" fill="url(#parchment)" opacity="0.5"/>
+    <ellipse cx="64" cy="23" rx="30" ry="4" fill="#fef3c7" opacity="0.4"/>
+    <!-- Roll end caps -->
+    <ellipse cx="28" cy="25" rx="5" ry="10" fill="url(#rollShade)" stroke="#92400e" stroke-width="1"/>
+    <ellipse cx="28" cy="24" rx="3" ry="6" fill="#fde68a" opacity="0.5"/>
+    <ellipse cx="100" cy="25" rx="5" ry="10" fill="url(#rollShade)" stroke="#92400e" stroke-width="1"/>
+    <ellipse cx="100" cy="24" rx="3" ry="6" fill="#fde68a" opacity="0.5"/>
+    
+    <!-- === BOTTOM ROLL === -->
+    <ellipse cx="64" cy="110" rx="38" ry="8" fill="url(#rollShade)" stroke="#92400e" stroke-width="1.5"/>
+    <ellipse cx="64" cy="110" rx="35" ry="6" fill="url(#parchment)" opacity="0.5"/>
+    <ellipse cx="64" cy="108" rx="30" ry="4" fill="#fef3c7" opacity="0.4"/>
+    <!-- Roll end caps -->
+    <ellipse cx="28" cy="110" rx="5" ry="10" fill="url(#rollShade)" stroke="#92400e" stroke-width="1"/>
+    <ellipse cx="28" cy="109" rx="3" ry="6" fill="#fde68a" opacity="0.5"/>
+    <ellipse cx="100" cy="110" rx="5" ry="10" fill="url(#rollShade)" stroke="#92400e" stroke-width="1"/>
+    <ellipse cx="100" cy="109" rx="3" ry="6" fill="#fde68a" opacity="0.5"/>
+  </g>
+  
+  <!-- === TEXT LINES (quest content) === -->
+  <g stroke="#92400e" stroke-width="2" stroke-linecap="round" opacity="0.6">
+    <path d="M 40 45 L 88 45"/>
+    <path d="M 40 55 L 85 55"/>
+    <path d="M 40 65 L 80 65"/>
+    <path d="M 40 75 L 75 75"/>
+  </g>
+  
+  <!-- === CHECK MARKS (completed tasks) === -->
+  <g filter="url(#softGlow)">
+    <path d="M 42 45 L 46 49 L 54 41" stroke="#22c55e" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 42 55 L 46 59 L 54 51" stroke="#22c55e" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  
+  <!-- === WAX SEAL === -->
+  <g filter="url(#softGlow)">
+    <!-- Seal base -->
+    <circle cx="82" cy="90" r="14" fill="url(#sealWax)" stroke="#7f1d1d" stroke-width="2"/>
+    <circle cx="82" cy="90" r="11" fill="none" stroke="#991b1b" stroke-width="1" opacity="0.5"/>
+    
+    <!-- Seal emblem (star) -->
+    <path d="
+      M 82 80
+      L 84 86
+      L 91 86
+      L 86 90
+      L 88 97
+      L 82 93
+      L 76 97
+      L 78 90
+      L 73 86
+      L 80 86
+      Z
+    " fill="url(#starGold)" stroke="#b45309" stroke-width="0.5"/>
+    
+    <!-- Seal highlight -->
+    <ellipse cx="78" cy="85" rx="4" ry="3" fill="#fca5a5" opacity="0.5"/>
+  </g>
+  
+  <!-- === EXCLAMATION MARK (new quest indicator) === -->
+  <g filter="url(#softGlow)">
+    <circle cx="20" cy="20" r="12" fill="#fcd34d" stroke="#f59e0b" stroke-width="2"/>
+    <text x="20" y="26" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="16" fill="#92400e">!</text>
+  </g>
+  
+  <!-- Magic particles -->
+  <g fill="#fcd34d" opacity="0.7" filter="url(#softGlow)">
+    <circle cx="15" cy="45" r="2"/>
+    <circle cx="113" cy="45" r="2"/>
+    <circle cx="18" cy="80" r="1.5"/>
+    <circle cx="110" cy="80" r="1.5"/>
+    <circle cx="50" cy="15" r="1.5"/>
+    <circle cx="78" cy="15" r="1.5"/>
+  </g>
+</svg>

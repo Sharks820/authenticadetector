@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="medalGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fffbeb"/>
+      <stop offset="15%" stop-color="#fef3c7"/>
+      <stop offset="30%" stop-color="#fde047"/>
+      <stop offset="50%" stop-color="#facc15"/>
+      <stop offset="70%" stop-color="#eab308"/>
+      <stop offset="85%" stop-color="#ca8a04"/>
+      <stop offset="100%" stop-color="#854d0e"/>
+    </linearGradient>
+    <linearGradient id="goldShine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#854d0e"/>
+      <stop offset="20%" stop-color="#ca8a04"/>
+      <stop offset="40%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#fffbeb"/>
+      <stop offset="60%" stop-color="#fef08a"/>
+      <stop offset="80%" stop-color="#ca8a04"/>
+      <stop offset="100%" stop-color="#854d0e"/>
+    </linearGradient>
+    <linearGradient id="goldHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fffbeb"/>
+      <stop offset="100%" stop-color="#fde047" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="ribbonPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e9d5ff"/>
+      <stop offset="25%" stop-color="#c4b5fd"/>
+      <stop offset="50%" stop-color="#a78bfa"/>
+      <stop offset="75%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#5b21b6"/>
+    </linearGradient>
+    <linearGradient id="ribbonTeal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ccfbf1"/>
+      <stop offset="25%" stop-color="#99f6e4"/>
+      <stop offset="50%" stop-color="#5eead4"/>
+      <stop offset="75%" stop-color="#2dd4bf"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+    <radialGradient id="magicGem" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="20%" stop-color="#f5d0fe"/>
+      <stop offset="40%" stop-color="#e879f9"/>
+      <stop offset="60%" stop-color="#d946ef"/>
+      <stop offset="80%" stop-color="#a21caf"/>
+      <stop offset="100%" stop-color="#4a044e"/>
+    </radialGradient>
+    <radialGradient id="medalGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fef08a" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#ca8a04" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feOffset in="blur" dx="2" dy="4" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    </filter>
+    <filter id="gemGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#e879f9" flood-opacity="0.6"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background glow -->
+  <ellipse cx="64" cy="72" rx="56" ry="48" fill="url(#medalGlow)"/>
+  
+  <!-- Ribbons behind medal -->
+  <g filter="url(#innerShadow)">
+    <!-- Left ribbon -->
+    <path d="M 40 28 L 22 6 L 34 6 L 56 32 L 56 68 L 40 60 Z" fill="url(#ribbonPurple)" stroke="#4c1d95" stroke-width="2"/>
+    <path d="M 44 20 L 32 10 L 42 20" fill="#c4b5fd" opacity="0.5"/>
+    <path d="M 50 36 L 46 44 L 50 52" stroke="#5b21b6" stroke-width="1.5" fill="none" opacity="0.4"/>
+    
+    <!-- Right ribbon -->
+    <path d="M 88 28 L 106 6 L 94 6 L 72 32 L 72 68 L 88 60 Z" fill="url(#ribbonTeal)" stroke="#0f766e" stroke-width="2"/>
+    <path d="M 84 20 L 96 10 L 86 20" fill="#5eead4" opacity="0.5"/>
+    <path d="M 78 36 L 82 44 L 78 52" stroke="#0d9488" stroke-width="1.5" fill="none" opacity="0.4"/>
+  </g>
+  
+  <!-- Medal body - CENTERED AT 64,76 -->
+  <g filter="url(#strongGlow)">
+    <!-- Medal back 3D edge -->
+    <circle cx="64" cy="80" r="44" fill="#78350f"/>
+    
+    <!-- Outer medal ring -->
+    <circle cx="64" cy="76" r="44" fill="url(#medalGold)" stroke="#78350f" stroke-width="3.5"/>
+    
+    <!-- Decorative outer ring -->
+    <circle cx="64" cy="76" r="38" fill="none" stroke="url(#goldShine)" stroke-width="5"/>
+    
+    <!-- Decorative dots - evenly spaced around center 64,76 -->
+    <g fill="#fef9c3">
+      <circle cx="64" cy="35" r="3"/>
+      <circle cx="64" cy="117" r="3"/>
+      <circle cx="23" cy="76" r="3"/>
+      <circle cx="105" cy="76" r="3"/>
+      <circle cx="35" cy="47" r="2.5"/>
+      <circle cx="93" cy="47" r="2.5"/>
+      <circle cx="35" cy="105" r="2.5"/>
+      <circle cx="93" cy="105" r="2.5"/>
+    </g>
+    
+    <!-- Inner medal face -->
+    <circle cx="64" cy="76" r="30" fill="url(#medalGold)" stroke="#92400e" stroke-width="2.5"/>
+    
+    <!-- Inner ring -->
+    <circle cx="64" cy="76" r="26" fill="none" stroke="#ca8a04" stroke-width="2"/>
+    
+    <!-- Medal face highlight -->
+    <path d="M 46 62 C 52 52, 70 48, 82 58 C 74 52, 56 52, 50 64 Z" fill="url(#goldHighlight)" opacity="0.55"/>
+  </g>
+  
+  <!-- Star emblem - CENTERED AT 64,76 -->
+  <g filter="url(#strongGlow)">
+    <polygon points="64,52 71,68 88,71 76,83 79,100 64,91 49,100 52,83 40,71 57,68" fill="url(#medalGold)" stroke="#92400e" stroke-width="2.5"/>
+    <polygon points="64,58 69,70 82,72 72,81 75,94 64,87 53,94 56,81 46,72 59,70" fill="url(#goldShine)" stroke="#a16207" stroke-width="1"/>
+    <polygon points="64,62 68,72 78,74 70,80 72,90 64,84 56,90 58,80 50,74 60,72" fill="#fef9c3" opacity="0.35"/>
+  </g>
+  
+  <!-- Center magic gem - EXACTLY CENTERED AT 64,76 -->
+  <g filter="url(#gemGlow)">
+    <circle cx="64" cy="76" r="11" fill="url(#magicGem)" stroke="#86198f" stroke-width="2"/>
+    <circle cx="64" cy="76" r="7" fill="none" stroke="#d946ef" stroke-width="1.5" opacity="0.5"/>
+    <ellipse cx="61" cy="73" rx="4" ry="3" fill="#fff" opacity="0.7"/>
+    <circle cx="67" cy="79" r="1.5" fill="#fff" opacity="0.4"/>
+  </g>
+  
+  <!-- Top hanging ring -->
+  <g filter="url(#strongGlow)">
+    <circle cx="64" cy="30" r="7" fill="none" stroke="url(#goldShine)" stroke-width="4"/>
+    <circle cx="64" cy="30" r="7" fill="none" stroke="#78350f" stroke-width="1.5"/>
+    <ellipse cx="62" cy="27" rx="2.5" ry="1.5" fill="#fffbeb" opacity="0.5"/>
+  </g>
+  
+  <!-- Sparkles -->
+  <g fill="#fffbeb" filter="url(#softGlow)">
+    <circle cx="16" cy="24" r="3"/>
+    <circle cx="112" cy="24" r="3"/>
+    <circle cx="12" cy="76" r="2.5"/>
+    <circle cx="116" cy="76" r="2.5"/>
+  </g>
+  
+  <!-- Floating particles -->
+  <g fill="#fde047" filter="url(#softGlow)" opacity="0.8">
+    <circle cx="28" cy="14" r="2"/>
+    <circle cx="100" cy="14" r="2"/>
+  </g>
+</svg>

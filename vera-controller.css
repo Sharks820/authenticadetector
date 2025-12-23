@@ -1,7 +1,7 @@
 /* =============================================================================
-   VERA ANIMATION CONTROLLER v3.5.0 - CSS
+   VERA ANIMATION CONTROLLER v3.6.0 - CSS
    Complete overhaul: Smooth animations, soft particles, no glitching
-   Updates: Responsive positioning, more transparent mobile dialog (0.55 opacity)
+   Updates: Blender bone-rigged animation frames for fairy state
    ============================================================================= */
 
 /* ==========================================================================
@@ -9,8 +9,8 @@
    ========================================================================== */
 .vera-container {
     position: fixed;
-    width: 140px;
-    height: 140px;
+    width: 200px;
+    height: 200px;
     z-index: 9990;  /* High enough to be above UI (1000) but below modals (9999+) */
     cursor: pointer;
     /* Remove default right/bottom positioning - JS handles position */
@@ -988,4 +988,258 @@ body.vera-shake {
     .vera-container {
         display: none;
     }
+}
+
+/* ==========================================================================
+   BLENDER ANIMATED SPRITE MODE v1.0
+   Uses pre-rendered bone-rigged animation frames
+   ========================================================================== */
+
+/* Animated sprite container - hides layer-based elements, shows single animated sprite */
+.vera-container.animated-mode .vera-body,
+.vera-container.animated-mode .vera-wings,
+.vera-container.animated-mode .vera-hair,
+.vera-container.animated-mode .vera-overlay {
+    display: none !important;
+}
+
+/* The animated sprite element */
+.vera-animated-sprite {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 10;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* Fairy animated frames */
+.vera-container.fairy.animated-mode .vera-animated-sprite {
+    background-image: url('assets/vera/vera_fairy_frame_00.png');
+    animation: veraFairyFrames 1s steps(1) infinite;
+}
+
+@keyframes veraFairyFrames {
+    0%      { background-image: url('assets/vera/vera_fairy_frame_00.png'); }
+    12.5%   { background-image: url('assets/vera/vera_fairy_frame_01.png'); }
+    25%     { background-image: url('assets/vera/vera_fairy_frame_02.png'); }
+    37.5%   { background-image: url('assets/vera/vera_fairy_frame_03.png'); }
+    50%     { background-image: url('assets/vera/vera_fairy_frame_04.png'); }
+    62.5%   { background-image: url('assets/vera/vera_fairy_frame_05.png'); }
+    75%     { background-image: url('assets/vera/vera_fairy_frame_06.png'); }
+    87.5%   { background-image: url('assets/vera/vera_fairy_frame_07.png'); }
+}
+
+/* Hover effect for animated mode */
+.vera-container.animated-mode:hover .vera-animated-sprite {
+    filter: brightness(1.1) drop-shadow(0 0 10px rgba(147, 197, 253, 0.6));
+}
+
+/* Poke/click effect */
+.vera-container.animated-mode:active .vera-animated-sprite {
+    filter: brightness(1.2) drop-shadow(0 0 15px rgba(251, 207, 232, 0.8));
+    transform: scale(0.95);
+}
+
+/* Responsive animated sprite */
+@media (max-width: 480px) {
+    .vera-animated-sprite {
+        transform: scale(1.1);
+    }
+}
+
+/* ==========================================================================
+   NEW ANIMATED GIF MODE - v3 Visible GIFs (Single animated image)
+   ========================================================================== */
+
+/* GIF mode uses a single animated GIF for each state */
+.vera-container.gif-mode .vera-body {
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Hide other layers in GIF mode (body contains full animation) */
+.vera-container.gif-mode .vera-wings,
+.vera-container.gif-mode .vera-hair,
+.vera-container.gif-mode .vera-animated-sprite {
+    display: none !important;
+}
+
+/* Fairy state - new visible GIF */
+.vera-container.gif-mode.fairy .vera-body {
+    background-image: url('assets/vera/vera_blurb_v3_fairy_VISIBLE.gif');
+}
+
+/* Monster state - new visible GIF */
+.vera-container.gif-mode.monster .vera-body {
+    background-image: url('assets/vera/vera_blurb_v3_monster_VISIBLE.gif');
+}
+
+/* Partial and takeover use the same as before in GIF mode (fallback to existing) */
+.vera-container.gif-mode.partial .vera-body {
+    background-image: url('assets/vera/vera_hybrid_takeover.png');
+}
+
+.vera-container.gif-mode.takeover .vera-body {
+    background-image: url('assets/vera/vera_hybrid_takeover.png');
+}
+
+/* ==========================================================================
+   V2 LAYERED ANIMATION MODE - New anime-style VERA with full animation
+   Uses: body, head, eyes, mouth, hair, wing_left, wing_right, tail
+   ========================================================================== */
+
+/* V2 Mode - hide old layers, show new layers */
+.vera-container.v2-mode .vera-body,
+.vera-container.v2-mode .vera-wings,
+.vera-container.v2-mode .vera-hair,
+.vera-container.v2-mode .vera-animated-sprite {
+    display: none !important;
+}
+
+/* V2 Layers container - holds all animated layers */
+.vera-container.v2-mode .vera-v2-layers {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* V2 Layer base styles */
+.vera-container.v2-mode .vera-v2-layer {
+    position: absolute;
+    inset: 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    pointer-events: none;
+}
+
+/* V2 Layer z-index ordering */
+.vera-container.v2-mode .vera-v2-body { z-index: 1; }
+.vera-container.v2-mode .vera-v2-head { z-index: 2; }
+.vera-container.v2-mode .vera-v2-mouth { z-index: 3; }
+.vera-container.v2-mode .vera-v2-eyes { z-index: 4; }
+.vera-container.v2-mode .vera-v2-hair { z-index: 5; }
+.vera-container.v2-mode .vera-v2-wing-left { z-index: 6; transform-origin: right center; }
+.vera-container.v2-mode .vera-v2-wing-right { z-index: 7; transform-origin: left center; }
+.vera-container.v2-mode .vera-v2-tail { z-index: 0; transform-origin: left center; }
+
+/* ===== V2 FAIRY ASSETS ===== */
+.vera-container.v2-mode.fairy .vera-v2-body { background-image: url('assets/vera/v2/vera_fairy/vera_fairy_body.png'); }
+.vera-container.v2-mode.fairy .vera-v2-head { background-image: url('assets/vera/v2/vera_fairy/vera_fairy_head.png'); }
+.vera-container.v2-mode.fairy .vera-v2-eyes { background-image: url('assets/vera/v2/vera_fairy/vera_fairy_eyes.png'); }
+.vera-container.v2-mode.fairy .vera-v2-mouth { background-image: url('assets/vera/v2/vera_fairy/vera_fairy_mouth.png'); }
+.vera-container.v2-mode.fairy .vera-v2-hair { background-image: url('assets/vera/v2/vera_fairy/vera_fairy_hair.png'); }
+.vera-container.v2-mode.fairy .vera-v2-wing-left { background-image: url('assets/vera/v2/vera_fairy/vera_fairy_wing_left.png'); }
+.vera-container.v2-mode.fairy .vera-v2-wing-right { background-image: url('assets/vera/v2/vera_fairy/vera_fairy_wing_right.png'); }
+.vera-container.v2-mode.fairy .vera-v2-tail { display: none; }
+
+/* ===== V2 PARTIAL ASSETS ===== */
+.vera-container.v2-mode.partial .vera-v2-body { background-image: url('assets/vera/v2/vera_partial/vera_partial_body.png'); }
+.vera-container.v2-mode.partial .vera-v2-head { background-image: url('assets/vera/v2/vera_partial/vera_partial_head.png'); }
+.vera-container.v2-mode.partial .vera-v2-eyes { background-image: url('assets/vera/v2/vera_partial/vera_partial_eyes.png'); }
+.vera-container.v2-mode.partial .vera-v2-mouth { background-image: url('assets/vera/v2/vera_partial/vera_partial_mouth.png'); }
+.vera-container.v2-mode.partial .vera-v2-hair { background-image: url('assets/vera/v2/vera_partial/vera_partial_hair.png'); }
+.vera-container.v2-mode.partial .vera-v2-wing-left { background-image: url('assets/vera/v2/vera_partial/vera_partial_wing_left.png'); }
+.vera-container.v2-mode.partial .vera-v2-wing-right { background-image: url('assets/vera/v2/vera_partial/vera_partial_wing_right.png'); }
+.vera-container.v2-mode.partial .vera-v2-tail { background-image: url('assets/vera/v2/vera_partial/vera_partial_tail.png'); }
+
+/* ===== V2 TAKEOVER ASSETS ===== */
+.vera-container.v2-mode.takeover .vera-v2-body { background-image: url('assets/vera/v2/vera_takeover/vera_takeover_body.png'); }
+.vera-container.v2-mode.takeover .vera-v2-head { background-image: url('assets/vera/v2/vera_takeover/vera_takeover_head.png'); }
+.vera-container.v2-mode.takeover .vera-v2-eyes { background-image: url('assets/vera/v2/vera_takeover/vera_takeover_eyes.png'); }
+.vera-container.v2-mode.takeover .vera-v2-mouth { background-image: url('assets/vera/v2/vera_takeover/vera_takeover_mouth.png'); }
+.vera-container.v2-mode.takeover .vera-v2-hair { background-image: url('assets/vera/v2/vera_takeover/vera_takeover_hair.png'); }
+.vera-container.v2-mode.takeover .vera-v2-wing-left { background-image: url('assets/vera/v2/vera_takeover/vera_takeover_wing_left.png'); }
+.vera-container.v2-mode.takeover .vera-v2-wing-right { background-image: url('assets/vera/v2/vera_takeover/vera_takeover_wing_right.png'); }
+.vera-container.v2-mode.takeover .vera-v2-tail { background-image: url('assets/vera/v2/vera_takeover/vera_takeover_tail.png'); }
+
+/* ===== V2 MONSTER ASSETS ===== */
+.vera-container.v2-mode.monster .vera-v2-body { background-image: url('assets/vera/v2/vera_monster/vera_monster_body.png'); }
+.vera-container.v2-mode.monster .vera-v2-head { background-image: url('assets/vera/v2/vera_monster/vera_monster_head.png'); }
+.vera-container.v2-mode.monster .vera-v2-eyes { background-image: url('assets/vera/v2/vera_monster/vera_monster_eyes.png'); }
+.vera-container.v2-mode.monster .vera-v2-mouth { background-image: url('assets/vera/v2/vera_monster/vera_monster_mouth.png'); }
+.vera-container.v2-mode.monster .vera-v2-hair { background-image: url('assets/vera/v2/vera_monster/vera_monster_hair.png'); }
+.vera-container.v2-mode.monster .vera-v2-wing-left { background-image: url('assets/vera/v2/vera_monster/vera_monster_wing_left.png'); }
+.vera-container.v2-mode.monster .vera-v2-wing-right { background-image: url('assets/vera/v2/vera_monster/vera_monster_wing_right.png'); }
+.vera-container.v2-mode.monster .vera-v2-tail { background-image: url('assets/vera/v2/vera_monster/vera_monster_tail.png'); }
+
+/* ===== V2 ANIMATIONS ===== */
+
+/* Blinking animation - toggle eyes visibility */
+@keyframes v2Blink {
+    0%, 90%, 100% { opacity: 1; }
+    95% { opacity: 0; }
+}
+.vera-container.v2-mode .vera-v2-eyes {
+    animation: v2Blink 4s ease-in-out infinite;
+}
+
+/* Wing flapping - left wing */
+@keyframes v2WingFlapLeft {
+    0%, 100% { transform: rotate(0deg) scaleX(1); }
+    25% { transform: rotate(-8deg) scaleX(0.95); }
+    50% { transform: rotate(0deg) scaleX(1); }
+    75% { transform: rotate(5deg) scaleX(1.02); }
+}
+.vera-container.v2-mode.fairy .vera-v2-wing-left {
+    animation: v2WingFlapLeft 1.2s ease-in-out infinite;
+}
+
+/* Wing flapping - right wing (mirrored) */
+@keyframes v2WingFlapRight {
+    0%, 100% { transform: rotate(0deg) scaleX(1); }
+    25% { transform: rotate(8deg) scaleX(0.95); }
+    50% { transform: rotate(0deg) scaleX(1); }
+    75% { transform: rotate(-5deg) scaleX(1.02); }
+}
+.vera-container.v2-mode.fairy .vera-v2-wing-right {
+    animation: v2WingFlapRight 1.2s ease-in-out infinite;
+}
+
+/* Monster/takeover - more aggressive wing flapping */
+.vera-container.v2-mode.monster .vera-v2-wing-left,
+.vera-container.v2-mode.takeover .vera-v2-wing-left {
+    animation: v2WingFlapLeft 0.6s ease-in-out infinite;
+}
+.vera-container.v2-mode.monster .vera-v2-wing-right,
+.vera-container.v2-mode.takeover .vera-v2-wing-right {
+    animation: v2WingFlapRight 0.6s ease-in-out infinite;
+}
+
+/* Tail whipping animation */
+@keyframes v2TailWhip {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(15deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(-10deg); }
+}
+.vera-container.v2-mode.monster .vera-v2-tail {
+    animation: v2TailWhip 0.8s ease-in-out infinite;
+}
+.vera-container.v2-mode.partial .vera-v2-tail,
+.vera-container.v2-mode.takeover .vera-v2-tail {
+    animation: v2TailWhip 1.2s ease-in-out infinite;
+}
+
+/* Hair sway animation */
+@keyframes v2HairSway {
+    0%, 100% { transform: rotate(0deg) translateX(0); }
+    50% { transform: rotate(2deg) translateX(2px); }
+}
+.vera-container.v2-mode .vera-v2-hair {
+    animation: v2HairSway 3s ease-in-out infinite;
+}
+
+/* Mouth talking animation (when speaking) */
+@keyframes v2MouthTalk {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.8); }
+}
+.vera-container.v2-mode.talking .vera-v2-mouth {
+    animation: v2MouthTalk 0.15s ease-in-out infinite;
 }

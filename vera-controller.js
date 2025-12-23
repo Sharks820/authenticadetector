@@ -569,7 +569,7 @@
         createDOM() {
             // Main container
             this.container = document.createElement('div');
-            this.container.className = 'vera-container fairy';
+            this.container.className = 'vera-container fairy v2-mode';
             this.container.id = 'veraContainer';
             this.container.setAttribute('role', 'button');
             this.container.setAttribute('aria-label', 'VERA - AI Detection Assistant');
@@ -606,7 +606,55 @@
             this.stage.appendChild(this.bodyLayer);
             this.stage.appendChild(this.hairLayer);
             this.stage.appendChild(this.overlay);
+
+            // Blender animated sprite (bone-rigged animation frames) - legacy
+            this.animatedSprite = document.createElement('div');
+            this.animatedSprite.className = 'vera-animated-sprite';
+            this.stage.appendChild(this.animatedSprite);
+
+            // V2 Layered Animation System - New anime-style VERA with full animation
+            // Creates: body, head, eyes, mouth, hair, wing_left, wing_right, tail
+            this.v2Layers = document.createElement('div');
+            this.v2Layers.className = 'vera-v2-layers';
+
+            this.v2Body = document.createElement('div');
+            this.v2Body.className = 'vera-v2-layer vera-v2-body';
+            this.v2Layers.appendChild(this.v2Body);
+
+            this.v2Tail = document.createElement('div');
+            this.v2Tail.className = 'vera-v2-layer vera-v2-tail';
+            this.v2Layers.appendChild(this.v2Tail);
+
+            this.v2Head = document.createElement('div');
+            this.v2Head.className = 'vera-v2-layer vera-v2-head';
+            this.v2Layers.appendChild(this.v2Head);
+
+            this.v2Mouth = document.createElement('div');
+            this.v2Mouth.className = 'vera-v2-layer vera-v2-mouth';
+            this.v2Layers.appendChild(this.v2Mouth);
+
+            this.v2Eyes = document.createElement('div');
+            this.v2Eyes.className = 'vera-v2-layer vera-v2-eyes';
+            this.v2Layers.appendChild(this.v2Eyes);
+
+            this.v2Hair = document.createElement('div');
+            this.v2Hair.className = 'vera-v2-layer vera-v2-hair';
+            this.v2Layers.appendChild(this.v2Hair);
+
+            this.v2WingLeft = document.createElement('div');
+            this.v2WingLeft.className = 'vera-v2-layer vera-v2-wing-left';
+            this.v2Layers.appendChild(this.v2WingLeft);
+
+            this.v2WingRight = document.createElement('div');
+            this.v2WingRight.className = 'vera-v2-layer vera-v2-wing-right';
+            this.v2Layers.appendChild(this.v2WingRight);
+
+            this.stage.appendChild(this.v2Layers);
+
             this.container.appendChild(this.stage);
+
+            // V2 mode is now the default - full layered animation system
+            // No need for animated-mode, v2-mode handles everything via CSS
 
             // Help badge
             this.badge = document.createElement('div');
@@ -884,6 +932,9 @@
             this.container.classList.remove('fairy', 'partial', 'takeover', 'monster');
             this.container.classList.add(newState);
 
+            // V2 mode handles all states via CSS - no need to toggle animated-mode
+            // All layers automatically update based on state class (fairy, partial, takeover, monster)
+
             // Play sounds and effects
             this.playStateSound(oldState, newState);
             this.updateSparkles();
@@ -1038,9 +1089,13 @@
 
             this.speech.classList.add('visible');
 
+            // Animate mouth while talking (V2 mode)
+            this.container.classList.add('talking');
+
             clearTimeout(this.speechHideTimer);
             this.speechHideTimer = setTimeout(() => {
                 this.speech.classList.remove('visible');
+                this.container.classList.remove('talking');
             }, 5000);
         },
 

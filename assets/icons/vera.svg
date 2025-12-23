@@ -1,0 +1,309 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <style>
+    .fairy { opacity: 1; transition: opacity 0.4s ease; }
+    .monster { opacity: 0; transition: opacity 0.4s ease; }
+    svg:hover .fairy, svg:focus .fairy, svg:active .fairy { opacity: 0; }
+    svg:hover .monster, svg:focus .monster, svg:active .monster { opacity: 1; }
+  </style>
+  <defs>
+    <!-- FAIRY GRADIENTS -->
+    <linearGradient id="skinBase" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#fef3c7"/>
+      <stop offset="40%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#fcd34d"/>
+    </linearGradient>
+    <linearGradient id="hairBase" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="25%" stop-color="#fde047"/>
+      <stop offset="50%" stop-color="#facc15"/>
+      <stop offset="75%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="hairHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fefce8"/>
+      <stop offset="100%" stop-color="#fde047" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="outfitBase" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="50%" stop-color="#14b8a6"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+    <linearGradient id="wingFairy" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#99f6e4" stop-opacity="0.95"/>
+      <stop offset="30%" stop-color="#5eead4" stop-opacity="0.8"/>
+      <stop offset="60%" stop-color="#2dd4bf" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#14b8a6" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="goldAccent" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#fcd34d"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <radialGradient id="eyeGreen" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#bbf7d0"/>
+      <stop offset="30%" stop-color="#4ade80"/>
+      <stop offset="60%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#15803d"/>
+    </radialGradient>
+    
+    <!-- DEMON GRADIENTS -->
+    <linearGradient id="demonSkin" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#581c87"/>
+      <stop offset="25%" stop-color="#4c1d95"/>
+      <stop offset="50%" stop-color="#3b0764"/>
+      <stop offset="75%" stop-color="#2e1065"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="demonHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#4c1d95" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="batWing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2e1065"/>
+      <stop offset="40%" stop-color="#1e1b4b"/>
+      <stop offset="70%" stop-color="#0f0a1f"/>
+      <stop offset="100%" stop-color="#030712"/>
+    </linearGradient>
+    <linearGradient id="hornDemon" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="30%" stop-color="#3b0764"/>
+      <stop offset="60%" stop-color="#581c87"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="demonHair" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="50%" stop-color="#0f0a1f"/>
+      <stop offset="100%" stop-color="#030712"/>
+    </linearGradient>
+    <radialGradient id="eyeDemon" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f5d0fe"/>
+      <stop offset="40%" stop-color="#e879f9"/>
+      <stop offset="70%" stop-color="#c026d3"/>
+      <stop offset="100%" stop-color="#86198f"/>
+    </radialGradient>
+    <radialGradient id="chestGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#e879f9"/>
+      <stop offset="40%" stop-color="#a855f7" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    
+    <!-- Filters -->
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feOffset in="blur" dx="2" dy="3" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    </filter>
+    <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- ==================== FAIRY VERA ==================== -->
+  <g class="fairy">
+    <ellipse cx="64" cy="70" rx="50" ry="40" fill="#14b8a6" opacity="0.1"/>
+    
+    <!-- Wings -->
+    <g filter="url(#softGlow)">
+      <path d="M 42 55 C 25 45, 8 35, 5 25 C 3 18, 8 12, 15 15 C 22 18, 28 28, 32 38 C 28 32, 18 22, 12 28 C 8 32, 15 42, 25 48 C 30 52, 38 55, 42 58 Z" fill="url(#wingFairy)" stroke="#14b8a6" stroke-width="1"/>
+      <path d="M 40 55 C 30 48, 18 35, 10 22" stroke="#5eead4" stroke-width="1" fill="none" opacity="0.5"/>
+      <circle cx="25" cy="35" r="2.5" fill="#fff" opacity="0.9"/>
+      <circle cx="18" cy="28" r="2" fill="#fff" opacity="0.8"/>
+      <path d="M 86 55 C 103 45, 120 35, 123 25 C 125 18, 120 12, 113 15 C 106 18, 100 28, 96 38 C 100 32, 110 22, 116 28 C 120 32, 113 42, 103 48 C 98 52, 90 55, 86 58 Z" fill="url(#wingFairy)" stroke="#14b8a6" stroke-width="1"/>
+      <path d="M 88 55 C 98 48, 110 35, 118 22" stroke="#5eead4" stroke-width="1" fill="none" opacity="0.5"/>
+      <circle cx="103" cy="35" r="2.5" fill="#fff" opacity="0.9"/>
+      <circle cx="110" cy="28" r="2" fill="#fff" opacity="0.8"/>
+    </g>
+    
+    <!-- Body -->
+    <path d="M 48 75 C 45 80, 44 90, 46 100 C 50 108, 58 112, 64 112 C 70 112, 78 108, 82 100 C 84 90, 83 80, 80 75 C 76 72, 70 70, 64 70 C 58 70, 52 72, 48 75 Z" fill="url(#outfitBase)" filter="url(#innerShadow)"/>
+    <path d="M 50 78 C 48 85, 48 92, 50 98 C 58 95, 64 94, 64 94 C 64 94, 58 85, 50 78 Z" fill="#5eead4" opacity="0.4"/>
+    <path d="M 46 88 Q 64 94 82 88" stroke="url(#goldAccent)" stroke-width="3" fill="none"/>
+    
+    <!-- Bodice -->
+    <ellipse cx="64" cy="68" rx="12" ry="8" fill="#fff"/>
+    <g filter="url(#softGlow)">
+      <polygon points="64,60 66,64 70,65 67,68 68,72 64,70 60,72 61,68 58,65 62,64" fill="url(#goldAccent)" stroke="#d97706" stroke-width="0.5"/>
+    </g>
+    
+    <!-- Head -->
+    <circle cx="64" cy="42" r="20" fill="url(#skinBase)" filter="url(#innerShadow)"/>
+    <ellipse cx="48" cy="48" rx="5" ry="3" fill="#fda4af" opacity="0.4"/>
+    <ellipse cx="80" cy="48" rx="5" ry="3" fill="#fda4af" opacity="0.4"/>
+    
+    <!-- Hair -->
+    <path d="M 44 42 C 40 35, 42 25, 50 20 C 58 16, 70 16, 78 20 C 86 25, 88 35, 84 42 C 82 38, 75 32, 64 32 C 53 32, 46 38, 44 42 Z" fill="url(#hairBase)"/>
+    <path d="M 48 38 C 46 32, 50 24, 58 22 C 64 20, 72 22, 76 26 C 70 24, 62 24, 56 26 C 52 28, 48 32, 48 38 Z" fill="url(#hairHighlight)" opacity="0.6"/>
+    <path d="M 44 42 C 40 45, 38 55, 40 62 C 42 58, 44 52, 44 45 Z" fill="url(#hairBase)"/>
+    <path d="M 84 42 C 88 45, 90 55, 88 62 C 86 58, 84 52, 84 45 Z" fill="url(#hairBase)"/>
+    <path d="M 72 22 C 78 18, 85 16, 88 20 C 90 24, 86 28, 80 28 C 76 28, 74 26, 72 22 Z" fill="url(#hairBase)"/>
+    
+    <!-- Headband -->
+    <path d="M 42 32 Q 64 22 86 32" stroke="#14b8a6" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <circle cx="50" cy="28" r="3" fill="#fff"/><circle cx="50" cy="28" r="1.5" fill="#99f6e4"/>
+    <circle cx="64" cy="24" r="4" fill="#fff"/><circle cx="64" cy="24" r="2" fill="#99f6e4"/>
+    <circle cx="78" cy="28" r="3" fill="#fff"/><circle cx="78" cy="28" r="1.5" fill="#99f6e4"/>
+    
+    <!-- Ears -->
+    <path d="M 44 40 L 34 36 L 40 44 Z" fill="url(#skinBase)"/>
+    <path d="M 84 40 L 94 36 L 88 44 Z" fill="url(#skinBase)"/>
+    
+    <!-- Eyes -->
+    <g filter="url(#softGlow)">
+      <ellipse cx="54" cy="44" rx="7" ry="8" fill="#fff"/>
+      <ellipse cx="54" cy="45" rx="5.5" ry="6.5" fill="url(#eyeGreen)"/>
+      <ellipse cx="54" cy="45" rx="2.5" ry="3" fill="#0f172a"/>
+      <ellipse cx="52" cy="43" rx="2" ry="1.5" fill="#fff"/>
+      <ellipse cx="74" cy="44" rx="7" ry="8" fill="#fff"/>
+      <ellipse cx="74" cy="45" rx="5.5" ry="6.5" fill="url(#eyeGreen)"/>
+      <ellipse cx="74" cy="45" rx="2.5" ry="3" fill="#0f172a"/>
+      <ellipse cx="72" cy="43" rx="2" ry="1.5" fill="#fff"/>
+    </g>
+    
+    <!-- Smile -->
+    <path d="M 56 54 Q 64 62 72 54" stroke="#d97706" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- ==================== FEMALE DEMON VERA ==================== -->
+  <g class="monster">
+    <ellipse cx="64" cy="70" rx="55" ry="45" fill="#7c3aed" opacity="0.15"/>
+    
+    <!-- === BAT WINGS === -->
+    <g filter="url(#softGlow)">
+      <!-- Left wing -->
+      <path d="
+        M 40 52
+        C 28 42, 8 25, -2 12
+        C -6 6, -2 2, 6 8
+        C 14 14, 22 28, 28 40
+        C 20 28, 6 14, 2 20
+        C -2 28, 12 42, 26 52
+        C 18 48, 4 38, 2 45
+        C 0 52, 16 60, 34 65
+        Z
+      " fill="url(#batWing)" stroke="#1e1b4b" stroke-width="2"/>
+      <path d="M 36 50 C 22 38, 6 22, -2 12" stroke="#3b0764" stroke-width="1.5" fill="none" opacity="0.6"/>
+      <path d="M 32 56 C 18 48, 4 36, 0 28" stroke="#2e1065" stroke-width="1" fill="none" opacity="0.5"/>
+      
+      <!-- Right wing -->
+      <path d="
+        M 88 52
+        C 100 42, 120 25, 130 12
+        C 134 6, 130 2, 122 8
+        C 114 14, 106 28, 100 40
+        C 108 28, 122 14, 126 20
+        C 130 28, 116 42, 102 52
+        C 110 48, 124 38, 126 45
+        C 128 52, 112 60, 94 65
+        Z
+      " fill="url(#batWing)" stroke="#1e1b4b" stroke-width="2"/>
+      <path d="M 92 50 C 106 38, 122 22, 130 12" stroke="#3b0764" stroke-width="1.5" fill="none" opacity="0.6"/>
+      <path d="M 96 56 C 110 48, 124 36, 128 28" stroke="#2e1065" stroke-width="1" fill="none" opacity="0.5"/>
+    </g>
+    
+    <!-- === FEMININE BODY (same dress shape as fairy) === -->
+    <path d="
+      M 48 72
+      C 45 78, 44 88, 46 100
+      C 50 108, 58 112, 64 112
+      C 70 112, 78 108, 82 100
+      C 84 88, 83 78, 80 72
+      C 76 69, 70 67, 64 67
+      C 58 67, 52 69, 48 72
+      Z
+    " fill="url(#demonSkin)" filter="url(#innerShadow)"/>
+    <!-- Dress highlight -->
+    <path d="M 50 75 C 48 82, 48 90, 50 98 C 58 94, 64 92, 64 92 C 64 92, 58 82, 50 75 Z" fill="url(#demonHighlight)" opacity="0.3"/>
+    
+    <!-- Purple vein markings on body -->
+    <g stroke="#c084fc" stroke-width="1" fill="none" opacity="0.5">
+      <path d="M 52 78 C 50 88, 50 98, 52 105"/>
+      <path d="M 76 78 C 78 88, 78 98, 76 105"/>
+    </g>
+    
+    <!-- === BODICE (corrupted) === -->
+    <ellipse cx="64" cy="65" rx="12" ry="7" fill="#1e1b4b" stroke="#3b0764" stroke-width="1"/>
+    
+    <!-- Glowing chest mark -->
+    <g filter="url(#strongGlow)">
+      <path d="M 58 62 L 64 55 L 70 62 L 64 69 Z" fill="url(#chestGlow)"/>
+      <path d="M 60 62 L 64 58 L 68 62 L 64 66 Z" fill="#e879f9"/>
+      <path d="M 62 62 L 64 60 L 66 62 L 64 64 Z" fill="#f5d0fe" opacity="0.9"/>
+    </g>
+    
+    <!-- === HEAD (same feminine shape) === -->
+    <circle cx="64" cy="40" r="20" fill="url(#demonSkin)" filter="url(#innerShadow)"/>
+    <!-- Head highlight -->
+    <path d="M 50 35 C 52 28, 58 24, 64 24 C 70 24, 76 28, 78 35 C 72 30, 68 28, 64 28 C 60 28, 56 30, 50 35 Z" fill="url(#demonHighlight)" opacity="0.35"/>
+    
+    <!-- Purple vein markings on face -->
+    <g stroke="#c084fc" stroke-width="1" fill="none" opacity="0.4">
+      <path d="M 48 38 C 45 42, 44 48, 46 52"/>
+      <path d="M 80 38 C 83 42, 84 48, 82 52"/>
+    </g>
+    
+    <!-- === HORNS (curving up) === -->
+    <g filter="url(#softGlow)">
+      <path d="M 48 28 C 44 20, 38 10, 36 2 C 35 -2, 40 -3, 44 2 C 48 10, 48 20, 48 26 Z" fill="url(#hornDemon)" stroke="#1e1b4b" stroke-width="1.5"/>
+      <path d="M 46 22 C 44 16, 40 8, 38 2" stroke="#7c3aed" stroke-width="1" fill="none" opacity="0.5"/>
+      <path d="M 80 28 C 84 20, 90 10, 92 2 C 93 -2, 88 -3, 84 2 C 80 10, 80 20, 80 26 Z" fill="url(#hornDemon)" stroke="#1e1b4b" stroke-width="1.5"/>
+      <path d="M 82 22 C 84 16, 88 8, 90 2" stroke="#7c3aed" stroke-width="1" fill="none" opacity="0.5"/>
+    </g>
+    
+    <!-- === DARK SPIKY HAIR === -->
+    <path d="M 44 40 C 40 32, 42 22, 50 18 C 58 14, 70 14, 78 18 C 86 22, 88 32, 84 40 C 82 35, 75 28, 64 28 C 53 28, 46 35, 44 40 Z" fill="url(#demonHair)"/>
+    <path d="M 48 35 C 46 28, 50 22, 58 20 C 64 18, 72 20, 76 24 C 70 22, 62 22, 56 24 C 52 26, 48 30, 48 35 Z" fill="#2e1065" opacity="0.5"/>
+    <!-- Spiky tufts -->
+    <g fill="url(#demonHair)">
+      <path d="M 50 22 L 45 10 L 54 20 Z"/>
+      <path d="M 60 18 L 58 6 L 64 16 Z"/>
+      <path d="M 68 18 L 70 6 L 72 16 Z"/>
+      <path d="M 78 22 L 83 10 L 78 20 Z"/>
+    </g>
+    <!-- Side hair -->
+    <path d="M 44 40 C 40 44, 38 54, 40 62 C 42 58, 44 50, 44 44 Z" fill="url(#demonHair)"/>
+    <path d="M 84 40 C 88 44, 90 54, 88 62 C 86 58, 84 50, 84 44 Z" fill="url(#demonHair)"/>
+    
+    <!-- === POINTED EARS === -->
+    <path d="M 44 38 L 32 32 L 40 42 Z" fill="url(#demonSkin)" stroke="#3b0764" stroke-width="1"/>
+    <path d="M 84 38 L 96 32 L 88 42 Z" fill="url(#demonSkin)" stroke="#3b0764" stroke-width="1"/>
+    
+    <!-- === GLOWING EYES === -->
+    <g filter="url(#strongGlow)">
+      <ellipse cx="54" cy="42" rx="7" ry="8" fill="#0f0a1f"/>
+      <ellipse cx="54" cy="43" rx="5.5" ry="6.5" fill="url(#eyeDemon)"/>
+      <ellipse cx="54" cy="43" rx="2" ry="5" fill="#0f0a1f"/>
+      <ellipse cx="52" cy="41" rx="2" ry="1.5" fill="#fff"/>
+      <circle cx="56" cy="45" r="1" fill="#fff" opacity="0.6"/>
+      
+      <ellipse cx="74" cy="42" rx="7" ry="8" fill="#0f0a1f"/>
+      <ellipse cx="74" cy="43" rx="5.5" ry="6.5" fill="url(#eyeDemon)"/>
+      <ellipse cx="74" cy="43" rx="2" ry="5" fill="#0f0a1f"/>
+      <ellipse cx="72" cy="41" rx="2" ry="1.5" fill="#fff"/>
+      <circle cx="76" cy="45" r="1" fill="#fff" opacity="0.6"/>
+    </g>
+    
+    <!-- === SNARLING MOUTH WITH FANGS === -->
+    <path d="M 52 52 C 56 50, 60 49, 64 49 C 68 49, 72 50, 76 52 C 72 58, 68 60, 64 60 C 60 60, 56 58, 52 52 Z" fill="#450a0a" stroke="#0f0a1f" stroke-width="1.5"/>
+    <path d="M 55 53 C 58 51, 62 50, 64 50 C 66 50, 70 51, 73 53 C 70 56, 66 57, 64 57 C 62 57, 58 56, 55 53 Z" fill="#1c1917"/>
+    <!-- Fangs -->
+    <g fill="#f5f5f4">
+      <path d="M 55 52 L 53 59 L 57 52 Z"/>
+      <path d="M 55 52 L 54 56 L 56 52 Z" fill="#fafaf9"/>
+      <path d="M 60 51 L 58 56 L 62 51 Z"/>
+      <path d="M 68 51 L 66 56 L 70 51 Z"/>
+      <path d="M 73 52 L 71 59 L 75 52 Z"/>
+      <path d="M 73 52 L 72 56 L 74 52 Z" fill="#fafaf9"/>
+    </g>
+  </g>
+
+  <!-- === HELP BADGE === -->
+  <g filter="url(#softGlow)">
+    <circle cx="108" cy="108" r="12" fill="#0f172a" stroke="#22d3ee" stroke-width="3"/>
+    <text x="108" y="114" font-size="16" font-weight="900" fill="#22d3ee" text-anchor="middle" font-family="sans-serif">?</text>
+  </g>
+</svg>

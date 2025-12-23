@@ -42,8 +42,8 @@
     z-index: 0;
 }
 
-/* Loading state */
-#phaserCharacterCanvas.loading::after {
+/* Loading state - only show when avatar view is active */
+#avatarView.active #phaserCharacterCanvas.loading::after {
     content: 'Loading Character...';
     position: absolute;
     top: 50%;
@@ -53,6 +53,11 @@
     font-size: 14px;
     font-weight: 600;
     animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Hide loading text when avatar view is not active */
+#phaserCharacterCanvas.loading::after {
+    content: none;
 }
 
 /* =============================================================================

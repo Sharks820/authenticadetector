@@ -1,5 +1,170 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/>
-  <path d="M9 4v14"/>
-  <path d="M15 6v14"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <!-- Parchment -->
+    <linearGradient id="mapParchment" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef3c7"/>
+      <stop offset="30%" stop-color="#fde68a"/>
+      <stop offset="60%" stop-color="#fcd34d"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    
+    <!-- Land masses -->
+    <linearGradient id="landGreen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#86efac"/>
+      <stop offset="50%" stop-color="#4ade80"/>
+      <stop offset="100%" stop-color="#22c55e"/>
+    </linearGradient>
+    <linearGradient id="landBrown" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d6d3d1"/>
+      <stop offset="50%" stop-color="#a8a29e"/>
+      <stop offset="100%" stop-color="#78716c"/>
+    </linearGradient>
+    
+    <!-- Water -->
+    <linearGradient id="waterBlue" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#7dd3fc"/>
+      <stop offset="50%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    
+    <!-- Pin -->
+    <radialGradient id="pinRed" cx="40%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#fca5a5"/>
+      <stop offset="50%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </radialGradient>
+    
+    <!-- Compass -->
+    <linearGradient id="compassGold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#fcd34d"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    
+    <!-- Glow -->
+    <radialGradient id="mapGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fcd34d" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#fcd34d" stop-opacity="0"/>
+    </radialGradient>
+    
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="innerShadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+      <feOffset in="blur" dx="2" dy="3"/>
+      <feComposite in="SourceGraphic" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Background glow -->
+  <ellipse cx="64" cy="64" rx="58" ry="55" fill="url(#mapGlow)"/>
+  
+  <!-- === MAP BASE === -->
+  <g filter="url(#innerShadow)">
+    <!-- Parchment background -->
+    <rect x="12" y="20" width="104" height="88" rx="4" fill="url(#mapParchment)" stroke="#b45309" stroke-width="3"/>
+    
+    <!-- Aged edges -->
+    <path d="M 14 22 L 114 22 L 114 35 L 14 35 Z" fill="#fef3c7" opacity="0.4"/>
+    <path d="M 14 95 L 114 95 L 114 106 L 14 106 Z" fill="#92400e" opacity="0.2"/>
+    
+    <!-- Map fold lines -->
+    <path d="M 45 20 L 45 108" stroke="#d97706" stroke-width="1" opacity="0.3"/>
+    <path d="M 83 20 L 83 108" stroke="#d97706" stroke-width="1" opacity="0.3"/>
+    <path d="M 12 52 L 116 52" stroke="#d97706" stroke-width="1" opacity="0.3"/>
+    <path d="M 12 76 L 116 76" stroke="#d97706" stroke-width="1" opacity="0.3"/>
+  </g>
+  
+  <!-- === WATER/OCEAN === -->
+  <path d="
+    M 18 28
+    L 108 28
+    L 108 100
+    L 18 100
+    Z
+  " fill="url(#waterBlue)" opacity="0.6"/>
+  
+  <!-- Water pattern -->
+  <g stroke="#0284c7" stroke-width="0.5" opacity="0.3" fill="none">
+    <path d="M 20 35 C 30 33, 40 37, 50 35 C 60 33, 70 37, 80 35"/>
+    <path d="M 25 50 C 35 48, 45 52, 55 50 C 65 48, 75 52, 85 50"/>
+    <path d="M 20 65 C 30 63, 40 67, 50 65 C 60 63, 70 67, 80 65"/>
+    <path d="M 30 80 C 40 78, 50 82, 60 80 C 70 78, 80 82, 90 80"/>
+  </g>
+  
+  <!-- === LAND MASSES === -->
+  <g filter="url(#softGlow)">
+    <!-- Main continent -->
+    <path d="
+      M 35 40
+      C 28 45, 25 55, 30 65
+      C 35 75, 45 78, 55 75
+      C 62 72, 65 65, 68 60
+      C 72 55, 78 52, 82 55
+      C 88 60, 92 68, 88 78
+      C 85 85, 78 88, 70 85
+      C 62 82, 55 85, 50 90
+      C 45 93, 38 92, 35 88
+      C 30 82, 32 75, 28 70
+      C 24 65, 22 55, 28 48
+      C 32 42, 35 40, 35 40
+      Z
+    " fill="url(#landGreen)" stroke="#15803d" stroke-width="1.5"/>
+    
+    <!-- Mountain region -->
+    <path d="M 55 50 L 60 42 L 65 50 L 70 44 L 75 52 L 68 55 L 58 54 Z" fill="url(#landBrown)" stroke="#57534e" stroke-width="1"/>
+    <path d="M 60 44 L 62 48 M 70 46 L 72 50" stroke="#e7e5e4" stroke-width="1"/>
+    
+    <!-- Island -->
+    <ellipse cx="95" cy="45" rx="12" ry="8" fill="url(#landGreen)" stroke="#15803d" stroke-width="1"/>
+    
+    <!-- Small island -->
+    <ellipse cx="25" cy="85" rx="6" ry="4" fill="url(#landGreen)" stroke="#15803d" stroke-width="1"/>
+  </g>
+  
+  <!-- === LOCATION PIN === -->
+  <g filter="url(#softGlow)">
+    <path d="
+      M 75 55
+      C 75 48, 80 42, 88 42
+      C 96 42, 101 48, 101 55
+      C 101 65, 88 78, 88 78
+      C 88 78, 75 65, 75 55
+      Z
+    " fill="url(#pinRed)" stroke="#7f1d1d" stroke-width="2"/>
+    <circle cx="88" cy="54" r="6" fill="#fff" opacity="0.9"/>
+    <circle cx="88" cy="54" r="3" fill="#dc2626"/>
+    
+    <!-- Pin shine -->
+    <ellipse cx="82" cy="50" rx="3" ry="2" fill="#fff" opacity="0.4"/>
+  </g>
+  
+  <!-- === PATH/ROUTE === -->
+  <g filter="url(#softGlow)">
+    <path d="M 30 70 C 40 65, 50 68, 60 60 C 70 52, 80 55, 88 60" stroke="#dc2626" stroke-width="3" fill="none" stroke-dasharray="6 4" stroke-linecap="round"/>
+  </g>
+  
+  <!-- === COMPASS === -->
+  <g filter="url(#softGlow)">
+    <circle cx="100" cy="92" r="12" fill="#1e293b" stroke="url(#compassGold)" stroke-width="2"/>
+    <circle cx="100" cy="92" r="9" fill="none" stroke="#fcd34d" stroke-width="0.5"/>
+    
+    <!-- Compass needle -->
+    <path d="M 100 84 L 103 92 L 100 100 L 97 92 Z" fill="url(#compassGold)"/>
+    <path d="M 100 84 L 100 92 L 97 92 Z" fill="#dc2626"/>
+    <circle cx="100" cy="92" r="2" fill="#fcd34d"/>
+    
+    <!-- N marker -->
+    <text x="100" y="82" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="6" fill="#fcd34d">N</text>
+  </g>
+  
+  <!-- Decorative corners -->
+  <g stroke="#b45309" stroke-width="2" fill="none">
+    <path d="M 15 25 L 15 35 M 15 25 L 25 25"/>
+    <path d="M 113 25 L 113 35 M 113 25 L 103 25"/>
+    <path d="M 15 103 L 15 93 M 15 103 L 25 103"/>
+    <path d="M 113 103 L 113 93 M 113 103 L 103 103"/>
+  </g>
 </svg>

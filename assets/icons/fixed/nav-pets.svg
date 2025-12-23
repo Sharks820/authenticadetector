@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="monsterBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#4c1d95"/>
+    </linearGradient>
+    <linearGradient id="demonEyes" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#ff3366"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </linearGradient>
+    <linearGradient id="wingMembrane" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#581c87" stop-opacity="0.6"/>
+    </linearGradient>
+    <linearGradient id="cyanGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Bat wings -->
+  <path d="M6 18 Q2 14 4 8 L10 14 Q8 20 6 18Z" fill="url(#wingMembrane)" stroke="url(#cyanGlow)" stroke-width="0.5"/>
+  <path d="M4 8 Q0 6 2 2" stroke="url(#cyanGlow)" stroke-width="1.5" fill="none"/>
+  <path d="M42 18 Q46 14 44 8 L38 14 Q40 20 42 18Z" fill="url(#wingMembrane)" stroke="url(#cyanGlow)" stroke-width="0.5"/>
+  <path d="M44 8 Q48 6 46 2" stroke="url(#cyanGlow)" stroke-width="1.5" fill="none"/>
+
+  <!-- Monster body - round and cute -->
+  <ellipse cx="24" cy="26" rx="14" ry="12" fill="url(#monsterBody)"/>
+
+  <!-- Small horns -->
+  <path d="M16 16 Q14 10 16 6" stroke="url(#demonEyes)" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M32 16 Q34 10 32 6" stroke="url(#demonEyes)" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+  <!-- Ears -->
+  <path d="M10 20 L6 12 L14 18Z" fill="url(#monsterBody)"/>
+  <path d="M38 20 L42 12 L34 18Z" fill="url(#monsterBody)"/>
+
+  <!-- Eyes - glowing demon eyes -->
+  <ellipse cx="18" cy="24" rx="4" ry="5" fill="#0f0f23"/>
+  <ellipse cx="30" cy="24" rx="4" ry="5" fill="#0f0f23"/>
+  <ellipse cx="18" cy="24" rx="2.5" ry="3.5" fill="url(#demonEyes)" filter="url(#glow)"/>
+  <ellipse cx="30" cy="24" rx="2.5" ry="3.5" fill="url(#demonEyes)" filter="url(#glow)"/>
+  <circle cx="17" cy="22" r="1" fill="#fff" opacity="0.8"/>
+  <circle cx="29" cy="22" r="1" fill="#fff" opacity="0.8"/>
+
+  <!-- Fangs -->
+  <path d="M20 32 L21 36 L22 32" fill="#f8fafc"/>
+  <path d="M26 32 L27 36 L28 32" fill="#f8fafc"/>
+
+  <!-- Tail -->
+  <path d="M24 38 Q30 42 36 40 Q40 38 42 42" stroke="url(#monsterBody)" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <circle cx="42" cy="42" r="2.5" fill="url(#cyanGlow)" filter="url(#glow)"/>
+
+  <!-- Sparkles -->
+  <circle cx="4" cy="26" r="1.5" fill="url(#demonEyes)" opacity="0.6"/>
+  <circle cx="44" cy="26" r="1.5" fill="url(#demonEyes)" opacity="0.6"/>
+</svg>

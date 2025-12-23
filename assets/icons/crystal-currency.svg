@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <!-- Crystal gradients -->
+    <linearGradient id="crystalPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f3e8ff"/>
+      <stop offset="15%" stop-color="#e9d5ff"/>
+      <stop offset="30%" stop-color="#d8b4fe"/>
+      <stop offset="50%" stop-color="#c084fc"/>
+      <stop offset="70%" stop-color="#a855f7"/>
+      <stop offset="85%" stop-color="#9333ea"/>
+      <stop offset="100%" stop-color="#7e22ce"/>
+    </linearGradient>
+    <linearGradient id="crystalHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="50%" stop-color="#f3e8ff" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#d8b4fe" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="crystalFacet1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e9d5ff"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+    <linearGradient id="crystalFacet2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#7e22ce"/>
+    </linearGradient>
+    <linearGradient id="crystalFacet3" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#d8b4fe"/>
+      <stop offset="100%" stop-color="#6b21a8"/>
+    </linearGradient>
+    <radialGradient id="crystalGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#c084fc" stop-opacity="0.7"/>
+      <stop offset="50%" stop-color="#a855f7" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#7e22ce" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+      <feOffset in="blur" dx="2" dy="3" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Background glow -->
+  <ellipse cx="64" cy="64" rx="58" ry="58" fill="url(#crystalGlow)"/>
+  
+  <!-- Main crystal -->
+  <g filter="url(#strongGlow)">
+    <!-- Back facets -->
+    <path d="M 64 6 L 98 36 L 98 92 L 64 122 L 30 92 L 30 36 Z" fill="url(#crystalPurple)" stroke="#581c87" stroke-width="3"/>
+    
+    <!-- Left facet -->
+    <path d="M 64 6 L 30 36 L 30 92 L 64 64 Z" fill="url(#crystalFacet1)" stroke="#6b21a8" stroke-width="1.5"/>
+    
+    <!-- Right facet -->
+    <path d="M 64 6 L 98 36 L 98 92 L 64 64 Z" fill="url(#crystalFacet2)" stroke="#6b21a8" stroke-width="1.5"/>
+    
+    <!-- Bottom left facet -->
+    <path d="M 30 92 L 64 122 L 64 64 Z" fill="url(#crystalFacet3)" stroke="#6b21a8" stroke-width="1.5"/>
+    
+    <!-- Bottom right facet -->
+    <path d="M 98 92 L 64 122 L 64 64 Z" fill="url(#crystalPurple)" stroke="#6b21a8" stroke-width="1.5" opacity="0.8"/>
+    
+    <!-- Center line -->
+    <line x1="64" y1="6" x2="64" y2="122" stroke="#581c87" stroke-width="2" opacity="0.5"/>
+    <line x1="30" y1="36" x2="98" y2="92" stroke="#581c87" stroke-width="1.5" opacity="0.3"/>
+    <line x1="98" y1="36" x2="30" y2="92" stroke="#581c87" stroke-width="1.5" opacity="0.3"/>
+  </g>
+  
+  <!-- Highlight facets -->
+  <g filter="url(#softGlow)">
+    <path d="M 64 10 L 42 32 L 42 50 L 64 35 Z" fill="url(#crystalHighlight)" opacity="0.7"/>
+    <path d="M 64 10 L 50 28 L 64 40 Z" fill="#fff" opacity="0.5"/>
+  </g>
+  
+  <!-- Inner glow -->
+  <g filter="url(#strongGlow)">
+    <ellipse cx="64" cy="64" rx="16" ry="24" fill="#f3e8ff" opacity="0.3"/>
+    <ellipse cx="64" cy="60" rx="8" ry="12" fill="#fff" opacity="0.2"/>
+  </g>
+  
+  <!-- Edge highlights -->
+  <g stroke="#f3e8ff" stroke-width="2" fill="none" opacity="0.6">
+    <line x1="64" y1="8" x2="34" y2="36"/>
+    <line x1="32" y1="38" x2="32" y2="70"/>
+  </g>
+  
+  <!-- Sparkles -->
+  <g fill="#fff" filter="url(#softGlow)">
+    <circle cx="18" cy="40" r="3.5"/>
+    <circle cx="110" cy="40" r="3.5"/>
+    <circle cx="18" cy="88" r="3"/>
+    <circle cx="110" cy="88" r="3"/>
+    <circle cx="64" cy="2" r="3"/>
+  </g>
+  
+  <!-- Magic particles -->
+  <g fill="#e9d5ff" filter="url(#softGlow)" opacity="0.8">
+    <circle cx="24" cy="24" r="2.5"/>
+    <circle cx="104" cy="24" r="2.5"/>
+    <circle cx="24" cy="104" r="2"/>
+    <circle cx="104" cy="104" r="2"/>
+  </g>
+  
+  <!-- Small floating crystals -->
+  <g filter="url(#softGlow)" opacity="0.6">
+    <path d="M 20 64 L 16 58 L 20 52 L 24 58 Z" fill="url(#crystalPurple)" stroke="#7e22ce" stroke-width="1"/>
+    <path d="M 108 64 L 104 58 L 108 52 L 112 58 Z" fill="url(#crystalPurple)" stroke="#7e22ce" stroke-width="1"/>
+  </g>
+</svg>

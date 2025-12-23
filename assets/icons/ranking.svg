@@ -1,0 +1,192 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <!-- Gold gradients -->
+    <linearGradient id="goldPodium" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fefce8"/>
+      <stop offset="15%" stop-color="#fef08a"/>
+      <stop offset="30%" stop-color="#fde047"/>
+      <stop offset="50%" stop-color="#facc15"/>
+      <stop offset="70%" stop-color="#eab308"/>
+      <stop offset="85%" stop-color="#ca8a04"/>
+      <stop offset="100%" stop-color="#a16207"/>
+    </linearGradient>
+    <linearGradient id="goldHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fefce8"/>
+      <stop offset="100%" stop-color="#fde047" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="goldFace" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ca8a04"/>
+      <stop offset="20%" stop-color="#eab308"/>
+      <stop offset="50%" stop-color="#facc15"/>
+      <stop offset="80%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#ca8a04"/>
+    </linearGradient>
+    <!-- Silver gradients -->
+    <linearGradient id="silverPodium" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="15%" stop-color="#f1f5f9"/>
+      <stop offset="30%" stop-color="#e2e8f0"/>
+      <stop offset="50%" stop-color="#cbd5e1"/>
+      <stop offset="70%" stop-color="#94a3b8"/>
+      <stop offset="85%" stop-color="#64748b"/>
+      <stop offset="100%" stop-color="#475569"/>
+    </linearGradient>
+    <linearGradient id="silverHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="100%" stop-color="#e2e8f0" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="silverFace" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#64748b"/>
+      <stop offset="20%" stop-color="#94a3b8"/>
+      <stop offset="50%" stop-color="#cbd5e1"/>
+      <stop offset="80%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#64748b"/>
+    </linearGradient>
+    <!-- Bronze gradients -->
+    <linearGradient id="bronzePodium" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fed7aa"/>
+      <stop offset="15%" stop-color="#fdba74"/>
+      <stop offset="30%" stop-color="#fb923c"/>
+      <stop offset="50%" stop-color="#f97316"/>
+      <stop offset="70%" stop-color="#ea580c"/>
+      <stop offset="85%" stop-color="#c2410c"/>
+      <stop offset="100%" stop-color="#9a3412"/>
+    </linearGradient>
+    <linearGradient id="bronzeHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffedd5"/>
+      <stop offset="100%" stop-color="#fdba74" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="bronzeFace" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#9a3412"/>
+      <stop offset="20%" stop-color="#c2410c"/>
+      <stop offset="50%" stop-color="#ea580c"/>
+      <stop offset="80%" stop-color="#c2410c"/>
+      <stop offset="100%" stop-color="#9a3412"/>
+    </linearGradient>
+    <!-- Base gradient -->
+    <linearGradient id="baseDark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3b0764"/>
+      <stop offset="50%" stop-color="#2e1065"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <radialGradient id="rankGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fde047" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#ca8a04" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feOffset in="blur" dx="2" dy="4" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Background glow -->
+  <ellipse cx="64" cy="68" rx="58" ry="52" fill="url(#rankGlow)"/>
+  
+  <!-- Base platform -->
+  <g filter="url(#innerShadow)">
+    <rect x="6" y="108" width="116" height="14" rx="4" fill="url(#baseDark)" stroke="#1e1b4b" stroke-width="2"/>
+    <rect x="10" y="110" width="108" height="4" rx="2" fill="#4c1d95" opacity="0.3"/>
+  </g>
+  
+  <!-- 2ND PLACE - SILVER (Left) -->
+  <g filter="url(#innerShadow)">
+    <!-- Podium block -->
+    <rect x="10" y="58" width="34" height="52" rx="3" fill="url(#silverPodium)" stroke="#475569" stroke-width="2"/>
+    <!-- Front face -->
+    <rect x="12" y="60" width="30" height="48" rx="2" fill="url(#silverFace)"/>
+    <!-- Top highlight -->
+    <rect x="14" y="60" width="26" height="12" rx="2" fill="url(#silverHighlight)" opacity="0.5"/>
+    <!-- Number -->
+    <text x="27" y="92" font-size="28" font-weight="bold" fill="#1e293b" text-anchor="middle" font-family="Arial Black, sans-serif">2</text>
+    <!-- Podium shine -->
+    <rect x="14" y="62" width="8" height="44" rx="2" fill="#fff" opacity="0.15"/>
+  </g>
+  
+  <!-- Silver medal -->
+  <g filter="url(#strongGlow)">
+    <circle cx="27" cy="46" r="12" fill="url(#silverPodium)" stroke="#475569" stroke-width="2"/>
+    <circle cx="27" cy="46" r="8" fill="url(#silverFace)" stroke="#64748b" stroke-width="1"/>
+    <text x="27" y="51" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle" font-family="Arial, sans-serif">2</text>
+    <!-- Medal shine -->
+    <ellipse cx="23" cy="42" rx="4" ry="3" fill="#fff" opacity="0.5"/>
+  </g>
+  
+  <!-- 1ST PLACE - GOLD (Center) -->
+  <g filter="url(#innerShadow)">
+    <!-- Podium block -->
+    <rect x="47" y="28" width="34" height="82" rx="3" fill="url(#goldPodium)" stroke="#a16207" stroke-width="2.5"/>
+    <!-- Front face -->
+    <rect x="49" y="30" width="30" height="78" rx="2" fill="url(#goldFace)"/>
+    <!-- Top highlight -->
+    <rect x="51" y="30" width="26" height="16" rx="2" fill="url(#goldHighlight)" opacity="0.5"/>
+    <!-- Number -->
+    <text x="64" y="78" font-size="36" font-weight="bold" fill="#713f12" text-anchor="middle" font-family="Arial Black, sans-serif">1</text>
+    <!-- Podium shine -->
+    <rect x="51" y="32" width="8" height="74" rx="2" fill="#fff" opacity="0.15"/>
+  </g>
+  
+  <!-- Crown on 1st place -->
+  <g filter="url(#strongGlow)">
+    <path d="M 48 22 L 54 32 L 58 26 L 64 36 L 70 26 L 74 32 L 80 22 L 78 16 L 50 16 Z" fill="url(#goldPodium)" stroke="#a16207" stroke-width="2"/>
+    <!-- Crown jewels -->
+    <circle cx="52" cy="18" r="3.5" fill="#ef4444" stroke="#b91c1c" stroke-width="1"/>
+    <circle cx="64" cy="14" r="4" fill="#ef4444" stroke="#b91c1c" stroke-width="1"/>
+    <circle cx="76" cy="18" r="3.5" fill="#ef4444" stroke="#b91c1c" stroke-width="1"/>
+    <!-- Crown highlight -->
+    <path d="M 54 20 L 58 28 L 62 24 L 64 30 L 66 24 L 70 28 L 74 20" fill="url(#goldHighlight)" opacity="0.4"/>
+  </g>
+  
+  <!-- 3RD PLACE - BRONZE (Right) -->
+  <g filter="url(#innerShadow)">
+    <!-- Podium block -->
+    <rect x="84" y="70" width="34" height="40" rx="3" fill="url(#bronzePodium)" stroke="#9a3412" stroke-width="2"/>
+    <!-- Front face -->
+    <rect x="86" y="72" width="30" height="36" rx="2" fill="url(#bronzeFace)"/>
+    <!-- Top highlight -->
+    <rect x="88" y="72" width="26" height="10" rx="2" fill="url(#bronzeHighlight)" opacity="0.5"/>
+    <!-- Number -->
+    <text x="101" y="98" font-size="24" font-weight="bold" fill="#7c2d12" text-anchor="middle" font-family="Arial Black, sans-serif">3</text>
+    <!-- Podium shine -->
+    <rect x="88" y="74" width="8" height="32" rx="2" fill="#fff" opacity="0.15"/>
+  </g>
+  
+  <!-- Bronze medal -->
+  <g filter="url(#strongGlow)">
+    <circle cx="101" cy="58" r="12" fill="url(#bronzePodium)" stroke="#9a3412" stroke-width="2"/>
+    <circle cx="101" cy="58" r="8" fill="url(#bronzeFace)" stroke="#c2410c" stroke-width="1"/>
+    <text x="101" y="63" font-size="12" font-weight="bold" fill="#7c2d12" text-anchor="middle" font-family="Arial, sans-serif">3</text>
+    <!-- Medal shine -->
+    <ellipse cx="97" cy="54" rx="4" ry="3" fill="#fff" opacity="0.4"/>
+  </g>
+  
+  <!-- Winner star -->
+  <g filter="url(#strongGlow)">
+    <polygon points="64,2 68,12 78,13 70,20 72,30 64,25 56,30 58,20 50,13 60,12" fill="url(#goldPodium)" stroke="#a16207" stroke-width="1.5"/>
+    <polygon points="64,6 66,12 72,13 68,17 69,23 64,20 59,23 60,17 56,13 62,12" fill="#fef9c3" opacity="0.5"/>
+  </g>
+  
+  <!-- Sparkles -->
+  <g fill="#fff" filter="url(#softGlow)">
+    <circle cx="12" cy="40" r="2.5"/>
+    <circle cx="116" cy="52" r="2.5"/>
+    <circle cx="38" cy="20" r="2"/>
+    <circle cx="90" cy="40" r="2"/>
+  </g>
+  
+  <!-- Confetti particles -->
+  <g filter="url(#softGlow)" opacity="0.8">
+    <rect x="20" y="12" width="4" height="4" fill="#fde047" transform="rotate(30 22 14)"/>
+    <rect x="104" y="20" width="4" height="4" fill="#a78bfa" transform="rotate(-20 106 22)"/>
+    <rect x="44" y="6" width="3" height="3" fill="#5eead4" transform="rotate(45 45.5 7.5)"/>
+    <rect x="82" y="10" width="3" height="3" fill="#f472b6" transform="rotate(-30 83.5 11.5)"/>
+  </g>
+</svg>

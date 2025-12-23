@@ -1,5 +1,162 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <rect x="3" y="4" width="18" height="16" rx="2"/>
-  <path d="M3 10h18"/>
-  <path d="M9 4v16"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <!-- Rich wood gradients -->
+    <linearGradient id="woodDark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#92400e"/>
+      <stop offset="30%" stop-color="#78350f"/>
+      <stop offset="60%" stop-color="#5c280b"/>
+      <stop offset="100%" stop-color="#3d1f06"/>
+    </linearGradient>
+    <linearGradient id="woodLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#b45309"/>
+      <stop offset="30%" stop-color="#a16207"/>
+      <stop offset="60%" stop-color="#92400e"/>
+      <stop offset="100%" stop-color="#78350f"/>
+    </linearGradient>
+    <linearGradient id="woodHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#92400e" stop-opacity="0"/>
+    </linearGradient>
+    <!-- Metallic brass -->
+    <linearGradient id="brassShine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#854d0e"/>
+      <stop offset="15%" stop-color="#a16207"/>
+      <stop offset="30%" stop-color="#eab308"/>
+      <stop offset="50%" stop-color="#fef9c3"/>
+      <stop offset="70%" stop-color="#eab308"/>
+      <stop offset="85%" stop-color="#a16207"/>
+      <stop offset="100%" stop-color="#854d0e"/>
+    </linearGradient>
+    <linearGradient id="brassFlat" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="30%" stop-color="#fde047"/>
+      <stop offset="60%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#a16207"/>
+    </linearGradient>
+    <radialGradient id="chestGlow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#78350f" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="deepShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="blur"/>
+      <feOffset in="blur" dx="4" dy="8" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Background glow -->
+  <ellipse cx="64" cy="70" rx="58" ry="50" fill="url(#chestGlow)"/>
+  
+  <!-- ========== CHEST BODY ========== -->
+  <g filter="url(#deepShadow)">
+    <!-- Main box shape -->
+    <path d="M 8 58 L 8 112 C 8 118, 20 124, 64 124 C 108 124, 120 118, 120 112 L 120 58 C 108 52, 86 50, 64 50 C 42 50, 20 52, 8 58 Z" fill="url(#woodDark)" stroke="#2d1506" stroke-width="4"/>
+    
+    <!-- Wood plank texture lines -->
+    <line x1="28" y1="54" x2="26" y2="118" stroke="#3d1f06" stroke-width="2" opacity="0.6"/>
+    <line x1="48" y1="52" x2="46" y2="120" stroke="#3d1f06" stroke-width="1.5" opacity="0.5"/>
+    <line x1="80" y1="52" x2="82" y2="120" stroke="#3d1f06" stroke-width="1.5" opacity="0.5"/>
+    <line x1="100" y1="54" x2="102" y2="118" stroke="#3d1f06" stroke-width="2" opacity="0.6"/>
+    
+    <!-- Wood grain knots -->
+    <ellipse cx="38" cy="85" rx="5" ry="8" fill="#5c280b" opacity="0.4"/>
+    <ellipse cx="90" cy="95" rx="4" ry="6" fill="#5c280b" opacity="0.35"/>
+    
+    <!-- Body highlight -->
+    <path d="M 16 60 C 34 54, 54 52, 64 52 C 76 52, 90 54, 100 58 L 98 95 C 86 92, 74 90, 68 92 L 16 60 Z" fill="url(#woodHighlight)" opacity="0.25"/>
+  </g>
+  
+  <!-- ========== METAL BANDS ========== -->
+  <g filter="url(#softGlow)">
+    <!-- Top band -->
+    <path d="M 10 60 C 30 52, 52 50, 64 50 C 76 50, 98 52, 118 60" stroke="url(#brassShine)" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <path d="M 14 58 C 32 52, 52 50, 64 50 C 76 50, 96 52, 114 58" stroke="#fef9c3" stroke-width="2" fill="none" opacity="0.4"/>
+    
+    <!-- Middle band -->
+    <path d="M 10 84 C 30 78, 52 76, 64 76 C 76 76, 98 78, 118 84" stroke="url(#brassShine)" stroke-width="8" fill="none"/>
+    <path d="M 14 82 C 32 77, 52 75, 64 75 C 76 75, 96 77, 114 82" stroke="#fef9c3" stroke-width="1.5" fill="none" opacity="0.35"/>
+    
+    <!-- Bottom band -->
+    <path d="M 12 108 C 30 103, 52 101, 64 101 C 76 101, 98 103, 116 108" stroke="url(#brassShine)" stroke-width="7" fill="none"/>
+  </g>
+  
+  <!-- ========== CURVED LID ========== -->
+  <g filter="url(#deepShadow)">
+    <!-- Lid curved shape -->
+    <path d="M 6 56 C 6 34, 30 18, 64 18 C 98 18, 122 34, 122 56 C 108 64, 84 66, 64 66 C 44 66, 20 64, 6 56 Z" fill="url(#woodLight)" stroke="#2d1506" stroke-width="4"/>
+    
+    <!-- Lid curve highlight -->
+    <path d="M 20 42 C 36 28, 54 22, 64 22 C 80 22, 100 30, 108 44 C 94 34, 76 28, 64 28 C 50 28, 32 34, 22 46 Z" fill="url(#woodHighlight)" opacity="0.4"/>
+    
+    <!-- Lid wood grain -->
+    <path d="M 30 40 C 40 32, 56 28, 64 28 C 72 28, 88 32, 98 40" stroke="#78350f" stroke-width="1.5" fill="none" opacity="0.3"/>
+    <path d="M 24 48 C 38 38, 56 34, 64 34 C 72 34, 90 38, 104 48" stroke="#78350f" stroke-width="1" fill="none" opacity="0.25"/>
+    
+    <!-- Lid metal rim -->
+    <path d="M 8 56 C 28 46, 52 44, 64 44 C 76 44, 100 46, 120 56" stroke="url(#brassShine)" stroke-width="6" fill="none"/>
+    <path d="M 12 54 C 30 46, 52 44, 64 44 C 76 44, 98 46, 116 54" stroke="#fef9c3" stroke-width="1.5" fill="none" opacity="0.4"/>
+  </g>
+  
+  <!-- ========== CENTER LOCK PLATE ========== -->
+  <g filter="url(#strongGlow)">
+    <!-- Lock plate base -->
+    <rect x="44" y="52" width="40" height="38" rx="5" fill="url(#brassFlat)" stroke="#854d0e" stroke-width="3"/>
+    
+    <!-- Lock plate inner dark -->
+    <rect x="49" y="57" width="30" height="28" rx="3" fill="#1a0f00" stroke="#2d1506" stroke-width="2"/>
+    
+    <!-- Lock plate highlight -->
+    <rect x="46" y="54" width="14" height="10" rx="2" fill="#fef9c3" opacity="0.45"/>
+    
+    <!-- KEYHOLE -->
+    <circle cx="64" cy="66" r="8" fill="#0a0500" stroke="#1a0f00" stroke-width="2"/>
+    <rect x="60" y="70" width="8" height="14" rx="2" fill="#0a0500"/>
+    <!-- Keyhole inner glow -->
+    <ellipse cx="62" cy="64" rx="2.5" ry="2" fill="#2d1506" opacity="0.5"/>
+    
+    <!-- Decorative rivets -->
+    <circle cx="50" cy="58" r="3" fill="#eab308" stroke="#854d0e" stroke-width="1"/>
+    <circle cx="78" cy="58" r="3" fill="#eab308" stroke="#854d0e" stroke-width="1"/>
+    <circle cx="50" cy="84" r="3" fill="#eab308" stroke="#854d0e" stroke-width="1"/>
+    <circle cx="78" cy="84" r="3" fill="#eab308" stroke="#854d0e" stroke-width="1"/>
+  </g>
+  
+  <!-- ========== CORNER BRACKETS ========== -->
+  <g fill="url(#brassFlat)" stroke="#854d0e" stroke-width="2" filter="url(#softGlow)">
+    <!-- Top left -->
+    <path d="M 14 28 L 14 44 L 18 44 L 18 32 L 30 32 L 30 28 Z"/>
+    <!-- Top right -->
+    <path d="M 114 28 L 114 44 L 110 44 L 110 32 L 98 32 L 98 28 Z"/>
+    <!-- Bottom left -->
+    <path d="M 14 118 L 14 102 L 18 102 L 18 114 L 30 114 L 30 118 Z"/>
+    <!-- Bottom right -->
+    <path d="M 114 118 L 114 102 L 110 102 L 110 114 L 98 114 L 98 118 Z"/>
+  </g>
+  
+  <!-- ========== SIDE HANDLES ========== -->
+  <g filter="url(#softGlow)">
+    <ellipse cx="4" cy="82" rx="4" ry="14" fill="url(#brassShine)" stroke="#854d0e" stroke-width="2"/>
+    <ellipse cx="124" cy="82" rx="4" ry="14" fill="url(#brassShine)" stroke="#854d0e" stroke-width="2"/>
+  </g>
+  
+  <!-- ========== SPARKLES ========== -->
+  <g fill="#fef9c3" filter="url(#softGlow)">
+    <circle cx="28" cy="10" r="3.5"/>
+    <circle cx="100" cy="10" r="3.5"/>
+    <circle cx="64" cy="4" r="3"/>
+  </g>
+  
+  <!-- Gold particles -->
+  <g fill="#fde047" filter="url(#softGlow)" opacity="0.7">
+    <circle cx="44" cy="8" r="2"/>
+    <circle cx="84" cy="8" r="2"/>
+  </g>
 </svg>

@@ -1,11 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <circle cx="12" cy="12" r="3"/>
-  <path d="M12 2v3"/>
-  <path d="M12 19v3"/>
-  <path d="M4.9 4.9l2.1 2.1"/>
-  <path d="M17 17l2.1 2.1"/>
-  <path d="M2 12h3"/>
-  <path d="M19 12h3"/>
-  <path d="M4.9 19.1l2.1-2.1"/>
-  <path d="M17 7l2.1-2.1"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="seGear" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#a8a29e"/><stop offset="30%" stop-color="#78716c"/><stop offset="70%" stop-color="#57534e"/><stop offset="100%" stop-color="#292524"/></linearGradient>
+    <linearGradient id="seCore" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#7c3aed"/><stop offset="50%" stop-color="#581c87"/><stop offset="100%" stop-color="#1e1b4b"/></linearGradient>
+    <radialGradient id="seGlow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#7c3aed" stop-opacity="0.4"/><stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/></radialGradient>
+    <filter id="seF"><feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#0a0812" flood-opacity="0.5"/></filter>
+    <filter id="seG" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <circle cx="64" cy="64" r="55" fill="url(#seGlow)"/>
+  <!-- MAIN GEAR -->
+  <g filter="url(#seF)">
+    <path d="M 64 12 L 72 12 L 76 24 L 88 20 L 94 28 L 86 38 L 96 48 L 96 56 L 84 58 L 88 72 L 80 78 L 70 68 L 64 78 L 58 68 L 48 78 L 40 72 L 44 58 L 32 56 L 32 48 L 42 38 L 34 28 L 40 20 L 52 24 L 56 12 Z" fill="url(#seGear)" stroke="#44403c" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M 64 18 L 70 18 L 73 28 L 84 24 L 88 30 L 80 40 L 90 50 L 90 54 L 80 56 L 84 68 L 78 72 L 70 64 L 64 72 L 58 64 L 50 72 L 44 68 L 48 56 L 38 54 L 38 50 L 48 40 L 40 30 L 44 24 L 55 28 L 58 18 Z" fill="#78716c" opacity="0.3"/>
+  </g>
+  <!-- CENTER CORE with demon eye -->
+  <g filter="url(#seG)">
+    <circle cx="64" cy="48" r="22" fill="url(#seCore)" stroke="#3b0764" stroke-width="3"/>
+    <circle cx="64" cy="48" r="16" fill="#0f0a1f" stroke="#7c3aed" stroke-width="2"/>
+    <ellipse cx="64" cy="48" rx="10" ry="12" fill="#dc2626"/>
+    <ellipse cx="64" cy="48" rx="3" ry="10" fill="#0f0a1f"/>
+    <ellipse cx="60" cy="44" rx="3" ry="2" fill="#fca5a5" opacity="0.7"/>
+  </g>
+  <!-- Small gears -->
+  <g filter="url(#seF)" opacity="0.8">
+    <circle cx="28" cy="85" r="12" fill="url(#seGear)" stroke="#44403c" stroke-width="2"/>
+    <circle cx="28" cy="85" r="6" fill="#0f0a1f"/>
+    <path d="M 28 70 L 30 73 L 26 73 Z M 28 100 L 26 97 L 30 97 Z M 13 85 L 16 83 L 16 87 Z M 43 85 L 40 87 L 40 83 Z" fill="url(#seGear)"/>
+    <circle cx="100" cy="85" r="12" fill="url(#seGear)" stroke="#44403c" stroke-width="2"/>
+    <circle cx="100" cy="85" r="6" fill="#0f0a1f"/>
+    <path d="M 100 70 L 102 73 L 98 73 Z M 100 100 L 98 97 L 102 97 Z M 85 85 L 88 83 L 88 87 Z M 115 85 L 112 87 L 112 83 Z" fill="url(#seGear)"/>
+  </g>
+  <!-- Connection lines -->
+  <g stroke="#57534e" stroke-width="2" stroke-dasharray="4 4" opacity="0.5">
+    <line x1="45" y1="60" x2="38" y2="78"/>
+    <line x1="83" y1="60" x2="90" y2="78"/>
+  </g>
 </svg>

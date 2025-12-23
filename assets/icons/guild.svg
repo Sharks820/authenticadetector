@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <!-- Banner gradients -->
+    <linearGradient id="bannerPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c4b5fd"/>
+      <stop offset="20%" stop-color="#a78bfa"/>
+      <stop offset="40%" stop-color="#8b5cf6"/>
+      <stop offset="60%" stop-color="#7c3aed"/>
+      <stop offset="80%" stop-color="#6d28d9"/>
+      <stop offset="100%" stop-color="#5b21b6"/>
+    </linearGradient>
+    <linearGradient id="bannerHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e9d5ff"/>
+      <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
+    </linearGradient>
+    <!-- Gold accents -->
+    <linearGradient id="guildGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fefce8"/>
+      <stop offset="20%" stop-color="#fef08a"/>
+      <stop offset="40%" stop-color="#fde047"/>
+      <stop offset="60%" stop-color="#facc15"/>
+      <stop offset="80%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#ca8a04"/>
+    </linearGradient>
+    <!-- Pole gradient -->
+    <linearGradient id="poleGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a16207"/>
+      <stop offset="25%" stop-color="#ca8a04"/>
+      <stop offset="50%" stop-color="#facc15"/>
+      <stop offset="75%" stop-color="#ca8a04"/>
+      <stop offset="100%" stop-color="#a16207"/>
+    </linearGradient>
+    <radialGradient id="guildGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Crown gem -->
+    <radialGradient id="crownGem" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#fecaca"/>
+      <stop offset="30%" stop-color="#f87171"/>
+      <stop offset="60%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#b91c1c"/>
+    </radialGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feOffset in="blur" dx="2" dy="4" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Background glow -->
+  <ellipse cx="64" cy="68" rx="58" ry="52" fill="url(#guildGlow)"/>
+  
+  <!-- Banner pole -->
+  <g filter="url(#innerShadow)">
+    <rect x="58" y="6" width="12" height="118" rx="3" fill="url(#poleGold)" stroke="#92400e" stroke-width="2"/>
+    <!-- Pole highlight -->
+    <rect x="60" y="8" width="4" height="114" rx="2" fill="#fef08a" opacity="0.4"/>
+  </g>
+  
+  <!-- Pole finial (top ornament) -->
+  <g filter="url(#strongGlow)">
+    <!-- Spear point -->
+    <path d="M 64 2 L 54 18 L 64 14 L 74 18 Z" fill="url(#guildGold)" stroke="#92400e" stroke-width="2"/>
+    <path d="M 64 4 L 58 14 L 64 12 Z" fill="#fef08a" opacity="0.5"/>
+  </g>
+  
+  <!-- Main banner -->
+  <g filter="url(#innerShadow)">
+    <!-- Banner body with wave effect -->
+    <path d="M 22 24 C 22 22, 26 20, 30 20 L 98 20 C 102 20, 106 22, 106 24 L 106 95 C 106 97, 102 100, 98 100 L 74 100 L 64 115 L 54 100 L 30 100 C 26 100, 22 97, 22 95 Z" fill="url(#bannerPurple)" stroke="#4c1d95" stroke-width="3"/>
+    
+    <!-- Banner folds/waves -->
+    <path d="M 28 24 C 32 28, 40 26, 50 28 C 60 30, 70 26, 80 28 C 90 30, 98 26, 100 24" stroke="#5b21b6" stroke-width="2" fill="none" opacity="0.4"/>
+    <path d="M 28 40 C 32 44, 40 42, 50 44 C 60 46, 70 42, 80 44 C 90 46, 98 42, 100 40" stroke="#5b21b6" stroke-width="1.5" fill="none" opacity="0.3"/>
+    
+    <!-- Banner highlight -->
+    <path d="M 26 26 C 30 24, 45 22, 55 24 L 50 65 C 40 62, 30 58, 26 50 Z" fill="url(#bannerHighlight)" opacity="0.3"/>
+  </g>
+  
+  <!-- Guild emblem (crossed swords with crown) -->
+  <g filter="url(#strongGlow)">
+    <!-- Left sword -->
+    <path d="M 38 82 L 52 50 L 56 52 L 44 82 Z" fill="url(#guildGold)" stroke="#92400e" stroke-width="1.5"/>
+    <rect x="34" y="80" width="14" height="6" rx="1" fill="url(#guildGold)" stroke="#92400e" stroke-width="1"/>
+    
+    <!-- Right sword -->
+    <path d="M 90 82 L 76 50 L 72 52 L 84 82 Z" fill="url(#guildGold)" stroke="#92400e" stroke-width="1.5"/>
+    <rect x="80" y="80" width="14" height="6" rx="1" fill="url(#guildGold)" stroke="#92400e" stroke-width="1"/>
+    
+    <!-- Shield in center -->
+    <path d="M 64 45 L 80 55 L 80 72 C 80 82, 72 88, 64 92 C 56 88, 48 82, 48 72 L 48 55 Z" fill="url(#guildGold)" stroke="#92400e" stroke-width="2.5"/>
+    <path d="M 64 50 L 76 58 L 76 70 C 76 78, 70 83, 64 86 C 58 83, 52 78, 52 70 L 52 58 Z" fill="#1e1b4b" stroke="#3b0764" stroke-width="1.5"/>
+    
+    <!-- Crown on shield -->
+    <path d="M 54 62 L 57 70 L 60 66 L 64 72 L 68 66 L 71 70 L 74 62 L 72 58 L 56 58 Z" fill="url(#guildGold)" stroke="#a16207" stroke-width="1"/>
+    <circle cx="58" cy="60" r="2" fill="url(#crownGem)"/>
+    <circle cx="64" cy="58" r="2.5" fill="url(#crownGem)"/>
+    <circle cx="70" cy="60" r="2" fill="url(#crownGem)"/>
+  </g>
+  
+  <!-- Banner tassels -->
+  <g filter="url(#softGlow)">
+    <path d="M 26 95 L 22 105 L 26 103 L 24 112" stroke="url(#guildGold)" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M 102 95 L 106 105 L 102 103 L 104 112" stroke="url(#guildGold)" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Sparkles -->
+  <g fill="#fefce8" filter="url(#softGlow)">
+    <circle cx="18" cy="35" r="3"/>
+    <circle cx="110" cy="35" r="3"/>
+    <circle cx="14" cy="75" r="2.5"/>
+    <circle cx="114" cy="75" r="2.5"/>
+  </g>
+  
+  <!-- Gold particles -->
+  <g fill="#fde047" filter="url(#softGlow)" opacity="0.8">
+    <circle cx="36" cy="18" r="2"/>
+    <circle cx="92" cy="18" r="2"/>
+  </g>
+</svg>

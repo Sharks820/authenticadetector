@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bubbleTeal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#99f6e4"/>
+      <stop offset="25%" stop-color="#5eead4"/>
+      <stop offset="50%" stop-color="#2dd4bf"/>
+      <stop offset="75%" stop-color="#14b8a6"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+    <linearGradient id="bubbleHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ccfbf1"/>
+      <stop offset="100%" stop-color="#5eead4" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="bubblePurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e9d5ff"/>
+      <stop offset="25%" stop-color="#c4b5fd"/>
+      <stop offset="50%" stop-color="#a78bfa"/>
+      <stop offset="75%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <radialGradient id="msgGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5eead4" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#14b8a6" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+      <feOffset in="blur" dx="2" dy="3" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Background glow -->
+  <ellipse cx="64" cy="64" rx="55" ry="50" fill="url(#msgGlow)"/>
+  
+  <!-- Back bubble (purple) -->
+  <g filter="url(#innerShadow)">
+    <path d="M 75 30 C 95 30, 112 42, 112 58 C 112 74, 95 86, 75 86 C 72 86, 69 85, 66 84 L 55 95 L 58 82 C 48 78, 42 68, 42 58 C 42 42, 55 30, 75 30 Z" fill="url(#bubblePurple)" stroke="#6d28d9" stroke-width="2.5"/>
+    <path d="M 60 40 C 70 35, 90 35, 100 45 C 92 40, 75 38, 62 42 Z" fill="#e9d5ff" opacity="0.5"/>
+  </g>
+  
+  <!-- Front bubble (teal) -->
+  <g filter="url(#innerShadow)">
+    <path d="M 53 45 C 28 45, 12 60, 12 78 C 12 96, 28 108, 53 108 C 57 108, 61 107, 65 106 L 78 118 L 74 103 C 87 98, 95 88, 95 78 C 95 60, 78 45, 53 45 Z" fill="url(#bubbleTeal)" stroke="#0d9488" stroke-width="2.5"/>
+    <path d="M 25 58 C 35 52, 58 50, 78 58 C 65 54, 42 54, 28 60 Z" fill="url(#bubbleHighlight)" opacity="0.5"/>
+  </g>
+  
+  <!-- Message dots in teal bubble -->
+  <g fill="#0f172a" filter="url(#softGlow)">
+    <circle cx="38" cy="78" r="5"/>
+    <circle cx="53" cy="78" r="5"/>
+    <circle cx="68" cy="78" r="5"/>
+  </g>
+  
+  <!-- Notification badge -->
+  <g filter="url(#softGlow)">
+    <circle cx="100" cy="30" r="14" fill="#ef4444" stroke="#b91c1c" stroke-width="2"/>
+    <text x="100" y="36" font-size="16" font-weight="bold" fill="#fff" text-anchor="middle" font-family="sans-serif">3</text>
+  </g>
+  
+  <!-- Sparkles -->
+  <g fill="#99f6e4" filter="url(#softGlow)">
+    <circle cx="18" cy="40" r="3"/>
+    <circle cx="108" cy="95" r="2.5"/>
+    <circle cx="35" cy="115" r="2"/>
+  </g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 60">
+  <defs>
+    <linearGradient id="sleeveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4a5568"/>
+      <stop offset="40%" stop-color="#2d3748"/>
+      <stop offset="100%" stop-color="#1a202c"/>
+    </linearGradient>
+    <linearGradient id="skinArmGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f5d0b5"/>
+      <stop offset="100%" stop-color="#d4a574"/>
+    </linearGradient>
+  </defs>
+  <!-- Upper arm (sleeve) -->
+  <path d="M5 0 Q0 5, 2 25 L8 30 Q12 35, 15 30 L20 25 Q25 5, 20 0 Z"
+        fill="url(#sleeveGrad)" stroke="#0d1117" stroke-width="2"/>
+  <!-- Lower arm (skin) -->
+  <path d="M6 28 Q4 40, 8 55 L14 58 L20 55 Q24 40, 20 28 Z"
+        fill="url(#skinArmGrad)" stroke="#c9a07a" stroke-width="1"/>
+  <!-- Hand -->
+  <ellipse cx="14" cy="56" rx="8" ry="5" fill="url(#skinArmGrad)" stroke="#c9a07a" stroke-width="1"/>
+  <!-- Sleeve accent -->
+  <path d="M3 20 Q10 22, 18 20" stroke="#22d3ee" stroke-width="1" stroke-opacity="0.5"/>
+</svg>

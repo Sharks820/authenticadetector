@@ -1,6 +1,177 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <circle cx="9" cy="8" r="3"/>
-  <path d="M3 20c1-3 4-5 6-5"/>
-  <circle cx="17" cy="9" r="2.5"/>
-  <path d="M14 20c0-2 2-4 4-4"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <!-- Left figure gradients -->
+    <linearGradient id="friendTeal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#99f6e4"/>
+      <stop offset="20%" stop-color="#5eead4"/>
+      <stop offset="40%" stop-color="#2dd4bf"/>
+      <stop offset="60%" stop-color="#14b8a6"/>
+      <stop offset="80%" stop-color="#0d9488"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </linearGradient>
+    <linearGradient id="tealHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ccfbf1"/>
+      <stop offset="100%" stop-color="#5eead4" stop-opacity="0"/>
+    </linearGradient>
+    <!-- Right figure gradients -->
+    <linearGradient id="friendPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e9d5ff"/>
+      <stop offset="20%" stop-color="#c4b5fd"/>
+      <stop offset="40%" stop-color="#a78bfa"/>
+      <stop offset="60%" stop-color="#8b5cf6"/>
+      <stop offset="80%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#6d28d9"/>
+    </linearGradient>
+    <linearGradient id="purpleHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f3e8ff"/>
+      <stop offset="100%" stop-color="#c4b5fd" stop-opacity="0"/>
+    </linearGradient>
+    <!-- Heart gradient -->
+    <radialGradient id="heartPink" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#fda4af"/>
+      <stop offset="30%" stop-color="#fb7185"/>
+      <stop offset="60%" stop-color="#f43f5e"/>
+      <stop offset="100%" stop-color="#e11d48"/>
+    </radialGradient>
+    <!-- Connection glow -->
+    <linearGradient id="connectionGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#14b8a6"/>
+      <stop offset="50%" stop-color="#f472b6"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <radialGradient id="friendsAura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f472b6" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#a78bfa" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#14b8a6" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Eye gradients -->
+    <radialGradient id="eyeWhite" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </radialGradient>
+    <radialGradient id="eyePupil" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </radialGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feOffset in="blur" dx="2" dy="4" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Background aura -->
+  <ellipse cx="64" cy="68" rx="58" ry="52" fill="url(#friendsAura)"/>
+  
+  <!-- Connection energy lines -->
+  <g filter="url(#strongGlow)" opacity="0.7">
+    <path d="M 38 52 Q 64 38 90 52" stroke="url(#connectionGlow)" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M 32 68 Q 64 55 96 68" stroke="url(#connectionGlow)" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- LEFT FIGURE (Teal) -->
+  <g filter="url(#innerShadow)">
+    <!-- Body -->
+    <path d="M 16 105 C 10 92, 12 75, 24 68 C 32 64, 44 64, 52 68 C 64 75, 66 92, 60 105 C 52 112, 24 112, 16 105 Z" fill="url(#friendTeal)" stroke="#0f766e" stroke-width="2.5"/>
+    <!-- Body highlight -->
+    <path d="M 22 100 C 18 90, 20 78, 28 72 C 26 82, 24 92, 26 100 Z" fill="url(#tealHighlight)" opacity="0.5"/>
+    <!-- Body shine -->
+    <ellipse cx="30" cy="82" rx="6" ry="10" fill="#ccfbf1" opacity="0.2"/>
+    
+    <!-- Head -->
+    <circle cx="38" cy="42" r="22" fill="url(#friendTeal)" stroke="#0f766e" stroke-width="2.5"/>
+    <!-- Head highlight -->
+    <path d="M 24 34 C 28 24, 42 20, 52 28 C 44 24, 32 26, 26 36 Z" fill="url(#tealHighlight)" opacity="0.6"/>
+    <!-- Cheek blush -->
+    <ellipse cx="24" cy="48" rx="5" ry="3" fill="#fda4af" opacity="0.35"/>
+    
+    <!-- Eyes -->
+    <g filter="url(#softGlow)">
+      <ellipse cx="30" cy="42" rx="5" ry="6" fill="url(#eyeWhite)"/>
+      <ellipse cx="31" cy="43" rx="3.5" ry="4.5" fill="url(#eyePupil)"/>
+      <circle cx="29" cy="41" r="2" fill="#fff"/>
+      
+      <ellipse cx="46" cy="42" rx="5" ry="6" fill="url(#eyeWhite)"/>
+      <ellipse cx="47" cy="43" rx="3.5" ry="4.5" fill="url(#eyePupil)"/>
+      <circle cx="45" cy="41" r="2" fill="#fff"/>
+    </g>
+    
+    <!-- Smile -->
+    <path d="M 30 52 Q 38 60 46 52" stroke="#0f766e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    
+    <!-- Hair tuft -->
+    <path d="M 32 22 C 30 18, 36 14, 42 18 C 38 16, 34 18, 34 22 Z" fill="#0d9488"/>
+  </g>
+  
+  <!-- RIGHT FIGURE (Purple) -->
+  <g filter="url(#innerShadow)">
+    <!-- Body -->
+    <path d="M 68 105 C 62 92, 64 75, 76 68 C 84 64, 96 64, 104 68 C 116 75, 118 92, 112 105 C 104 112, 76 112, 68 105 Z" fill="url(#friendPurple)" stroke="#5b21b6" stroke-width="2.5"/>
+    <!-- Body highlight -->
+    <path d="M 74 100 C 70 90, 72 78, 80 72 C 78 82, 76 92, 78 100 Z" fill="url(#purpleHighlight)" opacity="0.5"/>
+    <!-- Body shine -->
+    <ellipse cx="82" cy="82" rx="6" ry="10" fill="#e9d5ff" opacity="0.2"/>
+    
+    <!-- Head -->
+    <circle cx="90" cy="42" r="22" fill="url(#friendPurple)" stroke="#5b21b6" stroke-width="2.5"/>
+    <!-- Head highlight -->
+    <path d="M 76 34 C 80 24, 94 20, 104 28 C 96 24, 84 26, 78 36 Z" fill="url(#purpleHighlight)" opacity="0.6"/>
+    <!-- Cheek blush -->
+    <ellipse cx="104" cy="48" rx="5" ry="3" fill="#fda4af" opacity="0.35"/>
+    
+    <!-- Eyes -->
+    <g filter="url(#softGlow)">
+      <ellipse cx="82" cy="42" rx="5" ry="6" fill="url(#eyeWhite)"/>
+      <ellipse cx="83" cy="43" rx="3.5" ry="4.5" fill="url(#eyePupil)"/>
+      <circle cx="81" cy="41" r="2" fill="#fff"/>
+      
+      <ellipse cx="98" cy="42" rx="5" ry="6" fill="url(#eyeWhite)"/>
+      <ellipse cx="99" cy="43" rx="3.5" ry="4.5" fill="url(#eyePupil)"/>
+      <circle cx="97" cy="41" r="2" fill="#fff"/>
+    </g>
+    
+    <!-- Smile -->
+    <path d="M 82 52 Q 90 60 98 52" stroke="#5b21b6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    
+    <!-- Hair tuft -->
+    <path d="M 84 22 C 82 18, 88 14, 94 18 C 90 16, 86 18, 86 22 Z" fill="#6d28d9"/>
+  </g>
+  
+  <!-- CENTER HEART -->
+  <g filter="url(#strongGlow)">
+    <path d="M 64 90 C 64 90, 48 78, 48 66 C 48 56, 56 52, 64 58 C 72 52, 80 56, 80 66 C 80 78, 64 90, 64 90 Z" fill="url(#heartPink)" stroke="#be123c" stroke-width="2"/>
+    <!-- Heart highlight -->
+    <path d="M 54 62 C 56 58, 62 58, 64 62 C 60 60, 56 60, 54 64 Z" fill="#fecdd3" opacity="0.7"/>
+    <!-- Heart sparkle -->
+    <circle cx="56" cy="64" r="2" fill="#fff" opacity="0.8"/>
+  </g>
+  
+  <!-- Floating hearts -->
+  <g fill="url(#heartPink)" filter="url(#softGlow)" opacity="0.6">
+    <path d="M 20 28 C 20 28, 16 24, 16 20 C 16 17, 18 16, 20 18 C 22 16, 24 17, 24 20 C 24 24, 20 28, 20 28 Z"/>
+    <path d="M 108 28 C 108 28, 104 24, 104 20 C 104 17, 106 16, 108 18 C 110 16, 112 17, 112 20 C 112 24, 108 28, 108 28 Z"/>
+  </g>
+  
+  <!-- Sparkles -->
+  <g fill="#fff" filter="url(#softGlow)">
+    <circle cx="18" cy="50" r="3"/>
+    <circle cx="110" cy="50" r="3"/>
+    <circle cx="64" cy="12" r="2.5"/>
+  </g>
+  
+  <!-- Energy particles -->
+  <g filter="url(#softGlow)">
+    <circle cx="28" cy="16" r="2" fill="#5eead4"/>
+    <circle cx="100" cy="16" r="2" fill="#a78bfa"/>
+    <circle cx="12" cy="70" r="1.5" fill="#f472b6"/>
+    <circle cx="116" cy="70" r="1.5" fill="#f472b6"/>
+  </g>
 </svg>

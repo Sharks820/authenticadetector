@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <!-- Gift box gradients -->
+    <linearGradient id="boxPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c4b5fd"/>
+      <stop offset="20%" stop-color="#a78bfa"/>
+      <stop offset="40%" stop-color="#8b5cf6"/>
+      <stop offset="60%" stop-color="#7c3aed"/>
+      <stop offset="80%" stop-color="#6d28d9"/>
+      <stop offset="100%" stop-color="#5b21b6"/>
+    </linearGradient>
+    <linearGradient id="boxHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e9d5ff"/>
+      <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
+    </linearGradient>
+    <!-- Ribbon gold -->
+    <linearGradient id="ribbonGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fefce8"/>
+      <stop offset="20%" stop-color="#fef08a"/>
+      <stop offset="40%" stop-color="#fde047"/>
+      <stop offset="60%" stop-color="#facc15"/>
+      <stop offset="80%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#ca8a04"/>
+    </linearGradient>
+    <!-- Gems -->
+    <radialGradient id="gemRed" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#fecaca"/>
+      <stop offset="30%" stop-color="#f87171"/>
+      <stop offset="60%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#b91c1c"/>
+    </radialGradient>
+    <radialGradient id="gemBlue" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#bfdbfe"/>
+      <stop offset="30%" stop-color="#60a5fa"/>
+      <stop offset="60%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </radialGradient>
+    <radialGradient id="gemGreen" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#bbf7d0"/>
+      <stop offset="30%" stop-color="#4ade80"/>
+      <stop offset="60%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#15803d"/>
+    </radialGradient>
+    <radialGradient id="rewardGlow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#fde047" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#a78bfa" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feOffset in="blur" dx="2" dy="4" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Background glow -->
+  <ellipse cx="64" cy="68" rx="58" ry="52" fill="url(#rewardGlow)"/>
+  
+  <!-- Gift box base -->
+  <g filter="url(#innerShadow)">
+    <!-- Box body -->
+    <rect x="18" y="55" width="92" height="65" rx="6" fill="url(#boxPurple)" stroke="#4c1d95" stroke-width="3"/>
+    <!-- Box highlight -->
+    <rect x="22" y="58" width="30" height="58" rx="4" fill="url(#boxHighlight)" opacity="0.3"/>
+    <!-- Box pattern dots -->
+    <g fill="#5b21b6" opacity="0.3">
+      <circle cx="35" cy="75" r="4"/>
+      <circle cx="55" cy="90" r="4"/>
+      <circle cx="75" cy="75" r="4"/>
+      <circle cx="95" cy="90" r="4"/>
+      <circle cx="35" cy="105" r="4"/>
+      <circle cx="55" cy="75" r="4"/>
+      <circle cx="75" cy="105" r="4"/>
+      <circle cx="95" cy="75" r="4"/>
+    </g>
+  </g>
+  
+  <!-- Vertical ribbon -->
+  <g filter="url(#innerShadow)">
+    <rect x="54" y="55" width="20" height="65" fill="url(#ribbonGold)" stroke="#a16207" stroke-width="2"/>
+    <rect x="56" y="57" width="6" height="61" fill="#fef08a" opacity="0.4"/>
+  </g>
+  
+  <!-- Horizontal ribbon -->
+  <g filter="url(#innerShadow)">
+    <rect x="18" y="75" width="92" height="18" fill="url(#ribbonGold)" stroke="#a16207" stroke-width="2"/>
+    <rect x="20" y="77" width="88" height="5" fill="#fef08a" opacity="0.4"/>
+  </g>
+  
+  <!-- Box lid (open, tilted) -->
+  <g filter="url(#innerShadow)" transform="rotate(-15, 64, 55)">
+    <rect x="14" y="35" width="100" height="22" rx="4" fill="url(#boxPurple)" stroke="#4c1d95" stroke-width="3"/>
+    <rect x="50" y="35" width="20" height="22" fill="url(#ribbonGold)" stroke="#a16207" stroke-width="1.5"/>
+    <rect x="16" y="37" width="30" height="18" rx="3" fill="url(#boxHighlight)" opacity="0.3"/>
+  </g>
+  
+  <!-- Bow on top -->
+  <g filter="url(#strongGlow)">
+    <!-- Bow loops -->
+    <ellipse cx="45" cy="32" rx="16" ry="12" fill="url(#ribbonGold)" stroke="#a16207" stroke-width="2"/>
+    <ellipse cx="83" cy="32" rx="16" ry="12" fill="url(#ribbonGold)" stroke="#a16207" stroke-width="2"/>
+    <!-- Loop holes -->
+    <ellipse cx="45" cy="32" rx="6" ry="4" fill="#7c3aed"/>
+    <ellipse cx="83" cy="32" rx="6" ry="4" fill="#7c3aed"/>
+    <!-- Bow center -->
+    <circle cx="64" cy="36" r="10" fill="url(#ribbonGold)" stroke="#a16207" stroke-width="2"/>
+    <circle cx="62" cy="34" r="3" fill="#fef08a" opacity="0.6"/>
+    <!-- Ribbon tails -->
+    <path d="M 58 44 L 50 58 L 56 56 L 52 70" fill="none" stroke="url(#ribbonGold)" stroke-width="8" stroke-linecap="round"/>
+    <path d="M 70 44 L 78 58 L 72 56 L 76 70" fill="none" stroke="url(#ribbonGold)" stroke-width="8" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Treasures bursting out -->
+  <g filter="url(#strongGlow)">
+    <!-- Gems -->
+    <path d="M 36 22 L 30 32 L 36 40 L 42 32 Z" fill="url(#gemRed)" stroke="#991b1b" stroke-width="1.5"/>
+    <ellipse cx="33" cy="30" rx="2.5" ry="2" fill="#fff" opacity="0.6"/>
+    
+    <path d="M 92 22 L 86 32 L 92 40 L 98 32 Z" fill="url(#gemBlue)" stroke="#1e40af" stroke-width="1.5"/>
+    <ellipse cx="89" cy="30" rx="2.5" ry="2" fill="#fff" opacity="0.6"/>
+    
+    <path d="M 64 8 L 56 20 L 64 30 L 72 20 Z" fill="url(#gemGreen)" stroke="#166534" stroke-width="1.5"/>
+    <ellipse cx="60" cy="18" rx="3" ry="2" fill="#fff" opacity="0.6"/>
+    
+    <!-- Coins -->
+    <ellipse cx="28" cy="14" rx="8" ry="4" fill="#fde047" stroke="#a16207" stroke-width="1.5"/>
+    <ellipse cx="100" cy="14" rx="8" ry="4" fill="#fde047" stroke="#a16207" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Sparkles -->
+  <g fill="#fefce8" filter="url(#softGlow)">
+    <circle cx="18" cy="8" r="3"/>
+    <circle cx="110" cy="8" r="3"/>
+    <circle cx="64" cy="2" r="2.5"/>
+  </g>
+  
+  <!-- Magic particles -->
+  <g fill="#fde047" filter="url(#softGlow)" opacity="0.8">
+    <circle cx="24" cy="28" r="2"/>
+    <circle cx="104" cy="28" r="2"/>
+    <circle cx="48" cy="6" r="1.5"/>
+    <circle cx="80" cy="6" r="1.5"/>
+  </g>
+</svg>

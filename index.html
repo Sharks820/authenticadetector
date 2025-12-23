@@ -312,6 +312,8 @@
         }
         .view.active{
             display:flex;
+            opacity: 1 !important;
+            transform: translateX(0) !important;
             animation: pageSlideIn 0.3s ease forwards;
         }
         .view.closing{
@@ -320,7 +322,9 @@
         
         .view-header{
             flex-shrink:0;
-            display:flex;align-items:center;justify-content:space-between;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
             padding:12px 16px;
             padding-top:calc(12px + var(--safe-top));
             background:var(--surface);
@@ -328,12 +332,30 @@
             min-height:56px;
             /* Extend background into safe area to prevent Chrome bleed-through */
             position:relative;
+            gap:12px;
+        }
+        .view-header > *:first-child{
+            flex:0 0 auto;
+        }
+        .view-header > *:nth-child(2){
+            flex:1 1 auto;
+            text-align:center;
+        }
+        .view-header > *:last-child{
+            flex:0 0 auto;
         }
         .view-header::before{
             content:'';position:absolute;top:calc(-1 * var(--safe-top));left:0;right:0;
             height:var(--safe-top);background:var(--surface);
         }
-        .view-title{font-size:18px;font-weight:700}
+        .view-title{
+            font-size:18px;
+            font-weight:700;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+        }
         .view-close{
             width:44px;height:44px;border-radius:50%;
             background:var(--surface2);border:none;
@@ -347,13 +369,20 @@
         }
         /* Premium Home Button */
         .home-btn{
-            width:40px;height:40px;border-radius:12px;
+            width:40px;
+            height:40px;
+            border-radius:12px;
             background:linear-gradient(135deg, rgba(94,234,212,0.15) 0%, rgba(34,211,238,0.1) 100%);
             border:1px solid rgba(94,234,212,0.3);
-            color:var(--primary);font-size:18px;
-            cursor:pointer;display:flex;align-items:center;justify-content:center;
+            color:var(--primary);
+            font-size:18px;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            justify-content:center;
             transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow:0 2px 8px rgba(0,0,0,0.2);
+            flex-shrink:0;
         }
         .home-btn:hover{
             background:linear-gradient(135deg, rgba(94,234,212,0.25) 0%, rgba(34,211,238,0.2) 100%);
@@ -364,13 +393,20 @@
         .home-btn:active{transform:scale(0.95)}
         /* Back Button - matches home-btn style */
         .back-btn{
-            width:40px;height:40px;border-radius:12px;
+            width:40px;
+            height:40px;
+            border-radius:12px;
             background:linear-gradient(135deg, rgba(124,58,237,0.15) 0%, rgba(139,92,246,0.1) 100%);
             border:1px solid rgba(124,58,237,0.3);
-            color:#a78bfa;font-size:18px;
-            cursor:pointer;display:flex;align-items:center;justify-content:center;
+            color:#a78bfa;
+            font-size:18px;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            justify-content:center;
             transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow:0 2px 8px rgba(0,0,0,0.2);
+            flex-shrink:0;
         }
         .back-btn:hover{
             background:linear-gradient(135deg, rgba(124,58,237,0.25) 0%, rgba(139,92,246,0.2) 100%);
@@ -2067,7 +2103,50 @@
             border-radius:50%;
         }
         .help-text strong { color:#00d4aa; }
-        
+
+        /* ========================================
+           TOGGLE SWITCH STYLES (Settings Page)
+           ======================================== */
+
+        /* Toggle switch - the slider knob that moves */
+        label input[type="checkbox"] + span::before {
+            content: '';
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.4s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* When checkbox is checked, move the slider knob to the right */
+        label input[type="checkbox"]:checked + span::before {
+            transform: translateX(20px);
+        }
+
+        /* Change background color when checked */
+        label input[type="checkbox"]:checked + span {
+            background: var(--primary) !important;
+        }
+
+        /* Add pointer cursor to the label */
+        label[style*="position:relative"] {
+            cursor: pointer;
+        }
+
+        /* Hover effect for better UX */
+        label[style*="position:relative"]:hover span {
+            opacity: 0.9;
+        }
+
+        /* Active/pressed effect */
+        label[style*="position:relative"]:active span::before {
+            width: 22px;
+        }
+
         .hidden{display:none!important}
 
         /* ========================================
@@ -2167,6 +2246,8 @@
             font-weight: 700;
             color: var(--gold);
             border: 1px solid rgba(255, 215, 0, 0.3);
+            flex-shrink: 0;
+            white-space: nowrap;
         }
 
         .streak-display {
@@ -3828,28 +3909,35 @@
         }
 
         .char-head {
-            background: radial-gradient(circle at 30% 30%, #f6c7a2 0%, #e9a87f 60%, #c77a55 100%);
-            border: 3px solid #0b0f18;
-            border-radius: 50%;
+            background: url('assets/avatar/avatar-head.svg') center/contain no-repeat;
+            border: none;
+            border-radius: 0;
             font-size: 0;
         }
         .char-torso {
-            background: linear-gradient(180deg, #1e2a3f 0%, #0f1624 100%);
-            border: 3px solid #0b0f18;
-            border-radius: 18px;
+            background: url('assets/avatar/avatar-torso.svg') center/contain no-repeat;
+            border: none;
+            border-radius: 0;
             font-size: 0;
         }
-        .char-left-arm,
+        .char-left-arm {
+            background: url('assets/avatar/avatar-arm.svg') center/contain no-repeat;
+            border: none;
+            border-radius: 0;
+            font-size: 0;
+        }
         .char-right-arm {
-            background: linear-gradient(180deg, #20324a 0%, #0d1524 100%);
-            border: 3px solid #0b0f18;
-            border-radius: 18px;
+            background: url('assets/avatar/avatar-arm.svg') center/contain no-repeat;
+            transform: scaleX(-1);
+            transform-origin: center center;
+            border: none;
+            border-radius: 0;
             font-size: 0;
         }
         .char-legs {
-            background: linear-gradient(180deg, #1f2836 0%, #0b111d 100%);
-            border: 3px solid #0b0f18;
-            border-radius: 18px;
+            background: url('assets/avatar/avatar-legs.svg') center/contain no-repeat;
+            border: none;
+            border-radius: 0;
             font-size: 0;
         }
         .char-weapon,
@@ -3858,7 +3946,16 @@
         .char-back,
         .char-pet {
             font-size: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        /* Placeholder icons for empty accessory slots */
+        .char-weapon:empty::before { content: '⚔️'; font-size: 24px; opacity: 0.3; }
+        .char-hat:empty::before { content: '🎩'; font-size: 24px; opacity: 0.3; }
+        .char-glasses:empty::before { content: '👓'; font-size: 20px; opacity: 0.3; }
+        .char-back:empty::before { content: '🦋'; font-size: 24px; opacity: 0.3; }
+        .char-pet:empty::before { content: '🐾'; font-size: 20px; opacity: 0.3; }
         .avatar-item-icon {
             width: 26px;
             height: 26px;
@@ -4616,10 +4713,10 @@
         .currency-item {
             display: flex;
             align-items: center;
-            gap: 5px;
-            padding: 4px 10px;
+            gap: 8px;
+            padding: 8px 14px;
             background: rgba(255, 255, 255, 0.04);
-            border-radius: 14px;
+            border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
@@ -4646,8 +4743,8 @@
             background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(139, 92, 246, 0.08));
             border-color: rgba(168, 85, 247, 0.25);
         }
-        .currency-item .currency-icon { font-size: 13px; }
-        .currency-value { font-weight: 700; font-size: 12px; }
+        .currency-item .currency-icon { font-size: 22px; }
+        .currency-value { font-weight: 700; font-size: 15px; }
         .currency-item.coins .currency-value { color: #fcd34d; }
         .currency-item.keys .currency-value { color: #22d3ee; }
         .currency-item.gems .currency-value { color: #c084fc; }
@@ -5789,7 +5886,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
     <div class="home-header" style="position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(180deg,rgba(10,15,30,0.98) 0%,rgba(15,20,35,0.95) 100%);border-bottom:1px solid rgba(99,102,241,0.3);backdrop-filter:blur(12px)">
         <!-- LEFT: Title (MUCH BIGGER) -->
-        <h1 class="header-title" onclick="window.location.reload()">
+        <h1 class="header-title" onclick="goHome()" title="Go to Home">
             <span class="title-full">AuthenticaDetector</span><span class="title-hub"> Hub</span>
         </h1>
         <!-- RIGHT: Quests + Gift + Settings + Profile -->
@@ -6196,10 +6293,6 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
                 <span class="quest-summary-value" id="questsAvailable">0</span>
                 <span class="quest-summary-label">Available</span>
             </div>
-            <div class="quest-summary-stat">
-                <span class="quest-summary-value" id="questsCoinsEarned">0</span>
-                <span class="quest-summary-label">Coins Earned</span>
-            </div>
         </div>
 
         <div class="quest-section">
@@ -6240,13 +6333,13 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
     </div>
     <div class="view-body view-body-padded">
 
-        <!-- Phaser Character Canvas (Bone-Rigged Animation) -->
-        <div id="phaserCharacterCanvas" class="loading">
+        <!-- Phaser Character Canvas (Bone-Rigged Animation) - Hidden until Phaser loads -->
+        <div id="phaserCharacterCanvas" class="loading" style="display:none">
             <div class="drag-hint">Drag to rotate</div>
         </div>
 
-        <!-- Animation Controls -->
-        <div class="animation-controls">
+        <!-- Animation Controls - Hidden until Phaser works -->
+        <div class="animation-controls" style="display:none">
             <button class="anim-btn active" onclick="playCharacterAnimation('idle'); this.parentNode.querySelector('.active')?.classList.remove('active'); this.classList.add('active');">
                 <span class="anim-icon">🧘</span>
                 <span class="anim-label">Idle</span>
@@ -6265,8 +6358,8 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
             </button>
         </div>
 
-        <!-- Color Customization Section -->
-        <div class="color-picker-section">
+        <!-- Color Customization Section - Hidden until implemented -->
+        <div class="color-picker-section" style="display:none">
             <h4><span class="ad-icon-slot" data-ad-icon="palette" data-ad-size="16"></span> Colors</h4>
             <div id="skinColorPicker"></div>
             <div id="hairColorPicker"></div>
@@ -6274,8 +6367,8 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
             <div id="clothesColorPicker"></div>
         </div>
 
-        <!-- Character Stage - Visual Preview (Legacy Fallback) -->
-        <div class="character-stage" id="characterStage" style="display:none">
+        <!-- Character Stage - Visual Preview -->
+        <div class="character-stage" id="characterStage">
             <!-- Mode Toggle -->
             <div class="character-mode-toggle">
                 <button class="mode-btn active" id="standModeBtn" onclick="setCharacterMode('stand')">
@@ -6420,28 +6513,13 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
             <!-- Items will be populated by JavaScript -->
         </div>
 
-        <!-- Gacha Section -->
-        <div class="gacha-section" style="margin-top: 24px;">
-            <div class="gacha-banner" style="background: linear-gradient(135deg, #8e44ad, #9b59b6); border-radius: 16px; padding: 20px; border: 2px solid #6c3483;">
-                <h3 style="margin: 0 0 8px; color: white;"><span class="ad-icon-slot" data-ad-icon="lootbox" data-ad-size="18"></span> Mystery Cosmetics</h3>
-                <p style="color: rgba(255,255,255,0.8); margin: 0 0 16px; font-size: 14px;">Roll for rare AI-themed items!</p>
-                <div class="gacha-costs" style="display: flex; gap: 12px; flex-wrap: wrap;">
-                    <button class="gacha-btn" onclick="rollDesignerGacha('basic')" style="flex: 1; min-width: 120px; padding: 12px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; color: white; cursor: pointer; transition: all 0.3s;">
-                        <div style="font-weight: 700;">Basic Roll</div>
-                        <div style="color: #f39c12; font-size: 16px;"><span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="14"></span> 100</div>
-                    </button>
-                    <button class="gacha-btn" onclick="rollDesignerGacha('premium')" style="flex: 1; min-width: 120px; padding: 12px; background: linear-gradient(135deg, rgba(243, 156, 18, 0.3), rgba(230, 126, 34, 0.3)); border: 2px solid #f39c12; border-radius: 10px; color: white; cursor: pointer; transition: all 0.3s;">
-                        <div style="font-weight: 700;">Premium Roll</div>
-                        <div style="color: #f39c12; font-size: 16px;"><span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="14"></span> 400</div>
-                        <div style="font-size: 10px; color: #2ecc71;">Better odds!</div>
-                    </button>
-                    <button class="gacha-btn" onclick="rollDesignerGacha('legendary')" style="flex: 1; min-width: 120px; padding: 12px; background: linear-gradient(135deg, rgba(231, 76, 60, 0.3), rgba(192, 57, 43, 0.3)); border: 2px solid #e74c3c; border-radius: 10px; color: white; cursor: pointer; transition: all 0.3s;">
-                        <div style="font-weight: 700;">Legendary</div>
-                        <div style="color: #e74c3c; font-size: 16px;"><span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="14"></span> 1000</div>
-                        <div style="font-size: 10px; color: #e74c3c;">Epic+ guaranteed!</div>
-                    </button>
-                </div>
-            </div>
+        <!-- Shop CTA Banner -->
+        <div class="shop-cta-section" style="margin-top: 24px;">
+            <button onclick="openShop()" style="width: 100%; padding: 16px 20px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border: 2px solid rgba(139, 92, 246, 0.5); border-radius: 16px; color: white; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 16px; font-weight: 700;">
+                <span style="font-size: 24px;">🏪</span>
+                <span>Visit Shop for More Items</span>
+                <span style="font-size: 18px;">→</span>
+            </button>
         </div>
     </div>
 </div>
@@ -7407,13 +7485,13 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
 
 <link rel="stylesheet" href="PROFESSIONAL_UI_OVERHAUL.css">
 <link rel="stylesheet" href="ai-cosmetics-gacha.css">
-<link rel="stylesheet" href="vera-controller.css?v=3.5.0">
+<link rel="stylesheet" href="vera-controller.css?v=4.0.0">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script src="tank-shooter-enhanced.js"></script>
 <script src="avatar-cosmetics-system.js"></script>
 <script src="ai-cosmetics-gacha.js"></script>
-<script src="vera-controller.js?v=3.1.0" defer></script>
+<script src="vera-controller.js?v=4.0.0" defer></script>
 <script src="vera-gsap.js?v=1.1.0" defer></script>
 <!-- Rive Animation Runtime (for professional VERA animations) -->
 <script src="https://unpkg.com/@rive-app/canvas@2.15.2"></script>
@@ -7429,6 +7507,43 @@ if (window.IconLibrary) {
     window.IconLibrary.apply();
 }
 
+// Inject header action buttons into all view headers
+function injectHeaderActions() {
+    const headerActionsHTML = `
+        <div class="header-actions" style="display:flex;align-items:center;gap:4px">
+            <button onclick="toggleQuestsPopup()" title="Quests" class="header-action-btn" style="width:32px;height:32px;border-radius:50%;border:1px solid rgba(94,234,212,0.4);background:linear-gradient(135deg,rgba(94,234,212,0.15),rgba(20,184,166,0.08));cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center">📋</button>
+            <button onclick="claimDailyBonus()" title="Daily Bonus" class="header-action-btn" style="width:32px;height:32px;border-radius:50%;border:1px solid rgba(251,191,36,0.4);background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(245,158,11,0.08));cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center">🎁</button>
+            <button onclick="openSettings()" title="Settings" class="header-action-btn" style="width:32px;height:32px;border-radius:50%;border:1px solid rgba(100,116,139,0.3);background:rgba(100,116,139,0.1);cursor:pointer;display:flex;align-items:center;justify-content:center">
+                <img src="assets/icons/ui-settings.svg" alt="Settings" style="width:16px;height:16px">
+            </button>
+        </div>
+    `;
+
+    // Skip these views that already have custom right-side content or shouldn't have actions
+    const skipViews = ['loginView', 'settingsView', 'questsView'];
+
+    document.querySelectorAll('.view-header').forEach(header => {
+        const viewEl = header.closest('.view');
+        if (!viewEl) return;
+
+        // Skip if already has header-actions or is in skip list
+        if (header.querySelector('.header-actions')) return;
+        if (skipViews.includes(viewEl.id)) return;
+
+        // Find or create right-side container
+        let rightSide = header.querySelector('.coins-display');
+        if (rightSide) {
+            // Insert actions before coins display
+            rightSide.insertAdjacentHTML('beforebegin', headerActionsHTML);
+        } else {
+            // No coins display, append to end
+            header.insertAdjacentHTML('beforeend', headerActionsHTML);
+        }
+    });
+
+    console.log('[Init] Header actions injected into view headers');
+}
+
 // Initialize cosmetics system on page load
 document.addEventListener('DOMContentLoaded', () => {
     // Re-initialize Lucide icons after DOM loads (catches dynamically added elements)
@@ -7438,6 +7553,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.IconLibrary) {
         window.IconLibrary.apply();
     }
+
+    // Inject header action buttons
+    injectHeaderActions();
 
     if (typeof initCosmeticsSystem === 'function') {
         console.log('[Init] Starting cosmetics system...');
@@ -8153,10 +8271,21 @@ window.claimDailyBonus = function() {
     const newCoins = currentCoins + bonusCoins;
     localStorage.setItem('truthCoins', newCoins.toString());
 
+    // Also update userProgression object so display functions work
+    if (window.userProgression) {
+        window.userProgression.truth_coins = newCoins;
+    } else {
+        window.userProgression = { truth_coins: newCoins };
+    }
+
     // Update displays
     if (typeof updateAllCoinDisplays === 'function') {
         updateAllCoinDisplays();
     }
+
+    // Also update the header currency bar directly
+    const headerCoinCount = document.getElementById('headerCoinCount');
+    if (headerCoinCount) headerCoinCount.textContent = newCoins;
 
     // Show celebration
     showToast(`🎁 Day ${streakDay} Bonus: +${bonusCoins} coins! (${streak} day streak)`, 'success', 4000);
@@ -8268,18 +8397,18 @@ function initSupabase() {
 
 // ==================== PWA INSTALL ====================
 window.addEventListener('beforeinstallprompt', e => {
-    e.preventDefault(); 
+    e.preventDefault();
     deferredPrompt = e;
-    if (!isInstalled && !isIOS) $('installBanner').classList.add('show');
+    if (!isInstalled && !isIOS) $('installBanner')?.classList.add('show');
     updateStatusBar();
     console.log('[PWA] Install prompt captured');
 });
 
 window.addEventListener('appinstalled', () => {
-    isInstalled = true; 
+    isInstalled = true;
     localStorage.setItem('app_installed', 'true');
-    $('installBanner').classList.remove('show'); 
-    $('iosHelper').classList.remove('show');
+    $('installBanner')?.classList.remove('show');
+    $('iosHelper')?.classList.remove('show');
     updateStatusBar(); 
     updateGating(); 
     toast('🎉 App installed!');
@@ -8299,10 +8428,10 @@ function checkInstallState() {
     }
 
     if (isInstalled) {
-        $('installBanner').classList.remove('show');
-        $('iosHelper').classList.remove('show');
+        $('installBanner')?.classList.remove('show');
+        $('iosHelper')?.classList.remove('show');
     } else if (isIOS && !localStorage.getItem('ios_dismissed')) {
-        setTimeout(() => { if (!isInstalled) $('iosHelper').classList.add('show'); }, 2000);
+        setTimeout(() => { if (!isInstalled) $('iosHelper')?.classList.add('show'); }, 2000);
     }
     updateStatusBar();
 }
@@ -8311,56 +8440,71 @@ window.promptInstall = async function() {
     if (deferredPrompt) {
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') { 
-            isInstalled = true; 
-            localStorage.setItem('app_installed', 'true'); 
-            $('installBanner').classList.remove('show'); 
-            updateStatusBar(); 
-            updateGating(); 
+        if (outcome === 'accepted') {
+            isInstalled = true;
+            localStorage.setItem('app_installed', 'true');
+            $('installBanner')?.classList.remove('show');
+            updateStatusBar();
+            updateGating();
         }
         deferredPrompt = null;
-    } else if (isIOS) { 
-        $('iosHelper').classList.add('show'); 
+    } else if (isIOS) {
+        $('iosHelper')?.classList.add('show'); 
     } else { 
         toast('Use browser menu → Install app'); 
     }
 };
 
-window.dismissIosHelper = () => { 
-    $('iosHelper').classList.remove('show'); 
-    localStorage.setItem('ios_dismissed', 'true'); 
+window.dismissIosHelper = () => {
+    $('iosHelper')?.classList.remove('show');
+    localStorage.setItem('ios_dismissed', 'true');
 };
 
 // ==================== STATUS BAR ====================
 function updateStatusBar() {
-    const ic = $('installChip'), lc = $('loginChip'), sc = $('signupChip');
-    
-    if (isInstalled) { 
-        ic.classList.remove('pending'); 
-        ic.classList.add('complete'); 
-        ic.innerHTML = '<span>✓</span> Installed'; 
-    } else { 
-        ic.classList.add('pending'); 
-        ic.classList.remove('complete'); 
-        ic.innerHTML = '<span>📲</span> Install'; 
+    const ic = $('installChip'), lc = $('loginChip'), sc = $('signupChip'), sb = $('statusBar');
+
+    // Skip if elements don't exist
+    if (!ic && !lc && !sc && !sb) return;
+
+    if (ic) {
+        if (isInstalled) {
+            ic.classList.remove('pending');
+            ic.classList.add('complete');
+            ic.innerHTML = '<span>✓</span> Installed';
+        } else {
+            ic.classList.add('pending');
+            ic.classList.remove('complete');
+            ic.innerHTML = '<span>📲</span> Install';
+        }
     }
-    
-    if (user) {
-        lc.classList.remove('pending');
-        lc.classList.add('complete');
-        lc.innerHTML = '<span>✓</span> Signed In';
-        lc.onclick = () => openProfile(); // When logged in, go to profile
-        sc.classList.add('hidden');
-    } else {
-        lc.classList.add('pending');
-        lc.classList.remove('complete');
-        lc.innerHTML = '<span>🔑</span> Sign In';
-        lc.onclick = () => openLogin(); // When logged out, open login
-        sc.classList.remove('hidden');
+
+    if (lc) {
+        if (user) {
+            lc.classList.remove('pending');
+            lc.classList.add('complete');
+            lc.innerHTML = '<span>✓</span> Signed In';
+            lc.onclick = () => openProfile();
+        } else {
+            lc.classList.add('pending');
+            lc.classList.remove('complete');
+            lc.innerHTML = '<span>🔑</span> Sign In';
+            lc.onclick = () => openLogin();
+        }
     }
-    
+
+    if (sc) {
+        if (user) {
+            sc.classList.add('hidden');
+        } else {
+            sc.classList.remove('hidden');
+        }
+    }
+
     // Hide status bar only when BOTH are complete
-    $('statusBar').style.display = (isInstalled && user) ? 'none' : 'flex';
+    if (sb) {
+        sb.style.display = (isInstalled && user) ? 'none' : 'flex';
+    }
 }
 
 // ==================== AUTH ====================
@@ -9306,6 +9450,36 @@ window.closeView = function() {
     }
 };
 
+// Go directly to home (clears navigation stack)
+window.goHome = function() {
+    console.log('[View] Going directly to home');
+    viewStack = ['homeView'];
+    isNavigating = false;
+
+    // Close all views
+    document.querySelectorAll('.view').forEach(v => {
+        v.classList.remove('active');
+        v.style.opacity = '0';
+    });
+
+    // Open home
+    const homeView = $('homeView');
+    if (homeView) {
+        homeView.classList.add('active');
+        homeView.style.opacity = '1';
+        currentView = 'homeView';
+    }
+
+    // Hide game nav
+    const gameNav = $('gameNav');
+    if (gameNav) gameNav.style.display = 'none';
+
+    // Update history
+    try {
+        history.replaceState({ view: 'homeView', isBase: true }, '', '#homeView');
+    } catch(e) {}
+};
+
 // Emergency navigation reset - call this if buttons ever break
 window.resetNavigation = function() {
     console.log('[View] Emergency navigation reset');
@@ -9610,12 +9784,17 @@ function updateProgressionUI() {
 }
 
 function updateCoinsDisplay() {
-    const coins = userProgression?.truth_coins || 0;
-    const displays = ['coinsCount', 'headerCoins', 'userCoins', 'historyViewCoins', 'leaderboardViewCoins', 'profileViewCoins', 'badgesViewCoins', 'questsViewCoins'];
+    // Get coins from userProgression or localStorage fallback
+    let coins = userProgression?.truth_coins || 0;
+    if (coins === 0) {
+        coins = parseInt(localStorage.getItem('truthCoins') || '0');
+    }
+
+    const displays = ['coinsCount', 'headerCoins', 'userCoins', 'historyViewCoins', 'leaderboardViewCoins', 'profileViewCoins', 'badgesViewCoins', 'questsViewCoins', 'headerCoinCount'];
     displays.forEach(id => {
         const el = $(id);
         if (el) {
-            if (id === 'coinsCount') {
+            if (id === 'coinsCount' || id === 'headerCoinCount') {
                 el.textContent = coins;
             } else if (id === 'userCoins') {
                 el.textContent = `${coins} 🪙`;
@@ -10620,14 +10799,14 @@ window.handleLogout = async function() {
 
         // Clear local user data
         user = null;
-        localStorage.removeItem('user');
+        saveUser(); // Persist logout state
         localStorage.removeItem('userSettings');
 
         // Update UI
         updateUserUI();
 
         // Navigate to home
-        openView('homeView');
+        showView('homeView');
 
         showToast('Signed out successfully', 'success');
     } catch (error) {
@@ -10888,10 +11067,34 @@ function loadCharacterDesignerState() {
                     );
                 });
             }
+        } else {
+            // New user - set up default equipment (free items)
+            initializeDefaultEquipment();
         }
     } catch (e) {
         console.error('[Character Designer] Failed to load state:', e);
+        initializeDefaultEquipment();
     }
+}
+
+// Initialize default equipment for new users
+function initializeDefaultEquipment() {
+    console.log('[Character Designer] Setting up default equipment for new user');
+    // Equip free default items
+    const defaultItems = {
+        head: CHARACTER_ITEMS.head.find(i => i.id === 'default'),
+        torso: CHARACTER_ITEMS.torso.find(i => i.id === 'shirt'),
+        legs: CHARACTER_ITEMS.legs.find(i => i.id === 'pants')
+    };
+
+    Object.entries(defaultItems).forEach(([slot, item]) => {
+        if (item) {
+            characterDesignerState.equipped[slot] = normalizeEquippedItem(slot, item);
+        }
+    });
+
+    // Save the default state
+    saveCharacterDesignerState();
 }
 
 // Save character state
@@ -10906,8 +11109,9 @@ function saveCharacterDesignerState() {
 // Update coins display in designer
 function updateDesignerCoins() {
     const coinsEl = document.getElementById('designerCoinsCount');
-    if (coinsEl && typeof userProgression !== 'undefined') {
-        coinsEl.textContent = userProgression.truth_coins.toLocaleString();
+    if (coinsEl) {
+        const coins = userProgression?.truth_coins || parseInt(localStorage.getItem('truth_coins') || '0');
+        coinsEl.textContent = coins.toLocaleString();
     }
 }
 
@@ -13179,17 +13383,6 @@ function drawParticles(ctx) {
 
 init();
 </script>
-
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-.cta-btn-secondary:hover {
-    background: var(--surface3);
-    border-color: var(--primary);
-}
-</style>
 
 <!-- VERA is now handled by vera-controller.js -->
 

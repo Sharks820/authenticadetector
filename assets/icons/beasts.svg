@@ -1,7 +1,250 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <circle cx="8" cy="8" r="1.5"/>
-  <circle cx="12" cy="6.5" r="1.5"/>
-  <circle cx="16" cy="8" r="1.5"/>
-  <circle cx="10" cy="11" r="1.5"/>
-  <path d="M6 15c0-2 2-4 6-4s6 2 6 4-2 5-6 5-6-3-6-5z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <!-- Soft gradient for fur/flesh -->
+    <linearGradient id="furBase" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6d28d9"/>
+      <stop offset="25%" stop-color="#5b21b6"/>
+      <stop offset="50%" stop-color="#4c1d95"/>
+      <stop offset="75%" stop-color="#3b0764"/>
+      <stop offset="100%" stop-color="#2e1065"/>
+    </linearGradient>
+    <linearGradient id="furHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="furShadow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#0f0a1f"/>
+    </linearGradient>
+    <!-- Eye gradients -->
+    <radialGradient id="eyeGlow" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="40%" stop-color="#facc15"/>
+      <stop offset="70%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </radialGradient>
+    <radialGradient id="eyeDepth" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#0f0a1f"/>
+    </radialGradient>
+    <!-- Horn gradient -->
+    <linearGradient id="hornGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="30%" stop-color="#57534e"/>
+      <stop offset="60%" stop-color="#a8a29e"/>
+      <stop offset="85%" stop-color="#e7e5e4"/>
+      <stop offset="100%" stop-color="#fafaf9"/>
+    </linearGradient>
+    <!-- Soft glow filter -->
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feOffset in="blur" dx="2" dy="3" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Ambient glow behind creature -->
+  <ellipse cx="64" cy="70" rx="50" ry="40" fill="#7c3aed" opacity="0.15"/>
+  
+  <!-- === BODY - Organic curved shape === -->
+  <path d="
+    M 30 75
+    C 25 65, 28 50, 40 45
+    C 45 42, 55 40, 64 40
+    C 73 40, 83 42, 88 45
+    C 100 50, 103 65, 98 75
+    C 100 82, 98 92, 90 98
+    C 80 105, 64 108, 64 108
+    C 64 108, 48 105, 38 98
+    C 30 92, 28 82, 30 75
+    Z
+  " fill="url(#furBase)" filter="url(#innerShadow)"/>
+  
+  <!-- Body highlight (top) -->
+  <path d="
+    M 35 70
+    C 32 60, 38 48, 50 45
+    C 58 43, 70 43, 78 45
+    C 90 48, 96 60, 93 70
+    C 88 65, 75 62, 64 62
+    C 53 62, 40 65, 35 70
+    Z
+  " fill="url(#furHighlight)" opacity="0.4"/>
+  
+  <!-- Body shadow (bottom) -->
+  <path d="
+    M 35 85
+    C 40 95, 55 102, 64 102
+    C 73 102, 88 95, 93 85
+    C 90 92, 78 98, 64 98
+    C 50 98, 38 92, 35 85
+    Z
+  " fill="url(#furShadow)" opacity="0.6"/>
+  
+  <!-- === HEAD - Detailed organic shape === -->
+  <path d="
+    M 35 52
+    C 30 45, 35 32, 50 28
+    C 58 25, 70 25, 78 28
+    C 93 32, 98 45, 93 52
+    C 96 58, 95 68, 88 72
+    C 78 78, 64 80, 64 80
+    C 64 80, 50 78, 40 72
+    C 33 68, 32 58, 35 52
+    Z
+  " fill="url(#furBase)"/>
+  
+  <!-- Head top highlight -->
+  <path d="
+    M 42 48
+    C 40 40, 48 32, 58 30
+    C 64 28, 70 28, 76 32
+    C 82 36, 86 44, 84 50
+    C 78 45, 70 42, 64 42
+    C 58 42, 48 45, 42 48
+    Z
+  " fill="#a78bfa" opacity="0.35"/>
+  
+  <!-- Cheek fur tufts - left -->
+  <path d="M 32 58 C 28 55, 25 60, 28 65 C 30 62, 32 60, 32 58Z" fill="#5b21b6"/>
+  <path d="M 30 62 C 24 60, 22 66, 26 70 C 28 67, 30 64, 30 62Z" fill="#4c1d95"/>
+  
+  <!-- Cheek fur tufts - right -->
+  <path d="M 96 58 C 100 55, 103 60, 100 65 C 98 62, 96 60, 96 58Z" fill="#5b21b6"/>
+  <path d="M 98 62 C 104 60, 106 66, 102 70 C 100 67, 98 64, 98 62Z" fill="#4c1d95"/>
+  
+  <!-- === LEFT HORN - Detailed with ridges === -->
+  <path d="
+    M 42 38
+    C 38 35, 30 25, 22 15
+    C 18 10, 12 8, 10 12
+    C 8 16, 12 20, 18 25
+    C 26 32, 35 38, 42 42
+    C 40 40, 40 39, 42 38
+    Z
+  " fill="url(#hornGrad)"/>
+  <!-- Horn ridges -->
+  <path d="M 38 34 C 34 30, 28 22, 24 18" stroke="#d6d3d1" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M 35 32 C 30 27, 24 20, 20 15" stroke="#a8a29e" stroke-width="0.8" fill="none" opacity="0.4"/>
+  <path d="M 32 30 C 26 24, 20 17, 16 12" stroke="#78716c" stroke-width="0.6" fill="none" opacity="0.3"/>
+  
+  <!-- === RIGHT HORN === -->
+  <path d="
+    M 86 38
+    C 90 35, 98 25, 106 15
+    C 110 10, 116 8, 118 12
+    C 120 16, 116 20, 110 25
+    C 102 32, 93 38, 86 42
+    C 88 40, 88 39, 86 38
+    Z
+  " fill="url(#hornGrad)"/>
+  <!-- Horn ridges -->
+  <path d="M 90 34 C 94 30, 100 22, 104 18" stroke="#d6d3d1" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M 93 32 C 98 27, 104 20, 108 15" stroke="#a8a29e" stroke-width="0.8" fill="none" opacity="0.4"/>
+  
+  <!-- === LEFT EYE - Detailed anime style === -->
+  <g filter="url(#softGlow)">
+    <!-- Eye socket shadow -->
+    <ellipse cx="50" cy="52" rx="12" ry="10" fill="#0f0a1f"/>
+    <!-- Eyeball base -->
+    <ellipse cx="50" cy="52" rx="10" ry="9" fill="url(#eyeDepth)"/>
+    <!-- Iris -->
+    <ellipse cx="50" cy="53" rx="8" ry="8" fill="url(#eyeGlow)"/>
+    <!-- Iris detail rings -->
+    <ellipse cx="50" cy="53" rx="6" ry="6" fill="none" stroke="#fcd34d" stroke-width="0.5" opacity="0.6"/>
+    <ellipse cx="50" cy="53" rx="4" ry="4" fill="none" stroke="#f59e0b" stroke-width="0.4" opacity="0.5"/>
+    <!-- Slit pupil -->
+    <ellipse cx="50" cy="53" rx="2.5" ry="7" fill="#0f0a1f"/>
+    <ellipse cx="50" cy="53" rx="1.2" ry="6" fill="#1e1b4b"/>
+    <!-- Main highlight -->
+    <ellipse cx="46" cy="49" rx="3" ry="2.5" fill="#fff"/>
+    <!-- Secondary highlight -->
+    <circle cx="54" cy="56" r="1.5" fill="#fff" opacity="0.7"/>
+    <!-- Tertiary tiny highlight -->
+    <circle cx="48" cy="57" r="0.8" fill="#fff" opacity="0.5"/>
+  </g>
+  
+  <!-- === RIGHT EYE === -->
+  <g filter="url(#softGlow)">
+    <ellipse cx="78" cy="52" rx="12" ry="10" fill="#0f0a1f"/>
+    <ellipse cx="78" cy="52" rx="10" ry="9" fill="url(#eyeDepth)"/>
+    <ellipse cx="78" cy="53" rx="8" ry="8" fill="url(#eyeGlow)"/>
+    <ellipse cx="78" cy="53" rx="6" ry="6" fill="none" stroke="#fcd34d" stroke-width="0.5" opacity="0.6"/>
+    <ellipse cx="78" cy="53" rx="4" ry="4" fill="none" stroke="#f59e0b" stroke-width="0.4" opacity="0.5"/>
+    <ellipse cx="78" cy="53" rx="2.5" ry="7" fill="#0f0a1f"/>
+    <ellipse cx="78" cy="53" rx="1.2" ry="6" fill="#1e1b4b"/>
+    <ellipse cx="74" cy="49" rx="3" ry="2.5" fill="#fff"/>
+    <circle cx="82" cy="56" r="1.5" fill="#fff" opacity="0.7"/>
+    <circle cx="76" cy="57" r="0.8" fill="#fff" opacity="0.5"/>
+  </g>
+  
+  <!-- === THIRD EYE (forehead) === -->
+  <g filter="url(#softGlow)">
+    <circle cx="64" cy="38" r="6" fill="#0f0a1f" stroke="#dc2626" stroke-width="1.5"/>
+    <circle cx="64" cy="38" r="4" fill="#dc2626"/>
+    <ellipse cx="64" cy="38" rx="1.5" ry="3" fill="#0f0a1f"/>
+    <ellipse cx="62" cy="36" rx="1.5" ry="1" fill="#fca5a5" opacity="0.8"/>
+  </g>
+  
+  <!-- === SNOUT/NOSE area === -->
+  <ellipse cx="64" cy="65" rx="8" ry="5" fill="#3b0764"/>
+  <ellipse cx="64" cy="64" rx="6" ry="3.5" fill="#4c1d95"/>
+  <!-- Nostrils -->
+  <ellipse cx="60" cy="64" rx="2" ry="1.5" fill="#1e1b4b"/>
+  <ellipse cx="68" cy="64" rx="2" ry="1.5" fill="#1e1b4b"/>
+  
+  <!-- === MOUTH with FANGS === -->
+  <path d="
+    M 48 72
+    C 52 68, 58 67, 64 67
+    C 70 67, 76 68, 80 72
+    C 76 78, 70 80, 64 80
+    C 58 80, 52 78, 48 72
+    Z
+  " fill="#dc2626"/>
+  
+  <!-- Inner mouth darkness -->
+  <path d="
+    M 52 73
+    C 56 70, 60 69, 64 69
+    C 68 69, 72 70, 76 73
+    C 72 76, 68 77, 64 77
+    C 60 77, 56 76, 52 73
+    Z
+  " fill="#7f1d1d"/>
+  
+  <!-- Fangs - detailed with shine -->
+  <path d="M 54 72 L 52 80 L 56 72 Z" fill="#f5f5f4"/>
+  <path d="M 54 72 L 53 76 L 55 72 Z" fill="#fafaf9"/>
+  <path d="M 60 71 L 58 77 L 62 71 Z" fill="#f5f5f4"/>
+  <path d="M 68 71 L 66 77 L 70 71 Z" fill="#f5f5f4"/>
+  <path d="M 74 72 L 72 80 L 76 72 Z" fill="#f5f5f4"/>
+  <path d="M 74 72 L 73 76 L 75 72 Z" fill="#fafaf9"/>
+  
+  <!-- Tongue hint -->
+  <ellipse cx="64" cy="75" rx="4" ry="2" fill="#f87171" opacity="0.6"/>
+  
+  <!-- === SMALL EARS === -->
+  <path d="M 38 35 C 35 30, 38 25, 42 28 C 44 30, 42 34, 40 36 Z" fill="#5b21b6"/>
+  <path d="M 39 33 C 38 30, 40 28, 42 30 Z" fill="#a78bfa" opacity="0.4"/>
+  <path d="M 90 35 C 93 30, 90 25, 86 28 C 84 30, 86 34, 88 36 Z" fill="#5b21b6"/>
+  <path d="M 89 33 C 90 30, 88 28, 86 30 Z" fill="#a78bfa" opacity="0.4"/>
+  
+  <!-- === SUBTLE FUR TEXTURE lines === -->
+  <g stroke="#a78bfa" stroke-width="0.5" opacity="0.2" fill="none">
+    <path d="M 45 48 C 48 50, 50 52, 48 55"/>
+    <path d="M 80 48 C 78 50, 76 52, 78 55"/>
+    <path d="M 55 85 C 58 88, 62 90, 64 88"/>
+    <path d="M 73 85 C 70 88, 66 90, 64 88"/>
+  </g>
+  
+  <!-- Whisker dots -->
+  <circle cx="42" cy="62" r="1" fill="#a78bfa" opacity="0.5"/>
+  <circle cx="40" cy="66" r="1" fill="#a78bfa" opacity="0.4"/>
+  <circle cx="86" cy="62" r="1" fill="#a78bfa" opacity="0.5"/>
+  <circle cx="88" cy="66" r="1" fill="#a78bfa" opacity="0.4"/>
 </svg>

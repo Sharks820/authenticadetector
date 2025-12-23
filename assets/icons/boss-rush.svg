@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <!-- Glowing eye gradient -->
+    <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="40%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#fef08a" stop-opacity="0"/>
+    </radialGradient>
+    
+    <!-- Red energy aura -->
+    <radialGradient id="doomAura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#dc2626" stop-opacity="0.4"/>
+      <stop offset="60%" stop-color="#7f1d1d" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    
+    <filter id="eyeBlur" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background doom aura -->
+  <ellipse cx="64" cy="70" rx="60" ry="55" fill="url(#doomAura)"/>
+  
+  <!-- === MENACING SILHOUETTE === -->
+  <g fill="#0f0a1f">
+    <!-- Wild hair/mane - left side -->
+    <path d="M 42 28 C 35 22, 25 18, 18 12 C 28 20, 32 26, 38 32 Z"/>
+    <path d="M 38 32 C 28 28, 18 28, 8 24 C 20 30, 28 34, 36 38 Z"/>
+    <path d="M 48 26 C 42 18, 35 10, 28 2 C 38 12, 44 20, 48 28 Z"/>
+    <path d="M 36 38 C 24 38, 14 40, 4 38 C 16 44, 26 44, 36 44 Z"/>
+    
+    <!-- Wild hair/mane - right side -->
+    <path d="M 86 28 C 93 22, 103 18, 110 12 C 100 20, 96 26, 90 32 Z"/>
+    <path d="M 90 32 C 100 28, 110 28, 120 24 C 108 30, 100 34, 92 38 Z"/>
+    <path d="M 80 26 C 86 18, 93 10, 100 2 C 90 12, 84 20, 80 28 Z"/>
+    <path d="M 92 38 C 104 38, 114 40, 124 38 C 112 44, 102 44, 92 44 Z"/>
+    
+    <!-- Top hair spikes -->
+    <path d="M 54 24 C 50 14, 48 6, 44 0 C 52 8, 54 16, 56 26 Z"/>
+    <path d="M 64 20 C 64 10, 64 4, 64 -4 C 64 6, 64 14, 64 24 Z"/>
+    <path d="M 74 24 C 78 14, 80 6, 84 0 C 76 8, 74 16, 72 26 Z"/>
+    
+    <!-- Main head shape -->
+    <ellipse cx="64" cy="42" rx="26" ry="22"/>
+    
+    <!-- Face/skull area - darker inset -->
+    <path d="M 44 38 C 44 32, 52 26, 64 26 C 76 26, 84 32, 84 38 C 84 48, 78 56, 64 58 C 50 56, 44 48, 44 38 Z" fill="#000"/>
+    
+    <!-- Neck -->
+    <path d="M 52 56 L 52 72 C 52 76, 56 80, 64 80 C 72 80, 76 76, 76 72 L 76 56 Z"/>
+    
+    <!-- Shoulder spikes left -->
+    <path d="M 52 68 C 42 64, 30 62, 18 58 C 32 66, 42 70, 52 74 Z"/>
+    <path d="M 48 74 C 36 74, 24 76, 12 74 C 26 80, 38 80, 48 80 Z"/>
+    <path d="M 44 80 C 32 84, 20 90, 8 94 C 22 92, 34 88, 44 84 Z"/>
+    
+    <!-- Shoulder spikes right -->
+    <path d="M 76 68 C 86 64, 98 62, 110 58 C 96 66, 86 70, 76 74 Z"/>
+    <path d="M 80 74 C 92 74, 104 76, 116 74 C 102 80, 90 80, 80 80 Z"/>
+    <path d="M 84 80 C 96 84, 108 90, 120 94 C 106 92, 94 88, 84 84 Z"/>
+    
+    <!-- Torso -->
+    <path d="M 44 72 C 38 78, 34 90, 36 105 C 40 115, 50 122, 64 124 C 78 122, 88 115, 92 105 C 94 90, 90 78, 84 72 C 78 76, 70 80, 64 80 C 58 80, 50 76, 44 72 Z"/>
+    
+    <!-- Chest detail lines (white accents like reference) -->
+    <path d="M 50 78 C 48 85, 46 95, 48 108" stroke="#1e1b4b" stroke-width="2" fill="none"/>
+    <path d="M 78 78 C 80 85, 82 95, 80 108" stroke="#1e1b4b" stroke-width="2" fill="none"/>
+    <path d="M 54 82 C 58 90, 58 100, 56 112" stroke="#1e1b4b" stroke-width="1.5" fill="none"/>
+    <path d="M 74 82 C 70 90, 70 100, 72 112" stroke="#1e1b4b" stroke-width="1.5" fill="none"/>
+    <path d="M 64 80 L 64 118" stroke="#1e1b4b" stroke-width="1" fill="none"/>
+    
+    <!-- Left arm -->
+    <path d="M 44 76 C 34 80, 24 88, 16 100 C 12 108, 10 118, 8 128 C 14 122, 18 112, 24 102 C 30 94, 38 86, 46 82 Z"/>
+    
+    <!-- Left clawed hand -->
+    <path d="M 8 128 C 4 124, 0 118, -2 110 C 2 116, 6 122, 10 126 Z"/>
+    <path d="M 10 126 C 8 120, 4 112, 2 104 C 8 112, 12 120, 14 126 Z"/>
+    <path d="M 14 124 C 14 116, 12 108, 10 100 C 16 108, 18 116, 18 124 Z"/>
+    <path d="M 18 122 C 20 114, 20 106, 18 98 C 24 106, 24 114, 22 122 Z"/>
+    <path d="M 22 120 C 26 112, 28 104, 28 96 C 30 104, 30 114, 26 122 Z"/>
+    
+    <!-- Right arm -->
+    <path d="M 84 76 C 94 80, 104 88, 112 100 C 116 108, 118 118, 120 128 C 114 122, 110 112, 104 102 C 98 94, 90 86, 82 82 Z"/>
+    
+    <!-- Right clawed hand -->
+    <path d="M 120 128 C 124 124, 128 118, 130 110 C 126 116, 122 122, 118 126 Z"/>
+    <path d="M 118 126 C 120 120, 124 112, 126 104 C 120 112, 116 120, 114 126 Z"/>
+    <path d="M 114 124 C 114 116, 116 108, 118 100 C 112 108, 110 116, 110 124 Z"/>
+    <path d="M 110 122 C 108 114, 108 106, 110 98 C 104 106, 104 114, 106 122 Z"/>
+    <path d="M 106 120 C 102 112, 100 104, 100 96 C 98 104, 98 114, 102 122 Z"/>
+    
+    <!-- Bottom ragged edges -->
+    <path d="M 36 105 C 30 112, 28 120, 26 128 L 34 128 C 34 120, 34 112, 38 106 Z"/>
+    <path d="M 50 115 C 46 120, 44 124, 42 128 L 52 128 C 52 124, 52 120, 52 116 Z"/>
+    <path d="M 64 118 C 62 122, 60 126, 58 128 L 70 128 C 68 126, 66 122, 64 118 Z"/>
+    <path d="M 78 115 C 82 120, 84 124, 86 128 L 76 128 C 76 124, 76 120, 76 116 Z"/>
+    <path d="M 92 105 C 98 112, 100 120, 102 128 L 94 128 C 94 120, 94 112, 90 106 Z"/>
+  </g>
+  
+  <!-- === GLOWING EYES === -->
+  <g filter="url(#eyeBlur)">
+    <!-- Left eye -->
+    <ellipse cx="52" cy="40" rx="6" ry="4" fill="url(#eyeGlow)"/>
+    <ellipse cx="52" cy="40" rx="4" ry="2.5" fill="#fff"/>
+    
+    <!-- Right eye -->
+    <ellipse cx="76" cy="40" rx="6" ry="4" fill="url(#eyeGlow)"/>
+    <ellipse cx="76" cy="40" rx="4" ry="2.5" fill="#fff"/>
+  </g>
+  
+  <!-- === FANGED MOUTH === -->
+  <g fill="#0f0a1f">
+    <!-- Mouth opening -->
+    <path d="M 52 48 C 56 54, 72 54, 76 48 C 72 52, 56 52, 52 48 Z" fill="#000"/>
+  </g>
+  
+  <!-- Upper fangs (white) -->
+  <g fill="#e7e5e4">
+    <path d="M 54 48 L 52 54 L 56 50 Z"/>
+    <path d="M 60 49 L 58 53 L 62 50 Z"/>
+    <path d="M 68 49 L 70 53 L 66 50 Z"/>
+    <path d="M 74 48 L 76 54 L 72 50 Z"/>
+  </g>
+  
+  <!-- Lower fangs (white) -->
+  <g fill="#d6d3d1">
+    <path d="M 56 52 L 54 48 L 58 51 Z"/>
+    <path d="M 64 52 L 64 47 L 66 52 Z"/>
+    <path d="M 72 52 L 74 48 L 70 51 Z"/>
+  </g>
+</svg>

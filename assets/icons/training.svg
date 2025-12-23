@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <!-- Metal gradients -->
+    <linearGradient id="steelBar" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f1f5f9"/>
+      <stop offset="15%" stop-color="#e2e8f0"/>
+      <stop offset="30%" stop-color="#cbd5e1"/>
+      <stop offset="50%" stop-color="#94a3b8"/>
+      <stop offset="70%" stop-color="#64748b"/>
+      <stop offset="85%" stop-color="#475569"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </linearGradient>
+    <linearGradient id="steelHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="100%" stop-color="#e2e8f0" stop-opacity="0"/>
+    </linearGradient>
+    <!-- Weight plate gradients -->
+    <linearGradient id="weightPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="20%" stop-color="#8b5cf6"/>
+      <stop offset="40%" stop-color="#7c3aed"/>
+      <stop offset="60%" stop-color="#6d28d9"/>
+      <stop offset="80%" stop-color="#5b21b6"/>
+      <stop offset="100%" stop-color="#4c1d95"/>
+    </linearGradient>
+    <linearGradient id="weightHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c4b5fd"/>
+      <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="weightEdge" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b0764"/>
+      <stop offset="20%" stop-color="#5b21b6"/>
+      <stop offset="50%" stop-color="#7c3aed"/>
+      <stop offset="80%" stop-color="#5b21b6"/>
+      <stop offset="100%" stop-color="#3b0764"/>
+    </linearGradient>
+    <!-- Badge gradients -->
+    <linearGradient id="xpGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fefce8"/>
+      <stop offset="25%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#fde047"/>
+      <stop offset="75%" stop-color="#facc15"/>
+      <stop offset="100%" stop-color="#eab308"/>
+    </linearGradient>
+    <linearGradient id="ppTeal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#99f6e4"/>
+      <stop offset="25%" stop-color="#5eead4"/>
+      <stop offset="50%" stop-color="#2dd4bf"/>
+      <stop offset="75%" stop-color="#14b8a6"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+    <radialGradient id="trainGlow" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feOffset in="blur" dx="2" dy="4" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    </filter>
+    <filter id="bevel" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1" result="blur"/>
+      <feOffset in="blur" dx="-1" dy="-1" result="light"/>
+      <feOffset in="blur" dx="1" dy="1" result="shadow"/>
+      <feComposite in="SourceGraphic" in2="light" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Background glow -->
+  <ellipse cx="64" cy="52" rx="58" ry="48" fill="url(#trainGlow)"/>
+  
+  <!-- === DUMBBELL === -->
+  <g filter="url(#innerShadow)">
+    <!-- LEFT WEIGHT PLATES (stacked) -->
+    <!-- Outer plate -->
+    <rect x="4" y="30" width="10" height="48" rx="3" fill="url(#weightEdge)" stroke="#2e1065" stroke-width="1.5"/>
+    <!-- Main plate -->
+    <rect x="12" y="26" width="22" height="56" rx="4" fill="url(#weightPurple)" stroke="#3b0764" stroke-width="2.5"/>
+    <!-- Plate face detail -->
+    <rect x="16" y="30" width="14" height="48" rx="2" fill="url(#weightPurple)" stroke="#4c1d95" stroke-width="1.5"/>
+    <!-- Plate highlight -->
+    <path d="M 18 34 C 20 32, 26 32, 28 36 L 28 42 C 24 40, 20 40, 18 42 Z" fill="url(#weightHighlight)" opacity="0.5"/>
+    <!-- Weight grooves -->
+    <line x1="18" y1="48" x2="28" y2="48" stroke="#3b0764" stroke-width="2.5"/>
+    <line x1="18" y1="60" x2="28" y2="60" stroke="#3b0764" stroke-width="2.5"/>
+    <!-- Center hole indicator -->
+    <ellipse cx="23" cy="54" rx="4" ry="6" fill="#1e1b4b" stroke="#2e1065" stroke-width="1"/>
+    
+    <!-- RIGHT WEIGHT PLATES (stacked) -->
+    <!-- Outer plate -->
+    <rect x="114" y="30" width="10" height="48" rx="3" fill="url(#weightEdge)" stroke="#2e1065" stroke-width="1.5"/>
+    <!-- Main plate -->
+    <rect x="94" y="26" width="22" height="56" rx="4" fill="url(#weightPurple)" stroke="#3b0764" stroke-width="2.5"/>
+    <!-- Plate face detail -->
+    <rect x="98" y="30" width="14" height="48" rx="2" fill="url(#weightPurple)" stroke="#4c1d95" stroke-width="1.5"/>
+    <!-- Plate highlight -->
+    <path d="M 100 34 C 102 32, 108 32, 110 36 L 110 42 C 106 40, 102 40, 100 42 Z" fill="url(#weightHighlight)" opacity="0.5"/>
+    <!-- Weight grooves -->
+    <line x1="100" y1="48" x2="110" y2="48" stroke="#3b0764" stroke-width="2.5"/>
+    <line x1="100" y1="60" x2="110" y2="60" stroke="#3b0764" stroke-width="2.5"/>
+    <!-- Center hole indicator -->
+    <ellipse cx="105" cy="54" rx="4" ry="6" fill="#1e1b4b" stroke="#2e1065" stroke-width="1"/>
+    
+    <!-- CENTER BAR -->
+    <rect x="30" y="48" width="68" height="12" rx="4" fill="url(#steelBar)" stroke="#334155" stroke-width="2"/>
+    <!-- Bar highlight -->
+    <rect x="34" y="49" width="60" height="4" rx="2" fill="url(#steelHighlight)" opacity="0.6"/>
+    
+    <!-- Grip knurling pattern -->
+    <g stroke="#475569" stroke-width="1" opacity="0.6">
+      <line x1="46" y1="50" x2="46" y2="58"/>
+      <line x1="50" y1="50" x2="50" y2="58"/>
+      <line x1="54" y1="50" x2="54" y2="58"/>
+      <line x1="58" y1="50" x2="58" y2="58"/>
+      <line x1="62" y1="50" x2="62" y2="58"/>
+      <line x1="66" y1="50" x2="66" y2="58"/>
+      <line x1="70" y1="50" x2="70" y2="58"/>
+      <line x1="74" y1="50" x2="74" y2="58"/>
+      <line x1="78" y1="50" x2="78" y2="58"/>
+      <line x1="82" y1="50" x2="82" y2="58"/>
+    </g>
+    
+    <!-- Collars -->
+    <rect x="30" y="44" width="10" height="20" rx="2" fill="url(#steelBar)" stroke="#334155" stroke-width="1.5"/>
+    <rect x="88" y="44" width="10" height="20" rx="2" fill="url(#steelBar)" stroke="#334155" stroke-width="1.5"/>
+    <!-- Collar highlights -->
+    <rect x="32" y="45" width="3" height="18" rx="1" fill="url(#steelHighlight)" opacity="0.4"/>
+    <rect x="90" y="45" width="3" height="18" rx="1" fill="url(#steelHighlight)" opacity="0.4"/>
+  </g>
+  
+  <!-- === BADGES === -->
+  <!-- +XP Badge -->
+  <g filter="url(#strongGlow)">
+    <rect x="10" y="92" width="48" height="26" rx="8" fill="url(#xpGold)" stroke="#a16207" stroke-width="2.5"/>
+    <!-- Badge highlight -->
+    <rect x="14" y="94" width="40" height="8" rx="4" fill="#fefce8" opacity="0.4"/>
+    <text x="34" y="111" font-size="15" font-weight="bold" fill="#713f12" text-anchor="middle" font-family="Arial, sans-serif">+XP</text>
+  </g>
+  
+  <!-- +PP Badge -->
+  <g filter="url(#strongGlow)">
+    <rect x="70" y="92" width="48" height="26" rx="8" fill="url(#ppTeal)" stroke="#0d9488" stroke-width="2.5"/>
+    <!-- Badge highlight -->
+    <rect x="74" y="94" width="40" height="8" rx="4" fill="#ccfbf1" opacity="0.4"/>
+    <text x="94" y="111" font-size="15" font-weight="bold" fill="#134e4a" text-anchor="middle" font-family="Arial, sans-serif">+PP</text>
+  </g>
+  
+  <!-- === ENERGY EFFECTS === -->
+  <!-- Up arrows -->
+  <g filter="url(#strongGlow)">
+    <path d="M 64 22 L 56 34 L 60 34 L 60 40 L 68 40 L 68 34 L 72 34 Z" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
+    <path d="M 64 6 L 54 20 L 60 20 L 60 26 L 68 26 L 68 20 L 74 20 Z" fill="#4ade80" stroke="#22c55e" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Energy sparkles -->
+  <g fill="#fde047" filter="url(#softGlow)">
+    <circle cx="44" cy="18" r="3"/>
+    <circle cx="84" cy="18" r="3"/>
+    <circle cx="64" cy="2" r="2.5"/>
+  </g>
+  
+  <!-- Side sparkles -->
+  <g fill="#fff" filter="url(#softGlow)">
+    <circle cx="8" cy="20" r="2.5"/>
+    <circle cx="120" cy="20" r="2.5"/>
+  </g>
+  
+  <!-- Energy particles -->
+  <g filter="url(#softGlow)" opacity="0.8">
+    <circle cx="26" cy="14" r="2" fill="#a78bfa"/>
+    <circle cx="102" cy="14" r="2" fill="#a78bfa"/>
+    <circle cx="38" cy="8" r="1.5" fill="#5eead4"/>
+    <circle cx="90" cy="8" r="1.5" fill="#fde047"/>
+  </g>
+</svg>

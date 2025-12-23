@@ -1,23 +1,120 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
+    <!-- Gold key gradients -->
     <linearGradient id="keyGold" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fef3c7"/>
-      <stop offset="50%" stop-color="#fcd34d"/>
-      <stop offset="100%" stop-color="#d97706"/>
+      <stop offset="0%" stop-color="#fefce8"/>
+      <stop offset="15%" stop-color="#fef08a"/>
+      <stop offset="30%" stop-color="#fde047"/>
+      <stop offset="50%" stop-color="#facc15"/>
+      <stop offset="70%" stop-color="#eab308"/>
+      <stop offset="85%" stop-color="#ca8a04"/>
+      <stop offset="100%" stop-color="#a16207"/>
     </linearGradient>
-    <linearGradient id="keyTeal" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#5eead4"/>
-      <stop offset="100%" stop-color="#14b8a6"/>
+    <linearGradient id="keyShine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#92400e"/>
+      <stop offset="20%" stop-color="#ca8a04"/>
+      <stop offset="40%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#fefce8"/>
+      <stop offset="60%" stop-color="#fef08a"/>
+      <stop offset="80%" stop-color="#ca8a04"/>
+      <stop offset="100%" stop-color="#92400e"/>
     </linearGradient>
+    <linearGradient id="keyHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fefce8"/>
+      <stop offset="100%" stop-color="#fde047" stop-opacity="0"/>
+    </linearGradient>
+    <!-- Teal gem -->
+    <radialGradient id="tealGem" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#f0fdfa"/>
+      <stop offset="20%" stop-color="#99f6e4"/>
+      <stop offset="40%" stop-color="#5eead4"/>
+      <stop offset="60%" stop-color="#2dd4bf"/>
+      <stop offset="80%" stop-color="#14b8a6"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </radialGradient>
+    <radialGradient id="keyGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fde047" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#ca8a04" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feOffset in="blur" dx="2" dy="4" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    </filter>
+    <filter id="tealGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#2dd4bf" flood-opacity="0.6"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
-  <!-- Key head - centered better -->
-  <circle cx="14" cy="24" r="10" fill="none" stroke="url(#keyGold)" stroke-width="4"/>
-  <circle cx="14" cy="24" r="5" fill="#0f172a"/>
-  <circle cx="14" cy="24" r="3" fill="url(#keyTeal)"/>
-  <circle cx="13" cy="23" r="1" fill="#fff" opacity="0.7"/>
-  <!-- Key shaft -->
-  <rect x="22" y="21" width="22" height="6" rx="2" fill="url(#keyGold)"/>
-  <!-- Key teeth -->
-  <rect x="36" y="27" width="3" height="5" rx="1" fill="url(#keyGold)"/>
-  <rect x="40" y="27" width="4" height="7" rx="1" fill="url(#keyGold)"/>
+  
+  <!-- Background glow -->
+  <ellipse cx="64" cy="64" rx="58" ry="58" fill="url(#keyGlow)"/>
+  
+  <!-- Key rotated at angle -->
+  <g transform="rotate(-25, 64, 64)" filter="url(#innerShadow)">
+    
+    <!-- === KEY HEAD (ornate bow) === -->
+    <!-- Outer ring -->
+    <circle cx="34" cy="52" r="26" fill="url(#keyGold)" stroke="#78350f" stroke-width="4"/>
+    <!-- Inner dark hole -->
+    <circle cx="34" cy="52" r="16" fill="#0f172a" stroke="#1e293b" stroke-width="3"/>
+    <!-- Highlight on bow -->
+    <path d="M 18 40 C 24 30, 40 28, 50 38 C 42 32, 28 34, 22 44 Z" fill="url(#keyHighlight)" opacity="0.5"/>
+    
+    <!-- Decorative knobs on bow -->
+    <circle cx="34" cy="26" r="8" fill="url(#keyGold)" stroke="#78350f" stroke-width="2.5"/>
+    <circle cx="14" cy="62" r="7" fill="url(#keyGold)" stroke="#78350f" stroke-width="2"/>
+    <circle cx="54" cy="62" r="7" fill="url(#keyGold)" stroke="#78350f" stroke-width="2"/>
+    
+    <!-- TEAL GEM in center -->
+    <g filter="url(#tealGlow)">
+      <circle cx="34" cy="52" r="10" fill="url(#tealGem)" stroke="#0d9488" stroke-width="2"/>
+      <circle cx="34" cy="52" r="6" fill="none" stroke="#5eead4" stroke-width="1.5" opacity="0.5"/>
+      <ellipse cx="31" cy="49" rx="4" ry="3" fill="#fff" opacity="0.8"/>
+      <circle cx="37" cy="55" r="1.5" fill="#fff" opacity="0.4"/>
+    </g>
+    
+    <!-- === KEY SHAFT === -->
+    <rect x="56" y="46" width="58" height="14" rx="3" fill="url(#keyGold)" stroke="#78350f" stroke-width="3"/>
+    <!-- Shaft groove -->
+    <rect x="62" y="51" width="46" height="4" rx="1.5" fill="#92400e" opacity="0.4"/>
+    <!-- Shaft highlight -->
+    <rect x="58" y="48" width="52" height="4" rx="1.5" fill="url(#keyHighlight)" opacity="0.5"/>
+    
+    <!-- Decorative collar rings -->
+    <rect x="64" y="42" width="10" height="22" rx="2" fill="url(#keyShine)" stroke="#78350f" stroke-width="2"/>
+    <rect x="66" y="44" width="3" height="18" rx="1" fill="#fef9c3" opacity="0.3"/>
+    
+    <rect x="86" y="42" width="10" height="22" rx="2" fill="url(#keyShine)" stroke="#78350f" stroke-width="2"/>
+    <rect x="88" y="44" width="3" height="18" rx="1" fill="#fef9c3" opacity="0.3"/>
+    
+    <!-- === KEY TEETH === -->
+    <path d="M 110 46 L 110 36 L 118 36 L 118 46 L 122 46 L 122 32 L 130 32 L 130 46 L 130 60 L 122 60 L 122 52 L 118 52 L 118 60 L 110 60 L 110 52 L 114 52 L 114 46 Z" fill="url(#keyGold)" stroke="#78350f" stroke-width="2.5" stroke-linejoin="round"/>
+    <!-- Teeth highlights -->
+    <rect x="112" y="38" width="4" height="8" fill="url(#keyHighlight)" opacity="0.4"/>
+    <rect x="124" y="34" width="4" height="12" fill="url(#keyHighlight)" opacity="0.4"/>
+  </g>
+  
+  <!-- Sparkles -->
+  <g fill="#f0fdfa" filter="url(#softGlow)">
+    <circle cx="20" cy="22" r="3.5"/>
+    <circle cx="108" cy="100" r="3.5"/>
+    <circle cx="16" cy="90" r="3"/>
+  </g>
+  
+  <!-- Teal magic particles -->
+  <g fill="#5eead4" filter="url(#softGlow)" opacity="0.7">
+    <circle cx="12" cy="50" r="2.5"/>
+    <circle cx="116" cy="80" r="2.5"/>
+  </g>
 </svg>

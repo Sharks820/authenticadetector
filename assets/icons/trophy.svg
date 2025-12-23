@@ -1,8 +1,141 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M8 4h8v3a4 4 0 0 1-8 0V4z"/>
-  <path d="M6 4H4v3a4 4 0 0 0 4 4"/>
-  <path d="M18 4h2v3a4 4 0 0 1-4 4"/>
-  <path d="M12 11v4"/>
-  <rect x="9" y="15" width="6" height="3"/>
-  <path d="M8 20h8"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="trophyGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fffbeb"/>
+      <stop offset="15%" stop-color="#fef3c7"/>
+      <stop offset="30%" stop-color="#fde047"/>
+      <stop offset="50%" stop-color="#facc15"/>
+      <stop offset="70%" stop-color="#eab308"/>
+      <stop offset="85%" stop-color="#ca8a04"/>
+      <stop offset="100%" stop-color="#854d0e"/>
+    </linearGradient>
+    <linearGradient id="goldShine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#854d0e"/>
+      <stop offset="20%" stop-color="#ca8a04"/>
+      <stop offset="40%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#fffbeb"/>
+      <stop offset="60%" stop-color="#fef08a"/>
+      <stop offset="80%" stop-color="#ca8a04"/>
+      <stop offset="100%" stop-color="#854d0e"/>
+    </linearGradient>
+    <linearGradient id="goldHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fffbeb"/>
+      <stop offset="100%" stop-color="#fde047" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="handleGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ca8a04"/>
+      <stop offset="30%" stop-color="#facc15"/>
+      <stop offset="50%" stop-color="#fef9c3"/>
+      <stop offset="70%" stop-color="#facc15"/>
+      <stop offset="100%" stop-color="#ca8a04"/>
+    </linearGradient>
+    <radialGradient id="rubyGem" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="20%" stop-color="#fecaca"/>
+      <stop offset="40%" stop-color="#f87171"/>
+      <stop offset="60%" stop-color="#ef4444"/>
+      <stop offset="80%" stop-color="#dc2626"/>
+      <stop offset="100%" stop-color="#7f1d1d"/>
+    </radialGradient>
+    <linearGradient id="basePurple" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="40%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#2e1065"/>
+    </linearGradient>
+    <radialGradient id="trophyGlow" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#fef08a" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#ca8a04" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feOffset in="blur" dx="2" dy="4" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Background glow -->
+  <ellipse cx="64" cy="62" rx="56" ry="50" fill="url(#trophyGlow)"/>
+  
+  <!-- Left handle -->
+  <g filter="url(#innerShadow)">
+    <path d="M 30 32 C 14 32, 6 48, 6 60 C 6 74, 14 86, 30 86" fill="none" stroke="url(#handleGold)" stroke-width="10" stroke-linecap="round"/>
+    <path d="M 30 38 C 18 38, 12 50, 12 60 C 12 72, 18 80, 30 80" fill="none" stroke="#78350f" stroke-width="2"/>
+    <path d="M 28 42 C 20 44, 16 52, 16 60" stroke="#fef9c3" stroke-width="2" fill="none" opacity="0.6"/>
+  </g>
+  
+  <!-- Right handle -->
+  <g filter="url(#innerShadow)">
+    <path d="M 98 32 C 114 32, 122 48, 122 60 C 122 74, 114 86, 98 86" fill="none" stroke="url(#handleGold)" stroke-width="10" stroke-linecap="round"/>
+    <path d="M 98 38 C 110 38, 116 50, 116 60 C 116 72, 110 80, 98 80" fill="none" stroke="#78350f" stroke-width="2"/>
+    <path d="M 100 42 C 108 44, 112 52, 112 60" stroke="#fef9c3" stroke-width="2" fill="none" opacity="0.6"/>
+  </g>
+  
+  <!-- Trophy cup -->
+  <g filter="url(#innerShadow)">
+    <!-- Cup body -->
+    <path d="M 32 18 C 28 18, 26 22, 26 28 L 26 56 C 26 78, 44 92, 64 92 C 84 92, 102 78, 102 56 L 102 28 C 102 22, 100 18, 96 18 Z" fill="url(#trophyGold)" stroke="#78350f" stroke-width="3.5"/>
+    
+    <!-- Cup rim -->
+    <ellipse cx="64" cy="20" rx="36" ry="7" fill="url(#goldShine)" stroke="#78350f" stroke-width="2"/>
+    <ellipse cx="64" cy="20" rx="30" ry="5" fill="url(#goldHighlight)" opacity="0.5"/>
+    
+    <!-- Cup inner shadow -->
+    <ellipse cx="64" cy="24" rx="28" ry="4" fill="#78350f" opacity="0.35"/>
+    
+    <!-- Highlight -->
+    <path d="M 40 28 C 46 22, 60 20, 74 24 C 64 22, 50 24, 46 32 L 40 58 C 38 50, 38 38, 40 28 Z" fill="url(#goldHighlight)" opacity="0.55"/>
+    
+    <!-- Decorative band top -->
+    <path d="M 32 36 C 46 32, 58 31, 64 31 C 70 31, 82 32, 96 36" stroke="#ca8a04" stroke-width="3.5" fill="none"/>
+    
+    <!-- Decorative band bottom -->
+    <path d="M 36 74 C 48 78, 58 80, 64 80 C 70 80, 80 78, 92 74" stroke="#ca8a04" stroke-width="3.5" fill="none"/>
+  </g>
+  
+  <!-- Center ruby gem -->
+  <g filter="url(#strongGlow)">
+    <circle cx="64" cy="54" r="16" fill="url(#goldShine)" stroke="#78350f" stroke-width="2.5"/>
+    <path d="M 64 42 L 52 54 L 64 70 L 76 54 Z" fill="url(#rubyGem)" stroke="#7f1d1d" stroke-width="2"/>
+    <path d="M 64 45 L 56 54 L 64 65" fill="#fecaca" opacity="0.3"/>
+    <path d="M 64 46 L 58 52 L 64 58 L 70 52 Z" fill="#fff" opacity="0.35"/>
+    <ellipse cx="58" cy="50" rx="3.5" ry="2.5" fill="#fff" opacity="0.7"/>
+  </g>
+  
+  <!-- Stem -->
+  <g filter="url(#innerShadow)">
+    <path d="M 54 88 L 54 100 C 54 102, 58 104, 64 104 C 70 104, 74 102, 74 100 L 74 88" fill="url(#trophyGold)" stroke="#78350f" stroke-width="2.5"/>
+    <rect x="56" y="90" width="5" height="12" fill="url(#goldHighlight)" opacity="0.4"/>
+    <ellipse cx="64" cy="96" rx="12" ry="3.5" fill="url(#goldShine)" stroke="#92400e" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Base -->
+  <g filter="url(#innerShadow)">
+    <path d="M 38 102 L 36 114 C 36 120, 48 124, 64 124 C 80 124, 92 120, 92 114 L 90 102 C 82 100, 74 99, 64 99 C 54 99, 46 100, 38 102 Z" fill="url(#basePurple)" stroke="#1e1b4b" stroke-width="2.5"/>
+    <ellipse cx="64" cy="102" rx="28" ry="6" fill="url(#goldShine)" stroke="#78350f" stroke-width="2"/>
+    <ellipse cx="64" cy="102" rx="22" ry="4" fill="url(#goldHighlight)" opacity="0.35"/>
+    <path d="M 44 108 C 52 106, 58 105, 64 105 C 70 105, 76 106, 84 108 L 84 114 C 76 112, 70 111, 64 111 C 58 111, 52 112, 44 114 Z" fill="#a78bfa" opacity="0.25"/>
+    <rect x="50" y="112" width="28" height="8" rx="2" fill="url(#goldShine)" stroke="#92400e" stroke-width="1"/>
+    <text x="64" y="118" font-size="6" font-weight="bold" fill="#78350f" text-anchor="middle" font-family="Arial Black, sans-serif">#1</text>
+  </g>
+  
+  <!-- Stars -->
+  <g filter="url(#strongGlow)">
+    <polygon points="64,4 67,12 76,13 69,19 71,28 64,23 57,28 59,19 52,13 61,12" fill="url(#trophyGold)" stroke="#92400e" stroke-width="1.5"/>
+    <polygon points="18,22 20,27 25,27 21,30 22,35 18,32 14,35 15,30 11,27 16,27" fill="url(#trophyGold)" stroke="#92400e" stroke-width="1"/>
+    <polygon points="110,22 112,27 117,27 113,30 114,35 110,32 106,35 107,30 103,27 108,27" fill="url(#trophyGold)" stroke="#92400e" stroke-width="1"/>
+  </g>
+  
+  <!-- Sparkles -->
+  <g fill="#fffbeb" filter="url(#softGlow)">
+    <circle cx="10" cy="58" r="2.5"/>
+    <circle cx="118" cy="58" r="2.5"/>
+  </g>
 </svg>

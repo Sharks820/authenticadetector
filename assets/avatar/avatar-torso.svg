@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 70">
+  <defs>
+    <linearGradient id="shirtGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4a5568"/>
+      <stop offset="50%" stop-color="#2d3748"/>
+      <stop offset="100%" stop-color="#1a202c"/>
+    </linearGradient>
+    <linearGradient id="collarGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+  </defs>
+  <!-- Main torso body -->
+  <path d="M12 0 Q0 10, 5 35 L10 70 L70 70 L75 35 Q80 10, 68 0 L55 0 Q40 8, 25 0 Z"
+        fill="url(#shirtGrad)" stroke="#0d1117" stroke-width="2"/>
+  <!-- Collar/neckline accent -->
+  <path d="M25 0 Q40 8, 55 0" stroke="url(#collarGrad)" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Chest detail lines -->
+  <path d="M40 15 L40 50" stroke="#1a202c" stroke-width="1" stroke-opacity="0.5"/>
+  <path d="M25 20 L25 45" stroke="#1a202c" stroke-width="1" stroke-opacity="0.3"/>
+  <path d="M55 20 L55 45" stroke="#1a202c" stroke-width="1" stroke-opacity="0.3"/>
+  <!-- Pocket accent -->
+  <rect x="20" y="30" width="12" height="14" rx="2" fill="none" stroke="#22d3ee" stroke-width="1" stroke-opacity="0.5"/>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="gearTeal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="100%" stop-color="#14b8a6"/>
+    </linearGradient>
+    <linearGradient id="gearGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcd34d"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer gear - 8 teeth -->
+  <path d="M21,4 h6 l1,5 l5,2 l4,-3 l4,4 l-3,4 l2,5 h5 v6 h-5 l-2,5 l3,4 l-4,4 l-4,-3 l-5,2 l-1,5 h-6 l-1,-5 l-5,-2 l-4,3 l-4,-4 l3,-4 l-2,-5 H4 v-6 h5 l2,-5 l-3,-4 l4,-4 l4,3 l5,-2 z"
+        fill="url(#gearTeal)" stroke="url(#gearGold)" stroke-width="1.5"/>
+  <!-- Inner circle -->
+  <circle cx="24" cy="24" r="8" fill="#0f172a" stroke="url(#gearGold)" stroke-width="2"/>
+  <!-- Center -->
+  <circle cx="24" cy="24" r="4" fill="url(#gearTeal)"/>
+  <!-- Shine -->
+  <circle cx="21" cy="21" r="1.5" fill="#fff" opacity="0.5"/>
+</svg>
