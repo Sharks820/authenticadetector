@@ -608,7 +608,7 @@
     position: absolute;
     width: 220px;
     max-width: 220px;
-    padding: 14px 16px;
+    padding: 14px 16px 14px 16px;
     background: rgba(15, 23, 42, 0.8);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -627,6 +627,41 @@
     /* Default: bottom-right corner - speech goes above-left */
     bottom: calc(100% + 15px);
     right: -10px;
+}
+
+/* X Close Button - Top Right Corner */
+.vera-speech-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    background: rgba(148, 163, 184, 0.15);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    border-radius: 6px;
+    color: #cbd5e1;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all 0.2s ease;
+    pointer-events: auto;
+    z-index: 1;
+}
+
+.vera-speech-close:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.5);
+    color: #fca5a5;
+    transform: scale(1.1);
+}
+
+.vera-speech-close:active {
+    transform: scale(0.95);
 }
 
 .vera-speech::after {
@@ -1139,14 +1174,20 @@ body.vera-shake {
     background-position: center center;
     background-size: contain;
     pointer-events: none;
-    /* GPU acceleration for smooth animations */
+    /* CRITICAL: GPU acceleration for smooth animations - prevents glitching */
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     transform: translateZ(0);
     will-change: transform;
+    /* CRITICAL: Prevent sub-pixel rendering issues */
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
     /* Anti-aliasing for crisp edges */
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
+    /* CRITICAL: Prevent flickering during animations */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* ==========================================================================
@@ -1404,6 +1445,7 @@ body.vera-shake {
 
 /* ==========================================================================
    TRANSFORMATION ANIMATION - SMOOTH STATE TRANSITIONS
+   NO SCALING - PREVENTS LAYER GLITCHING
    ========================================================================== */
 .vera-container.transforming .vera-v2-layers {
     animation: transformPulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -1411,23 +1453,27 @@ body.vera-shake {
 
 @keyframes transformPulse {
     0% {
-        transform: scale(1);
+        transform: translateY(0);
         filter: brightness(1) saturate(1);
     }
-    30% {
-        transform: scale(1.15);
-        filter: brightness(1.4) saturate(1.3);
+    20% {
+        transform: translateY(-5px);
+        filter: brightness(1.5) saturate(1.4);
     }
-    50% {
-        transform: scale(0.9);
-        filter: brightness(1.7) saturate(0.8);
+    40% {
+        transform: translateY(-8px);
+        filter: brightness(1.8) saturate(0.8);
     }
-    70% {
-        transform: scale(1.08);
-        filter: brightness(1.2) saturate(1.1);
+    60% {
+        transform: translateY(-5px);
+        filter: brightness(1.3) saturate(1.2);
+    }
+    80% {
+        transform: translateY(-2px);
+        filter: brightness(1.1) saturate(1.05);
     }
     100% {
-        transform: scale(1);
+        transform: translateY(0);
         filter: brightness(1) saturate(1);
     }
 }

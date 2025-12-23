@@ -216,13 +216,14 @@ async function saveCosmeticsToDB() {
 function openAvatarSelector() {
     console.log('[Cosmetics] Opening avatar selector...');
 
-    const modal = document.getElementById('avatarModal');
+    let modal = document.getElementById('avatarModal');
     if (!modal) {
         createAvatarModal();
+        modal = document.getElementById('avatarModal');
     }
 
     renderAvatarGrid();
-    document.getElementById('avatarModal').style.display = 'flex';
+    if (modal) modal.style.display = 'flex';
 }
 
 function createAvatarModal() {
@@ -1149,7 +1150,10 @@ window.openAvatarView = function() {
         // Fallback: show view directly if it exists
         const avatarView = document.getElementById('avatarView');
         if (avatarView) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            const views = document.querySelectorAll('.view');
+            views.forEach(v => {
+                if (v) v.classList.remove('active');
+            });
             avatarView.classList.add('active');
         }
     }

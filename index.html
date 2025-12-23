@@ -6,12 +6,12 @@
     <meta name="theme-color" content="#0a0d14">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="AuthenticaDetector">
-    <meta name="description" content="AuthenticaDetector - Capture beasts, battle waves, and compete in the Veilbreakers arena!">
-    <meta property="og:title" content="AuthenticaDetector - Beast Collection & Tank Battle">
+    <meta name="apple-mobile-web-app-title" content="VEILBREAKERS Hub">
+    <meta name="description" content="VEILBREAKERS - Capture beasts, battle waves, and compete in epic arenas!">
+    <meta property="og:title" content="VEILBREAKERS - AI Gaming Hub">
     <meta property="og:description" content="Collect beasts, battle in your tank, and climb the leaderboards!">
     <meta property="og:image" content="icon-512.png">
-    <title>AuthenticaDetector - Beast Collection & Tank Battle</title>
+    <title>VEILBREAKERS - AI Gaming Hub</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon-192.png">
     <link rel="apple-touch-icon" href="icon-180.png">
@@ -474,6 +474,44 @@
             0%,100%{filter:drop-shadow(0 0 12px rgba(94,234,212,0.5))}
             50%{filter:drop-shadow(0 0 24px rgba(94,234,212,0.9))}
         }
+
+        /* PLAY BUTTON ANIMATIONS - Bigger, animated, premium quality */
+        @keyframes playPulse{
+            0%,100%{
+                transform:scale(1);
+                filter:drop-shadow(0 4px 20px rgba(220,38,38,0.6));
+            }
+            50%{
+                transform:scale(1.08);
+                filter:drop-shadow(0 6px 35px rgba(220,38,38,1));
+            }
+        }
+        @keyframes playGlow{
+            0%,100%{
+                box-shadow:0 0 30px rgba(220,38,38,0.5), inset 0 0 20px rgba(255,255,255,0.1);
+            }
+            50%{
+                box-shadow:0 0 50px rgba(220,38,38,0.8), inset 0 0 30px rgba(255,255,255,0.2);
+            }
+        }
+
+        .play-btn-animated{
+            animation:playPulse 2s ease-in-out infinite;
+            cursor:pointer;
+            transition:transform 0.2s ease, filter 0.2s ease;
+            position:relative;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+        }
+        .play-btn-animated:hover{
+            transform:scale(1.12) !important;
+            animation-play-state:paused;
+            filter:drop-shadow(0 8px 45px rgba(220,38,38,1)) !important;
+        }
+        .play-btn-animated:active{
+            transform:scale(0.98) !important;
+        }
         .logo-text{
             font-size:22px;font-weight:900;letter-spacing:-0.5px;
             /* Deep professional gradient - teal, purple, blue */
@@ -513,6 +551,32 @@
         @keyframes text-shimmer{
             0%{background-position:0% center}
             100%{background-position:200% center}
+        }
+
+        /* Shop Button Animations */
+        @keyframes shop-gradient{
+            0%,100%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+        }
+        @keyframes shop-pulse{
+            0%,100%{opacity:0.3;transform:scale(1)}
+            50%{opacity:0.6;transform:scale(1.1)}
+        }
+        @keyframes shop-float{
+            0%,100%{transform:translateY(0px)}
+            50%{transform:translateY(-8px)}
+        }
+        @keyframes shop-sparkle{
+            0%,100%{opacity:1;transform:scale(1) rotate(0deg)}
+            50%{opacity:0.7;transform:scale(1.2) rotate(180deg)}
+        }
+        @keyframes shop-arrow-pulse{
+            0%,100%{transform:translateX(0px);opacity:1}
+            50%{transform:translateX(10px);opacity:0.7}
+        }
+        @keyframes border-glow{
+            0%,100%{opacity:0.6}
+            50%{opacity:0.9}
         }
         .header-btns{display:flex;gap:6px;flex-shrink:1;min-width:0;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
         .icon-btn{
@@ -1509,6 +1573,36 @@
 
         /* SHOP - GLASSMORPHIC DESIGN */
         /* PREMIUM SHOP - Complete Overhaul */
+
+        /* New Shop Tab System */
+        .shop-tab{
+            padding:10px 18px;border-radius:12px;border:2px solid rgba(139,92,246,0.2);
+            background:linear-gradient(135deg,rgba(15,23,42,0.8),rgba(26,31,46,0.6));
+            color:var(--text3);font-size:13px;font-weight:700;
+            cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:6px;
+            white-space:nowrap;flex-shrink:0;
+        }
+        .shop-tab:hover{
+            background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(124,58,237,0.1));
+            border-color:rgba(139,92,246,0.4);color:var(--primary-bright);
+            transform:translateY(-2px);box-shadow:0 4px 12px rgba(139,92,246,0.2);
+        }
+        .shop-tab.active{
+            background:linear-gradient(135deg,rgba(139,92,246,0.25),rgba(124,58,237,0.15));
+            border-color:rgba(139,92,246,0.6);color:var(--primary-bright);
+            box-shadow:0 4px 16px rgba(139,92,246,0.3);
+        }
+
+        /* Shop Items Grid - Larger Cards */
+        .shop-items-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+            gap:16px;
+        }
+        @media(max-width:480px){
+            .shop-items-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+        }
+
         .shop-category{margin-bottom:32px}
         .shop-category-title{
             font-size:16px;font-weight:800;
@@ -3955,7 +4049,7 @@
         .char-hat:empty::before { content: '🎩'; font-size: 24px; opacity: 0.3; }
         .char-glasses:empty::before { content: '👓'; font-size: 20px; opacity: 0.3; }
         .char-back:empty::before { content: '🦋'; font-size: 24px; opacity: 0.3; }
-        .char-pet:empty::before { content: '🐾'; font-size: 20px; opacity: 0.3; }
+        .char-pet:empty::before { content: '🐾'; font-size: 40px; opacity: 0.3; }
         .avatar-item-icon {
             width: 26px;
             height: 26px;
@@ -4030,14 +4124,16 @@
         }
 
         /* Pet companion */
+        /* BIGGER PET SLOT - More visible and prominent */
         .char-pet {
-            bottom: 10px;
-            right: -30px;
-            width: 50px;
-            height: 50px;
-            font-size: 36px;
+            bottom: 5px;
+            right: -40px;
+            width: 80px;
+            height: 80px;
+            font-size: 56px;
             z-index: 15;
             animation: petBounce 1.5s ease-in-out infinite;
+            filter: drop-shadow(0 4px 12px rgba(139,92,246,0.4));
         }
         @keyframes petBounce {
             0%, 100% { transform: translateY(0); }
@@ -5888,9 +5984,9 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
     <!-- STICKY HEADER - Title + Coins + Settings/Profile (Scrolls with content) -->
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
     <div class="home-header" style="position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(180deg,rgba(10,15,30,0.98) 0%,rgba(15,20,35,0.95) 100%);border-bottom:1px solid rgba(99,102,241,0.3);backdrop-filter:blur(12px)">
-        <!-- LEFT: Title (MUCH BIGGER) -->
-        <h1 class="header-title" onclick="goHome()" title="Go to Home">
-            <span class="title-full">AuthenticaDetector</span><span class="title-hub"> Hub</span>
+        <!-- LEFT: Title (MUCH BIGGER) + Cache Refresh on Click -->
+        <h1 class="header-title" onclick="triggerCacheRefresh(event)" title="Click to refresh app (clears cache)">
+            <span class="title-full">VEILBREAKERS</span><span class="title-hub"> Hub</span>
         </h1>
         <!-- RIGHT: Quests + Gift + Settings + Profile -->
         <div style="display:flex;align-items:center;gap:8px">
@@ -6002,7 +6098,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
                     <img src="assets/icons/nav-vera.svg" alt="VERA" style="width:18px;height:18px;filter:drop-shadow(0 1px 3px rgba(94,234,212,0.8))">
                 </div>
                 <p style="margin:0;font-size:9px;color:#5eead4;flex:1;line-height:1.2">
-                    <strong>TIP:</strong> Level up by scanning AI images and completing quests!
+                    <strong>TIP:</strong> Level up by battling beasts, completing quests, and earning coins!
                 </p>
             </div>
 
@@ -6101,8 +6197,8 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
                 </span>
             </div>
             <div style="padding:10px 14px;background:rgba(0,0,0,0.3)">
-                <button onclick="showToast('Veilbreakers coming soon! Build your beast army!', 'info')" style="width:100%;background:linear-gradient(135deg,#8b5cf6,#7c3aed);border:none;color:#fff;padding:11px;border-radius:10px;font-weight:800;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 20px rgba(139,92,246,0.4)">
-                    <img src="assets/icons/play.svg" alt="" style="width:16px;height:16px"> COMING SOON
+                <button onclick="showToast('Veilbreakers coming soon! Build your beast army!', 'info')" class="play-btn-animated" style="width:100%;background:linear-gradient(135deg,#8b5cf6,#7c3aed);border:none;color:#fff;padding:16px;border-radius:12px;font-weight:900;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 8px 32px rgba(139,92,246,0.5);animation:playPulse 2s ease-in-out infinite">
+                    <img src="assets/icons/play.svg" alt="" style="width:32px;height:32px;filter:drop-shadow(0 2px 8px rgba(255,255,255,0.5))"> <span style="font-size:18px;letter-spacing:1px">COMING SOON</span>
                 </button>
             </div>
         </div>
@@ -6136,10 +6232,52 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
                 </span>
             </div>
             <div style="padding:10px 14px;background:linear-gradient(180deg,rgba(220,38,38,0.1),rgba(0,0,0,0.4))">
-                <button onclick="startTankShooter()" style="width:100%;background:linear-gradient(135deg,#dc2626,#b91c1c);border:none;color:#fff;padding:10px;border-radius:8px;font-weight:800;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
-                    <img src="assets/icons/play.svg" alt="" style="width:16px;height:16px"> PLAY NOW
+                <button onclick="startTankShooter()" class="play-btn-animated" style="width:100%;background:linear-gradient(135deg,#dc2626,#b91c1c);border:none;color:#fff;padding:16px;border-radius:12px;font-weight:900;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 8px 32px rgba(220,38,38,0.5)">
+                    <img src="assets/icons/play.svg" alt="" style="width:32px;height:32px;filter:drop-shadow(0 2px 8px rgba(255,255,255,0.5))"> <span style="font-size:18px;letter-spacing:1px">PLAY NOW</span>
                 </button>
             </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- BIG ANIMATED SHOP BUTTON - Eye-catching CTA                     -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <div class="big-shop-cta" onclick="openShop()" style="margin-bottom:20px;cursor:pointer;position:relative;overflow:hidden;border-radius:20px">
+            <!-- Animated background glows -->
+            <div style="position:absolute;inset:0;background:linear-gradient(135deg,#fcd34d 0%,#f59e0b 25%,#8b5cf6 50%,#7c3aed 75%,#fcd34d 100%);background-size:300% 300%;animation:shop-gradient 8s ease infinite;opacity:0.15"></div>
+            <div style="position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(252,211,77,0.4) 0%,transparent 50%);animation:shop-pulse 3s ease-in-out infinite"></div>
+            <div style="position:absolute;bottom:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(139,92,246,0.3) 0%,transparent 50%);animation:shop-pulse 3s ease-in-out infinite reverse"></div>
+
+            <!-- Main content -->
+            <div style="position:relative;background:linear-gradient(135deg,rgba(15,23,42,0.95),rgba(26,31,46,0.9));border:3px solid transparent;background-clip:padding-box;border-radius:20px;padding:24px;display:flex;align-items:center;gap:20px;box-shadow:0 8px 32px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.05)">
+                <!-- Animated shop icon with floating effect -->
+                <div style="font-size:80px;animation:shop-float 3s ease-in-out infinite;filter:drop-shadow(0 8px 24px rgba(252,211,77,0.8))">🏪</div>
+
+                <!-- Text content -->
+                <div style="flex:1">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                        <h2 style="margin:0;font-size:28px;font-weight:900;background:linear-gradient(135deg,#fcd34d,#f59e0b,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200% auto;animation:text-shimmer 3s linear infinite">TRUTH SHOP</h2>
+                        <span style="font-size:24px;animation:shop-sparkle 2s ease-in-out infinite">✨</span>
+                    </div>
+                    <p style="margin:0 0 12px;font-size:14px;color:var(--text2);line-height:1.5">Get <strong style="color:var(--gold-bright)">exclusive cosmetics</strong>, powerful <strong style="color:var(--primary-bright)">boosts</strong>, and special items!</p>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap">
+                        <span style="padding:4px 10px;background:linear-gradient(135deg,rgba(252,211,77,0.2),rgba(251,191,36,0.1));border:1px solid rgba(252,211,77,0.3);border-radius:8px;font-size:11px;font-weight:700;color:#fcd34d;display:inline-flex;align-items:center;gap:4px">
+                            <span style="font-size:14px">🎨</span> 50+ Cosmetics
+                        </span>
+                        <span style="padding:4px 10px;background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(124,58,237,0.1));border:1px solid rgba(139,92,246,0.3);border-radius:8px;font-size:11px;font-weight:700;color:#c4b5fd;display:inline-flex;align-items:center;gap:4px">
+                            <span style="font-size:14px">⚡</span> Power-Ups
+                        </span>
+                        <span style="padding:4px 10px;background:linear-gradient(135deg,rgba(244,114,182,0.2),rgba(236,72,153,0.1));border:1px solid rgba(244,114,182,0.3);border-radius:8px;font-size:11px;font-weight:700;color:#f9a8d4;display:inline-flex;align-items:center;gap:4px">
+                            <span style="font-size:14px">🌟</span> Special Items
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Arrow with pulse animation -->
+                <div style="font-size:40px;animation:shop-arrow-pulse 1.5s ease-in-out infinite;color:var(--gold-bright);text-shadow:0 0 20px rgba(252,211,77,0.6)">→</div>
+            </div>
+
+            <!-- Border glow effect -->
+            <div style="position:absolute;inset:-2px;background:linear-gradient(135deg,#fcd34d,#f59e0b,#8b5cf6,#7c3aed);border-radius:22px;z-index:-1;opacity:0.6;animation:border-glow 3s ease-in-out infinite"></div>
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -6155,10 +6293,10 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
                     <span>VERA's Tip</span>
                     <span style="font-size:10px;padding:2px 6px;background:rgba(147,197,253,0.2);border-radius:5px;color:#bfdbfe">NEW</span>
                 </div>
-                <p style="margin:0;font-size:11px;color:#cbd5e1;line-height:1.4">Upload an AI-generated image to start earning coins! Deep scans reveal hidden artifacts and level you up faster.</p>
+                <p style="margin:0;font-size:11px;color:#cbd5e1;line-height:1.4">Battle in Tank Shooter and Veilbreakers to earn coins! Complete daily quests and level up faster.</p>
             </div>
-            <button onclick="openView('scanView')" style="min-width:70px;padding:8px 12px;background:linear-gradient(135deg,#93c5fd,#7c3aed);border:none;border-radius:10px;color:#fff;font-weight:700;font-size:11px;cursor:pointer;box-shadow:0 4px 16px rgba(147,197,253,0.4)">
-                Scan Now
+            <button onclick="startTankShooter()" style="min-width:70px;padding:8px 12px;background:linear-gradient(135deg,#93c5fd,#7c3aed);border:none;border-radius:10px;color:#fff;font-weight:700;font-size:11px;cursor:pointer;box-shadow:0 4px 16px rgba(147,197,253,0.4)">
+                Play Now
             </button>
         </div>
 
@@ -6211,7 +6349,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
             </div>
             <div style="flex:1">
                 <div style="font-weight:700;font-size:12px;color:#c4b5fd;margin-bottom:3px">VERA says:</div>
-                <p style="margin:0;font-size:10px;color:#cbd5e1;line-height:1.3">"Veilbreakers will let you capture and battle mythical AI beasts! Start scanning images now to level up and unlock early access when it launches!"</p>
+                <p style="margin:0;font-size:10px;color:#cbd5e1;line-height:1.3">"Veilbreakers will let you capture and battle mythical AI beasts! Play Tank Battle now to level up and unlock early access when it launches!"</p>
             </div>
         </div>
 
@@ -7371,45 +7509,110 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
 </div>
 
 <!-- SHOP VIEW -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- DEDICATED SHOP PAGE - Full glassmorphic design with categories          -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
 <div class="view" id="shopView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title"><span class="ad-icon-slot" data-ad-icon="store" data-ad-size="16"></span> Shop</span>
-        <div style="display:flex;align-items:center;gap:8px;padding:4px 12px;background:var(--surface2);border-radius:8px;font-size:12px;font-weight:700">
-            <span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="16"></span>
-            <span id="shopCoinsDisplay">0</span>
+        <span class="view-title">🏪 Truth Shop</span>
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 16px;background:linear-gradient(135deg,rgba(252,211,77,0.15),rgba(251,191,36,0.1));border-radius:12px;border:1px solid rgba(252,211,77,0.3);box-shadow:0 2px 8px rgba(252,211,77,0.2)">
+            <span class="ad-icon-slot" data-ad-icon="coins" data-ad-size="18"></span>
+            <span id="shopCoinsDisplay" style="font-size:16px;font-weight:800;color:var(--gold-bright)">0</span>
         </div>
     </div>
-    <div class="view-body view-body-padded">
-        <!-- COSMETICS CATEGORY -->
-        <div class="shop-category">
-            <h3 class="shop-category-title"><span class="ad-icon-slot" data-ad-icon="sparkles" data-ad-size="16"></span> Cosmetics</h3>
-            <div class="shop-grid" id="cosmeticsShop"></div>
+    <div class="view-body" style="overflow-y:auto;padding-bottom:calc(100px + var(--safe-bottom))">
+
+        <!-- Shop Welcome Banner -->
+        <div style="background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(124,58,237,0.1));border-radius:20px;padding:20px;margin:16px;border:2px solid rgba(139,92,246,0.3);box-shadow:0 4px 20px rgba(139,92,246,0.2)">
+            <div style="display:flex;align-items:center;gap:16px">
+                <div style="font-size:64px;filter:drop-shadow(0 4px 12px rgba(139,92,246,0.6))">🏪</div>
+                <div style="flex:1">
+                    <h2 style="margin:0 0 8px;font-size:24px;font-weight:900;background:linear-gradient(135deg,#fcd34d,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Welcome to Truth Shop</h2>
+                    <p style="margin:0;font-size:13px;color:var(--text2);line-height:1.5">Upgrade your arsenal with powerful cosmetics, boosts, and special items. All purchases are permanent!</p>
+                </div>
+            </div>
         </div>
 
-        <!-- BADGES CATEGORY -->
-        <!-- Badges section removed: Badges are achievement-only, never purchasable -->
+        <!-- Category Tabs -->
+        <div style="display:flex;gap:8px;padding:0 16px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch">
+            <button class="shop-tab active" data-category="cosmetics" onclick="switchShopCategory('cosmetics',this)">
+                <span class="ad-icon-slot" data-ad-icon="sparkles" data-ad-size="16"></span>
+                <span>Cosmetics</span>
+            </button>
+            <button class="shop-tab" data-category="powerups" onclick="switchShopCategory('powerups',this)">
+                <span class="ad-icon-slot" data-ad-icon="wand" data-ad-size="16"></span>
+                <span>Power-Ups</span>
+            </button>
+            <button class="shop-tab" data-category="boosts" onclick="switchShopCategory('boosts',this)">
+                <span class="ad-icon-slot" data-ad-icon="star" data-ad-size="16"></span>
+                <span>Boosts</span>
+            </button>
+            <button class="shop-tab" data-category="special" onclick="switchShopCategory('special',this)">
+                <span class="ad-icon-slot" data-ad-icon="lootbox" data-ad-size="16"></span>
+                <span>Special</span>
+            </button>
+        </div>
+
+        <!-- COSMETICS CATEGORY -->
+        <div class="shop-category-section" id="shopCategory_cosmetics">
+            <div style="padding:0 16px 16px">
+                <h3 style="margin:0 0 16px;font-size:20px;font-weight:800;display:flex;align-items:center;gap:8px">
+                    <span class="ad-icon-slot" data-ad-icon="sparkles" data-ad-size="20"></span>
+                    Cosmetics
+                    <span style="font-size:12px;color:var(--text3);font-weight:500;margin-left:auto">Permanent Unlocks</span>
+                </h3>
+                <div class="shop-items-grid" id="cosmeticsShopGrid">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </div>
 
         <!-- POWER-UPS CATEGORY -->
-        <div class="shop-category">
-            <h3 class="shop-category-title"><span class="ad-icon-slot" data-ad-icon="wand" data-ad-size="16"></span> Power-Ups</h3>
-            <div class="shop-grid" id="powerupsShop"></div>
+        <div class="shop-category-section" id="shopCategory_powerups" style="display:none">
+            <div style="padding:0 16px 16px">
+                <h3 style="margin:0 0 16px;font-size:20px;font-weight:800;display:flex;align-items:center;gap:8px">
+                    <span class="ad-icon-slot" data-ad-icon="wand" data-ad-size="20"></span>
+                    Power-Ups
+                    <span style="font-size:12px;color:var(--text3);font-weight:500;margin-left:auto">Single Use</span>
+                </h3>
+                <div class="shop-items-grid" id="powerupsShopGrid">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
         </div>
 
-        <!-- TANK UPGRADES CATEGORY -->
-        <div class="shop-category">
-            <h3 class="shop-category-title"><span class="ad-icon-slot" data-ad-icon="tank" data-ad-size="16"></span> Tank Upgrades</h3>
-            <div class="shop-grid" id="tank_upgradesShop"></div>
+        <!-- BOOSTS CATEGORY -->
+        <div class="shop-category-section" id="shopCategory_boosts" style="display:none">
+            <div style="padding:0 16px 16px">
+                <h3 style="margin:0 0 16px;font-size:20px;font-weight:800;display:flex;align-items:center;gap:8px">
+                    <span class="ad-icon-slot" data-ad-icon="star" data-ad-size="20"></span>
+                    Boosts
+                    <span style="font-size:12px;color:var(--text3);font-weight:500;margin-left:auto">Timed Buffs</span>
+                </h3>
+                <div class="shop-items-grid" id="boostsShopGrid">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
         </div>
 
-        <!-- BOOSTERS CATEGORY -->
-        <div class="shop-category">
-            <h3 class="shop-category-title"><span class="ad-icon-slot" data-ad-icon="star" data-ad-size="16"></span> Boosters</h3>
-            <div class="shop-grid" id="boostersShop"></div>
+        <!-- SPECIAL CATEGORY -->
+        <div class="shop-category-section" id="shopCategory_special" style="display:none">
+            <div style="padding:0 16px 16px">
+                <h3 style="margin:0 0 16px;font-size:20px;font-weight:800;display:flex;align-items:center;gap:8px">
+                    <span class="ad-icon-slot" data-ad-icon="lootbox" data-ad-size="20"></span>
+                    Special Items
+                    <span style="font-size:12px;color:var(--text3);font-weight:500;margin-left:auto">Limited & Exclusive</span>
+                </h3>
+                <div class="shop-items-grid" id="specialShopGrid">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
         </div>
+
     </div>
 </div>
 
@@ -7788,7 +7991,7 @@ const SUPABASE_URL = 'https://vrvoyxxdlcpysthzjbeu.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZydm95eHhkbGNweXN0aHpqYmV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5ODcyMjUsImV4cCI6MjA4MTU2MzIyNX0.zwakHpqJY4moTqDyggoEx01CIo76gzFIgjtaPcamHkg';
 const APP_VERSION = '12.0.0';
 const DETECTOR_VERSION = '6.0.0';
-const APP_NAME = 'AuthenticaDetector';
+const APP_NAME = 'VEILBREAKERS';
 
 const rotatingBannerMessages = [
     { title: 'VEILBREAKERS PROTOCOL', detail: 'New zones soon: Neon Alley, Mirror Shrine, Bloom Gardens.' },
@@ -9663,6 +9866,18 @@ window.closeView = function() {
     }
 };
 
+// Trigger cache refresh (hard reload) when clicking hub name/logo
+window.triggerCacheRefresh = function(event) {
+    if (event) event.preventDefault();
+    console.log('[Cache] User triggered cache refresh via hub name click');
+
+    // Option 1: Hard refresh (bypasses cache)
+    location.reload(true);
+
+    // Option 2 (fallback for browsers that don't support reload(true)):
+    // window.location.href = window.location.href + '?v=' + Date.now();
+};
+
 // Go directly to home (clears navigation stack)
 window.goHome = function() {
     console.log('[View] Going directly to home');
@@ -10646,12 +10861,11 @@ async function loadShopView() {
     // Load user owned items from localStorage
     loadOwnedItems();
 
-    // Render shop categories (badges removed - achievement-only)
-    renderShopCategory('cosmetics');
-    renderShopCategory('powerups');
-    renderShopCategory('tank_upgrades');
-    // renderShopCategory('badges'); // REMOVED: Badges are achievement-only
-    renderShopCategory('boosters');
+    // Render shop categories with new grid structure
+    renderShopCategory('cosmetics', 'cosmeticsShopGrid');
+    renderShopCategory('powerups', 'powerupsShopGrid');
+    renderShopCategory('boosts', 'boostsShopGrid');
+    renderShopCategory('special', 'specialShopGrid');
 }
 
 function loadOwnedItems() {
@@ -10672,9 +10886,13 @@ function saveOwnedItems() {
     }
 }
 
-function renderShopCategory(category) {
-    const container = $(`${category}Shop`);
-    if (!container) return;
+function renderShopCategory(category, gridId) {
+    // Support both old and new ID format
+    const container = gridId ? $(gridId) : $(`${category}Shop`);
+    if (!container) {
+        console.warn('[Shop] Container not found for category:', category, gridId);
+        return;
+    }
 
     const items = Object.values(SHOP_ITEMS).filter(item => item.category === category);
 
@@ -10770,11 +10988,10 @@ function updateShopDisplay() {
     // Re-render all shop categories to reflect purchases
     const activeView = currentView;
     if (activeView === 'shopView') {
-        renderShopCategory('cosmetics');
-        renderShopCategory('powerups');
-        renderShopCategory('tank_upgrades');
-        // renderShopCategory('badges'); // REMOVED: Badges are achievement-only
-        renderShopCategory('boosters');
+        renderShopCategory('cosmetics', 'cosmeticsShopGrid');
+        renderShopCategory('powerups', 'powerupsShopGrid');
+        renderShopCategory('boosts', 'boostsShopGrid');
+        renderShopCategory('special', 'specialShopGrid');
 
         // Update coins display
         const shopCoinsDisplay = $('shopCoinsDisplay');
@@ -11087,6 +11304,26 @@ window.openShop = function() {
     }
     // Update coin display
     updateAllCoinDisplays();
+};
+
+// Switch shop category tabs
+window.switchShopCategory = function(category, button) {
+    // Hide all category sections
+    const sections = document.querySelectorAll('.shop-category-section');
+    sections.forEach(section => section.style.display = 'none');
+
+    // Show selected category
+    const selectedSection = document.getElementById('shopCategory_' + category);
+    if (selectedSection) {
+        selectedSection.style.display = 'block';
+    }
+
+    // Update tab active state
+    const tabs = document.querySelectorAll('.shop-tab');
+    tabs.forEach(tab => tab.classList.remove('active'));
+    if (button) {
+        button.classList.add('active');
+    }
 };
 
 // Initialize Phaser Character Creator

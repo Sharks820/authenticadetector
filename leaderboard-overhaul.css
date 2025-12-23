@@ -1,0 +1,512 @@
+/* ==================== LEADERBOARD - COMPLETE OVERHAUL ==================== */
+
+/* Loading Skeleton */
+.lb-skeleton{
+    background:linear-gradient(90deg,rgba(255,255,255,0.03) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.03) 75%);
+    background-size:200% 100%;
+    animation:shimmer 1.5s infinite;
+    border-radius:12px;
+    height:80px;
+    margin-bottom:12px;
+}
+@keyframes shimmer{
+    0%{background-position:200% 0}
+    100%{background-position:-200% 0}
+}
+
+/* Top 3 Podium Container - Sticky */
+.lb-top3-container{
+    position:sticky;
+    top:65px;
+    z-index:100;
+    background:linear-gradient(180deg,var(--bg) 0%,var(--bg) 85%,transparent 100%);
+    padding:20px 0 30px;
+    margin-bottom:20px;
+    backdrop-filter:blur(10px);
+}
+
+.podium{
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    gap:16px;
+    padding:0 12px 20px;
+}
+
+.podium-item{
+    text-align:center;
+    flex:1;
+    max-width:120px;
+    position:relative;
+    transition:transform 0.3s ease;
+}
+.podium-item:hover{transform:translateY(-4px)}
+
+/* Gold Medal (#1) - Larger, Center, ULTIMATE */
+.podium-item.first{
+    order:2;
+    max-width:150px;
+}
+.podium-item.first .podium-avatar{
+    width:100px;
+    height:100px;
+    border:5px solid #ffd700;
+    background:linear-gradient(135deg,#ffd700,#ffed4a);
+    box-shadow:
+        0 0 40px rgba(255,215,0,0.9),
+        0 0 80px rgba(255,215,0,0.5),
+        0 8px 32px rgba(0,0,0,0.3),
+        inset 0 0 30px rgba(255,255,255,0.4);
+    animation:goldPulse 2s ease-in-out infinite,goldShimmer 3s linear infinite;
+    position:relative;
+}
+.podium-item.first .podium-avatar::before{
+    content:'';
+    position:absolute;
+    inset:-6px;
+    border-radius:50%;
+    background:conic-gradient(from 0deg,#ffd700,#ff8c00,#ffd700,#ff8c00,#ffd700);
+    z-index:-1;
+    animation:rotate 4s linear infinite;
+}
+.podium-item.first .podium-crown{
+    font-size:44px;
+    top:-18px;
+    filter:drop-shadow(0 0 12px rgba(255,215,0,0.8));
+    animation:crownFloat 3s ease-in-out infinite;
+}
+.podium-item.first .podium-name{
+    font-size:14px;
+    font-weight:900;
+    background:linear-gradient(135deg,#ffd700,#ff8c00);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    text-shadow:0 0 20px rgba(255,215,0,0.5);
+}
+.podium-item.first .podium-stats{
+    font-size:12px;
+}
+
+/* Silver Medal (#2) - Left, PREMIUM */
+.podium-item.second{
+    order:1;
+}
+.podium-item.second .podium-avatar{
+    width:85px;
+    height:85px;
+    border:4px solid #c0c0c0;
+    background:linear-gradient(135deg,#c0c0c0,#e8e8e8);
+    box-shadow:
+        0 0 30px rgba(192,192,192,0.7),
+        0 6px 24px rgba(0,0,0,0.25),
+        inset 0 0 20px rgba(255,255,255,0.3);
+    animation:silverGlow 3s ease-in-out infinite;
+}
+.podium-item.second .podium-medal{
+    font-size:32px;
+    top:-12px;
+    filter:drop-shadow(0 0 8px rgba(192,192,192,0.6));
+}
+
+/* Bronze Medal (#3) - Right, GREAT */
+.podium-item.third{
+    order:3;
+}
+.podium-item.third .podium-avatar{
+    width:80px;
+    height:80px;
+    border:4px solid #cd7f32;
+    background:linear-gradient(135deg,#cd7f32,#daa520);
+    box-shadow:
+        0 0 25px rgba(205,127,50,0.6),
+        0 6px 20px rgba(0,0,0,0.2),
+        inset 0 0 18px rgba(255,255,255,0.25);
+    animation:bronzeShimmer 2.5s ease-in-out infinite;
+}
+.podium-item.third .podium-medal{
+    font-size:28px;
+    top:-10px;
+    filter:drop-shadow(0 0 6px rgba(205,127,50,0.5));
+}
+
+.podium-avatar{
+    border-radius:50%;
+    margin:0 auto 10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    font-weight:800;
+    overflow:hidden;
+    position:relative;
+}
+.podium-avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.podium-crown,.podium-medal{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:10;
+}
+
+.podium-name{
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:4px;
+}
+
+.podium-stats{
+    font-size:10px;
+    color:var(--text3);
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+}
+
+.podium-points{
+    font-weight:700;
+    color:var(--primary);
+}
+
+.podium-level{
+    font-size:9px;
+    color:var(--text2);
+}
+
+.podium-tier{
+    font-size:9px;
+    text-transform:uppercase;
+    margin-top:6px;
+    font-weight:800;
+    padding:3px 8px;
+    border-radius:6px;
+    display:inline-block;
+}
+
+/* Top 3 Animations */
+@keyframes goldPulse{
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.05)}
+}
+@keyframes goldShimmer{
+    0%{filter:brightness(1) hue-rotate(0deg)}
+    50%{filter:brightness(1.2) hue-rotate(5deg)}
+    100%{filter:brightness(1) hue-rotate(0deg)}
+}
+@keyframes crownFloat{
+    0%,100%{transform:translateX(-50%) translateY(0)}
+    50%{transform:translateX(-50%) translateY(-4px)}
+}
+@keyframes silverGlow{
+    0%,100%{filter:brightness(1)}
+    50%{filter:brightness(1.15)}
+}
+@keyframes bronzeShimmer{
+    0%,100%{filter:brightness(1)}
+    50%{filter:brightness(1.1)}
+}
+@keyframes rotate{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(360deg)}
+}
+
+/* Tier Badges */
+.tier-king{background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;box-shadow:0 0 8px rgba(255,215,0,0.4)}
+.tier-viceroy{background:linear-gradient(135deg,#c0c0c0,#808080);color:#000;box-shadow:0 0 8px rgba(192,192,192,0.4)}
+.tier-archduke{background:linear-gradient(135deg,#cd7f32,#8b4513);color:#fff;box-shadow:0 0 8px rgba(205,127,50,0.4)}
+.tier-legend{background:linear-gradient(135deg,#9b59b6,#8e44ad);color:#fff;box-shadow:0 0 8px rgba(155,89,182,0.4)}
+.tier-elite{background:linear-gradient(135deg,#3498db,#2980b9);color:#fff;box-shadow:0 0 8px rgba(52,152,219,0.4)}
+.tier-veteran{background:linear-gradient(135deg,#27ae60,#1e8449);color:#fff;box-shadow:0 0 8px rgba(39,174,96,0.4)}
+.tier-rising{background:linear-gradient(135deg,#7f8c8d,#95a5a6);color:#fff;box-shadow:0 0 8px rgba(127,140,141,0.3)}
+
+/* Leaderboard Items - MODERN DESIGN */
+.lb-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 14px;
+    background:var(--surface);
+    border-radius:12px;
+    margin-bottom:8px;
+    cursor:pointer;
+    transition:all 0.3s ease;
+    position:relative;
+    border:2px solid transparent;
+}
+
+.lb-item:hover{
+    transform:translateX(4px);
+    box-shadow:0 4px 16px rgba(0,0,0,0.2);
+}
+
+/* Current User Highlight */
+.lb-item.current-user{
+    background:linear-gradient(135deg,rgba(94,234,212,0.15),rgba(94,234,212,0.08));
+    border-color:var(--primary);
+    box-shadow:0 0 20px rgba(94,234,212,0.3);
+}
+.lb-item.current-user::before{
+    content:'YOU';
+    position:absolute;
+    top:4px;
+    right:8px;
+    font-size:8px;
+    font-weight:900;
+    color:var(--primary);
+    background:rgba(94,234,212,0.2);
+    padding:2px 6px;
+    border-radius:4px;
+}
+
+/* Top 10 Special Styling */
+.lb-item.top10{
+    border:2px solid transparent;
+    background:linear-gradient(var(--surface),var(--surface)) padding-box,
+               linear-gradient(135deg,var(--primary),#00ff88,#1abc9c) border-box;
+    box-shadow:0 0 15px rgba(26,188,156,0.3);
+}
+.lb-item.top10:hover{
+    box-shadow:0 0 25px rgba(26,188,156,0.5);
+}
+
+/* Rank Number Badge */
+.lb-rank{
+    min-width:36px;
+    height:36px;
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:900;
+    position:relative;
+}
+
+.lb-rank.rank-1{
+    background:linear-gradient(135deg,#ffd700,#ff8c00);
+    color:#000;
+    box-shadow:0 0 12px rgba(255,215,0,0.5);
+}
+.lb-rank.rank-2{
+    background:linear-gradient(135deg,#c0c0c0,#a9a9a9);
+    color:#000;
+    box-shadow:0 0 10px rgba(192,192,192,0.4);
+}
+.lb-rank.rank-3{
+    background:linear-gradient(135deg,#cd7f32,#b8860b);
+    color:#fff;
+    box-shadow:0 0 10px rgba(205,127,50,0.4);
+}
+.lb-rank.top10{
+    background:linear-gradient(135deg,var(--primary),#00ff88);
+    color:#000;
+    box-shadow:0 0 10px rgba(26,188,156,0.4);
+}
+.lb-rank.normal{
+    background:var(--surface2);
+    color:var(--text2);
+}
+
+/* Avatar with Tier Border */
+.lb-avatar{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    font-weight:800;
+    overflow:hidden;
+    position:relative;
+    border:3px solid transparent;
+    background:linear-gradient(var(--surface),var(--surface)) padding-box,
+               linear-gradient(135deg,var(--primary),#00ff88) border-box;
+}
+.lb-avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* Tier-specific Avatar Borders */
+.lb-avatar.tier-king{
+    background:linear-gradient(var(--surface),var(--surface)) padding-box,
+               linear-gradient(135deg,#ffd700,#ff8c00) border-box;
+}
+.lb-avatar.tier-viceroy{
+    background:linear-gradient(var(--surface),var(--surface)) padding-box,
+               linear-gradient(135deg,#c0c0c0,#808080) border-box;
+}
+.lb-avatar.tier-archduke{
+    background:linear-gradient(var(--surface),var(--surface)) padding-box,
+               linear-gradient(135deg,#cd7f32,#8b4513) border-box;
+}
+.lb-avatar.tier-legend{
+    background:linear-gradient(var(--surface),var(--surface)) padding-box,
+               linear-gradient(135deg,#9b59b6,#8e44ad) border-box;
+}
+
+/* Player Info */
+.lb-info{
+    flex:1;
+    min-width:0;
+}
+.lb-name{
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:2px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+.lb-stats{
+    font-size:10px;
+    color:var(--text3);
+    display:flex;
+    gap:8px;
+}
+.lb-stat-item{
+    display:flex;
+    align-items:center;
+    gap:3px;
+}
+
+/* Points Display */
+.lb-points{
+    font-size:15px;
+    font-weight:900;
+    color:var(--primary);
+    min-width:60px;
+    text-align:right;
+}
+
+/* Tier Badge */
+.lb-tier{
+    margin-left:8px;
+    font-size:9px;
+}
+
+/* Tier Group Sections */
+.tier-group-section{
+    margin-bottom:24px;
+    border-radius:12px;
+    overflow:hidden;
+    background:linear-gradient(135deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.1);
+}
+
+.tier-group-header{
+    padding:14px 16px;
+    font-weight:900;
+    font-size:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    background:linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.04));
+    border-bottom:3px solid;
+}
+
+.tier-group-header.tier-legend{
+    border-bottom-color:#9b59b6;
+    color:#9b59b6;
+    background:linear-gradient(135deg,rgba(155,89,182,0.12),rgba(155,89,182,0.05));
+}
+.tier-group-header.tier-elite{
+    border-bottom-color:#3498db;
+    color:#3498db;
+    background:linear-gradient(135deg,rgba(52,152,219,0.12),rgba(52,152,219,0.05));
+}
+.tier-group-header.tier-veteran{
+    border-bottom-color:#27ae60;
+    color:#27ae60;
+    background:linear-gradient(135deg,rgba(39,174,96,0.12),rgba(39,174,96,0.05));
+}
+.tier-group-header.tier-rising{
+    border-bottom-color:#7f8c8d;
+    color:#7f8c8d;
+    background:linear-gradient(135deg,rgba(127,140,141,0.12),rgba(127,140,141,0.05));
+}
+
+.tier-group-bracket{
+    font-size:18px;
+    opacity:0.7;
+}
+
+.tier-group-label{
+    flex:1;
+    text-align:center;
+}
+
+.tier-group-content{
+    padding:10px 12px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.tier-group-content .lb-item{
+    margin-bottom:0;
+}
+
+/* Rewards Section */
+.rewards-card{
+    background:linear-gradient(135deg,var(--surface2),var(--surface3));
+    border:2px solid var(--gold);
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:12px;
+}
+.rewards-title{
+    font-size:14px;
+    font-weight:800;
+    color:var(--gold);
+    margin-bottom:8px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+.rewards-list{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+.reward-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:8px;
+    background:var(--surface);
+    border-radius:8px;
+    font-size:11px;
+}
+.reward-icon{
+    font-size:18px;
+}
+.reward-text{
+    flex:1;
+}
+.reward-tier{
+    font-size:9px;
+    font-weight:700;
+    padding:2px 6px;
+    border-radius:4px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    .podium-item.first .podium-avatar{width:80px;height:80px}
+    .podium-item.second .podium-avatar{width:70px;height:70px}
+    .podium-item.third .podium-avatar{width:65px;height:65px}
+    .lb-avatar{width:40px;height:40px}
+    .lb-rank{min-width:32px;height:32px;font-size:11px}
+    .lb-name{font-size:12px}
+    .lb-points{font-size:13px}
+}

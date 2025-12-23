@@ -61,21 +61,64 @@ const TANK_CONFIG = {
     PROJECTILE_RADIUS: 5, // Bigger (was 4)
     PROJECTILE_LIFETIME: 3500, // Longer (was 3000)
 
-    // Enemy stats - EXPANDED
+    // Enemy stats - MASSIVE EXPANSION (20+ types)
     ENEMIES: {
-        spam: { hp: 30, speed: 80, damage: 10, score: 15, coins: 2, radius: 15, color: '#ff4478', icon: '📧' },
-        fakenews: { hp: 60, speed: 110, damage: 15, score: 30, coins: 3, radius: 18, color: '#ff6b9d', icon: '📰' },
-        deepfake: { hp: 120, speed: 55, damage: 35, score: 60, coins: 7, radius: 22, color: '#ff1744', icon: '🤖', canShoot: true },
-        swarm: { hp: 20, speed: 140, damage: 5, score: 8, coins: 1, radius: 10, color: '#ff8a9d', icon: '⚡' },
-        troll: { hp: 90, speed: 65, damage: 25, score: 45, coins: 5, radius: 20, color: '#ff5722', icon: '👹' },
-        botnet: { hp: 150, speed: 40, damage: 40, score: 80, coins: 10, radius: 25, color: '#e91e63', icon: '🕸️', canShoot: true },
+        // Basic enemies (Waves 1-5)
+        spam: { hp: 30, speed: 85, damage: 8, score: 15, coins: 2, radius: 14, color: '#ff6b9d', icon: '📧', behavior: 'rush' },
+        bot: { hp: 40, speed: 70, damage: 12, score: 20, coins: 3, radius: 16, color: '#ff8fab', icon: '🤖', behavior: 'zigzag' },
 
-        // BOSSES - Multiple types
-        bossAI: { hp: 800, speed: 35, damage: 60, score: 1000, coins: 50, radius: 50, color: '#8e44ad', icon: '🧠', canShoot: true, isBoss: true },
-        bossGAN: { hp: 1200, speed: 25, damage: 80, score: 1500, coins: 75, radius: 55, color: '#9c27b0', icon: '👾', canShoot: true, isBoss: true },
-        bossDiffusion: { hp: 1600, speed: 20, damage: 100, score: 2000, coins: 100, radius: 60, color: '#673ab7', icon: '🌀', canShoot: true, isBoss: true },
-        bossLLM: { hp: 2000, speed: 30, damage: 120, score: 2500, coins: 125, radius: 65, color: '#3f51b5', icon: '💬', canShoot: true, isBoss: true },
-        bossUltimate: { hp: 3000, speed: 40, damage: 150, score: 5000, coins: 200, radius: 70, color: '#1a237e', icon: '👑', canShoot: true, isBoss: true }
+        // Mid-tier enemies (Waves 3-10)
+        fakenews: { hp: 65, speed: 110, damage: 15, score: 30, coins: 4, radius: 18, color: '#ff4478', icon: '📰', behavior: 'flank' },
+        troll: { hp: 90, speed: 65, damage: 22, score: 45, coins: 6, radius: 20, color: '#ff5722', icon: '👹', behavior: 'tank' },
+        deepfake: { hp: 120, speed: 55, damage: 30, score: 60, coins: 8, radius: 22, color: '#e91e63', icon: '🎭', canShoot: true, behavior: 'sniper' },
+
+        // Advanced enemies (Waves 5-15)
+        swarm: { hp: 22, speed: 150, damage: 5, score: 10, coins: 1, radius: 10, color: '#ff8a9d', icon: '⚡', behavior: 'swarm' },
+        shielder: { hp: 140, speed: 50, damage: 25, score: 80, coins: 10, radius: 24, color: '#9c27b0', icon: '🛡️', hasShield: true, behavior: 'tank' },
+        sniper: { hp: 55, speed: 40, damage: 45, score: 85, coins: 12, radius: 18, color: '#673ab7', icon: '🎯', canShoot: true, behavior: 'sniper', fireRate: 1500 },
+        rusher: { hp: 45, speed: 170, damage: 28, score: 40, coins: 5, radius: 15, color: '#f44336', icon: '💨', behavior: 'rush' },
+
+        // Elite enemies (Waves 10-20)
+        botnet: { hp: 180, speed: 45, damage: 35, score: 95, coins: 15, radius: 26, color: '#3f51b5', icon: '🕸️', canShoot: true, behavior: 'artillery' },
+        phantom: { hp: 70, speed: 115, damage: 20, score: 100, coins: 14, radius: 20, color: '#00bcd4', icon: '👻', behavior: 'teleport', canShoot: true },
+        juggernaut: { hp: 300, speed: 30, damage: 50, score: 140, coins: 20, radius: 30, color: '#795548', icon: '🏛️', behavior: 'tank', hasShield: true },
+
+        // BOSSES - Unique mechanics per boss
+        bossAI: {
+            hp: 1000, speed: 40, damage: 60, score: 1500, coins: 100, radius: 55,
+            color: '#8e44ad', icon: '🧠', canShoot: true, isBoss: true, behavior: 'boss_ai',
+            fireRate: 800, pattern: 'circle'
+        },
+        bossGAN: {
+            hp: 1500, speed: 35, damage: 75, score: 2000, coins: 150, radius: 60,
+            color: '#9c27b0', icon: '👾', canShoot: true, isBoss: true, behavior: 'boss_gan',
+            fireRate: 600, pattern: 'spiral', spawnsMinions: true
+        },
+        bossDiffusion: {
+            hp: 2000, speed: 30, damage: 90, score: 2500, coins: 200, radius: 65,
+            color: '#673ab7', icon: '🌀', canShoot: true, isBoss: true, behavior: 'boss_diffusion',
+            fireRate: 500, pattern: 'burst', teleports: true
+        },
+        bossLLM: {
+            hp: 2500, speed: 45, damage: 110, score: 3000, coins: 250, radius: 70,
+            color: '#3f51b5', icon: '💬', canShoot: true, isBoss: true, behavior: 'boss_llm',
+            fireRate: 400, pattern: 'predict', adaptive: true
+        },
+        bossUltimate: {
+            hp: 4000, speed: 50, damage: 150, score: 5000, coins: 500, radius: 80,
+            color: '#1a237e', icon: '👑', canShoot: true, isBoss: true, behavior: 'boss_ultimate',
+            fireRate: 300, pattern: 'all', phases: true, spawnsMinions: true
+        }
+    },
+
+    // Powerup drops
+    POWERUPS: {
+        health: { radius: 15, color: '#4caf50', icon: '❤️', heal: 40, dropChance: 0.15 },
+        rapidFire: { radius: 15, color: '#ff9800', icon: '⚡', duration: 8000, rateBoost: 0.5, dropChance: 0.10 },
+        shield: { radius: 15, color: '#2196f3', icon: '🛡️', hp: 100, dropChance: 0.12 },
+        nuke: { radius: 15, color: '#f44336', icon: '💣', damage: 200, range: 300, dropChance: 0.05 },
+        speedBoost: { radius: 15, color: '#9c27b0', icon: '💨', duration: 10000, speedMult: 1.5, dropChance: 0.13 },
+        spreadShot: { radius: 15, color: '#00bcd4', icon: '💥', duration: 12000, count: 5, dropChance: 0.08 }
     },
 
     // Wave config
@@ -105,6 +148,500 @@ const TANK_CONFIG = {
     COMBO_INCREMENT: 0.6, // Faster (was 0.5)
     MAX_COMBO: 8.0 // Higher (was 5.0)
 };
+
+// ==================== TANK ECONOMY SYSTEM ====================
+
+// Tank progression state (persists to localStorage)
+let tankEconomy = {
+    coins: 0,
+    currentTank: 'starter',
+    ownedTanks: ['starter'],
+    upgrades: {
+        armor: 0,    // 0-3: Light, Medium, Heavy, Titan
+        barrel: 0,   // 0-3: Standard, Extended, Long, Cannon
+        tracks: 0,   // 0-3: Basic, All-Terrain, Speed, Hover
+        fireRate: 0  // 0-3: Slow, Normal, Fast, Rapid
+    },
+    shopPowerups: {
+        healthPack: 0,
+        shield: 0,
+        doubleDamage: 0,
+        speedBoost: 0,
+        nuke: 0,
+        extraLife: 0
+    },
+    customization: {
+        color: 'default',
+        decal: 'none',
+        trail: 'none'
+    },
+    stats: {
+        totalKills: 0,
+        highestWave: 0,
+        coinsEarned: 0,
+        gamesPlayed: 0
+    },
+    dailyBonus: {
+        lastClaim: null,
+        streak: 0
+    }
+};
+
+// Tank types with base stats
+const TANK_TYPES = {
+    starter: {
+        id: 'starter',
+        name: 'Starter Tank',
+        cost: 0,
+        description: 'Free starting tank with basic stats',
+        color: '#1ed6a0',
+        baseHP: 100,
+        baseSpeed: 150,
+        baseDamage: 30,
+        baseFireRate: 400,
+        unlocked: true
+    },
+    scout: {
+        id: 'scout',
+        name: 'Scout Tank',
+        cost: 500,
+        description: 'Fast but fragile - hit and run tactics',
+        color: '#3498db',
+        baseHP: 75,
+        baseSpeed: 220,
+        baseDamage: 25,
+        baseFireRate: 300,
+        unlocked: false
+    },
+    battle: {
+        id: 'battle',
+        name: 'Battle Tank',
+        cost: 1000,
+        description: 'Balanced stats for versatile combat',
+        color: '#e74c3c',
+        baseHP: 120,
+        baseSpeed: 140,
+        baseDamage: 35,
+        baseFireRate: 380,
+        unlocked: false
+    },
+    heavy: {
+        id: 'heavy',
+        name: 'Heavy Tank',
+        cost: 2500,
+        description: 'Slow but extremely tanky',
+        color: '#95a5a6',
+        baseHP: 200,
+        baseSpeed: 100,
+        baseDamage: 40,
+        baseFireRate: 500,
+        unlocked: false
+    },
+    assault: {
+        id: 'assault',
+        name: 'Assault Tank',
+        cost: 5000,
+        description: 'High damage output, aggressive playstyle',
+        color: '#f39c12',
+        baseHP: 110,
+        baseSpeed: 160,
+        baseDamage: 55,
+        baseFireRate: 350,
+        unlocked: false
+    },
+    legendary: {
+        id: 'legendary',
+        name: 'Legendary Tank',
+        cost: 10000,
+        description: 'Best stats in every category',
+        color: '#9b59b6',
+        baseHP: 180,
+        baseSpeed: 200,
+        baseDamage: 60,
+        baseFireRate: 250,
+        unlocked: false
+    }
+};
+
+// Upgrade tiers
+const UPGRADE_TIERS = {
+    armor: [
+        { id: 0, name: 'Light Armor', hpBonus: 0, cost: 0 },
+        { id: 1, name: 'Medium Armor', hpBonus: 40, cost: 300 },
+        { id: 2, name: 'Heavy Armor', hpBonus: 80, cost: 800 },
+        { id: 3, name: 'Titan Armor', hpBonus: 150, cost: 2000 }
+    ],
+    barrel: [
+        { id: 0, name: 'Standard Barrel', damageBonus: 0, cost: 0 },
+        { id: 1, name: 'Extended Barrel', damageBonus: 10, cost: 250 },
+        { id: 2, name: 'Long Barrel', damageBonus: 20, cost: 700 },
+        { id: 3, name: 'Cannon Barrel', damageBonus: 35, cost: 1800 }
+    ],
+    tracks: [
+        { id: 0, name: 'Basic Tracks', speedBonus: 0, cost: 0 },
+        { id: 1, name: 'All-Terrain', speedBonus: 30, cost: 200 },
+        { id: 2, name: 'Speed Tracks', speedBonus: 60, cost: 600 },
+        { id: 3, name: 'Hover System', speedBonus: 100, cost: 1500 }
+    ],
+    fireRate: [
+        { id: 0, name: 'Slow Fire', fireRateBonus: 0, cost: 0 },
+        { id: 1, name: 'Normal Fire', fireRateBonus: -50, cost: 350 },
+        { id: 2, name: 'Fast Fire', fireRateBonus: -100, cost: 900 },
+        { id: 3, name: 'Rapid Fire', fireRateBonus: -150, cost: 2200 }
+    ]
+};
+
+// Shop powerups (consumables used during game)
+const SHOP_POWERUPS = {
+    healthPack: {
+        id: 'healthPack',
+        name: 'Health Pack',
+        cost: 50,
+        icon: '❤️',
+        description: 'Restore 50% HP during game',
+        maxStack: 5,
+        effect: 'heal'
+    },
+    shield: {
+        id: 'shield',
+        name: 'Shield',
+        cost: 100,
+        icon: '🛡️',
+        description: 'Temporary invincibility (5 seconds)',
+        maxStack: 3,
+        effect: 'invincible'
+    },
+    doubleDamage: {
+        id: 'doubleDamage',
+        name: 'Double Damage',
+        cost: 150,
+        icon: '💥',
+        description: '2x damage for 30 seconds',
+        maxStack: 3,
+        effect: 'damage'
+    },
+    speedBoost: {
+        id: 'speedBoost',
+        name: 'Speed Boost',
+        cost: 75,
+        icon: '⚡',
+        description: 'Faster movement for 20 seconds',
+        maxStack: 4,
+        effect: 'speed'
+    },
+    nuke: {
+        id: 'nuke',
+        name: 'Nuke',
+        cost: 200,
+        icon: '☢️',
+        description: 'Clear all enemies on screen',
+        maxStack: 2,
+        effect: 'nuke'
+    },
+    extraLife: {
+        id: 'extraLife',
+        name: 'Extra Life',
+        cost: 300,
+        icon: '💚',
+        description: 'Continue on death with full HP',
+        maxStack: 1,
+        effect: 'revive'
+    }
+};
+
+// Tank customization options
+const TANK_CUSTOMIZATION = {
+    colors: {
+        default: { id: 'default', name: 'Default Green', cost: 0, color: '#1ed6a0' },
+        camo: { id: 'camo', name: 'Camo Pattern', cost: 100, color: '#556b2f' },
+        neon: { id: 'neon', name: 'Neon Blue', cost: 150, color: '#00f2ff' },
+        gold: { id: 'gold', name: 'Golden', cost: 500, color: '#ffd700' },
+        crimson: { id: 'crimson', name: 'Crimson Red', cost: 200, color: '#dc143c' },
+        midnight: { id: 'midnight', name: 'Midnight Black', cost: 250, color: '#1a1a2e' }
+    },
+    decals: {
+        none: { id: 'none', name: 'No Decal', cost: 0, icon: '' },
+        skull: { id: 'skull', name: 'Skull', cost: 80, icon: '💀' },
+        flame: { id: 'flame', name: 'Flame', cost: 100, icon: '🔥' },
+        lightning: { id: 'lightning', name: 'Lightning', cost: 120, icon: '⚡' },
+        star: { id: 'star', name: 'Star', cost: 90, icon: '⭐' },
+        dragon: { id: 'dragon', name: 'Dragon', cost: 200, icon: '🐉' }
+    },
+    trails: {
+        none: { id: 'none', name: 'No Trail', cost: 0 },
+        smoke: { id: 'smoke', name: 'Smoke Trail', cost: 75, color: '#888888' },
+        fire: { id: 'fire', name: 'Fire Trail', cost: 150, color: '#ff4500' },
+        sparkle: { id: 'sparkle', name: 'Sparkle Trail', cost: 200, color: '#ffee00' },
+        toxic: { id: 'toxic', name: 'Toxic Trail', cost: 180, color: '#00ff00' },
+        shadow: { id: 'shadow', name: 'Shadow Trail', cost: 250, color: '#000000' }
+    }
+};
+
+// Economy functions
+function loadTankEconomy() {
+    const saved = localStorage.getItem('tankEconomy');
+    if (saved) {
+        tankEconomy = { ...tankEconomy, ...JSON.parse(saved) };
+    }
+    updateTankStatsFromEconomy();
+}
+
+function saveTankEconomy() {
+    localStorage.setItem('tankEconomy', JSON.stringify(tankEconomy));
+}
+
+function awardCoins(amount, source = 'gameplay') {
+    tankEconomy.coins += amount;
+    tankEconomy.stats.coinsEarned += amount;
+    saveTankEconomy();
+
+    console.log(`[Tank Economy] Awarded ${amount} coins from ${source}. Total: ${tankEconomy.coins}`);
+    showCoinAward(amount);
+}
+
+function spendCoins(amount, item) {
+    if (tankEconomy.coins < amount) {
+        showNotification(`Not enough coins! Need ${amount - tankEconomy.coins} more`, 'warning');
+        return false;
+    }
+
+    tankEconomy.coins -= amount;
+    saveTankEconomy();
+    console.log(`[Tank Economy] Spent ${amount} coins on ${item}. Remaining: ${tankEconomy.coins}`);
+    return true;
+}
+
+function updateTankStatsFromEconomy() {
+    if (!tankGame.player) return;
+
+    const tank = TANK_TYPES[tankEconomy.currentTank];
+    if (!tank) return;
+
+    const armorTier = UPGRADE_TIERS.armor[tankEconomy.upgrades.armor];
+    const barrelTier = UPGRADE_TIERS.barrel[tankEconomy.upgrades.barrel];
+    const tracksTier = UPGRADE_TIERS.tracks[tankEconomy.upgrades.tracks];
+    const fireRateTier = UPGRADE_TIERS.fireRate[tankEconomy.upgrades.fireRate];
+
+    tankGame.player.maxHP = tank.baseHP + armorTier.hpBonus;
+    tankGame.player.hp = Math.min(tankGame.player.hp, tankGame.player.maxHP);
+    tankGame.player.damage = tank.baseDamage + barrelTier.damageBonus;
+    tankGame.player.speed = tank.baseSpeed + tracksTier.speedBonus;
+    tankGame.player.fireRate = Math.max(100, tank.baseFireRate + fireRateTier.fireRateBonus);
+
+    console.log('[Tank Economy] Stats updated:', {
+        hp: tankGame.player.maxHP,
+        damage: tankGame.player.damage,
+        speed: tankGame.player.speed,
+        fireRate: tankGame.player.fireRate
+    });
+}
+
+function purchaseTank(tankId) {
+    const tank = TANK_TYPES[tankId];
+    if (!tank) return false;
+
+    if (tankEconomy.ownedTanks.includes(tankId)) {
+        showNotification('You already own this tank!', 'warning');
+        return false;
+    }
+
+    if (!spendCoins(tank.cost, tank.name)) return false;
+
+    tankEconomy.ownedTanks.push(tankId);
+    tankEconomy.currentTank = tankId;
+    saveTankEconomy();
+    updateTankStatsFromEconomy();
+
+    showNotification(`Purchased ${tank.name}!`, 'success');
+    return true;
+}
+
+function purchaseUpgrade(upgradeType) {
+    const currentLevel = tankEconomy.upgrades[upgradeType];
+    if (currentLevel >= 3) {
+        showNotification('Max upgrade level reached!', 'warning');
+        return false;
+    }
+
+    const nextTier = UPGRADE_TIERS[upgradeType][currentLevel + 1];
+    if (!spendCoins(nextTier.cost, nextTier.name)) return false;
+
+    tankEconomy.upgrades[upgradeType]++;
+    saveTankEconomy();
+    updateTankStatsFromEconomy();
+
+    showNotification(`Upgraded to ${nextTier.name}!`, 'success');
+    return true;
+}
+
+function purchasePowerup(powerupId) {
+    const powerup = SHOP_POWERUPS[powerupId];
+    if (!powerup) return false;
+
+    if (tankEconomy.shopPowerups[powerupId] >= powerup.maxStack) {
+        showNotification(`Max ${powerup.name} stack reached (${powerup.maxStack})!`, 'warning');
+        return false;
+    }
+
+    if (!spendCoins(powerup.cost, powerup.name)) return false;
+
+    tankEconomy.shopPowerups[powerupId]++;
+    saveTankEconomy();
+
+    showNotification(`Purchased ${powerup.name}!`, 'success');
+    return true;
+}
+
+function purchaseCustomization(category, itemId) {
+    const item = TANK_CUSTOMIZATION[category][itemId];
+    if (!item) return false;
+
+    if (tankEconomy.customization[category] === itemId) {
+        showNotification('Already equipped!', 'warning');
+        return false;
+    }
+
+    if (!spendCoins(item.cost, item.name)) return false;
+
+    tankEconomy.customization[category] = itemId;
+    saveTankEconomy();
+
+    showNotification(`Equipped ${item.name}!`, 'success');
+    return true;
+}
+
+function usePowerup(powerupId) {
+    if (tankEconomy.shopPowerups[powerupId] <= 0) {
+        showNotification('No powerups remaining!', 'warning');
+        return false;
+    }
+
+    const powerup = SHOP_POWERUPS[powerupId];
+    tankEconomy.shopPowerups[powerupId]--;
+    saveTankEconomy();
+
+    switch (powerup.effect) {
+        case 'heal':
+            if (tankGame.player) {
+                tankGame.player.hp = Math.min(tankGame.player.maxHP, tankGame.player.hp + tankGame.player.maxHP * 0.5);
+                showNotification('HP restored!', 'success');
+            }
+            break;
+        case 'invincible':
+            tankGame.powerUps.shield.shieldHP = 9999;
+            setTimeout(() => { if (tankGame.powerUps.shield) tankGame.powerUps.shield.shieldHP = 0; }, 5000);
+            showNotification('Invincible for 5 seconds!', 'success');
+            break;
+        case 'damage':
+            tankGame.powerUps.xRay.active = true;
+            setTimeout(() => { if (tankGame.powerUps.xRay) tankGame.powerUps.xRay.active = false; }, 30000);
+            showNotification('Double damage for 30 seconds!', 'success');
+            break;
+        case 'speed':
+            if (tankGame.player) {
+                const originalSpeed = tankGame.player.speed;
+                tankGame.player.speed *= 1.5;
+                setTimeout(() => { if (tankGame.player) tankGame.player.speed = originalSpeed; }, 20000);
+                showNotification('Speed boost for 20 seconds!', 'success');
+            }
+            break;
+        case 'nuke':
+            tankGame.enemies.forEach(enemy => enemy.active = false);
+            if (tankGame.canvas) createExplosion(tankGame.canvas.width / 2, tankGame.canvas.height / 2, '#ffee00', 'massive');
+            tankGame.screenShake = 40;
+            showNotification('All enemies destroyed!', 'success');
+            break;
+        case 'revive':
+            showNotification('Extra life available!', 'success');
+            break;
+    }
+
+    return true;
+}
+
+function claimDailyBonus() {
+    const now = new Date();
+    const lastClaim = tankEconomy.dailyBonus.lastClaim ? new Date(tankEconomy.dailyBonus.lastClaim) : null;
+
+    if (lastClaim) {
+        const timeDiff = now - lastClaim;
+        const hoursDiff = timeDiff / (1000 * 60 * 60);
+
+        if (hoursDiff < 20) {
+            const hoursLeft = Math.ceil(20 - hoursDiff);
+            showNotification(`Daily bonus available in ${hoursLeft} hours`, 'warning');
+            return;
+        }
+
+        if (hoursDiff < 48) {
+            tankEconomy.dailyBonus.streak++;
+        } else {
+            tankEconomy.dailyBonus.streak = 1;
+        }
+    } else {
+        tankEconomy.dailyBonus.streak = 1;
+    }
+
+    tankEconomy.dailyBonus.lastClaim = now.toISOString();
+
+    const bonusAmount = 50 + (tankEconomy.dailyBonus.streak - 1) * 50;
+    const maxBonus = Math.min(bonusAmount, 500);
+
+    awardCoins(maxBonus, 'daily bonus');
+    saveTankEconomy();
+
+    showNotification(`Day ${tankEconomy.dailyBonus.streak} bonus: ${maxBonus} coins!`, 'success');
+}
+
+function showCoinAward(amount) {
+    if (!tankGame.canvas || !tankGame.particles) return;
+
+    const x = tankGame.canvas.width / 2;
+    const y = 100;
+
+    for (let i = 0; i < 10; i++) {
+        tankGame.particles.push(new Particle(x, y, '#ffd700', 'spark'));
+    }
+}
+
+function awardKillCoins(enemyType) {
+    const enemy = TANK_CONFIG.ENEMIES[enemyType];
+    if (enemy && enemy.coins) {
+        awardCoins(enemy.coins, `killed ${enemyType}`);
+    }
+}
+
+function awardWaveCoins(waveNumber) {
+    const baseCoins = 10;
+    const waveBonus = waveNumber * 5;
+    const total = baseCoins + waveBonus;
+    awardCoins(total, `completed wave ${waveNumber}`);
+}
+
+function awardHighScoreBonus(score) {
+    if (score > tankEconomy.stats.highestWave * 1000) {
+        const bonus = Math.floor(score / 100);
+        awardCoins(bonus, 'high score bonus');
+    }
+}
+
+// Initialize economy on load
+if (typeof window !== 'undefined') {
+    window.loadTankEconomy = loadTankEconomy;
+    window.saveTankEconomy = saveTankEconomy;
+    window.awardCoins = awardCoins;
+    window.purchaseTank = purchaseTank;
+    window.purchaseUpgrade = purchaseUpgrade;
+    window.purchasePowerup = purchasePowerup;
+    window.purchaseCustomization = purchaseCustomization;
+    window.usePowerup = usePowerup;
+    window.claimDailyBonus = claimDailyBonus;
+    window.tankEconomy = tankEconomy;
+    window.TANK_TYPES = TANK_TYPES;
+    window.UPGRADE_TIERS = UPGRADE_TIERS;
+    window.SHOP_POWERUPS = SHOP_POWERUPS;
+    window.TANK_CUSTOMIZATION = TANK_CUSTOMIZATION;
+}
 
 // ==================== ENHANCED ENTITY CLASSES ====================
 
@@ -899,6 +1436,9 @@ function createDamageNumber(x, y, damage) {
 function startTankShooter() {
     console.log('[TankShooter] Starting ENHANCED game...');
 
+    // Load economy system
+    loadTankEconomy();
+
     const gameContainer = document.getElementById('truthCannonGame');
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -932,14 +1472,21 @@ function startTankShooter() {
         tankGame.powerUps[key] = { ready: true, cooldown: 0, active: false, duration: 0, shieldHP: 0 };
     }
 
-    gameContainer.style.display = 'flex';
-    document.getElementById('gameOverScreen').style.display = 'none';
+    // Apply economy upgrades to player stats
+    updateTankStatsFromEconomy();
+
+    if (gameContainer) gameContainer.style.display = 'flex';
+
+    const gameOverScreen = document.getElementById('gameOverScreen');
+    if (gameOverScreen) gameOverScreen.style.display = 'none';
+
     updateGameUI();
 
     setupControls(canvas);
 
     if (window.innerWidth < 768) {
-        document.getElementById('mobileControls').style.display = 'block';
+        const mobileControls = document.getElementById('mobileControls');
+        if (mobileControls) mobileControls.style.display = 'block';
         setupVirtualJoystick();
     }
 
@@ -1205,12 +1752,17 @@ function distance(a, b) {
 
 function killEnemy(enemy) {
     tankGame.enemiesKilled++;
+    tankEconomy.stats.totalKills++; // Track total kills
+
     const points = Math.floor(enemy.score * tankGame.combo);
     tankGame.score += points;
 
     // Update combo
     tankGame.combo = Math.min(tankGame.combo + TANK_CONFIG.COMBO_INCREMENT, TANK_CONFIG.MAX_COMBO);
     tankGame.comboTimer = TANK_CONFIG.COMBO_WINDOW;
+
+    // Award coins for kill
+    awardKillCoins(enemy.type);
 
     createExplosion(enemy.x, enemy.y, enemy.color, enemy.isBoss ? 'massive' : 'normal');
 
@@ -1251,13 +1803,19 @@ function createExplosion(x, y, color, size = 'normal') {
 }
 
 function updateGameUI() {
-    document.getElementById('gameWave').textContent = tankGame.wave;
-    document.getElementById('gameScore').textContent = tankGame.score.toLocaleString();
-    document.getElementById('gameCombo').textContent = `x${tankGame.combo.toFixed(1)}`;
+    const gameWave = document.getElementById('gameWave');
+    const gameScore = document.getElementById('gameScore');
+    const gameCombo = document.getElementById('gameCombo');
+    const credibilityPercent = document.getElementById('credibilityPercent');
+    const credibilityFill = document.getElementById('credibilityFill');
+
+    if (gameWave) gameWave.textContent = tankGame.wave;
+    if (gameScore) gameScore.textContent = tankGame.score.toLocaleString();
+    if (gameCombo) gameCombo.textContent = `x${tankGame.combo.toFixed(1)}`;
 
     const hpPercent = tankGame.player ? (tankGame.player.hp / tankGame.player.maxHP * 100) : 100;
-    document.getElementById('credibilityPercent').textContent = `${Math.round(hpPercent)}%`;
-    document.getElementById('credibilityFill').style.width = `${hpPercent}%`;
+    if (credibilityPercent) credibilityPercent.textContent = `${Math.round(hpPercent)}%`;
+    if (credibilityFill) credibilityFill.style.width = `${hpPercent}%`;
 }
 
 // ==================== WAVE SYSTEM ====================
@@ -1368,6 +1926,15 @@ function waveComplete() {
     tankGame.waveActive = false;
     const bonus = TANK_CONFIG.WAVE_COMPLETE_POINTS * tankGame.wave;
     tankGame.score += bonus;
+
+    // Award wave completion coins
+    awardWaveCoins(tankGame.wave);
+
+    // Update highest wave stat
+    if (tankGame.wave > tankEconomy.stats.highestWave) {
+        tankEconomy.stats.highestWave = tankGame.wave;
+        saveTankEconomy();
+    }
 
     showNotification(`WAVE ${tankGame.wave} COMPLETE! +${bonus}`);
 
@@ -1778,15 +2345,29 @@ function gameOver() {
     const grade = calculateGrade(tankGame.score);
     const totalCoins = calculateCoins(grade);
 
+    // Award high score bonus
+    awardHighScoreBonus(tankGame.score);
+
+    // Update game stats
+    tankEconomy.stats.gamesPlayed++;
+    saveTankEconomy();
+
     // Always try to award coins - the function handles null checks and shows feedback
     awardTankShooterCoins(totalCoins);
 
-    document.getElementById('finalWave').textContent = tankGame.wave;
-    document.getElementById('finalScore').textContent = tankGame.score.toLocaleString();
-    document.getElementById('finalFakes').textContent = tankGame.enemiesKilled;
-    document.getElementById('coinsEarned').textContent = `+${totalCoins}`;
-    document.getElementById('gameOverGrade').textContent = grade;
-    document.getElementById('gameOverScreen').style.display = 'flex';
+    const finalWave = document.getElementById('finalWave');
+    const finalScore = document.getElementById('finalScore');
+    const finalFakes = document.getElementById('finalFakes');
+    const coinsEarned = document.getElementById('coinsEarned');
+    const gameOverGrade = document.getElementById('gameOverGrade');
+    const gameOverScreen = document.getElementById('gameOverScreen');
+
+    if (finalWave) finalWave.textContent = tankGame.wave;
+    if (finalScore) finalScore.textContent = tankGame.score.toLocaleString();
+    if (finalFakes) finalFakes.textContent = tankGame.enemiesKilled;
+    if (coinsEarned) coinsEarned.textContent = `+${totalCoins}`;
+    if (gameOverGrade) gameOverGrade.textContent = grade;
+    if (gameOverScreen) gameOverScreen.style.display = 'flex';
 
     console.log(`[TankShooter] Game Over - Wave: ${tankGame.wave}, Score: ${tankGame.score}, Grade: ${grade}, Coins: ${totalCoins}`);
 }
@@ -1891,8 +2472,10 @@ window.retryTankShooter = function() {
 
 window.closeTankShooter = function() {
     tankGame.running = false;
-    document.getElementById('truthCannonGame').style.display = 'none';
-    document.getElementById('mobileControls').style.display = 'none';
+    const truthCannonGame = document.getElementById('truthCannonGame');
+    const mobileControls = document.getElementById('mobileControls');
+    if (truthCannonGame) truthCannonGame.style.display = 'none';
+    if (mobileControls) mobileControls.style.display = 'none';
 };
 
 // Export

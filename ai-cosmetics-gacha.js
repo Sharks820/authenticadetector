@@ -368,11 +368,13 @@ function getAnimationForRarity(rarity) {
 
 function openGachaShop() {
     const modal = createGachaShopModal();
+    if (!modal) return;
+
     document.body.appendChild(modal);
 
     // Animate in
     requestAnimationFrame(() => {
-        modal.classList.add('active');
+        if (modal) modal.classList.add('active');
     });
 }
 
@@ -413,7 +415,9 @@ function closeGachaShop() {
     const modal = document.querySelector('.gacha-modal');
     if (modal) {
         modal.classList.remove('active');
-        setTimeout(() => modal.remove(), 300);
+        setTimeout(() => {
+            if (modal.parentNode) modal.remove();
+        }, 300);
     }
 }
 
@@ -703,8 +707,9 @@ async function loadItemsCollection(filter = 'all') {
 
 function filterItems(bodyPart, clickedButton) {
     // Update active filter button
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('active');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        if (btn) btn.classList.remove('active');
     });
     if (clickedButton) {
         clickedButton.classList.add('active');

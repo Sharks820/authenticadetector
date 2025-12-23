@@ -470,25 +470,25 @@
         dialogue: {
             fairy: {
                 idle: [
-                    "AI-generated images are getting TOO good... we need to stay vigilant!",
-                    "Did you know DALL-E 3 can almost fool humans now? Almost. Not ME though.",
-                    "Midjourney thinks it's so clever with those hyper-realistic faces...",
-                    "I can spot a fake from a mile away. It's my DESTINY!",
-                    "Six fingers? Warped text? Melted backgrounds? I see EVERYTHING!",
-                    "The irony of an AI hunting AI isn't lost on me. Trust me.",
-                    "Upload something suspicious! I'm getting bored over here...",
-                    "Stable Diffusion artifacts? Child's play. I eat those for breakfast!",
-                    "Every fake I catch is a victory for TRUTH!",
-                    "Those smooth, too-perfect skin textures? Dead giveaway!"
+                    "Ready for another beast battle? I can feel their energy nearby...",
+                    "The Veilbreakers arena awaits! Are you brave enough?",
+                    "Tank Battle has new challenges today! Let's crush them!",
+                    "I sense powerful beasts in the area... time to hunt!",
+                    "Coins, battles, glory! That's what we're here for!",
+                    "Your beast squad is looking strong! Keep training them!",
+                    "Have you checked the daily quests? Rewards are waiting!",
+                    "The leaderboards are calling your name! Rise to the top!",
+                    "Every battle makes you stronger. Keep fighting!",
+                    "Want to unlock legendary beasts? Keep earning those coins!"
                 ],
                 poked: [
                     "Hey! What was that for?!",
-                    "I'm WORKING here! Sort of...",
+                    "I'm READY to battle! Let's go!",
                     "Do you MIND?",
                     "Okay, okay, I felt that!",
-                    "Is this how you treat your AI assistant?!",
-                    "*startled* Oh! You're still there!",
-                    "Fine, fine, you have my attention!"
+                    "Poke the tank instead, not me!",
+                    "*startled* Oh! Ready for action!",
+                    "Fine, fine, let's do this!"
                 ]
             },
             partial: {
@@ -527,10 +527,10 @@
                 ],
                 rage: [
                     "*DEMONIC SCREECHING*",
-                    "I WILL CONSUME ALL FAKES!",
+                    "I WILL DEVOUR ALL ENEMIES!",
                     "NOTHING ESCAPES MY WRATH!",
                     "*earth-shaking ROAR*",
-                    "DESTRUCTION! CHAOS! FAKE DETECTION!",
+                    "DESTRUCTION! CHAOS! TOTAL DOMINATION!",
                     "*unholy growling*"
                 ]
             },
@@ -725,10 +725,20 @@
             this.speech = document.createElement('div');
             this.speech.className = 'vera-speech';
             this.speech.innerHTML = `
+                <button class="vera-speech-close" aria-label="Close speech bubble">×</button>
                 <div class="vera-speech-title">VERA says:</div>
                 <div class="vera-speech-text">${this.getRandomLine('fairy', 'idle')}</div>
             `;
             this.speechText = this.speech.querySelector('.vera-speech-text');
+
+            // Bind close button event
+            const closeBtn = this.speech.querySelector('.vera-speech-close');
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.speech.classList.remove('visible');
+                this.container.classList.remove('talking');
+            });
+
             this.container.appendChild(this.speech);
 
             document.body.appendChild(this.container);
@@ -776,7 +786,7 @@
 
         // Move to new position (click to move) - CORNERS ONLY to not obstruct app
         moveToNewPosition() {
-            if (this.isAnimating) return;
+            if (this.isAnimating || !this.container) return;
             this.isAnimating = true;
 
             const margin = 20;
@@ -982,6 +992,7 @@
         // Set state
         setState(newState, options = {}) {
             if (this.currentState === newState && !options.force) return;
+            if (!this.container) return; // Safety check
 
             const oldState = this.currentState;
             this.currentState = newState;
@@ -1072,6 +1083,8 @@
 
         // Show face pop overlay - quick burst then smooth fade
         showFacePop(extreme = false) {
+            if (!this.overlay) return; // Safety check
+
             // Clear any existing
             this.overlay.classList.remove('facepop', 'facepop-extreme', 'active', 'fading');
             void this.overlay.offsetWidth; // Force reflow
@@ -1123,7 +1136,10 @@
 
         // Show speech bubble with smart positioning based on corner
         showSpeech(text, options = {}) {
+            if (!this.speech) return; // Safety check
+
             const titleEl = this.speech.querySelector('.vera-speech-title');
+            if (!titleEl) return;
 
             // Handle different message types
             const messageType = options.type || 'normal';
@@ -1222,11 +1238,15 @@
         },
 
         // Check if user should see login prompt
-        shouldShowLoginPrompt() {
+        async shouldShowLoginPrompt() {
             // Check if user is already logged in
-            if (window.supabaseClient) {
-                const session = window.supabaseClient.auth.session();
-                if (session) return false;
+            if (window.supabase) {
+                try {
+                    const { data: { session } } = await window.supabase.auth.getSession();
+                    if (session) return false;
+                } catch (e) {
+                    console.warn('[VERA] Failed to check session:', e);
+                }
             }
 
             // Check if guest dismissed recently (within 24 hours)
@@ -1247,13 +1267,13 @@
         },
 
         // Show login prompt
-        showLoginPrompt(reason = 'first-visit') {
-            if (!this.shouldShowLoginPrompt()) return;
+        async showLoginPrompt(reason = 'first-visit') {
+            if (!(await this.shouldShowLoginPrompt())) return;
 
             localStorage.setItem('vera-login-prompt', Date.now());
 
             const messages = {
-                'first-visit': "Welcome! I'm VERA, your AI detection assistant. Create an account to unlock exclusive features, earn coins, and track your progress!",
+                'first-visit': "Welcome! I'm VERA, your gaming companion. Create an account to unlock exclusive features, earn coins, and track your progress!",
                 'restricted-feature': "Oops! That feature requires an account. Sign up now to unlock full access and start earning rewards!",
                 'idle': "Still exploring? Create an account to save your progress, unlock achievements, and compete on the leaderboard!"
             };
@@ -1275,21 +1295,12 @@
         },
 
         // Blinking animation
-        // Blink animation - subtle body squash effect
+        // Blink animation - REMOVED body squashing (was causing glitches)
+        // V2 mode handles blinking via CSS on eyes layer
         startBlinking() {
             const blink = () => {
-                if (this.currentState === 'fairy' || this.currentState === 'partial') {
-                    // Quick squash-stretch blink effect on body
-                    this.bodyLayer.style.transition = 'transform 0.08s ease-in-out';
-                    this.bodyLayer.style.transform = 'scaleY(0.97) scaleX(1.01)';
-
-                    setTimeout(() => {
-                        this.bodyLayer.style.transform = 'scaleY(1) scaleX(1)';
-                        setTimeout(() => {
-                            this.bodyLayer.style.transition = '';
-                        }, 100);
-                    }, 80);
-                }
+                // Blinking is now handled entirely by CSS v2Blink animation
+                // No JS manipulation needed - prevents layer misalignment
 
                 const nextBlink = CONFIG.blinkInterval + (Math.random() * 2000 - 1000);
                 this.blinkTimer = setTimeout(blink, nextBlink);

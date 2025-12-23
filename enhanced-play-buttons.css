@@ -1,0 +1,512 @@
+/* ═══════════════════════════════════════════════════════════════
+   ENHANCED PLAY BUTTONS - MUCH BIGGER, MORE ANIMATED, ATTRACTIVE
+   AuthenticaDetector - Game Button Enhancement System
+   Created: 2025-12-23
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Universal Play Button - Bigger, Eye-catching, Mobile-friendly */
+.game-play-btn {
+    width: 100%;
+    min-height: 70px; /* BIGGER - exceeds 60px requirement */
+    padding: 18px 24px;
+    margin-top: 0;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    /* Touch-friendly target size (exceeds 44px) */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Red/Danger theme for Tank Shooter, Outbreak */
+.game-play-btn.danger {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #dc2626 100%);
+    background-size: 200% 100%;
+    box-shadow:
+        0 8px 32px rgba(220,38,38,0.5),
+        0 0 0 0 rgba(220,38,38,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+    animation: dangerPulse 3s ease-in-out infinite;
+}
+
+/* Purple theme for Veilbreakers, Beast Training */
+.game-play-btn.purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #8b5cf6 100%);
+    background-size: 200% 100%;
+    box-shadow:
+        0 8px 32px rgba(139,92,246,0.5),
+        0 0 0 0 rgba(139,92,246,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+    animation: purplePulse 3s ease-in-out infinite;
+}
+
+/* Green theme for future games */
+.game-play-btn.green {
+    background: linear-gradient(135deg, #10b981 0%, #059669 50%, #10b981 100%);
+    background-size: 200% 100%;
+    box-shadow:
+        0 8px 32px rgba(16,185,129,0.5),
+        0 0 0 0 rgba(16,185,129,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+    animation: greenPulse 3s ease-in-out infinite;
+}
+
+/* Pulsing glow animations */
+@keyframes dangerPulse {
+    0%, 100% {
+        background-position: 0% 0;
+        box-shadow:
+            0 8px 32px rgba(220,38,38,0.4),
+            0 0 0 0 rgba(220,38,38,0.4),
+            inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+    50% {
+        background-position: 100% 0;
+        box-shadow:
+            0 12px 48px rgba(255,99,72,0.6),
+            0 0 20px 5px rgba(220,38,38,0.5),
+            inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+}
+
+@keyframes purplePulse {
+    0%, 100% {
+        background-position: 0% 0;
+        box-shadow:
+            0 8px 32px rgba(139,92,246,0.4),
+            0 0 0 0 rgba(139,92,246,0.4),
+            inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+    50% {
+        background-position: 100% 0;
+        box-shadow:
+            0 12px 48px rgba(139,92,246,0.6),
+            0 0 20px 5px rgba(139,92,246,0.5),
+            inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+}
+
+@keyframes greenPulse {
+    0%, 100% {
+        background-position: 0% 0;
+        box-shadow:
+            0 8px 32px rgba(16,185,129,0.4),
+            0 0 0 0 rgba(16,185,129,0.4),
+            inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+    50% {
+        background-position: 100% 0;
+        box-shadow:
+            0 12px 48px rgba(16,185,129,0.6),
+            0 0 20px 5px rgba(16,185,129,0.5),
+            inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+}
+
+/* Hover effects - Scale up + intensify glow */
+.game-play-btn:hover {
+    transform: translateY(-4px) scale(1.05);
+    animation: none;
+    background-position: 100% 0;
+}
+
+.game-play-btn.danger:hover {
+    box-shadow:
+        0 16px 64px rgba(220,38,38,0.7),
+        0 0 30px 8px rgba(220,38,38,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.25);
+}
+
+.game-play-btn.purple:hover {
+    box-shadow:
+        0 16px 64px rgba(139,92,246,0.7),
+        0 0 30px 8px rgba(139,92,246,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.25);
+}
+
+.game-play-btn.green:hover {
+    box-shadow:
+        0 16px 64px rgba(16,185,129,0.7),
+        0 0 30px 8px rgba(16,185,129,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.25);
+}
+
+/* Active/Click feedback - Satisfying scale down */
+.game-play-btn:active {
+    transform: translateY(-2px) scale(0.97);
+    transition: all 0.1s ease;
+}
+
+/* Gradient shine sweep on button */
+.game-play-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255,255,255,0.3),
+        transparent
+    );
+    transition: left 0.6s ease;
+    z-index: 1;
+}
+
+.game-play-btn:hover::before {
+    left: 100%;
+}
+
+/* Ensure button content is above shine effect */
+.game-play-btn > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Icon styling within button */
+.game-play-btn img {
+    width: 24px;
+    height: 24px;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.game-play-btn:hover img {
+    animation: iconSpin 0.6s ease;
+}
+
+@keyframes iconSpin {
+    from { transform: rotate(0deg) scale(1); }
+    to { transform: rotate(360deg) scale(1.2); }
+}
+
+/* COMING SOON / LOCKED button variant */
+.game-play-btn.locked {
+    background: linear-gradient(135deg, rgba(100,116,139,0.3), rgba(71,85,105,0.2));
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    cursor: not-allowed;
+    animation: none;
+}
+
+.game-play-btn.locked:hover {
+    transform: none;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.game-play-btn.locked::before {
+    display: none;
+}
+
+/* Mobile optimizations */
+@media (max-width: 480px) {
+    .game-play-btn {
+        min-height: 64px;
+        font-size: 16px;
+        padding: 16px 20px;
+    }
+
+    .game-play-btn img {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Accessibility - Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .game-play-btn,
+    .game-play-btn::before,
+    .game-play-btn img {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    .game-play-btn:hover {
+        transform: none;
+    }
+
+    .game-play-btn:active {
+        transform: none;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   VERA INTERACTION SYSTEM - Premium Modal UI
+   ═══════════════════════════════════════════════════════════════ */
+
+/* VERA Interaction Modal Backdrop */
+.vera-interaction-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.vera-interaction-backdrop.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* VERA Interaction Modal */
+.vera-interaction-modal {
+    background: linear-gradient(145deg, rgba(26,31,46,0.98) 0%, rgba(18,22,31,1) 100%);
+    border-radius: 24px;
+    border: 2px solid rgba(147,197,253,0.3);
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow:
+        0 0 80px rgba(147,197,253,0.4),
+        0 20px 60px rgba(0,0,0,0.5);
+    animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* VERA Modal Header */
+.vera-modal-header {
+    position: relative;
+    padding: 32px 24px 24px;
+    text-align: center;
+    border-bottom: 1px solid rgba(147,197,253,0.2);
+}
+
+.vera-modal-avatar {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(147,197,253,0.3), rgba(196,181,253,0.2));
+    border: 3px solid rgba(147,197,253,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 32px rgba(147,197,253,0.4);
+    animation: veraAvatarFloat 3s ease-in-out infinite;
+}
+
+@keyframes veraAvatarFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.vera-modal-avatar img {
+    width: 80px;
+    height: 80px;
+    filter: drop-shadow(0 4px 16px rgba(147,197,253,0.8));
+}
+
+.vera-modal-title {
+    font-size: 28px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #93c5fd, #c4b5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+}
+
+.vera-modal-subtitle {
+    font-size: 14px;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+/* VERA Modal Close Button */
+.vera-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(147,197,253,0.3);
+    background: rgba(147,197,253,0.1);
+    color: #93c5fd;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.vera-modal-close:hover {
+    background: rgba(147,197,253,0.2);
+    transform: rotate(90deg);
+}
+
+/* VERA Modal Content */
+.vera-modal-content {
+    padding: 24px;
+}
+
+.vera-message {
+    background: rgba(147,197,253,0.05);
+    border-left: 4px solid rgba(147,197,253,0.5);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.vera-message-text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #cbd5e1;
+    margin: 0;
+}
+
+.vera-message-text strong {
+    color: #93c5fd;
+}
+
+/* VERA Action Buttons */
+.vera-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.vera-action-btn {
+    width: 100%;
+    padding: 16px 24px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.vera-action-btn.primary {
+    background: linear-gradient(135deg, #93c5fd, #7c3aed);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(147,197,253,0.4);
+}
+
+.vera-action-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px rgba(147,197,253,0.5);
+}
+
+.vera-action-btn.secondary {
+    background: rgba(147,197,253,0.1);
+    border: 1px solid rgba(147,197,253,0.3);
+    color: #93c5fd;
+}
+
+.vera-action-btn.secondary:hover {
+    background: rgba(147,197,253,0.2);
+    transform: translateY(-2px);
+}
+
+/* VERA Tips Section */
+.vera-tips {
+    background: rgba(139,92,246,0.05);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 20px;
+}
+
+.vera-tips-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #c4b5fd;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vera-tips-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.vera-tips-list li {
+    font-size: 13px;
+    color: #94a3b8;
+    padding: 8px 0;
+    padding-left: 24px;
+    position: relative;
+}
+
+.vera-tips-list li::before {
+    content: '✨';
+    position: absolute;
+    left: 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    .vera-interaction-modal {
+        width: 95%;
+        max-height: 90vh;
+    }
+
+    .vera-modal-header {
+        padding: 24px 16px 20px;
+    }
+
+    .vera-modal-avatar {
+        width: 100px;
+        height: 100px;
+    }
+
+    .vera-modal-avatar img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .vera-modal-title {
+        font-size: 24px;
+    }
+
+    .vera-modal-content {
+        padding: 16px;
+    }
+}
