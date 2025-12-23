@@ -2947,6 +2947,41 @@
         /* ====================================
            QUEST SYSTEM STYLES
            ==================================== */
+        /* ═══════════════════════════════════════════════════════════════════ */
+        /* QUESTS VIEW - POLISHED                                               */
+        /* ═══════════════════════════════════════════════════════════════════ */
+
+        /* Quest Summary Card - Top of page */
+        .quest-summary-card {
+            background: linear-gradient(135deg, rgba(94,234,212,0.15) 0%, rgba(34,211,238,0.1) 100%);
+            border: 1px solid rgba(94,234,212,0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+        .quest-summary-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .quest-summary-value {
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .quest-summary-label {
+            font-size: 11px;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         .quest-section {
             margin-bottom: 24px;
         }
@@ -2955,116 +2990,250 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
         }
         .quest-section-header h3 {
             font-size: 16px;
             font-weight: 800;
-            color: var(--text1);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .quest-timer {
             font-size: 12px;
             color: var(--text3);
             font-weight: 600;
+            padding: 4px 10px;
+            background: rgba(99,102,241,0.15);
+            border-radius: 20px;
+            transition: all 0.3s;
         }
+        .quest-timer.urgent {
+            background: rgba(239,68,68,0.2);
+            color: #ef4444;
+            animation: pulse-urgent 1s ease-in-out infinite;
+        }
+        @keyframes pulse-urgent {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
         .quest-list {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
         .quest-card {
-            background: var(--surface);
+            background: linear-gradient(135deg, rgba(15,23,42,0.9) 0%, rgba(30,41,59,0.8) 100%);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px;
+            border-radius: 14px;
+            padding: 16px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            transition: all 0.2s;
+            gap: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .quest-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(94,234,212,0.1), transparent);
+            transition: left 0.5s;
         }
         .quest-card:hover {
             border-color: var(--primary);
-            box-shadow: 0 2px 8px rgba(94,234,212,0.1);
+            box-shadow: 0 4px 20px rgba(94,234,212,0.15);
+            transform: translateY(-2px);
+        }
+        .quest-card:hover::before {
+            left: 100%;
+        }
+        .quest-card.claimable {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(94,234,212,0.2);
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(94,234,212,0.15); }
+            50% { box-shadow: 0 0 25px rgba(94,234,212,0.3); }
         }
         .quest-card.completed {
-            opacity: 0.6;
+            opacity: 0.5;
             background: var(--surface2);
+            border-style: dashed;
+        }
+        .quest-card.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 16px;
+            color: var(--success);
         }
         .quest-icon {
-            font-size: 32px;
-            min-width: 40px;
-            text-align: center;
+            font-size: 36px;
+            min-width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(94,234,212,0.1);
+            border-radius: 12px;
         }
         .quest-info {
             flex: 1;
+            min-width: 0;
         }
         .quest-title {
             font-size: 14px;
             font-weight: 700;
-            color: var(--text1);
+            color: var(--text);
             margin-bottom: 4px;
         }
         .quest-desc {
             font-size: 11px;
             color: var(--text3);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            line-height: 1.4;
         }
         .quest-progress {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .quest-progress-bar {
             flex: 1;
-            height: 6px;
-            background: var(--surface2);
+            height: 8px;
+            background: rgba(30,41,59,0.8);
             border-radius: 10px;
             overflow: hidden;
+            position: relative;
         }
         .quest-progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), #00E5B8);
+            background: linear-gradient(90deg, var(--primary), var(--cyan), var(--primary));
+            background-size: 200% 100%;
             border-radius: 10px;
-            transition: width 0.3s;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: progress-shimmer 2s linear infinite;
+            position: relative;
+        }
+        @keyframes progress-shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .quest-progress-fill.complete {
+            background: linear-gradient(90deg, var(--success), #4ade80);
+            animation: none;
         }
         .quest-progress-text {
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--text2);
-            min-width: 50px;
+            min-width: 55px;
             text-align: right;
+            white-space: nowrap;
         }
         .quest-reward {
             text-align: center;
-            min-width: 60px;
+            min-width: 65px;
+            padding: 8px;
+            background: rgba(252,211,77,0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(252,211,77,0.2);
         }
         .quest-reward-value {
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--primary);
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
         }
         .quest-reward-label {
             font-size: 9px;
             color: var(--text3);
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
         }
         .quest-claim-btn {
-            background: var(--primary);
-            color: white;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--cyan) 100%);
+            color: #0a0d14;
             border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 10px 18px;
+            border-radius: 10px;
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 800;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        .quest-claim-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.4s;
         }
         .quest-claim-btn:hover {
-            background: #00B88C;
-            transform: scale(1.05);
+            transform: scale(1.08);
+            box-shadow: 0 4px 15px rgba(94,234,212,0.4);
+        }
+        .quest-claim-btn:hover::after {
+            left: 100%;
         }
         .quest-claim-btn:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
+            transform: none;
+        }
+        .quest-claim-btn:disabled:hover {
+            box-shadow: none;
+        }
+        .quest-claim-btn:disabled::after {
+            display: none;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 480px) {
+            .quest-summary-card {
+                padding: 16px 10px;
+            }
+            .quest-summary-value {
+                font-size: 22px;
+            }
+            .quest-card {
+                padding: 12px;
+                flex-wrap: wrap;
+            }
+            .quest-icon {
+                font-size: 28px;
+                min-width: 40px;
+                height: 40px;
+            }
+            .quest-reward {
+                min-width: auto;
+                padding: 6px 10px;
+            }
+            .quest-claim-btn {
+                padding: 8px 14px;
+                font-size: 11px;
+            }
         }
 
         /* ====================================
@@ -4511,6 +4680,475 @@
         @media (min-width: 481px) {
             .feature-badge::before { display: none; }
         }
+
+        /* ═══════════════════════════════════════════════════════════════════ */
+        /* PROFILE VIEW - Modern Redesign                                       */
+        /* ═══════════════════════════════════════════════════════════════════ */
+        .profile-hero-card {
+            background: linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(139,92,246,0.1) 100%);
+            border: 1px solid rgba(99,102,241,0.25);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .profile-email-small {
+            font-size: 11px;
+            color: var(--text3);
+            margin-bottom: 8px;
+        }
+        .profile-edit-btn {
+            width: 100%;
+            margin-top: 16px;
+            padding: 12px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .profile-edit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139,92,246,0.4);
+        }
+
+        .profile-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text1);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .profile-section-title .see-all-btn {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .profile-stats-extended {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .profile-stat-box {
+            background: rgba(30,35,50,0.8);
+            border: 1px solid rgba(99,102,241,0.15);
+            border-radius: 14px;
+            padding: 14px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .profile-stat-box:hover {
+            transform: translateY(-2px);
+            border-color: rgba(99,102,241,0.4);
+            background: rgba(99,102,241,0.1);
+        }
+        .stat-icon-lg { font-size: 24px; margin-bottom: 6px; }
+        .stat-value-lg { font-size: 18px; font-weight: 800; color: var(--text1); }
+        .stat-label-lg { font-size: 10px; color: var(--text3); margin-top: 4px; }
+
+        .badges-grid-modern {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .profile-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .profile-action-card {
+            background: rgba(30,35,50,0.8);
+            border: 1px solid rgba(99,102,241,0.15);
+            border-radius: 14px;
+            padding: 16px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .profile-action-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+            background: rgba(99,102,241,0.1);
+        }
+        .action-icon { font-size: 24px; margin-bottom: 6px; }
+        .action-label { font-size: 11px; color: var(--text2); font-weight: 600; }
+        .action-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #ef4444;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-menu {
+            background: rgba(30,35,50,0.6);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        .settings-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: none;
+            border: none;
+            border-bottom: 1px solid rgba(99,102,241,0.1);
+            color: var(--text1);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .settings-item:last-child { border-bottom: none; }
+        .settings-item:hover { background: rgba(99,102,241,0.1); }
+        .settings-icon { font-size: 18px; }
+        .settings-text { flex: 1; text-align: left; font-size: 14px; }
+        .settings-arrow { color: var(--text3); font-size: 14px; }
+
+        .app-info {
+            text-align: center;
+            padding: 20px;
+            color: var(--text3);
+        }
+        .app-version { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+        .app-copyright { font-size: 10px; }
+
+        @media (max-width: 480px) {
+            .profile-stats-extended { grid-template-columns: repeat(2, 1fr); }
+            .profile-actions-grid { grid-template-columns: repeat(2, 1fr); }
+            .profile-hero-card { padding: 16px; }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════ */
+        /* BEAST COLLECTION VIEW                                                */
+        /* ═══════════════════════════════════════════════════════════════════ */
+        .beast-summary-card {
+            display: flex;
+            justify-content: space-around;
+            background: linear-gradient(135deg, rgba(16,185,129,0.15) 0%, rgba(5,150,105,0.1) 100%);
+            border: 1px solid rgba(16,185,129,0.25);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .beast-summary-stat { text-align: center; }
+        .summary-value { font-size: 28px; font-weight: 800; color: #10b981; }
+        .summary-label { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+        .beast-filter-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+        .beast-filter-tab {
+            flex-shrink: 0;
+            padding: 8px 16px;
+            background: rgba(30,35,50,0.8);
+            border: 1px solid rgba(99,102,241,0.15);
+            border-radius: 20px;
+            color: var(--text2);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .beast-filter-tab.active, .beast-filter-tab:hover {
+            background: rgba(16,185,129,0.2);
+            border-color: rgba(16,185,129,0.4);
+            color: #10b981;
+        }
+
+        .beast-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .beast-empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text2);
+        }
+        .beast-empty-state h3 { color: var(--text1); margin-bottom: 8px; }
+        .beast-empty-state p { font-size: 13px; line-height: 1.5; }
+
+        /* ═══════════════════════════════════════════════════════════════════ */
+        /* FRIENDS VIEW - POLISHED                                              */
+        /* ═══════════════════════════════════════════════════════════════════ */
+        .friend-stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(139,92,246,0.1) 100%);
+            border: 1px solid rgba(99,102,241,0.25);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+        .friend-stat { text-align: center; }
+        .friend-stat-value {
+            font-size: 26px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+        .friend-stat-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .friends-section { margin-bottom: 24px; }
+        .friends-section .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .friends-section .section-header h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .friends-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Friend Card - Individual friend row */
+        .friend-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, rgba(15,23,42,0.8) 0%, rgba(30,41,59,0.7) 100%);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .friend-card:hover {
+            border-color: var(--primary);
+            transform: translateX(4px);
+            box-shadow: 0 4px 15px rgba(94,234,212,0.1);
+        }
+        .friend-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .friend-avatar.online::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            background: var(--success);
+            border-radius: 50%;
+            border: 2px solid var(--bg);
+        }
+        .friend-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .friend-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+        .friend-status {
+            font-size: 11px;
+            color: var(--text3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .friend-status.online { color: var(--success); }
+        .friend-level {
+            font-size: 10px;
+            color: var(--text3);
+            background: rgba(99,102,241,0.15);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .friend-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .friend-action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(94,234,212,0.1);
+            border: 1px solid rgba(94,234,212,0.2);
+            color: var(--primary);
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .friend-action-btn:hover {
+            background: rgba(94,234,212,0.2);
+            transform: scale(1.1);
+        }
+        .friend-action-btn.danger {
+            background: rgba(239,68,68,0.1);
+            border-color: rgba(239,68,68,0.2);
+            color: #ef4444;
+        }
+        .friend-action-btn.danger:hover {
+            background: rgba(239,68,68,0.2);
+        }
+
+        /* Friend Request Card */
+        .friend-request-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, rgba(251,191,36,0.1) 0%, rgba(245,158,11,0.05) 100%);
+            border: 1px solid rgba(251,191,36,0.3);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 8px;
+        }
+        .friend-request-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .friend-accept-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, var(--success), #16a34a);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .friend-accept-btn:hover { transform: scale(1.05); }
+        .friend-decline-btn {
+            padding: 8px 12px;
+            background: transparent;
+            border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 8px;
+            color: #ef4444;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .friend-decline-btn:hover {
+            background: rgba(239,68,68,0.1);
+        }
+
+        .friends-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text3);
+        }
+        .friends-empty h4 { color: var(--text); margin-bottom: 8px; font-size: 16px; }
+        .friends-empty p { font-size: 13px; line-height: 1.6; max-width: 280px; margin: 0 auto; }
+
+        /* ═══════════════════════════════════════════════════════════════════ */
+        /* TRADING VIEW                                                         */
+        /* ═══════════════════════════════════════════════════════════════════ */
+        .trading-stats-card {
+            display: flex;
+            justify-content: space-around;
+            background: linear-gradient(135deg, rgba(251,191,36,0.15) 0%, rgba(245,158,11,0.1) 100%);
+            border: 1px solid rgba(251,191,36,0.25);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .trading-stat { text-align: center; }
+        .trading-stat-icon { font-size: 24px; margin-bottom: 4px; }
+        .trading-stat-value { font-size: 20px; font-weight: 800; color: #fbbf24; }
+        .trading-stat-label { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+        .trades-list {
+            background: rgba(30,35,50,0.6);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        .trades-empty {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--text3);
+        }
+        .trades-empty h4 { color: var(--text1); margin-bottom: 8px; }
+        .trades-empty p { font-size: 13px; line-height: 1.5; }
+
+        .create-trade-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .create-trade-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251,191,36,0.4);
+        }
+
+        .section-header h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text1);
+            margin-bottom: 12px;
+        }
     </style>
 <link rel="stylesheet" href="assets/style/design-tokens.css">
 <link rel="stylesheet" href="assets/style/theme.css">
@@ -4527,12 +5165,37 @@ window.toggleBeastCard = function(sectionId) {
         if (toggleBtn) toggleBtn.classList.toggle('expanded');
     }
 };
-window.openBeastCollection = function() { if(window.showToast) showToast('Beast Collection coming soon!', 'info'); };
-window.openTankLeaderboard = function() { if(window.showToast) showToast('Tank Leaderboard coming soon!', 'info'); };
-window.openPvPArena = function() { if(window.showToast) showToast('PvP Arena coming soon!', 'info'); };
+window.openBeastCollection = function() { openView('beastCollectionView'); };
+window.openTankLeaderboard = function() { openView('leaderboardView'); };
+window.openPvPArena = function() { if(window.showToast) showToast('PvP Arena coming in Veilbreakers update!', 'info'); };
 window.viewBeastDetails = function() { if(window.showToast) showToast('Beast details coming soon!', 'info'); };
 window.openBeastLineup = function() { if(window.showToast) showToast('Beast Lineup coming soon!', 'info'); };
 window.startBeastBattle = function() { if(window.showToast) showToast('Beast battles coming soon!', 'info'); };
+window.openFriendsList = function() { openView('friendsView'); };
+window.openTradingHub = function() { openView('tradingView'); };
+window.openNotificationSettings = function() { if(window.showToast) showToast('Notification settings coming soon!', 'info'); };
+window.openPrivacySettings = function() { if(window.showToast) showToast('Privacy settings coming soon!', 'info'); };
+
+// Beast Collection functions
+window.filterBeasts = function(type, btn) {
+    document.querySelectorAll('.beast-filter-tab').forEach(t => t.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    // TODO: Filter beast grid by type
+    if(window.showToast) showToast(`Filtering by ${type}`, 'info');
+};
+
+// Friends functions
+window.showAddFriend = function() {
+    const code = prompt('Enter friend code or username:');
+    if (code && code.trim()) {
+        if(window.showToast) showToast(`Friend request sent to ${code}!`, 'success');
+    }
+};
+
+// Trading functions
+window.showCreateTrade = function() {
+    if(window.showToast) showToast('Select a friend to trade with first!', 'info');
+};
 </script>
 
 <!-- HOME VIEW -->
@@ -4857,7 +5520,7 @@ window.startBeastBattle = function() { if(window.showToast) showToast('Beast bat
     </div>
 </div>
 
-<!-- PROFILE VIEW -->
+<!-- PROFILE VIEW - Redesigned to match home profile card -->
 <div class="view" id="profileView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
@@ -4867,29 +5530,132 @@ window.startBeastBattle = function() { if(window.showToast) showToast('Beast bat
         <span class="view-title">👤 Profile</span>
         <div class="coins-display" id="profileViewCoins">
             <span style="font-size:16px">🪙</span>
-            <span>0</span>
+            <span id="profileViewCoinsValue">0</span>
         </div>
     </div>
     <div class="view-body view-body-padded">
-        <div class="profile-header">
-            <div class="profile-avatar" id="profileAvatar" onclick="changeProfilePic()">?</div>
-            <div class="profile-name" id="profileName">Guest</div>
-            <div class="profile-email" id="profileEmail">Sign in to save progress</div>
+
+        <!-- Hero Profile Card -->
+        <div class="profile-hero-card">
+            <!-- Top Area: Avatar + Info -->
+            <div class="profile-top-area">
+                <div class="profile-avatar-lg" id="profileAvatarLg" onclick="changeProfilePic()">
+                    <span id="profileAvatarEmoji">🧑‍🚀</span>
+                </div>
+                <div class="profile-middle-col">
+                    <div class="profile-name-row">
+                        <span class="profile-username" id="profileUserName">Guest</span>
+                        <span class="profile-level-badge">LV <span id="profileLevel">1</span></span>
+                    </div>
+                    <div class="profile-title" id="profileUserTitle">Newcomer</div>
+                    <div class="profile-email-small" id="profileEmailDisplay">Sign in to save progress</div>
+                    <div class="profile-xp-row">
+                        <div class="profile-xp-bar-container">
+                            <div class="profile-xp-bar-fill" id="profileXpBarFill" style="width: 0%"></div>
+                        </div>
+                        <span class="profile-xp-text"><span id="profileXP">0</span>/<span id="profileXpRequired">100</span> XP</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Profile Button -->
+            <button class="profile-edit-btn" onclick="openAvatarView()">
+                <span>🎨</span> Edit Profile
+            </button>
         </div>
-        <div class="stats-grid">
-            <div class="stat-card"><div class="stat-value" id="statScans">0</div><div class="stat-label">Scans</div></div>
-            <div class="stat-card"><div class="stat-value" id="statFound">0</div><div class="stat-label">AI Found</div></div>
-            <div class="stat-card"><div class="stat-value" id="statPoints">0</div><div class="stat-label">Points</div></div>
+
+        <!-- Stats Section -->
+        <div class="profile-section-title">📊 Your Stats</div>
+        <div class="profile-stats-extended">
+            <div class="profile-stat-box" onclick="openView('historyView')">
+                <div class="stat-icon-lg">🔍</div>
+                <div class="stat-value-lg" id="statScans">0</div>
+                <div class="stat-label-lg">Total Scans</div>
+            </div>
+            <div class="profile-stat-box">
+                <div class="stat-icon-lg">🤖</div>
+                <div class="stat-value-lg" id="statFound">0</div>
+                <div class="stat-label-lg">AI Detected</div>
+            </div>
+            <div class="profile-stat-box">
+                <div class="stat-icon-lg">🎯</div>
+                <div class="stat-value-lg" id="statAccuracy">--%</div>
+                <div class="stat-label-lg">Accuracy</div>
+            </div>
+            <div class="profile-stat-box" onclick="openLeaderboard()">
+                <div class="stat-icon-lg">🏆</div>
+                <div class="stat-value-lg" id="statRank">#--</div>
+                <div class="stat-label-lg">Global Rank</div>
+            </div>
+            <div class="profile-stat-box" onclick="startTankShooter()">
+                <div class="stat-icon-lg">🎖️</div>
+                <div class="stat-value-lg" id="statHighWave">0</div>
+                <div class="stat-label-lg">Best Wave</div>
+            </div>
+            <div class="profile-stat-box">
+                <div class="stat-icon-lg">🪙</div>
+                <div class="stat-value-lg" id="statLifetimeCoins">0</div>
+                <div class="stat-label-lg">Lifetime Coins</div>
+            </div>
         </div>
-        <div class="badges-preview">
-            <div class="badges-header"><span class="badges-title">🎖️ Badges</span><button class="badges-see-all" onclick="openAllBadges()">See All →</button></div>
-            <div class="badges-grid" id="badgesPreview"></div>
+
+        <!-- Badges Section -->
+        <div class="profile-section-title">🎖️ Badges <button class="see-all-btn" onclick="openAllBadges()">See All →</button></div>
+        <div class="badges-grid-modern" id="badgesPreview">
+            <!-- Populated by JS -->
         </div>
-        <div class="menu">
-            <button class="menu-item" onclick="openAvatarView()"><span class="menu-icon">🎨</span><span class="menu-text">Customize Avatar</span><span class="menu-arrow">→</span></button>
-            <button class="menu-item" onclick="openQuestsView()"><span class="menu-icon">⚡</span><span class="menu-text">Quests</span><span class="menu-arrow">→</span></button>
-            <button class="menu-item" onclick="handleLoginLogout()"><span class="menu-icon" id="loginLogoutIcon">🔑</span><span class="menu-text" id="loginLogoutText">Sign In</span><span class="menu-arrow">→</span></button>
-            <button class="menu-item" onclick="openHelp()"><span class="menu-icon">❓</span><span class="menu-text">Help & FAQ</span><span class="menu-arrow">→</span></button>
+
+        <!-- Quick Actions -->
+        <div class="profile-section-title">⚡ Quick Actions</div>
+        <div class="profile-actions-grid">
+            <button class="profile-action-card" onclick="openQuestsView()">
+                <div class="action-icon">📋</div>
+                <div class="action-label">Quests</div>
+                <div class="action-badge" id="questsBadge">3</div>
+            </button>
+            <button class="profile-action-card" onclick="openFriendsList()">
+                <div class="action-icon">👥</div>
+                <div class="action-label">Friends</div>
+            </button>
+            <button class="profile-action-card" onclick="openTradingHub()">
+                <div class="action-icon">🔄</div>
+                <div class="action-label">Trade</div>
+            </button>
+            <button class="profile-action-card" onclick="openShop()">
+                <div class="action-icon">🏪</div>
+                <div class="action-label">Shop</div>
+            </button>
+        </div>
+
+        <!-- Settings Menu -->
+        <div class="profile-section-title">⚙️ Settings</div>
+        <div class="settings-menu">
+            <button class="settings-item" onclick="openNotificationSettings()">
+                <span class="settings-icon">🔔</span>
+                <span class="settings-text">Notifications</span>
+                <span class="settings-arrow">→</span>
+            </button>
+            <button class="settings-item" onclick="openPrivacySettings()">
+                <span class="settings-icon">🔒</span>
+                <span class="settings-text">Privacy</span>
+                <span class="settings-arrow">→</span>
+            </button>
+            <button class="settings-item" onclick="openHelp()">
+                <span class="settings-icon">❓</span>
+                <span class="settings-text">Help & FAQ</span>
+                <span class="settings-arrow">→</span>
+            </button>
+            <button class="settings-item" onclick="handleLoginLogout()">
+                <span class="settings-icon" id="loginLogoutIcon">🔑</span>
+                <span class="settings-text" id="loginLogoutText">Sign In</span>
+                <span class="settings-arrow">→</span>
+            </button>
+        </div>
+
+        <!-- App Info -->
+        <div class="app-info">
+            <div class="app-version">AuthenticaDetector v2.0</div>
+            <div class="app-copyright">© 2025 • Built to fight AI misinformation</div>
         </div>
     </div>
 </div>
@@ -4910,20 +5676,36 @@ window.startBeastBattle = function() { if(window.showToast) showToast('Beast bat
     <div class="view-body view-body-padded" id="allBadgesContent"></div>
 </div>
 
-<!-- QUESTS VIEW -->
+<!-- QUESTS VIEW - POLISHED -->
 <div class="view" id="questsView">
     <div class="view-header">
         <div style="display:flex;align-items:center;gap:4px">
             <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
             <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
         </div>
-        <span class="view-title"><span class="ad-icon-slot" data-ad-icon="quest" data-ad-size="16"></span> Quests & Challenges</span>
+        <span class="view-title"><span class="ad-icon-slot" data-ad-icon="quest" data-ad-size="16"></span> Quests</span>
         <div class="coins-display" id="questsViewCoins">
             <span style="font-size:16px">🪙</span>
             <span>0</span>
         </div>
     </div>
     <div class="view-body view-body-padded">
+        <!-- Quest Summary Card -->
+        <div class="quest-summary-card">
+            <div class="quest-summary-stat">
+                <span class="quest-summary-value" id="questsCompleted">0</span>
+                <span class="quest-summary-label">Completed</span>
+            </div>
+            <div class="quest-summary-stat">
+                <span class="quest-summary-value" id="questsAvailable">0</span>
+                <span class="quest-summary-label">Available</span>
+            </div>
+            <div class="quest-summary-stat">
+                <span class="quest-summary-value" id="questsCoinsEarned">0</span>
+                <span class="quest-summary-label">Coins Earned</span>
+            </div>
+        </div>
+
         <div class="quest-section">
             <div class="quest-section-header">
                 <h3>📅 Daily Quests</h3>
@@ -5606,6 +6388,190 @@ window.startBeastBattle = function() { if(window.showToast) showToast('Beast bat
                 <p>🎲 <strong>Save 900 coins</strong> for 10-roll gacha (better value than singles)</p>
                 <p>✨ <strong>Equip legendary cosmetics</strong> to stand out on the leaderboard!</p>
             </div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- BEAST COLLECTION VIEW                                                    -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="view" id="beastCollectionView">
+    <div class="view-header">
+        <div style="display:flex;align-items:center;gap:4px">
+            <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
+        </div>
+        <span class="view-title">🐉 Beast Collection</span>
+        <div class="coins-display">
+            <span style="font-size:16px">🪙</span>
+            <span id="beastViewCoins">0</span>
+        </div>
+    </div>
+    <div class="view-body view-body-padded">
+        <!-- Beast Stats Summary -->
+        <div class="beast-summary-card">
+            <div class="beast-summary-stat">
+                <div class="summary-value" id="totalBeasts">0</div>
+                <div class="summary-label">Total Beasts</div>
+            </div>
+            <div class="beast-summary-stat">
+                <div class="summary-value" id="legendaryBeasts">0</div>
+                <div class="summary-label">Legendary</div>
+            </div>
+            <div class="beast-summary-stat">
+                <div class="summary-value" id="beastPower">0</div>
+                <div class="summary-label">Total Power</div>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="beast-filter-tabs">
+            <button class="beast-filter-tab active" onclick="filterBeasts('all', this)">All</button>
+            <button class="beast-filter-tab" onclick="filterBeasts('fire', this)">🔥 Fire</button>
+            <button class="beast-filter-tab" onclick="filterBeasts('water', this)">💧 Water</button>
+            <button class="beast-filter-tab" onclick="filterBeasts('electric', this)">⚡ Electric</button>
+            <button class="beast-filter-tab" onclick="filterBeasts('dark', this)">🌑 Dark</button>
+        </div>
+
+        <!-- Beast Grid -->
+        <div class="beast-grid" id="beastGrid">
+            <!-- Empty State -->
+            <div class="beast-empty-state" id="beastEmptyState">
+                <div style="font-size:60px;margin-bottom:16px">🥚</div>
+                <h3>No Beasts Yet!</h3>
+                <p>Capture your first beast in Veilbreakers mode to start building your collection!</p>
+                <button class="cta-btn" onclick="showToast('Veilbreakers coming soon!', 'info')" style="margin-top:16px">
+                    🎮 Play Veilbreakers
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- FRIENDS VIEW                                                              -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="view" id="friendsView">
+    <div class="view-header">
+        <div style="display:flex;align-items:center;gap:4px">
+            <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
+        </div>
+        <span class="view-title">👥 Friends</span>
+        <button class="icon-btn" onclick="showAddFriend()" title="Add Friend">➕</button>
+    </div>
+    <div class="view-body view-body-padded">
+        <!-- Friend Stats -->
+        <div class="friend-stats-bar">
+            <div class="friend-stat">
+                <span class="friend-stat-value" id="friendCount">0</span>
+                <span class="friend-stat-label">Friends</span>
+            </div>
+            <div class="friend-stat">
+                <span class="friend-stat-value" id="onlineCount">0</span>
+                <span class="friend-stat-label">Online</span>
+            </div>
+            <div class="friend-stat">
+                <span class="friend-stat-value" id="pendingRequests">0</span>
+                <span class="friend-stat-label">Pending</span>
+            </div>
+        </div>
+
+        <!-- Friend Requests Section -->
+        <div class="friends-section" id="friendRequestsSection" style="display:none">
+            <div class="section-header">
+                <h3>📬 Friend Requests</h3>
+            </div>
+            <div class="friend-requests-list" id="friendRequestsList"></div>
+        </div>
+
+        <!-- Online Friends -->
+        <div class="friends-section">
+            <div class="section-header">
+                <h3>🟢 Online Now</h3>
+            </div>
+            <div class="friends-list" id="onlineFriendsList">
+                <div class="friends-empty">No friends online right now</div>
+            </div>
+        </div>
+
+        <!-- All Friends -->
+        <div class="friends-section">
+            <div class="section-header">
+                <h3>👥 All Friends</h3>
+            </div>
+            <div class="friends-list" id="allFriendsList">
+                <div class="friends-empty" id="noFriendsState">
+                    <div style="font-size:50px;margin-bottom:12px">👋</div>
+                    <h4>No Friends Yet</h4>
+                    <p>Add friends to compete together, trade items, and climb the leaderboard!</p>
+                    <button class="cta-btn" onclick="showAddFriend()" style="margin-top:16px">
+                        ➕ Add Your First Friend
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- TRADING VIEW                                                              -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="view" id="tradingView">
+    <div class="view-header">
+        <div style="display:flex;align-items:center;gap:4px">
+            <button class="back-btn" onclick="closeView()"><span class="ad-icon-slot" data-ad-icon="back" data-ad-size="16"></span></button>
+            <button class="home-btn" onclick="openView('homeView')" title="Home"><span class="ad-icon-slot" data-ad-icon="home" data-ad-size="16"></span></button>
+        </div>
+        <span class="view-title">🔄 Trading Hub</span>
+        <div class="coins-display">
+            <span style="font-size:16px">🪙</span>
+            <span id="tradingViewCoins">0</span>
+        </div>
+    </div>
+    <div class="view-body view-body-padded">
+        <!-- Trading Stats -->
+        <div class="trading-stats-card">
+            <div class="trading-stat">
+                <div class="trading-stat-icon">📤</div>
+                <div class="trading-stat-value" id="tradesSent">0</div>
+                <div class="trading-stat-label">Sent</div>
+            </div>
+            <div class="trading-stat">
+                <div class="trading-stat-icon">📥</div>
+                <div class="trading-stat-value" id="tradesReceived">0</div>
+                <div class="trading-stat-label">Received</div>
+            </div>
+            <div class="trading-stat">
+                <div class="trading-stat-icon">✅</div>
+                <div class="trading-stat-value" id="tradesCompleted">0</div>
+                <div class="trading-stat-label">Completed</div>
+            </div>
+        </div>
+
+        <!-- Active Trades Section -->
+        <div class="section-header">
+            <h3>📋 Active Trades</h3>
+        </div>
+        <div class="trades-list" id="activeTradesList">
+            <div class="trades-empty">
+                <div style="font-size:50px;margin-bottom:12px">📦</div>
+                <h4>No Active Trades</h4>
+                <p>Start a trade with a friend to swap cosmetics, beasts, or items!</p>
+            </div>
+        </div>
+
+        <!-- Create Trade Button -->
+        <button class="create-trade-btn" onclick="showCreateTrade()">
+            <span>🔄</span> Create New Trade
+        </button>
+
+        <!-- Trade History -->
+        <div class="section-header" style="margin-top:24px">
+            <h3>📜 Trade History</h3>
+        </div>
+        <div class="trades-list" id="tradeHistoryList">
+            <div class="trades-empty">No completed trades yet</div>
         </div>
     </div>
 </div>
@@ -9994,6 +10960,35 @@ function renderQuests() {
     const userQuests = getStorage('userQuests', null);
     if (!userQuests) return;
 
+    // Calculate summary stats
+    let totalCompleted = 0;
+    let totalAvailable = 0;
+    let totalCoinsEarned = 0;
+
+    const countQuests = (quests, defs) => {
+        quests.forEach(q => {
+            const def = defs.find(d => d.id === q.id);
+            if (q.claimed) {
+                totalCompleted++;
+                totalCoinsEarned += (def?.reward?.coins || 0);
+            } else {
+                totalAvailable++;
+            }
+        });
+    };
+
+    countQuests(userQuests.daily.quests, QUEST_DEFINITIONS.daily);
+    countQuests(userQuests.weekly.quests, QUEST_DEFINITIONS.weekly);
+    countQuests(userQuests.special.quests, QUEST_DEFINITIONS.special);
+
+    // Update summary card
+    const completedEl = $('questsCompleted');
+    const availableEl = $('questsAvailable');
+    const coinsEl = $('questsCoinsEarned');
+    if (completedEl) completedEl.textContent = totalCompleted;
+    if (availableEl) availableEl.textContent = totalAvailable;
+    if (coinsEl) coinsEl.textContent = totalCoinsEarned;
+
     // Render daily quests
     const dailyContainer = $('dailyQuests');
     if (dailyContainer) {
@@ -10022,7 +11017,7 @@ function renderQuests() {
     }
 }
 
-// Render individual quest card
+// Render individual quest card - Polished version
 function renderQuestCard(quest, def, questType) {
     if (!def) return '';
 
@@ -10030,70 +11025,96 @@ function renderQuestCard(quest, def, questType) {
     const percentage = (progress / def.target) * 100;
     const isCompleted = quest.completed;
     const isClaimed = quest.claimed;
+    const isClaimable = isCompleted && !isClaimed;
 
-    const rewardText = def.reward.coins
-        ? `${def.reward.coins} coins`
-        : def.reward.cosmetic;
+    const coinReward = def.reward.coins || 0;
 
     let buttonHtml = '';
     if (isClaimed) {
-        buttonHtml = '<button class="quest-claim-btn claimed" disabled>Claimed</button>';
+        buttonHtml = '<button class="quest-claim-btn" disabled>✓ Claimed</button>';
     } else if (isCompleted) {
-        buttonHtml = `<button class="quest-claim-btn" onclick="claimQuestReward('${quest.id}', '${questType}')">Claim Reward</button>`;
+        buttonHtml = `<button class="quest-claim-btn" onclick="claimQuestReward('${quest.id}', '${questType}')">Claim</button>`;
     } else {
-        buttonHtml = `<button class="quest-claim-btn disabled" disabled>${progress}/${def.target}</button>`;
+        buttonHtml = `<button class="quest-claim-btn" disabled>In Progress</button>`;
     }
 
+    // Card classes based on state
+    let cardClasses = 'quest-card';
+    if (isClaimed) cardClasses += ' completed claimed';
+    else if (isClaimable) cardClasses += ' claimable';
+
+    // Progress bar class
+    const progressClass = isCompleted ? 'quest-progress-fill complete' : 'quest-progress-fill';
+
     return `
-        <div class="quest-card ${isCompleted ? 'completed' : ''} ${isClaimed ? 'claimed' : ''}">
+        <div class="${cardClasses}">
             <div class="quest-icon">${def.icon}</div>
             <div class="quest-info">
                 <div class="quest-title">${def.title}</div>
-                <div class="quest-description">${def.description}</div>
-                <div class="quest-progress-bar">
-                    <div class="quest-progress-fill" style="width: ${percentage}%"></div>
-                </div>
-                <div class="quest-stats">
+                <div class="quest-desc">${def.description}</div>
+                <div class="quest-progress">
+                    <div class="quest-progress-bar">
+                        <div class="${progressClass}" style="width: ${percentage}%"></div>
+                    </div>
                     <span class="quest-progress-text">${progress}/${def.target}</span>
-                    <span class="quest-reward">🎁 ${rewardText}</span>
                 </div>
+            </div>
+            <div class="quest-reward">
+                <div class="quest-reward-value">🪙 ${coinReward}</div>
+                <div class="quest-reward-label">Reward</div>
             </div>
             ${buttonHtml}
         </div>
     `;
 }
 
-// Update quest timers
+// Update quest timers with urgent indicator
 function updateQuestTimers() {
     const userQuests = getStorage('userQuests', null);
     if (!userQuests) return;
 
     const now = Date.now();
+    const ONE_HOUR = 60 * 60 * 1000;
+    const ONE_DAY = 24 * ONE_HOUR;
 
-    // Daily timer
+    // Daily timer - urgent if < 1 hour remaining
     const dailyTimer = $('dailyTimer');
     if (dailyTimer) {
-        const dailyRemaining = 24 * 60 * 60 * 1000 - (now - userQuests.daily.lastReset);
+        const dailyRemaining = ONE_DAY - (now - userQuests.daily.lastReset);
         if (dailyRemaining > 0) {
-            const hours = Math.floor(dailyRemaining / (60 * 60 * 1000));
-            const minutes = Math.floor((dailyRemaining % (60 * 60 * 1000)) / (60 * 1000));
+            const hours = Math.floor(dailyRemaining / ONE_HOUR);
+            const minutes = Math.floor((dailyRemaining % ONE_HOUR) / (60 * 1000));
             const seconds = Math.floor((dailyRemaining % (60 * 1000)) / 1000);
-            dailyTimer.textContent = `Resets in: ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            dailyTimer.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            // Add urgent class if less than 1 hour remaining
+            if (dailyRemaining < ONE_HOUR) {
+                dailyTimer.classList.add('urgent');
+            } else {
+                dailyTimer.classList.remove('urgent');
+            }
         } else {
-            dailyTimer.textContent = 'Ready to reset!';
+            dailyTimer.textContent = 'Reset now!';
+            dailyTimer.classList.add('urgent');
         }
     }
 
-    // Weekly timer
+    // Weekly timer - urgent if < 1 day remaining
     const weeklyTimer = $('weeklyTimer');
     if (weeklyTimer) {
-        const weeklyRemaining = 7 * 24 * 60 * 60 * 1000 - (now - userQuests.weekly.lastReset);
+        const weeklyRemaining = 7 * ONE_DAY - (now - userQuests.weekly.lastReset);
         if (weeklyRemaining > 0) {
-            const days = Math.floor(weeklyRemaining / (24 * 60 * 60 * 1000));
-            const hours = Math.floor((weeklyRemaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-            weeklyTimer.textContent = `Resets in: ${days}d ${hours}h`;
+            const days = Math.floor(weeklyRemaining / ONE_DAY);
+            const hours = Math.floor((weeklyRemaining % ONE_DAY) / ONE_HOUR);
+            weeklyTimer.textContent = `${days}d ${hours}h`;
+            // Add urgent class if less than 1 day remaining
+            if (weeklyRemaining < ONE_DAY) {
+                weeklyTimer.classList.add('urgent');
+            } else {
+                weeklyTimer.classList.remove('urgent');
+            }
         } else {
-            weeklyTimer.textContent = 'Ready to reset!';
+            weeklyTimer.textContent = 'Reset now!';
+            weeklyTimer.classList.add('urgent');
         }
     }
 }
