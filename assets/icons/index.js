@@ -1,42 +1,81 @@
 (function() {
+  const ICON_VERSION = 'v1.1'; // Cache buster - increment when icons change
+
   const iconPaths = {
+    // === NAVIGATION ===
     chevronRight: 'assets/icons/chevron-right.svg',
     back: 'assets/icons/back.svg',
-    badges: 'assets/icons/badges.svg',
+    home: 'assets/icons/home.svg',
+    map: 'assets/icons/map.svg',
+    notifications: 'assets/icons/notifications.svg',
+    quests: 'assets/icons/quests.svg',
+    quest: 'assets/icons/quests.svg', // alias
+    settings: 'assets/icons/settings.svg',
+    shop: 'assets/icons/shop.svg',
+
+    // === BATTLE ===
+    arena: 'assets/icons/arena.svg',
     beasts: 'assets/icons/beasts.svg',
+    bossRush: 'assets/icons/boss-rush.svg',
     boss: 'assets/icons/boss.svg',
-    camera: 'assets/icons/camera.svg',
     capture: 'assets/icons/capture.svg',
-    chat: 'assets/icons/chat.svg',
-    coins: 'assets/icons/coins.svg',
+    duels: 'assets/icons/duels.svg',
+
+    // === COMPETITION ===
+    achievements: 'assets/icons/achievements.svg',
+    ranking: 'assets/icons/ranking.svg',
+    trophy: 'assets/icons/trophy.svg',
+    leaderboard: 'assets/icons/ranking.svg', // alias to new HD ranking
+
+    // === CURRENCY (NEW HD ICONS) ===
+    crystalCurrency: 'assets/icons/crystal-currency.svg',
+    currencyCoin: 'assets/icons/currency-coin.svg',
+    currencyKey: 'assets/icons/currency-key.svg',
+    coins: 'assets/icons/currency-coin.svg', // alias to new HD coin
+    star: 'assets/icons/star.svg',
+
+    // === PROGRESSION ===
+    energy: 'assets/icons/energy.svg',
+    evolution: 'assets/icons/evolution.svg',
+    fusion: 'assets/icons/fusion.svg',
+    inventory: 'assets/icons/inventory.svg',
+    rewards: 'assets/icons/rewards.svg',
+    training: 'assets/icons/training.svg',
+
+    // === SOCIAL ===
+    friends: 'assets/icons/friends.svg',
+    guild: 'assets/icons/guild.svg',
+    messages: 'assets/icons/messages.svg',
+    squad: 'assets/icons/squad.svg',
+    chat: 'assets/icons/messages.svg', // alias
+
+    // === PLAY ===
+    play: 'assets/icons/play.svg',
+    playRed: 'assets/icons/play-red.svg',
+
+    // === SPECIAL ===
+    vera: 'assets/icons/vera.svg',
+
+    // === UI ELEMENTS ===
+    badges: 'assets/icons/badges.svg',
+    camera: 'assets/icons/camera.svg',
     corruption: 'assets/icons/corruption.svg',
     crosshair: 'assets/icons/crosshair.svg',
-    duels: 'assets/icons/duels.svg',
-    friends: 'assets/icons/friends.svg',
     heart: 'assets/icons/heart.svg',
     help: 'assets/icons/help.svg',
     history: 'assets/icons/history.svg',
-    home: 'assets/icons/home.svg',
     info: 'assets/icons/info.svg',
     install: 'assets/icons/install.svg',
-    inventory: 'assets/icons/inventory.svg',
-    leaderboard: 'assets/icons/leaderboard.svg',
     lootbox: 'assets/icons/lootbox.svg',
-    map: 'assets/icons/map.svg',
-    play: 'assets/icons/play.svg',
     profile: 'assets/icons/profile.svg',
-    quest: 'assets/icons/quest.svg',
     refresh: 'assets/icons/refresh.svg',
     scan: 'assets/icons/scan.svg',
     search: 'assets/icons/search.svg',
-    settings: 'assets/icons/settings.svg',
     shield: 'assets/icons/shield.svg',
     sparkles: 'assets/icons/sparkles.svg',
-    star: 'assets/icons/star.svg',
     stats: 'assets/icons/stats.svg',
-    store: 'assets/icons/store.svg',
+    store: 'assets/icons/shop.svg', // alias to new HD shop
     tank: 'assets/icons/tank.svg',
-    trophy: 'assets/icons/trophy.svg',
     upload: 'assets/icons/upload.svg',
     verify: 'assets/icons/verify.svg',
     wand: 'assets/icons/wand.svg',
@@ -48,7 +87,7 @@
   async function getIcon(name) {
     if (!iconPaths[name]) return null;
     if (cache.has(name)) return cache.get(name);
-    const res = await fetch(iconPaths[name]);
+    const res = await fetch(iconPaths[name] + '?' + ICON_VERSION);
     if (!res.ok) return null;
     const svg = await res.text();
     cache.set(name, svg);

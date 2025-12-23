@@ -5714,11 +5714,14 @@
 <link rel="stylesheet" href="assets/style/theme.css">
 <link rel="stylesheet" href="phaser-character-creator.css">
 <script src="assets/icons/index.js" defer></script>
-<!-- Phaser.js for character animation -->
+<!-- Phaser.js for character animation AND tank game -->
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
 <!-- Phaser Spine Plugin (optional - for bone-rigged animations) -->
 <script src="https://cdn.jsdelivr.net/npm/phaser-spine@4.2.0/dist/phaser-spine.umd.min.js" defer></script>
 <script src="phaser-character-creator.js" defer></script>
+
+<!-- Howler.js for professional game audio -->
+<script src="https://cdn.jsdelivr.net/npm/howler@2.2.3/dist/howler.min.js"></script>
 </head>
 <body>
 <script>
@@ -5733,10 +5736,10 @@ window.toggleBeastCard = function(sectionId) {
 };
 window.openBeastCollection = function() { openView('beastCollectionView'); };
 window.openTankLeaderboard = function() { openView('leaderboardView'); };
-window.openPvPArena = function() { if(window.showToast) showToast('PvP Arena coming in Veilbreakers update!', 'info'); };
-window.viewBeastDetails = function() { if(window.showToast) showToast('Beast details coming soon!', 'info'); };
-window.openBeastLineup = function() { if(window.showToast) showToast('Beast Lineup coming soon!', 'info'); };
-window.startBeastBattle = function() { if(window.showToast) showToast('Beast battles coming soon!', 'info'); };
+window.openPvPArena = function() { if (!user) { if(window.showToast) showToast('Please log in to play!', 'warning'); return; } if(window.showToast) showToast('PvP Arena coming in Veilbreakers update!', 'info'); };
+window.viewBeastDetails = function() { if (!user) { if(window.showToast) showToast('Please log in to play!', 'warning'); return; } if(window.showToast) showToast('Beast details coming soon!', 'info'); };
+window.openBeastLineup = function() { if (!user) { if(window.showToast) showToast('Please log in to play!', 'warning'); return; } if(window.showToast) showToast('Beast Lineup coming soon!', 'info'); };
+window.startBeastBattle = function() { if (!user) { if(window.showToast) showToast('Please log in to play!', 'warning'); return; } if(window.showToast) showToast('Beast battles coming soon!', 'info'); };
 window.openFriendsList = function() { openView('friendsView'); };
 window.openTradingHub = function() { openView('tradingView'); };
 window.openNotificationSettings = function() { if(window.showToast) showToast('Notification settings coming soon!', 'info'); };
@@ -5893,15 +5896,17 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
         <div style="display:flex;align-items:center;gap:8px">
             <!-- Quests Button with Badge -->
             <button onclick="toggleQuestsPopup()" title="Quests" id="headerQuestsBtn" style="position:relative;width:40px;height:40px;border-radius:50%;border:2px solid rgba(94,234,212,0.5);background:linear-gradient(135deg,rgba(94,234,212,0.2),rgba(20,184,166,0.1));cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease">
-                📋
+                <img src="assets/icons/quest.svg" alt="Quests" style="width:20px;height:20px">
                 <span id="questsBadge" style="position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;background:linear-gradient(135deg,#ef4444,#dc2626);color:white;font-size:10px;font-weight:700;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--bg)">3</span>
             </button>
-            <button onclick="claimDailyBonus()" title="Daily Bonus" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(251,191,36,0.5);background:linear-gradient(135deg,rgba(251,191,36,0.2),rgba(245,158,11,0.1));cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center">🎁</button>
+            <button onclick="claimDailyBonus()" title="Daily Bonus" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(251,191,36,0.5);background:linear-gradient(135deg,rgba(251,191,36,0.2),rgba(245,158,11,0.1));cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center">
+                <img src="assets/icons/rewards.svg" alt="Daily Bonus" style="width:20px;height:20px">
+            </button>
             <button onclick="openSettings()" title="Settings" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(100,116,139,0.4);background:rgba(100,116,139,0.15);cursor:pointer;display:flex;align-items:center;justify-content:center">
                 <img src="assets/icons/ui-settings.svg" alt="Settings" style="width:22px;height:22px">
             </button>
             <button class="user-btn" id="userBtn" onclick="openProfile()" title="Profile" style="width:40px;height:40px;border-radius:50%;border:2px solid #6366f1;background:linear-gradient(135deg,#1e1b4b,#312e81);cursor:pointer;font-size:18px;box-shadow:0 3px 10px rgba(99,102,241,0.4)">
-                <span id="userInitial">👤</span>
+                <span id="userInitial"><img src="assets/icons/profile.svg" alt="Profile" style="width:20px;height:20px"></span>
             </button>
         </div>
     </div>
@@ -5911,15 +5916,15 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
     <div class="currency-bar">
         <div class="currency-item coins">
-            <span class="currency-icon">🪙</span>
+            <span class="currency-icon"><img src="assets/icons/currency-coin.svg" alt="Coins" style="width:18px;height:18px"></span>
             <span class="currency-value" id="headerCoinCount">0</span>
         </div>
         <div class="currency-item keys">
-            <span class="currency-icon">🔑</span>
+            <span class="currency-icon"><img src="assets/icons/currency-key.svg" alt="Keys" style="width:18px;height:18px"></span>
             <span class="currency-value" id="headerKeyCount">0</span>
         </div>
         <div class="currency-item gems">
-            <span class="currency-icon">💎</span>
+            <span class="currency-icon"><img src="assets/icons/currency-crystal.svg" alt="Gems" style="width:18px;height:18px"></span>
             <span class="currency-value" id="headerGemCount">0</span>
         </div>
     </div>
@@ -5951,34 +5956,40 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
                     </div>
                 </div>
                 <div class="profile-right-actions">
-                    <button class="profile-action-btn customize" onclick="openAvatarBuilder()" title="Customize Avatar">🎨</button>
-                    <button class="profile-action-btn shop" onclick="openShop()" title="Shop">🏪</button>
-                    <button class="profile-action-btn vera" onclick="openHelp()" title="VERA Assistant">🧚</button>
+                    <button class="profile-action-btn customize" onclick="openAvatarBuilder()" title="Customize Avatar">
+                        <img src="assets/icons/camera.svg" alt="Customize" style="width:20px;height:20px">
+                    </button>
+                    <button class="profile-action-btn shop" onclick="openShop()" title="Shop">
+                        <img src="assets/icons/shop.svg" alt="Shop" style="width:20px;height:20px">
+                    </button>
+                    <button class="profile-action-btn vera" onclick="openHelp()" title="VERA Assistant">
+                        <img src="assets/icons/nav-vera.svg" alt="VERA" style="width:20px;height:20px">
+                    </button>
                 </div>
             </div>
 
             <!-- Stats Grid (4 columns, clickable) -->
             <div class="profile-stats-grid">
                 <div class="profile-stat-card" onclick="openLeaderboard()">
-                    <div class="stat-icon">🏆</div>
+                    <div class="stat-icon"><img src="assets/icons/trophy.svg" alt="Rank" style="width:28px;height:28px"></div>
                     <div class="stat-value" style="color:#a78bfa" id="homeRankNum">#--</div>
                     <div class="stat-label">Rank</div>
                     <div class="tap-hint">tap</div>
                 </div>
                 <div class="profile-stat-card" onclick="openBeastCollection()">
-                    <div class="stat-icon">🐉</div>
+                    <div class="stat-icon"><img src="assets/icons/beasts.svg" alt="Beasts" style="width:28px;height:28px"></div>
                     <div class="stat-value" style="color:#10b981" id="homeBeastCount">0</div>
                     <div class="stat-label">Beasts</div>
                     <div class="tap-hint">tap</div>
                 </div>
                 <div class="profile-stat-card" onclick="openTankLeaderboard()">
-                    <div class="stat-icon">🎖️</div>
+                    <div class="stat-icon"><img src="assets/icons/ui-tank.svg" alt="Tank" style="width:28px;height:28px"></div>
                     <div class="stat-value" style="color:#f87171" id="homeTankRank">#--</div>
                     <div class="stat-label">Tank</div>
                     <div class="tap-hint">tap</div>
                 </div>
                 <div class="profile-stat-card" onclick="openPvPArena()">
-                    <div class="stat-icon">⚔️</div>
+                    <div class="stat-icon"><img src="assets/icons/action-attack.svg" alt="PvP" style="width:28px;height:28px"></div>
                     <div class="stat-value" style="color:#f472b6" id="homePvPRank">#--</div>
                     <div class="stat-label">PvP</div>
                     <div class="tap-hint">tap</div>
@@ -6003,7 +6014,9 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
                             <span class="beast-stat">SPD <span id="favBeastSPD">--</span></span>
                         </div>
                     </div>
-                    <div class="beast-toggle" id="beastToggleBtn">👁️</div>
+                    <div class="beast-toggle" id="beastToggleBtn">
+                        <img src="assets/icons/search.svg" alt="View" style="width:20px;height:20px">
+                    </div>
                 </div>
                 <div class="beast-expanded">
                     <div class="beast-divider"></div>
@@ -6019,9 +6032,15 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
                         <span class="beast-xp-text" id="favBeastXpText">0 / 100</span>
                     </div>
                     <div class="beast-actions">
-                        <button class="beast-btn" onclick="viewBeastDetails()">👁️ View</button>
-                        <button class="beast-btn" onclick="openBeastLineup()">📋 Lineup</button>
-                        <button class="beast-btn primary" onclick="startBeastBattle()">⚔️ Battle</button>
+                        <button class="beast-btn" onclick="viewBeastDetails()">
+                            <img src="assets/icons/search.svg" alt="" style="width:16px;height:16px;margin-right:4px"> View
+                        </button>
+                        <button class="beast-btn" onclick="openBeastLineup()">
+                            <img src="assets/icons/inventory.svg" alt="" style="width:16px;height:16px;margin-right:4px"> Lineup
+                        </button>
+                        <button class="beast-btn primary" onclick="startBeastBattle()">
+                            <img src="assets/icons/action-attack.svg" alt="" style="width:16px;height:16px;margin-right:4px"> Battle
+                        </button>
                     </div>
                 </div>
             </div>
@@ -6037,25 +6056,39 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
                 <div style="position:absolute;right:-15%;bottom:-20%;width:50%;height:60%;background:radial-gradient(circle,rgba(244,114,182,0.2) 0%,transparent 60%);animation:pulse 4s ease-in-out infinite reverse"></div>
                 <!-- Beast Icon -->
                 <div style="position:absolute;right:12px;top:50%;transform:translateY(-50%)">
-                    <img src="assets/icons/nav-pets.svg" alt="Beast" style="width:90px;height:90px;filter:drop-shadow(0 8px 28px rgba(139,92,246,0.7))">
+                    <img src="assets/icons/beasts.svg" alt="Beast" style="width:100px;height:100px;filter:drop-shadow(0 8px 32px rgba(139,92,246,0.8))">
                 </div>
                 <!-- Title & Description -->
                 <div style="position:absolute;left:16px;bottom:12px;max-width:65%">
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
                         <h2 style="margin:0;font-size:24px;font-weight:900;color:#fff;text-shadow:0 3px 20px rgba(139,92,246,0.8)">VEILBREAKERS</h2>
-                        <span class="feature-badge featured">⭐ FEATURED</span>
+                        <span class="feature-badge featured">
+                            <img src="assets/icons/star.svg" alt="" style="width:14px;height:14px;margin-right:4px"> FEATURED
+                        </span>
                     </div>
                     <p style="margin:0;font-size:11px;color:#e2e8f0;line-height:1.4">Hunt, capture, and train mythical beasts. Battle in ranked PvP arenas, evolve your creatures through fusion, and rise through the leaderboards. Build your ultimate beast squad!</p>
                 </div>
             </div>
             <!-- Game Features -->
             <div style="background:rgba(139,92,246,0.12);padding:10px 14px;display:flex;gap:6px;flex-wrap:wrap">
-                <span style="background:rgba(220,38,38,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#fca5a5;border:1px solid rgba(220,38,38,0.3)">⚔️ PvP Battles</span>
-                <span style="background:rgba(251,191,36,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#fcd34d;border:1px solid rgba(251,191,36,0.3)">🏆 Ranked Seasons</span>
-                <span style="background:rgba(16,185,129,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#6ee7b7;border:1px solid rgba(16,185,129,0.3)">🎯 Beast Capture</span>
-                <span style="background:rgba(168,85,247,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#d8b4fe;border:1px solid rgba(168,85,247,0.3)">🔮 Evolution</span>
-                <span style="background:rgba(59,130,246,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#93c5fd;border:1px solid rgba(59,130,246,0.3)">🧬 Fusion</span>
-                <span style="background:rgba(244,114,182,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#f9a8d4;border:1px solid rgba(244,114,182,0.3)">🏟️ Arenas</span>
+                <span style="background:rgba(220,38,38,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#fca5a5;border:1px solid rgba(220,38,38,0.3);display:inline-flex;align-items:center;gap:4px">
+                    <img src="assets/icons/arena.svg" alt="" style="width:12px;height:12px"> PvP Battles
+                </span>
+                <span style="background:rgba(251,191,36,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#fcd34d;border:1px solid rgba(251,191,36,0.3);display:inline-flex;align-items:center;gap:4px">
+                    <img src="assets/icons/ranking.svg" alt="" style="width:12px;height:12px"> Ranked Seasons
+                </span>
+                <span style="background:rgba(16,185,129,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#6ee7b7;border:1px solid rgba(16,185,129,0.3);display:inline-flex;align-items:center;gap:4px">
+                    <img src="assets/icons/capture.svg" alt="" style="width:12px;height:12px"> Beast Capture
+                </span>
+                <span style="background:rgba(168,85,247,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#d8b4fe;border:1px solid rgba(168,85,247,0.3);display:inline-flex;align-items:center;gap:4px">
+                    <img src="assets/icons/evolution.svg" alt="" style="width:12px;height:12px"> Evolution
+                </span>
+                <span style="background:rgba(59,130,246,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#93c5fd;border:1px solid rgba(59,130,246,0.3);display:inline-flex;align-items:center;gap:4px">
+                    <img src="assets/icons/fusion.svg" alt="" style="width:12px;height:12px"> Fusion
+                </span>
+                <span style="background:rgba(244,114,182,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#f9a8d4;border:1px solid rgba(244,114,182,0.3);display:inline-flex;align-items:center;gap:4px">
+                    <img src="assets/icons/arena.svg" alt="" style="width:12px;height:12px"> Arenas
+                </span>
             </div>
             <div style="padding:10px 14px;background:rgba(0,0,0,0.3)">
                 <button onclick="showToast('Veilbreakers coming soon! Build your beast army!', 'info')" style="width:100%;background:linear-gradient(135deg,#8b5cf6,#7c3aed);border:none;color:#fff;padding:11px;border-radius:10px;font-weight:800;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 20px rgba(139,92,246,0.4)">
@@ -6071,7 +6104,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
             <div class="game-card-hero" style="position:relative;height:100px;background:linear-gradient(135deg,#1a0a0a 0%,#2d1515 50%,#1a0f0f 100%);overflow:hidden">
                 <div style="position:absolute;right:-10%;top:-20%;width:50%;height:70%;background:radial-gradient(circle,rgba(220,38,38,0.2) 0%,transparent 70%)"></div>
                 <div style="position:absolute;right:16px;top:50%;transform:translateY(-50%)">
-                    <img src="assets/icons/ui-tank.svg" alt="Tank" style="width:70px;height:70px;filter:drop-shadow(0 4px 16px rgba(220,38,38,0.5))">
+                    <img src="assets/icons/tank.svg" alt="Tank" style="width:80px;height:80px;filter:drop-shadow(0 6px 20px rgba(220,38,38,0.7))">
                 </div>
                 <div style="position:absolute;left:16px;top:50%;transform:translateY(-50%)">
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
@@ -6082,9 +6115,15 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
                 </div>
             </div>
             <div style="padding:10px 14px;background:rgba(0,0,0,0.3);display:flex;gap:6px;flex-wrap:wrap">
-                <span style="background:rgba(220,38,38,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#fca5a5">🎯 Campaign</span>
-                <span style="background:rgba(220,38,38,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#fca5a5">♾️ Endless</span>
-                <span style="background:rgba(220,38,38,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#fca5a5">👹 Boss Rush</span>
+                <span style="background:rgba(220,38,38,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#fca5a5;display:inline-flex;align-items:center;gap:4px">
+                    <img src="assets/icons/map.svg" alt="" style="width:12px;height:12px"> Campaign
+                </span>
+                <span style="background:rgba(220,38,38,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#fca5a5;display:inline-flex;align-items:center;gap:4px">
+                    <img src="assets/icons/energy.svg" alt="" style="width:12px;height:12px"> Endless
+                </span>
+                <span style="background:rgba(220,38,38,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#fca5a5;display:inline-flex;align-items:center;gap:4px">
+                    <img src="assets/icons/boss.svg" alt="" style="width:12px;height:12px"> Boss Rush
+                </span>
             </div>
             <div style="padding:10px 14px;background:linear-gradient(180deg,rgba(220,38,38,0.1),rgba(0,0,0,0.4))">
                 <button onclick="startTankShooter()" style="width:100%;background:linear-gradient(135deg,#dc2626,#b91c1c);border:none;color:#fff;padding:10px;border-radius:8px;font-weight:800;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
@@ -6100,7 +6139,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
             <div class="game-card-hero" style="position:relative;height:100px;background:linear-gradient(135deg,#052e16 0%,#14532d 50%,#064e3b 100%);overflow:hidden">
                 <div style="position:absolute;right:-10%;top:-20%;width:50%;height:70%;background:radial-gradient(circle,rgba(16,185,129,0.25) 0%,transparent 70%)"></div>
                 <div style="position:absolute;right:16px;top:50%;transform:translateY(-50%)">
-                    <img src="assets/icons/nav-pets.svg" alt="Beast" style="width:60px;height:60px;filter:drop-shadow(0 4px 16px rgba(16,185,129,0.5)) hue-rotate(90deg)">
+                    <img src="assets/icons/training.svg" alt="Training" style="width:70px;height:70px;filter:drop-shadow(0 6px 20px rgba(16,185,129,0.7))">
                 </div>
                 <div style="position:absolute;left:16px;top:50%;transform:translateY(-50%)">
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
@@ -6111,11 +6150,21 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
                 </div>
             </div>
             <div style="padding:10px 14px;background:rgba(0,0,0,0.3);display:flex;gap:6px;flex-wrap:wrap">
-                <span style="background:rgba(16,185,129,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#6ee7b7">🏋️ Training</span>
-                <span style="background:rgba(59,130,246,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#93c5fd">✨ Purify</span>
-                <span style="background:rgba(168,85,247,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#d8b4fe">🔮 Fuse</span>
-                <span style="background:rgba(244,114,182,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#f9a8d4">⚗️ Enhance</span>
-                <span style="background:rgba(251,191,36,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#fcd34d">🎓 Skills</span>
+                <span style="background:rgba(16,185,129,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#6ee7b7;display:inline-flex;align-items:center;gap:4px">
+                    <img src="assets/icons/training.svg" alt="" style="width:12px;height:12px"> Training
+                </span>
+                <span style="background:rgba(59,130,246,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#93c5fd;display:inline-flex;align-items:center;gap:4px">
+                    <img src="assets/icons/sparkles.svg" alt="" style="width:12px;height:12px"> Purify
+                </span>
+                <span style="background:rgba(168,85,247,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#d8b4fe;display:inline-flex;align-items:center;gap:4px">
+                    <img src="assets/icons/fusion.svg" alt="" style="width:12px;height:12px"> Fuse
+                </span>
+                <span style="background:rgba(244,114,182,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#f9a8d4;display:inline-flex;align-items:center;gap:4px">
+                    <img src="assets/icons/wand.svg" alt="" style="width:12px;height:12px"> Enhance
+                </span>
+                <span style="background:rgba(251,191,36,0.2);padding:4px 8px;border-radius:5px;font-size:9px;font-weight:700;color:#fcd34d;display:inline-flex;align-items:center;gap:4px">
+                    <img src="assets/icons/stats.svg" alt="" style="width:12px;height:12px"> Skills
+                </span>
             </div>
             <div style="padding:10px 14px;background:linear-gradient(180deg,rgba(16,185,129,0.1),rgba(0,0,0,0.4))">
                 <button onclick="showToast('Beast Training coming soon!', 'info')" style="width:100%;background:linear-gradient(135deg,rgba(16,185,129,0.3),rgba(5,150,105,0.2));border:1px solid rgba(16,185,129,0.4);color:#6ee7b7;padding:10px;border-radius:8px;font-weight:800;font-size:12px;cursor:pointer">🔒 Coming Q1 2025</button>
@@ -6146,7 +6195,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
         </div>
         <span class="view-title">📋 History</span>
         <div class="coins-display" id="historyViewCoins">
-            <span style="font-size:16px">🪙</span>
+            <img src="assets/icons/currency-coin.svg" alt="Coins" style="width:16px;height:16px;vertical-align:middle">
             <span>0</span>
         </div>
     </div>
@@ -6171,13 +6220,17 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
     <div class="view-body view-body-padded">
         <!-- Epic Header -->
         <div style="text-align:center;margin-bottom:20px;padding:20px;background:linear-gradient(135deg,rgba(220,38,38,0.1),rgba(94,234,212,0.05));border-radius:16px;border:1px solid rgba(220,38,38,0.2)">
-            <h2 style="margin:0;font-size:22px;font-weight:900;background:linear-gradient(135deg,#ff4757,#ffa502);-webkit-background-clip:text;-webkit-text-fill-color:transparent">⚔️ TOP TANK COMMANDERS ⚔️</h2>
+            <h2 style="margin:0;font-size:22px;font-weight:900;background:linear-gradient(135deg,#ff4757,#ffa502);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;justify-content:center;gap:8px">
+                <img src="assets/icons/ui-tank.svg" alt="" style="width:24px;height:24px"> TOP TANK COMMANDERS <img src="assets/icons/ui-tank.svg" alt="" style="width:24px;height:24px">
+            </h2>
             <p style="margin:8px 0 0;color:var(--text3);font-size:12px">Legends who destroy the most AI fakes</p>
         </div>
 
         <!-- REWARDS TEASER -->
         <div class="rewards-card" style="background:linear-gradient(145deg,rgba(26,31,46,0.95),rgba(18,22,31,0.98));border:1px solid rgba(94,234,212,0.2);border-radius:16px;padding:16px;margin-bottom:20px">
-            <div class="rewards-title" style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--primary)">🏆 Weekly Battle Rewards</div>
+            <div class="rewards-title" style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--primary);display:flex;align-items:center;gap:6px">
+                <img src="assets/icons/trophy.svg" alt="" style="width:18px;height:18px"> Weekly Battle Rewards
+            </div>
             <div class="rewards-list" style="display:flex;flex-direction:column;gap:8px">
                 <div class="reward-item" style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,215,0,0.1);border-radius:10px;border-left:3px solid gold">
                     <span class="reward-icon" style="font-size:20px">👑</span>
@@ -6210,7 +6263,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
         </div>
         <span class="view-title">👤 Profile</span>
         <div class="coins-display" id="profileViewCoins">
-            <span style="font-size:16px">🪙</span>
+            <img src="assets/icons/currency-coin.svg" alt="Coins" style="width:16px;height:16px;vertical-align:middle">
             <span id="profileViewCoinsValue">0</span>
         </div>
     </div>
@@ -6262,7 +6315,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
         </div>
         <span class="view-title"><span class="ad-icon-slot" data-ad-icon="badges" data-ad-size="16"></span> All Badges</span>
         <div class="coins-display" id="badgesViewCoins">
-            <span style="font-size:16px">🪙</span>
+            <img src="assets/icons/currency-coin.svg" alt="Coins" style="width:16px;height:16px;vertical-align:middle">
             <span>0</span>
         </div>
     </div>
@@ -6278,7 +6331,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
         </div>
         <span class="view-title"><span class="ad-icon-slot" data-ad-icon="quest" data-ad-size="16"></span> Quests</span>
         <div class="coins-display" id="questsViewCoins">
-            <span style="font-size:16px">🪙</span>
+            <img src="assets/icons/currency-coin.svg" alt="Coins" style="width:16px;height:16px;vertical-align:middle">
             <span>0</span>
         </div>
     </div>
@@ -7025,7 +7078,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
         </div>
         <span class="view-title">🐉 Beast Collection</span>
         <div class="coins-display">
-            <span style="font-size:16px">🪙</span>
+            <img src="assets/icons/currency-coin.svg" alt="Coins" style="width:16px;height:16px;vertical-align:middle">
             <span id="beastViewCoins">0</span>
         </div>
     </div>
@@ -7147,7 +7200,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
         </div>
         <span class="view-title">🔄 Trading Hub</span>
         <div class="coins-display">
-            <span style="font-size:16px">🪙</span>
+            <img src="assets/icons/currency-coin.svg" alt="Coins" style="width:16px;height:16px;vertical-align:middle">
             <span id="tradingViewCoins">0</span>
         </div>
     </div>
@@ -7486,9 +7539,11 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
 <link rel="stylesheet" href="PROFESSIONAL_UI_OVERHAUL.css">
 <link rel="stylesheet" href="ai-cosmetics-gacha.css">
 <link rel="stylesheet" href="vera-controller.css?v=4.0.0">
+<link rel="stylesheet" href="UI_FIXES.css?v=1.0.0">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script src="tank-shooter-enhanced.js"></script>
+<script src="tank-game-enhancements.js"></script>
 <script src="avatar-cosmetics-system.js"></script>
 <script src="ai-cosmetics-gacha.js"></script>
 <script src="vera-controller.js?v=4.0.0" defer></script>
@@ -8668,21 +8723,45 @@ window.openTankLeaderboard = function() {
 
 // Open PvP Arena
 window.openPvPArena = function() {
+    // Login requirement check
+    if (!user) {
+        showToast('Please log in to play!', 'warning');
+        return;
+    }
+
     showToast('PvP Arena coming soon in Veilbreakers!', 'info');
 };
 
 // View beast details
 window.viewBeastDetails = function() {
+    // Login requirement check
+    if (!user) {
+        showToast('Please log in to play!', 'warning');
+        return;
+    }
+
     showToast('Beast details coming soon!', 'info');
 };
 
 // Open beast lineup editor
 window.openBeastLineup = function() {
+    // Login requirement check
+    if (!user) {
+        showToast('Please log in to play!', 'warning');
+        return;
+    }
+
     showToast('Beast Lineup editor coming soon!', 'info');
 };
 
 // Start beast battle
 window.startBeastBattle = function() {
+    // Login requirement check
+    if (!user) {
+        showToast('Please log in to play!', 'warning');
+        return;
+    }
+
     showToast('Beast battles coming soon in Veilbreakers!', 'info');
 };
 
@@ -8804,6 +8883,12 @@ function updateLoginUI() {
 }
 
 window.toggleLoginMode = () => { isLoginMode = !isLoginMode; updateLoginUI(); };
+
+// VERA Integration - Open auth modal from VERA prompts
+window.openAuthModal = function(mode = 'login') {
+    const isSignup = mode === 'signup';
+    window.openLogin(isSignup);
+};
 
 window.submitLogin = async function() {
     console.log('[Login] Starting login/signup');
@@ -12330,6 +12415,24 @@ function renderQuests() {
     }
 }
 
+// Helper function to convert emoji icons to SVG paths
+function getIconSVG(icon, size = 24) {
+    const iconMap = {
+        '🏆': 'assets/icons/trophy.svg',
+        '🎖️': 'assets/icons/medal.svg',
+        '⭐': 'assets/icons/star.svg',
+        '⚡': 'assets/icons/lightning.svg',
+        '👑': 'assets/icons/crown.svg',
+        '💎': 'assets/icons/currency-crystal.svg'
+    };
+
+    if (iconMap[icon]) {
+        return `<img src="${iconMap[icon]}" alt="" style="width:${size}px;height:${size}px">`;
+    }
+    // Fallback to emoji if no SVG mapping
+    return icon;
+}
+
 // Render individual quest card - Polished version
 function renderQuestCard(quest, def, questType) {
     if (!def) return '';
@@ -12361,7 +12464,7 @@ function renderQuestCard(quest, def, questType) {
 
     return `
         <div class="${cardClasses}">
-            <div class="quest-icon">${def.icon}</div>
+            <div class="quest-icon">${getIconSVG(def.icon, 32)}</div>
             <div class="quest-info">
                 <div class="quest-title">${def.title}</div>
                 <div class="quest-desc">${def.description}</div>
@@ -12969,6 +13072,12 @@ class Particle {
 }
 
 window.startTruthCannon = function() {
+    // Login requirement check
+    if (!user) {
+        showToast('Please log in to play!', 'warning');
+        return;
+    }
+
     console.log('[TruthCannon] Starting game...');
 
     const gameContainer = $('truthCannonGame');
@@ -12997,7 +13106,12 @@ window.startTruthCannon = function() {
         particles: [],
         bubbleSpawnTimer: 0,
         waveTimer: 0,
-        lastTime: Date.now()
+        lastTime: Date.now(),
+        enemiesInWave: 0,
+        enemiesDestroyed: 0,
+        waveActive: false,
+        showingWaveAnnouncement: false,
+        waveAnnouncementTimer: 0
     };
 
     // Show game
@@ -13044,6 +13158,14 @@ window.startTruthCannon = function() {
 
     // Start game loop
     requestAnimationFrame(gameLoop);
+
+    // Enable enhanced wave system
+    if (typeof enableEnhancedWaveSystem === 'function') {
+        console.log('[TankGame] Activating enhanced wave system...');
+        enableEnhancedWaveSystem();
+    } else {
+        console.warn('[TankGame] Enhanced wave system not loaded');
+    }
 };
 
 function startPull(clientX, clientY) {
@@ -13124,14 +13246,36 @@ function gameLoop() {
         const deltaTime = Math.min(now - gameState.lastTime, 100); // Cap deltaTime to prevent huge jumps
         gameState.lastTime = now;
 
+        // Update wave announcement timer
+        if (gameState.showingWaveAnnouncement) {
+            gameState.waveAnnouncementTimer -= deltaTime;
+            if (gameState.waveAnnouncementTimer <= 0) {
+                gameState.showingWaveAnnouncement = false;
+                gameState.waveActive = true; // Resume spawning after announcement
+            }
+        }
+
         // Clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Update game state
-        updateBubbles(canvas, deltaTime);
-        updateTruthBomb(canvas);
-        updateParticles();
-        checkCollisions();
+        // Update game state (skip spawning during announcement)
+        if (!gameState.showingWaveAnnouncement) {
+            updateBubbles(canvas, deltaTime);
+            updateTruthBomb(canvas);
+            updateParticles();
+            checkCollisions();
+        } else {
+            // Still update existing entities during announcement
+            updateTruthBomb(canvas);
+            updateParticles();
+            gameState.bubbles.forEach(bubble => {
+                if (bubble.update && bubble.update.length > 1) {
+                    bubble.update(canvas, gameState);
+                } else if (bubble.update) {
+                    bubble.update(canvas);
+                }
+            });
+        }
 
         // Draw everything
         drawBubbles(ctx);
@@ -13151,19 +13295,40 @@ function gameLoop() {
 function updateBubbles(canvas, deltaTime) {
     gameState.bubbleSpawnTimer += deltaTime;
 
-    // Spawn new bubbles (with cap to prevent lag)
-    const spawnInterval = Math.max(GAME_CONFIG.MIN_SPAWN_INTERVAL, GAME_CONFIG.BUBBLE_SPAWN_INTERVAL - gameState.wave * 100);
-    if (gameState.bubbleSpawnTimer > spawnInterval && gameState.bubbles.length < GAME_CONFIG.MAX_BUBBLES) {
-        gameState.bubbleSpawnTimer = 0;
+    // Use enhanced wave system if available
+    if (typeof WAVE_CONFIGS !== 'undefined' && gameState.waveActive) {
+        const waveConfig = WAVE_CONFIGS.getWaveConfig(gameState.wave);
+        const spawnInterval = waveConfig.spawnInterval;
 
-        const x = GAME_CONFIG.BUBBLE_RADIUS + Math.random() * (canvas.width - GAME_CONFIG.BUBBLE_RADIUS * 2);
-        const isFake = Math.random() < Math.min(0.7, 0.3 + gameState.wave * 0.05); // More fakes on higher waves, caps at 70%
+        if (gameState.bubbleSpawnTimer > spawnInterval && gameState.bubbles.length < GAME_CONFIG.MAX_BUBBLES) {
+            gameState.bubbleSpawnTimer = 0;
 
-        gameState.bubbles.push(new Bubble(x, -GAME_CONFIG.BUBBLE_RADIUS, isFake));
+            const newBubble = spawnEnhancedBubble(canvas, gameState.wave);
+            if (newBubble) {
+                gameState.bubbles.push(newBubble);
+            }
+        }
+    } else {
+        // Fallback to original spawning
+        const spawnInterval = Math.max(GAME_CONFIG.MIN_SPAWN_INTERVAL, GAME_CONFIG.BUBBLE_SPAWN_INTERVAL - gameState.wave * 100);
+        if (gameState.bubbleSpawnTimer > spawnInterval && gameState.bubbles.length < GAME_CONFIG.MAX_BUBBLES) {
+            gameState.bubbleSpawnTimer = 0;
+
+            const x = GAME_CONFIG.BUBBLE_RADIUS + Math.random() * (canvas.width - GAME_CONFIG.BUBBLE_RADIUS * 2);
+            const isFake = Math.random() < Math.min(0.7, 0.3 + gameState.wave * 0.05); // More fakes on higher waves, caps at 70%
+
+            gameState.bubbles.push(new Bubble(x, -GAME_CONFIG.BUBBLE_RADIUS, isFake));
+        }
     }
 
-    // Update all bubbles
-    gameState.bubbles.forEach(bubble => bubble.update(canvas));
+    // Update all bubbles (support both original and enhanced)
+    gameState.bubbles.forEach(bubble => {
+        if (bubble.update.length > 1) {
+            bubble.update(canvas, gameState); // Enhanced bubbles
+        } else {
+            bubble.update(canvas); // Original bubbles
+        }
+    });
 
     // Remove inactive bubbles (cleanup for performance)
     gameState.bubbles = gameState.bubbles.filter(b => b.active);
@@ -13202,20 +13367,40 @@ function checkCollisions() {
 
         if (distance < bomb.radius + bubble.radius) {
             // HIT!
-            bubble.active = false;
             bomb.active = false;
 
             if (bubble.isFake) {
-                // Destroyed a fake - GOOD!
-                gameState.fakesDestroyed++;
-                gameState.score += GAME_CONFIG.POINTS_PER_FAKE * gameState.combo;
-                gameState.combo = Math.min(gameState.combo + 0.5, 5);
-                createExplosion(bubble.x, bubble.y, '#ff4478');
+                // Check if bubble has HP system (enhanced bubble)
+                let destroyed = true;
+                if (typeof bubble.takeDamage === 'function') {
+                    destroyed = bubble.takeDamage(1.0);
+                }
 
-                // Screen shake
-                if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+                if (destroyed) {
+                    bubble.active = false;
+                    gameState.fakesDestroyed++;
+                    gameState.enemiesDestroyed++; // Track for wave completion
+
+                    gameState.score += GAME_CONFIG.POINTS_PER_FAKE * gameState.combo;
+                    gameState.combo = Math.min(gameState.combo + 0.5, 5);
+                    createExplosion(bubble.x, bubble.y, bubble.behavior ? bubble.behavior.color : '#ff4478');
+
+                    // Check wave completion
+                    if (typeof checkWaveComplete === 'function') {
+                        checkWaveComplete();
+                    }
+
+                    // Screen shake
+                    if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+                } else {
+                    // Damaged but not destroyed
+                    const hitColor = bubble.behavior ? bubble.behavior.color : '#ff4478';
+                    createExplosion(bubble.x, bubble.y, hitColor);
+                    if (navigator.vibrate) navigator.vibrate(20);
+                }
             } else {
                 // Hit a real image - BAD!
+                bubble.active = false;
                 loseCredibility(GAME_CONFIG.CREDIBILITY_LOSS_REAL_HIT);
                 gameState.combo = 1;
                 createExplosion(bubble.x, bubble.y, '#44ff78');
@@ -13256,8 +13441,9 @@ function updateGameUI() {
 function gameOver() {
     gameState.running = false;
 
-    // Calculate coins earned
-    const coinsEarned = Math.floor(gameState.score / 100) + gameState.fakesDestroyed * 2;
+    // Calculate coins earned (with wave bonus)
+    const waveBonus = gameState.wave > 1 ? (gameState.wave - 1) * 5 : 0;
+    const coinsEarned = Math.floor(gameState.score / 100) + gameState.fakesDestroyed * 2 + waveBonus;
 
     // Award coins
     if (user && userProgression) {

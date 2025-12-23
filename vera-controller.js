@@ -562,7 +562,65 @@
             this.scheduleRandomSpeech();
             this.createSparkles();
 
+            // Check if first visit - show login prompt after short delay
+            this.checkFirstVisit();
+
+            // Setup idle time tracker for login prompts
+            this.setupIdleLoginPrompt();
+
             console.log('[VERA] Controller v2.0 initialized');
+        },
+
+        // Check if this is user's first visit
+        checkFirstVisit() {
+            const hasVisited = localStorage.getItem('vera-has-visited');
+
+            if (!hasVisited) {
+                // Mark as visited
+                localStorage.setItem('vera-has-visited', 'true');
+
+                // Show welcome login prompt after 3 seconds
+                setTimeout(() => {
+                    this.showLoginPrompt('first-visit');
+                }, 3000);
+            }
+        },
+
+        // Setup idle time tracker for login prompts
+        setupIdleLoginPrompt() {
+            let idleTime = 0;
+            let idleInterval = null;
+
+            const resetIdleTime = () => {
+                idleTime = 0;
+            };
+
+            // Track user activity
+            const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+            activityEvents.forEach(event => {
+                document.addEventListener(event, resetIdleTime, { passive: true });
+            });
+
+            // Check idle time every 5 seconds
+            idleInterval = setInterval(() => {
+                idleTime += 5;
+
+                // Show login prompt after 45 seconds of idle time on home screen
+                if (idleTime >= 45) {
+                    const currentView = document.querySelector('.view.active');
+                    const isHomeView = currentView && currentView.id === 'homeView';
+
+                    if (isHomeView) {
+                        this.showLoginPrompt('idle');
+                        idleTime = 0; // Reset after showing
+                    }
+                }
+            }, 5000);
+        },
+
+        // Trigger login prompt when user tries to access restricted feature
+        triggerRestrictedFeature() {
+            this.showLoginPrompt('restricted-feature');
         },
 
         // Create DOM structure
@@ -1064,8 +1122,11 @@
         },
 
         // Show speech bubble with smart positioning based on corner
-        showSpeech(text) {
+        showSpeech(text, options = {}) {
             const titleEl = this.speech.querySelector('.vera-speech-title');
+
+            // Handle different message types
+            const messageType = options.type || 'normal';
 
             switch (this.currentState) {
                 case 'monster':
@@ -1078,25 +1139,128 @@
                     titleEl.textContent = 'VERA mutters:';
                     break;
                 default:
-                    titleEl.textContent = 'VERA says:';
+                    titleEl.textContent = messageType === 'login' ? 'VERA suggests:' : 'VERA says:';
+            }
+
+            // Clear any existing buttons
+            const existingButtons = this.speech.querySelector('.vera-speech-buttons');
+            if (existingButtons) {
+                existingButtons.remove();
             }
 
             this.speechText.textContent = text;
 
+            // Add login buttons if type is 'login'
+            if (messageType === 'login') {
+                this.addLoginButtons();
+            }
+
             // Position speech bubble based on corner to prevent cutoff
             this.speech.classList.remove('pos-top-left', 'pos-top-right', 'pos-bottom-left', 'pos-bottom-right');
             this.speech.classList.add('pos-' + this.currentCorner);
+
+            // Add type class for specific styling
+            this.speech.classList.remove('type-login', 'type-normal');
+            this.speech.classList.add(`type-${messageType}`);
 
             this.speech.classList.add('visible');
 
             // Animate mouth while talking (V2 mode)
             this.container.classList.add('talking');
 
+            // Login messages stay longer
+            const duration = messageType === 'login' ? 15000 : 5000;
+
             clearTimeout(this.speechHideTimer);
             this.speechHideTimer = setTimeout(() => {
                 this.speech.classList.remove('visible');
                 this.container.classList.remove('talking');
-            }, 5000);
+            }, duration);
+        },
+
+        // Add login action buttons to speech bubble
+        addLoginButtons() {
+            const buttonsContainer = document.createElement('div');
+            buttonsContainer.className = 'vera-speech-buttons';
+
+            // Sign Up button
+            const signUpBtn = document.createElement('button');
+            signUpBtn.className = 'vera-btn vera-btn-primary';
+            signUpBtn.innerHTML = '<span>✨</span> Sign Up';
+            signUpBtn.onclick = () => {
+                this.speech.classList.remove('visible');
+                if (typeof openAuthModal === 'function') {
+                    openAuthModal('signup');
+                }
+            };
+
+            // Log In button
+            const loginBtn = document.createElement('button');
+            loginBtn.className = 'vera-btn vera-btn-secondary';
+            loginBtn.innerHTML = '<span>🔑</span> Log In';
+            loginBtn.onclick = () => {
+                this.speech.classList.remove('visible');
+                if (typeof openAuthModal === 'function') {
+                    openAuthModal('login');
+                }
+            };
+
+            // Continue as Guest button
+            const guestBtn = document.createElement('button');
+            guestBtn.className = 'vera-btn vera-btn-ghost';
+            guestBtn.innerHTML = '<span>👻</span> Continue as Guest';
+            guestBtn.onclick = () => {
+                this.speech.classList.remove('visible');
+                localStorage.setItem('vera-guest-dismissed', Date.now());
+            };
+
+            buttonsContainer.appendChild(signUpBtn);
+            buttonsContainer.appendChild(loginBtn);
+            buttonsContainer.appendChild(guestBtn);
+
+            this.speech.appendChild(buttonsContainer);
+        },
+
+        // Check if user should see login prompt
+        shouldShowLoginPrompt() {
+            // Check if user is already logged in
+            if (window.supabaseClient) {
+                const session = window.supabaseClient.auth.session();
+                if (session) return false;
+            }
+
+            // Check if guest dismissed recently (within 24 hours)
+            const guestDismissed = localStorage.getItem('vera-guest-dismissed');
+            if (guestDismissed) {
+                const timeSince = Date.now() - parseInt(guestDismissed);
+                if (timeSince < 24 * 60 * 60 * 1000) return false;
+            }
+
+            // Check if login prompt shown recently (within 1 hour)
+            const lastPrompt = localStorage.getItem('vera-login-prompt');
+            if (lastPrompt) {
+                const timeSince = Date.now() - parseInt(lastPrompt);
+                if (timeSince < 60 * 60 * 1000) return false;
+            }
+
+            return true;
+        },
+
+        // Show login prompt
+        showLoginPrompt(reason = 'first-visit') {
+            if (!this.shouldShowLoginPrompt()) return;
+
+            localStorage.setItem('vera-login-prompt', Date.now());
+
+            const messages = {
+                'first-visit': "Welcome! I'm VERA, your AI detection assistant. Create an account to unlock exclusive features, earn coins, and track your progress!",
+                'restricted-feature': "Oops! That feature requires an account. Sign up now to unlock full access and start earning rewards!",
+                'idle': "Still exploring? Create an account to save your progress, unlock achievements, and compete on the leaderboard!"
+            };
+
+            const message = messages[reason] || messages['first-visit'];
+            this.showSpeech(message, { type: 'login' });
+            SoundFX.playChime();
         },
 
         // Schedule random speech
@@ -1226,5 +1390,12 @@
 
     window.VeraController = VeraController;
     window.VeraSoundFX = SoundFX;
+
+    // Global helper function for restricted features
+    window.veraShowLoginPrompt = function(reason = 'restricted-feature') {
+        if (VeraController && VeraController.showLoginPrompt) {
+            VeraController.showLoginPrompt(reason);
+        }
+    };
 
 })();

@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="medalSilver" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="15%" stop-color="#e2e8f0"/>
+      <stop offset="30%" stop-color="#cbd5e1"/>
+      <stop offset="50%" stop-color="#94a3b8"/>
+      <stop offset="70%" stop-color="#64748b"/>
+      <stop offset="85%" stop-color="#475569"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </linearGradient>
+    <linearGradient id="silverShine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="20%" stop-color="#64748b"/>
+      <stop offset="40%" stop-color="#e2e8f0"/>
+      <stop offset="50%" stop-color="#f8fafc"/>
+      <stop offset="60%" stop-color="#e2e8f0"/>
+      <stop offset="80%" stop-color="#64748b"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </linearGradient>
+    <linearGradient id="silverHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#cbd5e1" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="ribbonRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fee2e2"/>
+      <stop offset="25%" stop-color="#fca5a5"/>
+      <stop offset="50%" stop-color="#ef4444"/>
+      <stop offset="75%" stop-color="#dc2626"/>
+      <stop offset="100%" stop-color="#7f1d1d"/>
+    </linearGradient>
+    <radialGradient id="medalGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#e2e8f0" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#64748b" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background glow -->
+  <ellipse cx="64" cy="72" rx="56" ry="48" fill="url(#medalGlow)"/>
+
+  <!-- Ribbons -->
+  <g filter="url(#softGlow)">
+    <path d="M 40 28 L 22 6 L 34 6 L 56 32 L 56 68 L 40 60 Z" fill="url(#ribbonRed)" stroke="#7f1d1d" stroke-width="2"/>
+    <path d="M 88 28 L 106 6 L 94 6 L 72 32 L 72 68 L 88 60 Z" fill="url(#ribbonRed)" stroke="#7f1d1d" stroke-width="2"/>
+  </g>
+
+  <!-- Medal body -->
+  <g filter="url(#strongGlow)">
+    <circle cx="64" cy="80" r="44" fill="#334155"/>
+    <circle cx="64" cy="76" r="44" fill="url(#medalSilver)" stroke="#1e293b" stroke-width="3.5"/>
+    <circle cx="64" cy="76" r="38" fill="none" stroke="url(#silverShine)" stroke-width="5"/>
+    <circle cx="64" cy="76" r="30" fill="url(#medalSilver)" stroke="#475569" stroke-width="2.5"/>
+    <circle cx="64" cy="76" r="26" fill="none" stroke="#64748b" stroke-width="2"/>
+  </g>
+
+  <!-- Star emblem -->
+  <g filter="url(#strongGlow)">
+    <polygon points="64,52 71,68 88,71 76,83 79,100 64,91 49,100 52,83 40,71 57,68" fill="url(#medalSilver)" stroke="#475569" stroke-width="2.5"/>
+    <polygon points="64,58 69,70 82,72 72,81 75,94 64,87 53,94 56,81 46,72 59,70" fill="url(#silverShine)" stroke="#64748b" stroke-width="1"/>
+  </g>
+
+  <!-- Top ring -->
+  <g filter="url(#strongGlow)">
+    <circle cx="64" cy="30" r="7" fill="none" stroke="url(#silverShine)" stroke-width="4"/>
+    <circle cx="64" cy="30" r="7" fill="none" stroke="#1e293b" stroke-width="1.5"/>
+  </g>
+</svg>

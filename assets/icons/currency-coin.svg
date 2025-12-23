@@ -21,10 +21,6 @@
       <stop offset="0%" stop-color="#fefce8"/>
       <stop offset="100%" stop-color="#fde047" stop-opacity="0"/>
     </linearGradient>
-    <radialGradient id="coinGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#fde047" stop-opacity="0.6"/>
-      <stop offset="100%" stop-color="#ca8a04" stop-opacity="0"/>
-    </radialGradient>
     <!-- Monster eye gradients -->
     <radialGradient id="irisGlow" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#fbbf24"/>
@@ -32,51 +28,39 @@
       <stop offset="70%" stop-color="#b45309"/>
       <stop offset="100%" stop-color="#78350f"/>
     </radialGradient>
-    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
-      <feOffset in="blur" dx="3" dy="5" result="offsetBlur"/>
-      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    <!-- Cleaner filters without excessive blur -->
+    <filter id="coinShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+      <feOffset in="blur" dx="0" dy="4" result="offsetBlur"/>
+      <feFlood flood-color="#000000" flood-opacity="0.3" result="offsetColor"/>
+      <feComposite in="offsetColor" in2="offsetBlur" operator="in" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
     </filter>
   </defs>
-  
-  <!-- Background glow -->
-  <ellipse cx="64" cy="64" rx="58" ry="58" fill="url(#coinGlow)"/>
-  
-  <!-- Stacked coins behind -->
-  <g filter="url(#innerShadow)" opacity="0.7">
-    <ellipse cx="64" cy="100" rx="42" ry="10" fill="url(#coinEdge)"/>
-    <ellipse cx="64" cy="96" rx="42" ry="10" fill="url(#coinFace)" stroke="#92400e" stroke-width="2"/>
-    <ellipse cx="64" cy="92" rx="42" ry="10" fill="url(#coinFace)" stroke="#92400e" stroke-width="2"/>
-  </g>
-  
-  <!-- Main coin -->
-  <g filter="url(#strongGlow)">
-    <!-- Coin edge 3D -->
+
+  <!-- Main coin group with clean shadow -->
+  <g filter="url(#coinShadow)">
+    <!-- Coin edge 3D effect -->
     <ellipse cx="64" cy="54" rx="50" ry="50" fill="url(#coinEdge)"/>
-    
-    <!-- Coin face -->
-    <circle cx="64" cy="50" r="50" fill="url(#coinFace)" stroke="#92400e" stroke-width="4"/>
-    
+
+    <!-- Main coin face -->
+    <circle cx="64" cy="50" r="50" fill="url(#coinFace)" stroke="#92400e" stroke-width="3"/>
+
     <!-- Outer ring -->
-    <circle cx="64" cy="50" r="44" fill="none" stroke="#ca8a04" stroke-width="4"/>
-    
+    <circle cx="64" cy="50" r="44" fill="none" stroke="#ca8a04" stroke-width="3"/>
+
     <!-- Inner ring -->
-    <circle cx="64" cy="50" r="38" fill="none" stroke="#a16207" stroke-width="2"/>
-    
-    <!-- Highlight -->
-    <path d="M 34 32 C 44 16, 74 12, 94 28 C 80 18, 52 18, 40 36 Z" fill="url(#coinHighlight)" opacity="0.55"/>
-    
-    <!-- EVIL CRACKS - embossed into gold -->
-    <!-- Shadow layer for depth -->
-    <g stroke="#78350f" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
+    <circle cx="64" cy="50" r="38" fill="none" stroke="#a16207" stroke-width="1.5"/>
+
+    <!-- Top highlight -->
+    <path d="M 34 32 C 44 16, 74 12, 94 28 C 80 18, 52 18, 40 36 Z" fill="url(#coinHighlight)" opacity="0.6"/>
+
+    <!-- EVIL CRACKS - embossed effect -->
+    <!-- Shadow layer -->
+    <g stroke="#78350f" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.4">
       <path d="M78 42 L82 38 L80 32 L84 26 L82 20"/>
       <path d="M82 32 L88 30 L92 24"/>
       <path d="M50 62 L46 66 L48 72 L44 78"/>
@@ -86,8 +70,8 @@
       <path d="M48 40 L44 36 L46 30 L40 26"/>
       <path d="M82 66 L86 70 L84 76"/>
     </g>
-    <!-- Main crack line -->
-    <g stroke="#92400e" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.7">
+    <!-- Main crack lines -->
+    <g stroke="#92400e" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
       <path d="M78 40 L82 36 L80 30 L84 24 L82 18"/>
       <path d="M82 30 L88 28 L92 22"/>
       <path d="M50 60 L46 64 L48 70 L44 76"/>
@@ -97,8 +81,8 @@
       <path d="M48 38 L44 34 L46 28 L40 24"/>
       <path d="M82 64 L86 68 L84 74"/>
     </g>
-    <!-- Highlight edge for emboss -->
-    <g stroke="#fde047" stroke-width="0.8" fill="none" stroke-linecap="round" opacity="0.4">
+    <!-- Highlight edges -->
+    <g stroke="#fde047" stroke-width="0.7" fill="none" stroke-linecap="round" opacity="0.35">
       <path d="M78 38 L82 34 L80 28 L84 22"/>
       <path d="M50 58 L46 62 L48 68"/>
       <path d="M90 44 L94 46"/>
@@ -106,44 +90,43 @@
       <path d="M48 36 L44 32"/>
       <path d="M82 62 L86 66"/>
     </g>
-    
+
     <!-- MONSTER EYE STAMP -->
-    <g filter="url(#innerShadow)">
-      <!-- Eye outer shape - almond/cat eye -->
-      <ellipse cx="64" cy="50" rx="26" ry="16" fill="#78350f" opacity="0.8"/>
+    <g>
+      <!-- Eye outer shape -->
+      <ellipse cx="64" cy="50" rx="26" ry="16" fill="#78350f" opacity="0.7"/>
       <!-- Iris outer -->
       <ellipse cx="64" cy="50" rx="18" ry="14" fill="#92400e"/>
-      <!-- Iris inner ring -->
+      <!-- Iris with gradient -->
       <ellipse cx="64" cy="50" rx="14" ry="11" fill="url(#irisGlow)"/>
       <!-- Glowing center -->
       <ellipse cx="64" cy="50" rx="10" ry="8" fill="#d97706"/>
-      <!-- Slit pupil - vertical monster/cat style -->
-      <ellipse cx="64" cy="50" rx="3.5" ry="12" fill="#451a03"/>
-      <!-- Eye highlight - top -->
-      <ellipse cx="58" cy="44" rx="5" ry="3.5" fill="#fef3c7" opacity="0.85"/>
-      <!-- Eye highlight - small bottom -->
-      <circle cx="70" cy="56" r="2" fill="#fef3c7" opacity="0.5"/>
-      <!-- Subtle veins/detail lines -->
-      <path d="M38 50 Q46 48 50 50" stroke="#78350f" stroke-width="1.2" fill="none" opacity="0.6"/>
-      <path d="M78 50 Q82 48 90 50" stroke="#78350f" stroke-width="1.2" fill="none" opacity="0.6"/>
+      <!-- Slit pupil -->
+      <ellipse cx="64" cy="50" rx="3" ry="11" fill="#451a03"/>
+      <!-- Eye highlights -->
+      <ellipse cx="58" cy="44" rx="4.5" ry="3" fill="#fef3c7" opacity="0.8"/>
+      <circle cx="70" cy="56" r="1.8" fill="#fef3c7" opacity="0.45"/>
+      <!-- Subtle veins -->
+      <path d="M38 50 Q46 48 50 50" stroke="#78350f" stroke-width="1" fill="none" opacity="0.5"/>
+      <path d="M78 50 Q82 48 90 50" stroke="#78350f" stroke-width="1" fill="none" opacity="0.5"/>
     </g>
-    
-    <!-- Decorative dots -->
-    <g fill="#fef08a">
-      <circle cx="64" cy="4" r="3"/>
-      <circle cx="64" cy="96" r="3"/>
-      <circle cx="18" cy="50" r="3"/>
-      <circle cx="110" cy="50" r="3"/>
-      <circle cx="28" cy="18" r="2.5"/>
-      <circle cx="100" cy="18" r="2.5"/>
-      <circle cx="28" cy="82" r="2.5"/>
-      <circle cx="100" cy="82" r="2.5"/>
+
+    <!-- Corner decorative dots -->
+    <g fill="#fef08a" opacity="0.9">
+      <circle cx="64" cy="4" r="2.5"/>
+      <circle cx="64" cy="96" r="2.5"/>
+      <circle cx="18" cy="50" r="2.5"/>
+      <circle cx="110" cy="50" r="2.5"/>
+      <circle cx="28" cy="18" r="2"/>
+      <circle cx="100" cy="18" r="2"/>
+      <circle cx="28" cy="82" r="2"/>
+      <circle cx="100" cy="82" r="2"/>
     </g>
   </g>
-  
-  <!-- Sparkles -->
-  <g fill="#fefce8" filter="url(#softGlow)">
-    <circle cx="16" cy="16" r="3.5"/>
-    <circle cx="112" cy="16" r="3.5"/>
+
+  <!-- Clean sparkles without glow filter -->
+  <g fill="#fefce8" opacity="0.85">
+    <circle cx="16" cy="16" r="3"/>
+    <circle cx="112" cy="16" r="3"/>
   </g>
 </svg>
