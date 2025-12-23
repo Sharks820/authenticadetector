@@ -7658,18 +7658,20 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
 <link rel="stylesheet" href="PROFESSIONAL_UI_OVERHAUL.css">
 <link rel="stylesheet" href="ai-cosmetics-gacha.css">
 <link rel="stylesheet" href="vera-controller.css?v=4.0.0">
-<link rel="stylesheet" href="UI_FIXES.css?v=1.0.0">
+<link rel="stylesheet" href="UI_FIXES.css?v=1.0.1">
+<link rel="stylesheet" href="avatar-system-unity.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script src="tank-shooter-enhanced.js"></script>
-<script src="tank-game-enhancements.js"></script>
+<script src="tank-game-enhancements.js?v=1.0.1"></script>
 <script src="avatar-cosmetics-system.js"></script>
 <script src="ai-cosmetics-gacha.js"></script>
+<script src="avatar-system-unity.js"></script>
 <script src="vera-controller.js?v=4.0.0" defer></script>
 <script src="vera-gsap.js?v=1.1.0" defer></script>
 <!-- Rive Animation Runtime (for professional VERA animations) -->
 <script src="https://unpkg.com/@rive-app/canvas@2.15.2"></script>
-<script src="vera-rive.js?v=1.0.0" defer></script>
+<script src="vera-rive.js?v=1.0.1" defer></script>
 
 <script>
 // Initialize Lucide icons for professional UI
@@ -7734,6 +7736,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof initCosmeticsSystem === 'function') {
         console.log('[Init] Starting cosmetics system...');
         initCosmeticsSystem();
+    }
+
+    if (typeof initAvatarSystem === 'function') {
+        console.log('[Init] Starting Unity-style avatar system...');
+        initAvatarSystem();
     }
 
     // Apply VERA settings from localStorage
@@ -10516,6 +10523,7 @@ async function loadLeaderboardView() {
 function renderLeaderboard(leaderboard) {
     const container = $('leaderboardContent');
     const fallbackAvatar = 'assets/vera/vera_fairy.svg';
+    const fallbackEmoji = typeof updateLeaderboardAvatars === 'function' ? updateLeaderboardAvatars() : '🧑‍🚀';
     if (!container) return;
 
     if (!leaderboard || leaderboard.length === 0) {
@@ -13618,6 +13626,17 @@ function drawTruthBomb(ctx) {
 function drawCannon(ctx) {
     const x = gameState.cannonX;
     const y = gameState.cannonY;
+
+    // Draw avatar on tank (if available)
+    if (typeof getAvatarForTank === 'function') {
+        const avatarData = getAvatarForTank();
+        if (avatarData && avatarData.headEmoji) {
+            ctx.font = '30px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(avatarData.headEmoji, x, y - 40);
+        }
+    }
 
     // Cannon base
     ctx.fillStyle = '#2c3e50';
