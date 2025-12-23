@@ -71,7 +71,11 @@
             touch-action:pan-x pan-y;
         }
 
-        /* GLOBAL ANIMATIONS - Make everything feel alive */
+        /* ============================================
+           PROFESSIONAL ANIMATION SYSTEM
+           ============================================ */
+
+        /* Global entrance animations */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -80,18 +84,203 @@
             from { opacity: 0; transform: scale(0.9); }
             to { opacity: 1; transform: scale(1); }
         }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInFromLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInFromRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Shimmer & glow effects */
         @keyframes shimmerSlide {
             0% { left: -100%; }
             100% { left: 100%; }
+        }
+        @keyframes shimmerSweep {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
         @keyframes borderGlow {
             0%, 100% { border-color: rgba(94,234,212,0.3); }
             50% { border-color: rgba(94,234,212,0.6); }
         }
+        @keyframes softGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(94,234,212,0.2); }
+            50% { box-shadow: 0 0 20px rgba(94,234,212,0.4); }
+        }
 
-        /* Apply animations to common elements */
-        button, .card, .panel { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-        button:active { transform: scale(0.97); }
+        /* Loading animations */
+        @keyframes skeletonPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        @keyframes spinLoader {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes dotBounce {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Skeleton loader components */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+            background-size: 200% 100%;
+            animation: skeletonShimmer 1.5s ease-in-out infinite;
+            border-radius: 8px;
+        }
+        @keyframes skeletonShimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .skeleton-text {
+            height: 16px;
+            margin-bottom: 8px;
+        }
+        .skeleton-title {
+            height: 24px;
+            width: 60%;
+            margin-bottom: 12px;
+        }
+        .skeleton-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+        }
+        .skeleton-card {
+            height: 120px;
+            margin-bottom: 12px;
+        }
+
+        /* Count-up number animation */
+        @keyframes numberPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Value change highlight animation */
+        @keyframes valueChange {
+            0% {
+                transform: scale(1);
+                color: inherit;
+            }
+            50% {
+                transform: scale(1.15);
+                color: var(--primary-bright);
+                text-shadow: 0 0 8px var(--primary-glow);
+            }
+            100% {
+                transform: scale(1);
+                color: inherit;
+            }
+        }
+        .value-changed {
+            animation: valueChange 0.4s ease-out;
+        }
+
+        /* Notification pulse animation */
+        @keyframes notificationPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+        }
+        .notification-dot {
+            animation: notificationPulse 1.5s ease-in-out infinite;
+        }
+
+        /* Page transition animations */
+        @keyframes pageSlideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes pageSlideOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(-20px); }
+        }
+        @keyframes pageFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Apply smooth transitions to common elements */
+        button, .card, .panel {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        button:active {
+            transform: scale(0.97);
+            transition-duration: 0.1s;
+        }
+
+        /* Accessibility: Respect reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ============================================
+           ANIMATION FEATURE SUMMARY
+           ============================================
+
+           ✓ Button Hover Effects:
+             - Icon buttons: Lift + glow + shimmer sweep
+             - CTA buttons: Scale + gradient shift + top glow
+             - Quick nav: Lift + scale + shimmer
+             - Menu items: Slide + shimmer + icon rotate
+
+           ✓ Card Hover Effects:
+             - Stat cards: Lift + scale + shimmer sweep
+             - Badge cards: Lift + scale + continuous shine (unlocked)
+             - Profile stat cards: Lift + scale + shimmer
+             - Shop items: Already have good animations
+
+           ✓ Page Transitions:
+             - Views: Slide in/out with fade
+             - Closing: Fade out animation class
+
+           ✓ Loading States:
+             - Skeleton loaders: Shimmer animation
+             - Helper function: showSkeletonLoader()
+
+           ✓ Stat Counters:
+             - Number count-up: animateNumber() function
+             - Value change highlight: updateValueWithAnimation()
+             - Pop effect when complete
+
+           ✓ Badge/Achievement Effects:
+             - Unlocked badges: Diagonal shine sweep
+             - Epic/Legendary: Already have glow animations
+
+           ✓ Navigation:
+             - Quick nav icons: Float + rotate on hover
+             - Menu arrows: Slide right on hover
+             - Beast toggle: Rotate 180° + shimmer
+
+           ✓ Currency Bar:
+             - Hover effects: Lift + scale
+             - Value change animation available
+
+           ✓ Notifications:
+             - Notification dot pulse animation
+             - Toast notifications: Already animated
+           ============================================ */
 
         /* Animated underline for links */
         a { position: relative; text-decoration: none; color: var(--primary); }
@@ -107,7 +296,7 @@
         }
         a:hover::after { width: 100%; }
 
-        /* VIEWS - SCROLLABLE */
+        /* VIEWS - SCROLLABLE WITH SMOOTH TRANSITIONS */
         .view{
             position:fixed;inset:0;
             background:var(--bg);
@@ -116,8 +305,18 @@
             overflow:hidden;
             /* Chrome PWA: Use dynamic viewport height */
             height:100dvh;
+            /* Smooth page transitions */
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
-        .view.active{display:flex}
+        .view.active{
+            display:flex;
+            animation: pageSlideIn 0.3s ease forwards;
+        }
+        .view.closing{
+            animation: pageSlideOut 0.25s ease forwards;
+        }
         
         .view-header{
             flex-shrink:0;
@@ -285,8 +484,23 @@
             background:var(--surface2);border:1px solid var(--border);
             color:var(--text2);font-size:18px;
             cursor:pointer;display:flex;align-items:center;justify-content:center;
-            transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position:relative;
+            box-shadow:0 2px 4px rgba(0,0,0,0.2);
+        }
+        /* Enhanced shimmer effect on hover */
+        .icon-btn::before{
+            content:'';
+            position:absolute;
+            top:0;left:-100%;
+            width:100%;height:100%;
+            background:linear-gradient(90deg, transparent, rgba(94,234,212,0.3), transparent);
+            transition:left 0.5s ease;
+            border-radius:12px;
+            pointer-events:none;
+        }
+        .icon-btn:hover::before{
+            left:100%;
         }
         .icon-btn::after{
             content:attr(data-tooltip);
@@ -294,18 +508,24 @@
             background:var(--surface3);color:var(--text);
             padding:4px 8px;border-radius:6px;font-size:10px;font-weight:600;
             white-space:nowrap;opacity:0;pointer-events:none;
-            transition:all 0.2s;z-index:100;
+            transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);z-index:100;
             box-shadow:0 4px 12px rgba(0,0,0,0.3);
         }
-        .icon-btn:hover::after{opacity:1;transform:translateX(-50%) scale(1)}
+        .icon-btn:hover::after{
+            opacity:1;
+            transform:translateX(-50%) scale(1) translateY(-2px);
+        }
         .icon-btn:hover{
             background:linear-gradient(135deg, var(--surface3), var(--surface2));
             border-color:var(--primary);
             color:var(--primary);
-            transform:translateY(-3px) scale(1.05);
-            box-shadow:0 8px 20px rgba(94,234,212,0.25);
+            transform:translateY(-4px) scale(1.05);
+            box-shadow:0 8px 24px rgba(94,234,212,0.35), 0 0 16px rgba(94,234,212,0.15);
         }
-        .icon-btn:active{transform:scale(0.95)}
+        .icon-btn:active{
+            transform:scale(0.95) translateY(0);
+            transition-duration:0.1s;
+        }
         .icon-btn.highlight{
             animation:btn-glow 2s ease-in-out infinite;
             border-color:rgba(236,72,153,0.5);
@@ -346,25 +566,40 @@
             border:1px solid rgba(255,255,255,0.06);
             border-radius:14px;
             cursor:pointer;
-            transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-family:inherit;
             position:relative;
             overflow:hidden;
             box-shadow:0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.03);
         }
+        /* Top highlight line */
         .quick-nav-btn::before{
-            content:'';position:absolute;top:0;left:0;right:0;height:1px;
-            background:linear-gradient(90deg, transparent, rgba(94,234,212,0.3), transparent);
+            content:'';position:absolute;top:0;left:0;right:0;height:2px;
+            background:linear-gradient(90deg, transparent, rgba(94,234,212,0.5), transparent);
             opacity:0;transition:opacity 0.3s;
         }
+        /* Shimmer sweep on hover */
+        .quick-nav-btn::after{
+            content:'';
+            position:absolute;
+            top:0;left:-100%;
+            width:100%;height:100%;
+            background:linear-gradient(90deg, transparent, rgba(94,234,212,0.1), transparent);
+            transition:left 0.6s ease;
+            pointer-events:none;
+        }
         .quick-nav-btn:hover::before{opacity:1}
+        .quick-nav-btn:hover::after{left:100%}
         .quick-nav-btn:hover{
             background:linear-gradient(145deg, rgba(36,43,61,0.95) 0%, rgba(26,31,46,0.98) 100%);
-            border-color:rgba(94,234,212,0.25);
-            transform:translateY(-3px);
-            box-shadow:0 8px 20px rgba(0,0,0,0.3), 0 0 20px rgba(94,234,212,0.1), inset 0 1px 0 rgba(255,255,255,0.05);
+            border-color:rgba(94,234,212,0.35);
+            transform:translateY(-4px) scale(1.02);
+            box-shadow:0 10px 24px rgba(0,0,0,0.4), 0 0 24px rgba(94,234,212,0.15), inset 0 1px 0 rgba(255,255,255,0.05);
         }
-        .quick-nav-btn:active{transform:translateY(-1px) scale(0.98)}
+        .quick-nav-btn:active{
+            transform:translateY(-2px) scale(0.98);
+            transition-duration:0.1s;
+        }
         .quick-nav-icon{
             width:38px;height:38px;
             display:flex;align-items:center;justify-content:center;
@@ -1112,16 +1347,37 @@
             background:linear-gradient(145deg, rgba(26,31,46,0.9) 0%, rgba(18,22,31,0.95) 100%);
             border:1px solid rgba(94,234,212,0.12);
             border-radius:16px;padding:16px;text-align:center;
-            animation: statPop 0.4s ease-out backwards;
-            transition:all 0.3s ease;
+            animation: statPop 0.5s ease-out backwards;
+            transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position:relative;
+            overflow:hidden;
+            box-shadow:0 2px 8px rgba(0,0,0,0.2);
+        }
+        /* Shimmer effect on stat cards */
+        .stat-card::before{
+            content:'';
+            position:absolute;
+            top:0;left:-100%;
+            width:100%;height:100%;
+            background:linear-gradient(90deg, transparent, rgba(94,234,212,0.2), transparent);
+            transition:left 0.6s ease;
+            pointer-events:none;
+        }
+        .stat-card:hover::before{
+            left:100%;
         }
         .stat-card:nth-child(1) { animation-delay: 0s; }
         .stat-card:nth-child(2) { animation-delay: 0.1s; }
         .stat-card:nth-child(3) { animation-delay: 0.2s; }
+        .stat-card:nth-child(4) { animation-delay: 0.3s; }
         .stat-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(94,234,212,0.3);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            transform: translateY(-6px) scale(1.02);
+            border-color: rgba(94,234,212,0.4);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 0 24px rgba(94,234,212,0.2);
+        }
+        .stat-card:active {
+            transform: translateY(-2px) scale(0.98);
+            transition-duration: 0.1s;
         }
         .stat-value{
             font-size:24px;font-weight:900;
@@ -1142,16 +1398,42 @@
             position:relative;padding:16px;border-radius:16px;
             background:rgba(255,255,255,.08);backdrop-filter:blur(10px);
             border:1px solid rgba(255,255,255,.2);text-align:center;
-            transition:all 0.3s ease;cursor:pointer;
+            transition:all 0.35s cubic-bezier(0.4, 0, 0.2, 1);cursor:pointer;
             display:flex;flex-direction:column;align-items:center;justify-content:center;
             min-height:140px;
+            overflow:hidden;
+            box-shadow:0 4px 16px rgba(0,0,0,.2);
+        }
+        /* Shine sweep for unlocked badges */
+        .badge-card.unlocked::after{
+            content:'';
+            position:absolute;
+            top:-50%;left:-50%;
+            width:200%;height:200%;
+            background:linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+            transform:rotate(45deg);
+            animation:badgeShine 4s ease-in-out infinite;
+            pointer-events:none;
+        }
+        @keyframes badgeShine {
+            0%, 100% { transform:rotate(45deg) translateX(-100%); }
+            50% { transform:rotate(45deg) translateX(100%); }
         }
         .badge-card:hover{
-            transform:translateY(-8px);background:rgba(255,255,255,.12);
-            border-color:rgba(255,255,255,.3);box-shadow:0 8px 24px rgba(0,0,0,.3)
+            transform:translateY(-10px) scale(1.04);
+            background:rgba(255,255,255,.15);
+            border-color:rgba(94,234,212,.5);
+            box-shadow:0 12px 36px rgba(0,0,0,.4), 0 0 30px rgba(94,234,212,.25);
         }
-        .badge-card.locked{opacity:0.5;pointer-events:none}
-        .badge-card.unlocked{box-shadow:0 4px 16px rgba(0,0,0,.2)}
+        .badge-card:active{
+            transform:translateY(-6px) scale(1.01);
+            transition-duration:0.1s;
+        }
+        .badge-card.locked{
+            opacity:0.5;
+            pointer-events:none;
+            filter:grayscale(0.7);
+        }
         .badge-card-icon{
             width:64px;height:64px;border-radius:14px;
             display:flex;align-items:center;justify-content:center;
@@ -1340,36 +1622,61 @@
             background:none;border-left:none;border-right:none;border-top:none;
             width:100%;text-align:left;color:var(--text);font-family:inherit;font-size:14px;
             font-weight:500;
-            transition:all 0.25s ease;
+            transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position:relative;
+            overflow:hidden;
         }
+        /* Left accent bar */
         .menu-item::before {
             content:'';
             position:absolute;
             left:0;top:0;bottom:0;width:3px;
             background:linear-gradient(180deg, #00d4aa, #0984e3);
             opacity:0;
-            transition:opacity 0.25s ease;
+            transition:opacity 0.3s ease;
+        }
+        /* Shimmer effect on hover */
+        .menu-item::after {
+            content:'';
+            position:absolute;
+            top:0;left:-100%;
+            width:100%;height:100%;
+            background:linear-gradient(90deg, transparent, rgba(94,234,212,0.08), transparent);
+            transition:left 0.5s ease;
+            pointer-events:none;
         }
         .menu-item:hover {
-            background:rgba(94,234,212,0.08);
-            padding-left:20px;
+            background:rgba(94,234,212,0.1);
+            padding-left:24px;
         }
         .menu-item:hover::before { opacity:1; }
+        .menu-item:hover::after { left:100%; }
+        .menu-item:active {
+            background:rgba(94,234,212,0.15);
+            transition-duration:0.1s;
+        }
         .menu-item:last-child{border-bottom:none}
         .menu-icon{
             font-size:18px;width:32px;height:32px;
             display:flex;align-items:center;justify-content:center;
             background:linear-gradient(135deg, rgba(94,234,212,0.12), rgba(34,211,238,0.08));
             border-radius:10px;
+            transition:all 0.3s ease;
+        }
+        .menu-item:hover .menu-icon {
+            transform:scale(1.1) rotate(5deg);
+            background:linear-gradient(135deg, rgba(94,234,212,0.2), rgba(34,211,238,0.15));
         }
         .menu-text{flex:1;color:#fff}
         .menu-arrow{
             color:rgba(94,234,212,0.6);
             font-size:14px;
-            transition:transform 0.25s ease;
+            transition:transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .menu-item:hover .menu-arrow { transform:translateX(4px); }
+        .menu-item:hover .menu-arrow {
+            transform:translateX(6px);
+            color:rgba(94,234,212,0.9);
+        }
         
         /* HISTORY - Premium Cards */
         @keyframes historySlideIn {
@@ -2404,13 +2711,14 @@
             font-size: 16px;
             cursor: pointer;
             margin-bottom: 12px;
-            transition: all 0.4s ease;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             position: relative;
             overflow: hidden;
         }
+        /* Shimmer sweep effect */
         .cta-btn::before {
             content: '';
             position: absolute;
@@ -2418,19 +2726,35 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
+        }
+        /* Glow effect on top */
+        .cta-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         .cta-btn:hover {
             background-position: right center;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 10px 35px rgba(99, 102, 241, 0.6), 0 0 20px rgba(139, 92, 246, 0.3);
         }
         .cta-btn:hover::before {
             left: 100%;
         }
+        .cta-btn:hover::after {
+            opacity: 1;
+        }
         .cta-btn:active {
-            transform: translateY(-1px);
+            transform: translateY(-2px) scale(0.99);
+            transition-duration: 0.1s;
         }
 
         .cta-btn-secondary {
@@ -4297,6 +4621,18 @@
             background: rgba(255, 255, 255, 0.04);
             border-radius: 14px;
             border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .currency-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px) scale(1.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .currency-item:active {
+            transform: translateY(0) scale(1);
+            transition-duration: 0.1s;
         }
         .currency-item.coins {
             background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.08));
@@ -4450,12 +4786,34 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        /* Shimmer on hover */
+        .profile-stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(94,234,212,0.15), transparent);
+            transition: left 0.5s ease;
+            pointer-events: none;
+        }
+        .profile-stat-card:hover::before {
+            left: 100%;
         }
         .profile-stat-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-2px);
-            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-4px) scale(1.03);
+            border-color: rgba(94, 234, 212, 0.3);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3), 0 0 16px rgba(94,234,212,0.15);
+        }
+        .profile-stat-card:active {
+            transform: translateY(-2px) scale(0.99);
+            transition-duration: 0.1s;
         }
         .profile-stat-card .stat-icon { font-size: 18px; margin-bottom: 4px; }
         .profile-stat-card .stat-value { font-size: 14px; font-weight: 800; }
@@ -4576,14 +4934,42 @@
             justify-content: center;
             font-size: 18px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Shimmer effect on beast toggle */
+        .beast-toggle::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        .beast-toggle:hover::before {
+            left: 100%;
         }
         .beast-toggle:hover {
-            background: rgba(139, 92, 246, 0.3);
-            transform: scale(1.1);
+            background: rgba(139, 92, 246, 0.35);
+            transform: scale(1.15) rotate(5deg);
+            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
         }
-        .beast-toggle.expanded { background: rgba(139, 92, 246, 0.4); }
+        .beast-toggle:active {
+            transform: scale(1.05) rotate(0deg);
+            transition-duration: 0.1s;
+        }
+        .beast-toggle.expanded {
+            background: rgba(139, 92, 246, 0.5);
+            transform: rotate(180deg);
+        }
+        .beast-toggle.expanded:hover {
+            transform: rotate(180deg) scale(1.15);
+        }
 
         /* Expanded state */
         .beast-expanded {
@@ -5278,6 +5664,121 @@ window.showAddFriend = function() {
 // Trading functions
 window.showCreateTrade = function() {
     if(window.showToast) showToast('Select a friend to trade with first!', 'info');
+};
+
+// ============================================
+// ANIMATION UTILITIES
+// ============================================
+
+/**
+ * Animate number counting up from start to end
+ * @param {HTMLElement} element - The element to animate
+ * @param {number} start - Starting number
+ * @param {number} end - Ending number
+ * @param {number} duration - Duration in milliseconds (default: 800ms)
+ * @param {string} suffix - Optional suffix (e.g., '%', 'K', etc.)
+ */
+window.animateNumber = function(element, start, end, duration = 800, suffix = '') {
+    if (!element) return;
+
+    const range = end - start;
+    const startTime = performance.now();
+    const isInteger = Number.isInteger(end);
+
+    function updateNumber(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Easing function (ease-out-cubic)
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const current = start + (range * easeOut);
+
+        // Format number
+        const displayValue = isInteger ? Math.round(current) : current.toFixed(1);
+        element.textContent = displayValue + suffix;
+
+        // Add pop animation when complete
+        if (progress === 1) {
+            element.style.animation = 'numberPop 0.3s ease-out';
+            setTimeout(() => {
+                element.style.animation = '';
+            }, 300);
+        } else {
+            requestAnimationFrame(updateNumber);
+        }
+    }
+
+    requestAnimationFrame(updateNumber);
+};
+
+/**
+ * Animate multiple stat counters
+ * @param {Object} stats - Object with { elementId: targetValue }
+ */
+window.animateStats = function(stats) {
+    Object.entries(stats).forEach(([elementId, targetValue], index) => {
+        const element = document.getElementById(elementId);
+        if (element) {
+            // Stagger animations slightly
+            setTimeout(() => {
+                const currentValue = parseFloat(element.textContent) || 0;
+                animateNumber(element, currentValue, targetValue, 800);
+            }, index * 50);
+        }
+    });
+};
+
+/**
+ * Add entrance animation to element
+ * @param {HTMLElement} element - Element to animate
+ * @param {string} animationType - Animation type: 'fadeInUp', 'fadeInScale', 'slideInFromLeft', 'slideInFromRight'
+ * @param {number} delay - Delay in milliseconds
+ */
+window.addEntranceAnimation = function(element, animationType = 'fadeInUp', delay = 0) {
+    if (!element) return;
+
+    element.style.opacity = '0';
+    element.style.animation = `${animationType} 0.5s ease-out forwards`;
+    element.style.animationDelay = `${delay}ms`;
+};
+
+/**
+ * Trigger value change animation when updating a stat/currency
+ * @param {string} elementId - ID of the element to animate
+ * @param {number|string} newValue - New value to set
+ */
+window.updateValueWithAnimation = function(elementId, newValue) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    // Add animation class
+    element.classList.add('value-changed');
+
+    // Update value
+    element.textContent = newValue;
+
+    // Remove class after animation completes
+    setTimeout(() => {
+        element.classList.remove('value-changed');
+    }, 400);
+};
+
+/**
+ * Show skeleton loaders while content is loading
+ * @param {HTMLElement} container - Container to add skeletons to
+ * @param {number} count - Number of skeleton items
+ * @param {string} type - Type: 'card', 'text', 'avatar'
+ */
+window.showSkeletonLoader = function(container, count = 3, type = 'card') {
+    if (!container) return;
+
+    const skeletonHTML = type === 'card'
+        ? '<div class="skeleton skeleton-card"></div>'
+        : type === 'text'
+        ? '<div class="skeleton skeleton-text"></div>'
+        : '<div class="skeleton skeleton-avatar"></div>';
+
+    container.innerHTML = skeletonHTML.repeat(count);
 };
 </script>
 
@@ -7020,6 +7521,7 @@ let analysisAborted = false;
 let isLoginMode = false;
 let activeOutbreak = null;
 let userProgression = null; // User progression data (level, xp, coins, etc.)
+let userSquad = null; // User's current squad data
 
 // AI Detection Models - WE USE REAL AI DETECTORS NOW
 let aiDetectorPipeline = null;
@@ -9124,6 +9626,9 @@ function updateCoinsDisplay() {
     });
 }
 
+// Alias for updateCoinsDisplay
+window.updateAllCoinDisplays = updateCoinsDisplay;
+
 function updateGameCTA() {
     const cta = $('gameCTA');
     if (!cta || !user) return;
@@ -10119,7 +10624,7 @@ window.handleLogout = async function() {
         localStorage.removeItem('userSettings');
 
         // Update UI
-        updateUIForAuthState(null);
+        updateUserUI();
 
         // Navigate to home
         openView('homeView');
