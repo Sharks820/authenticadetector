@@ -1,7 +1,7 @@
 /* =============================================================================
-   VERA ANIMATION CONTROLLER v3.4.0 - CSS
+   VERA ANIMATION CONTROLLER v3.5.0 - CSS
    Complete overhaul: Smooth animations, soft particles, no glitching
-   Updates: Smaller mobile size (80px), transparent speech bubble (0.8 opacity)
+   Updates: Responsive positioning, more transparent mobile dialog (0.55 opacity)
    ============================================================================= */
 
 /* ==========================================================================
@@ -941,16 +941,16 @@ body.vera-shake {
         max-width: 160px;
         padding: 10px 12px;
         font-size: 11px;
-        background: rgba(15, 23, 42, 0.75);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
+        background: rgba(15, 23, 42, 0.55);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         right: -20px;
     }
 
     .vera-speech::after {
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
-        border-top: 8px solid rgba(15, 23, 42, 0.75);
+        border-top: 8px solid rgba(15, 23, 42, 0.55);
         bottom: -8px;
         right: 20px;
     }
@@ -958,11 +958,11 @@ body.vera-shake {
     /* Position adjustments for mobile corners */
     .vera-speech.pos-bottom-right::after,
     .vera-speech.pos-bottom-left::after {
-        border-top-color: rgba(15, 23, 42, 0.75);
+        border-top-color: rgba(15, 23, 42, 0.55);
     }
     .vera-speech.pos-top-right::after,
     .vera-speech.pos-top-left::after {
-        border-bottom-color: rgba(15, 23, 42, 0.75);
+        border-bottom-color: rgba(15, 23, 42, 0.55);
     }
 
     .vera-badge {

@@ -628,11 +628,18 @@
             }
         },
 
+        // Get current size based on viewport (responsive)
+        getSize() {
+            // Mobile: 80px, Desktop: 140px (matches CSS media query at 480px)
+            return window.innerWidth <= 480 ? 80 : 140;
+        },
+
         // Set initial position
         setInitialPosition() {
-            const margin = 20;
-            this.position.x = window.innerWidth - 140 - margin;
-            this.position.y = window.innerHeight - 140 - 80;
+            const margin = 15;
+            const size = this.getSize();
+            this.position.x = window.innerWidth - size - margin;
+            this.position.y = window.innerHeight - size - margin - 60;
             this.updatePosition();
         },
 
@@ -650,7 +657,7 @@
             this.isAnimating = true;
 
             const margin = 20;
-            const size = 140;
+            const size = this.getSize();
 
             const screenW = window.innerWidth;
             const screenH = window.innerHeight;
@@ -743,10 +750,10 @@
 
             document.addEventListener('click', () => SoundFX.resume(), { once: true });
 
-            // Handle resize
+            // Handle resize - recalculate position with responsive size
             window.addEventListener('resize', () => {
                 const margin = 20;
-                const size = 140;
+                const size = this.getSize();
                 const maxX = window.innerWidth - size - margin;
                 const maxY = window.innerHeight - size - margin - 60;
 

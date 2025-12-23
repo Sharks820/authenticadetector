@@ -4465,6 +4465,52 @@
                 flex: 1 1 45%;
             }
         }
+
+        /* Feature Badge System - Converts to icons on mobile */
+        .feature-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 8px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        .feature-badge.featured { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .feature-badge.live { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .feature-badge.soon { background: linear-gradient(135deg, #10b981, #059669); }
+        .feature-badge.new { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+
+        /* Mobile: Convert to icon overlays */
+        @media (max-width: 480px) {
+            .game-card-hero {
+                position: relative;
+            }
+            .feature-badge {
+                position: absolute !important;
+                top: 8px !important;
+                right: 8px !important;
+                width: 24px;
+                height: 24px;
+                padding: 0;
+                border-radius: 50%;
+                font-size: 12px;
+                z-index: 10;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            }
+            .feature-badge .badge-text { display: none; }
+            .feature-badge .badge-icon { display: flex; }
+            /* Icon-only display */
+            .feature-badge.featured::before { content: '⭐'; }
+            .feature-badge.live::before { content: '🔴'; font-size: 10px; }
+            .feature-badge.soon::before { content: '⏳'; font-size: 10px; }
+            .feature-badge.new::before { content: '✨'; }
+        }
+        @media (min-width: 481px) {
+            .feature-badge::before { display: none; }
+        }
     </style>
 <link rel="stylesheet" href="assets/style/design-tokens.css">
 <link rel="stylesheet" href="assets/style/theme.css">
@@ -4636,7 +4682,9 @@ window.startBeastBattle = function() { if(window.showToast) showToast('Beast bat
         <!-- VEILBREAKERS - The Ultimate Beast Collection & Battle RPG      -->
         <!-- ═══════════════════════════════════════════════════════════════ -->
         <div id="heroGameBanner" style="margin-bottom:14px;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.4);border:2px solid rgba(139,92,246,0.35)">
-            <div style="position:relative;height:160px;background:linear-gradient(135deg,#0f0a1a 0%,#1a0f2e 25%,#2d1b4e 50%,#3d1f6d 75%,#1a1033 100%);overflow:hidden">
+            <div class="game-card-hero" style="position:relative;height:160px;background:linear-gradient(135deg,#0f0a1a 0%,#1a0f2e 25%,#2d1b4e 50%,#3d1f6d 75%,#1a1033 100%);overflow:hidden">
+                <!-- Feature Badge - icon overlay on mobile -->
+                <span class="feature-badge featured">FEATURED</span>
                 <!-- Animated glow effects -->
                 <div style="position:absolute;left:-20%;top:-30%;width:60%;height:80%;background:radial-gradient(circle,rgba(139,92,246,0.35) 0%,transparent 60%);animation:pulse 3s ease-in-out infinite"></div>
                 <div style="position:absolute;right:-15%;bottom:-20%;width:50%;height:60%;background:radial-gradient(circle,rgba(244,114,182,0.2) 0%,transparent 60%);animation:pulse 4s ease-in-out infinite reverse"></div>
@@ -4648,7 +4696,6 @@ window.startBeastBattle = function() { if(window.showToast) showToast('Beast bat
                 <div style="position:absolute;left:16px;bottom:12px;max-width:65%">
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
                         <h2 style="margin:0;font-size:24px;font-weight:900;color:#fff;text-shadow:0 3px 20px rgba(139,92,246,0.8)">VEILBREAKERS</h2>
-                        <span style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-size:8px;font-weight:800;padding:2px 6px;border-radius:4px">FEATURED</span>
                     </div>
                     <p style="margin:0;font-size:11px;color:#e2e8f0;line-height:1.4">Hunt, capture, and train mythical beasts. Battle in ranked PvP arenas, evolve your creatures through fusion, and rise through the leaderboards. Build your ultimate beast squad!</p>
                 </div>
@@ -4675,7 +4722,9 @@ window.startBeastBattle = function() { if(window.showToast) showToast('Beast bat
         <!-- AI OUTBREAK: TANK BATTLE                                        -->
         <!-- ═══════════════════════════════════════════════════════════════ -->
         <div style="border-radius:16px;margin-bottom:14px;overflow:hidden;border:1px solid rgba(220,38,38,0.3);box-shadow:0 6px 24px rgba(0,0,0,0.3)">
-            <div style="position:relative;height:100px;background:linear-gradient(135deg,#1a0a0a 0%,#2d1515 50%,#1a0f0f 100%);overflow:hidden">
+            <div class="game-card-hero" style="position:relative;height:100px;background:linear-gradient(135deg,#1a0a0a 0%,#2d1515 50%,#1a0f0f 100%);overflow:hidden">
+                <!-- Feature Badge - icon overlay on mobile -->
+                <span class="feature-badge live">LIVE</span>
                 <div style="position:absolute;right:-10%;top:-20%;width:50%;height:70%;background:radial-gradient(circle,rgba(220,38,38,0.2) 0%,transparent 70%)"></div>
                 <div style="position:absolute;right:16px;top:50%;transform:translateY(-50%)">
                     <img src="assets/icons/ui-tank.svg" alt="Tank" style="width:70px;height:70px;filter:drop-shadow(0 4px 16px rgba(220,38,38,0.5))">
@@ -4683,7 +4732,6 @@ window.startBeastBattle = function() { if(window.showToast) showToast('Beast bat
                 <div style="position:absolute;left:16px;top:50%;transform:translateY(-50%)">
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
                         <span style="font-size:16px;font-weight:900;color:#fff">AI OUTBREAK: TANK BATTLE</span>
-                        <span style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-size:8px;font-weight:800;padding:2px 6px;border-radius:4px">LIVE</span>
                     </div>
                     <p style="margin:0;font-size:10px;color:#fca5a5;max-width:200px">Destroy AI-generated fakes in action-packed combat!</p>
                 </div>
@@ -4704,7 +4752,9 @@ window.startBeastBattle = function() { if(window.showToast) showToast('Beast bat
         <!-- BEAST TRAINING CENTER                                           -->
         <!-- ═══════════════════════════════════════════════════════════════ -->
         <div id="beastTrainingSection" style="border-radius:16px;margin-bottom:14px;overflow:hidden;border:1px solid rgba(16,185,129,0.3);box-shadow:0 6px 24px rgba(0,0,0,0.3)">
-            <div style="position:relative;height:100px;background:linear-gradient(135deg,#052e16 0%,#14532d 50%,#064e3b 100%);overflow:hidden">
+            <div class="game-card-hero" style="position:relative;height:100px;background:linear-gradient(135deg,#052e16 0%,#14532d 50%,#064e3b 100%);overflow:hidden">
+                <!-- Feature Badge - icon overlay on mobile -->
+                <span class="feature-badge soon">SOON</span>
                 <div style="position:absolute;right:-10%;top:-20%;width:50%;height:70%;background:radial-gradient(circle,rgba(16,185,129,0.25) 0%,transparent 70%)"></div>
                 <div style="position:absolute;right:16px;top:50%;transform:translateY(-50%)">
                     <img src="assets/icons/nav-pets.svg" alt="Beast" style="width:60px;height:60px;filter:drop-shadow(0 4px 16px rgba(16,185,129,0.5)) hue-rotate(90deg)">
@@ -4712,7 +4762,6 @@ window.startBeastBattle = function() { if(window.showToast) showToast('Beast bat
                 <div style="position:absolute;left:16px;top:50%;transform:translateY(-50%)">
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
                         <span style="font-size:16px;font-weight:900;color:#fff">Beast Training Center</span>
-                        <span style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:8px;font-weight:800;padding:2px 6px;border-radius:4px">SOON</span>
                     </div>
                     <p style="margin:0;font-size:10px;color:#a7f3d0;max-width:200px">Train, purify, and fuse your beasts!</p>
                 </div>
@@ -5625,7 +5674,7 @@ window.startBeastBattle = function() { if(window.showToast) showToast('Beast bat
 
 <link rel="stylesheet" href="PROFESSIONAL_UI_OVERHAUL.css">
 <link rel="stylesheet" href="ai-cosmetics-gacha.css">
-<link rel="stylesheet" href="vera-controller.css?v=3.4.0">
+<link rel="stylesheet" href="vera-controller.css?v=3.5.0">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script src="tank-shooter-enhanced.js"></script>
