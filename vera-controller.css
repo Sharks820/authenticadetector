@@ -1324,18 +1324,28 @@ body.vera-shake {
 }
 
 /* ===== WING FLAPPING - LEFT WING ===== */
+/* Organic bird-like wing motion with ease curves */
 @keyframes v2WingFlapLeft {
     0%, 100% {
-        transform: rotate(0deg) translateY(0);
+        transform: rotate(0deg) translateY(0) scaleY(1);
     }
-    25% {
-        transform: rotate(-12deg) translateY(-3px);
+    15% {
+        transform: rotate(-8deg) translateY(-2px) scaleY(1.05);
     }
-    50% {
-        transform: rotate(-8deg) translateY(-5px);
+    30% {
+        transform: rotate(-15deg) translateY(-4px) scaleY(1.08);
     }
-    75% {
-        transform: rotate(-4deg) translateY(-2px);
+    40% {
+        transform: rotate(-12deg) translateY(-6px) scaleY(1.1);
+    }
+    55% {
+        transform: rotate(-6deg) translateY(-4px) scaleY(1.05);
+    }
+    70% {
+        transform: rotate(-2deg) translateY(-2px) scaleY(1.02);
+    }
+    85% {
+        transform: rotate(2deg) translateY(-1px) scaleY(1);
     }
 }
 
@@ -1356,18 +1366,28 @@ body.vera-shake {
 }
 
 /* ===== WING FLAPPING - RIGHT WING (mirrored) ===== */
+/* Organic bird-like wing motion with ease curves (mirrored) */
 @keyframes v2WingFlapRight {
     0%, 100% {
-        transform: rotate(0deg) translateY(0);
+        transform: rotate(0deg) translateY(0) scaleY(1);
     }
-    25% {
-        transform: rotate(12deg) translateY(-3px);
+    15% {
+        transform: rotate(8deg) translateY(-2px) scaleY(1.05);
     }
-    50% {
-        transform: rotate(8deg) translateY(-5px);
+    30% {
+        transform: rotate(15deg) translateY(-4px) scaleY(1.08);
     }
-    75% {
-        transform: rotate(4deg) translateY(-2px);
+    40% {
+        transform: rotate(12deg) translateY(-6px) scaleY(1.1);
+    }
+    55% {
+        transform: rotate(6deg) translateY(-4px) scaleY(1.05);
+    }
+    70% {
+        transform: rotate(2deg) translateY(-2px) scaleY(1.02);
+    }
+    85% {
+        transform: rotate(-2deg) translateY(-1px) scaleY(1);
     }
 }
 
