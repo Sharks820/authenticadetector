@@ -1,6 +1,7 @@
 /* =============================================================================
-   VERA ANIMATION CONTROLLER v2.0 - CSS
+   VERA ANIMATION CONTROLLER v3.4.0 - CSS
    Complete overhaul: Smooth animations, soft particles, no glitching
+   Updates: Smaller mobile size (80px), transparent speech bubble (0.8 opacity)
    ============================================================================= */
 
 /* ==========================================================================
@@ -701,7 +702,9 @@
     width: 220px;
     max-width: 220px;
     padding: 14px 16px;
-    background: rgba(15, 23, 42, 0.95);
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(148, 163, 184, 0.2);
     border-radius: 16px;
     font-family: system-ui, -apple-system, sans-serif;
@@ -729,7 +732,7 @@
     /* Default: pointer at bottom-right */
     bottom: -10px;
     right: 30px;
-    border-top: 10px solid rgba(15, 23, 42, 0.95);
+    border-top: 10px solid rgba(15, 23, 42, 0.8);
     border-bottom: none;
 }
 
@@ -745,7 +748,7 @@
     top: auto;
     right: 30px;
     left: auto;
-    border-top: 10px solid rgba(15, 23, 42, 0.95);
+    border-top: 10px solid rgba(15, 23, 42, 0.8);
     border-bottom: none;
 }
 
@@ -761,7 +764,7 @@
     top: auto;
     left: 30px;
     right: auto;
-    border-top: 10px solid rgba(15, 23, 42, 0.95);
+    border-top: 10px solid rgba(15, 23, 42, 0.8);
     border-bottom: none;
 }
 
@@ -777,7 +780,7 @@
     bottom: auto;
     right: 30px;
     left: auto;
-    border-bottom: 10px solid rgba(15, 23, 42, 0.95);
+    border-bottom: 10px solid rgba(15, 23, 42, 0.8);
     border-top: none;
 }
 
@@ -793,7 +796,7 @@
     bottom: auto;
     left: 30px;
     right: auto;
-    border-bottom: 10px solid rgba(15, 23, 42, 0.95);
+    border-bottom: 10px solid rgba(15, 23, 42, 0.8);
     border-top: none;
 }
 
@@ -929,20 +932,54 @@ body.vera-shake {
    ========================================================================== */
 @media (max-width: 480px) {
     .vera-container {
-        width: 100px;
-        height: 100px;
+        width: 80px;
+        height: 80px;
     }
 
     .vera-speech {
-        width: 200px;
-        font-size: 12px;
-        right: -30px;
+        width: 160px;
+        max-width: 160px;
+        padding: 10px 12px;
+        font-size: 11px;
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        right: -20px;
+    }
+
+    .vera-speech::after {
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid rgba(15, 23, 42, 0.75);
+        bottom: -8px;
+        right: 20px;
+    }
+
+    /* Position adjustments for mobile corners */
+    .vera-speech.pos-bottom-right::after,
+    .vera-speech.pos-bottom-left::after {
+        border-top-color: rgba(15, 23, 42, 0.75);
+    }
+    .vera-speech.pos-top-right::after,
+    .vera-speech.pos-top-left::after {
+        border-bottom-color: rgba(15, 23, 42, 0.75);
     }
 
     .vera-badge {
-        width: 26px;
-        height: 26px;
-        font-size: 14px;
+        width: 22px;
+        height: 22px;
+        font-size: 12px;
+        top: -5px;
+        right: -5px;
+    }
+
+    .vera-sparkles {
+        inset: -20px;
+    }
+
+    .vera-aura {
+        inset: -15px;
+        filter: blur(10px);
     }
 }
 

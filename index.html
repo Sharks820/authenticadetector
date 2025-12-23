@@ -4008,12 +4008,486 @@
         .gacha-result-actions button {
             flex: 1;
         }
+
+        /* ========================================= */
+        /* CURRENCY BAR (Sticky below header)        */
+        /* ========================================= */
+        .currency-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px;
+            background: linear-gradient(135deg, rgba(0,0,0,0.5), rgba(20,20,40,0.7));
+            border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+            position: sticky;
+            top: 65px;
+            z-index: 99;
+            backdrop-filter: blur(8px);
+        }
+        .currency-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .currency-item.coins {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.08));
+            border-color: rgba(251, 191, 36, 0.25);
+        }
+        .currency-item.keys {
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(6, 182, 212, 0.08));
+            border-color: rgba(34, 211, 238, 0.25);
+        }
+        .currency-item.gems {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(139, 92, 246, 0.08));
+            border-color: rgba(168, 85, 247, 0.25);
+        }
+        .currency-item .currency-icon { font-size: 13px; }
+        .currency-value { font-weight: 700; font-size: 12px; }
+        .currency-item.coins .currency-value { color: #fcd34d; }
+        .currency-item.keys .currency-value { color: #22d3ee; }
+        .currency-item.gems .currency-value { color: #c084fc; }
+
+        /* ========================================= */
+        /* NEW PROFILE CARD LAYOUT                   */
+        /* ========================================= */
+        .profile-section { padding: 16px; }
+
+        .profile-top-area {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+        .profile-avatar-lg {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            border: 6px solid #6366f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.5);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            flex-shrink: 0;
+        }
+        .profile-avatar-lg:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.7);
+        }
+        .profile-middle-col {
+            flex: 1;
+            min-width: 0;
+        }
+        .profile-name-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 3px;
+        }
+        .profile-username {
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+        }
+        .profile-level-badge {
+            background: linear-gradient(135deg, #fcd34d, #f59e0b);
+            color: #000;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .profile-title {
+            font-size: 11px;
+            color: #a78bfa;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .profile-xp-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .profile-xp-bar-container {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 6px;
+            height: 8px;
+            overflow: hidden;
+        }
+        .profile-xp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22d3ee, #8b5cf6);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+        .profile-xp-text {
+            font-size: 10px;
+            color: #a3a3a3;
+            white-space: nowrap;
+        }
+
+        /* Right action buttons */
+        .profile-right-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-end;
+        }
+        .profile-action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .profile-action-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+        .profile-action-btn.customize {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(99, 102, 241, 0.15));
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+        .profile-action-btn.shop {
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(6, 182, 212, 0.1));
+            border-color: rgba(34, 211, 238, 0.4);
+        }
+        .profile-action-btn.vera {
+            background: linear-gradient(135deg, rgba(45, 212, 191, 0.2), rgba(20, 184, 166, 0.1));
+            border-color: rgba(45, 212, 191, 0.4);
+        }
+
+        /* Stats Grid */
+        .profile-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .profile-stat-card {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 10px 6px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .profile-stat-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .profile-stat-card .stat-icon { font-size: 18px; margin-bottom: 4px; }
+        .profile-stat-card .stat-value { font-size: 14px; font-weight: 800; }
+        .profile-stat-card .stat-label { font-size: 8px; color: #a3a3a3; text-transform: uppercase; margin-top: 2px; }
+        .profile-stat-card .tap-hint { font-size: 7px; color: #555; margin-top: 2px; }
+
+        /* ========================================= */
+        /* COLLAPSIBLE BEAST SECTION                 */
+        /* ========================================= */
+        .profile-section-label {
+            font-size: 9px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .profile-section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+        .beast-section {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(168, 85, 247, 0.08));
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .beast-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 60%);
+            animation: beastGlow 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes beastGlow {
+            0%, 100% { transform: translate(0, 0); opacity: 0.5; }
+            50% { transform: translate(10%, 10%); opacity: 1; }
+        }
+        .beast-collapsed {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+        .beast-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2d1b4e 0%, #1a0f2e 100%);
+            border: 2px solid rgba(168, 85, 247, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
+            flex-shrink: 0;
+        }
+        .beast-info { flex: 1; min-width: 0; }
+        .beast-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 2px;
+            flex-wrap: wrap;
+        }
+        .beast-name { font-size: 14px; font-weight: 800; color: #e9d5ff; }
+        .beast-level {
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+        .beast-rarity {
+            font-size: 8px;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 5px;
+        }
+        .beast-rarity.common { background: rgba(148, 163, 184, 0.3); color: #94a3b8; }
+        .beast-rarity.uncommon { background: rgba(34, 197, 94, 0.3); color: #4ade80; }
+        .beast-rarity.rare { background: rgba(59, 130, 246, 0.3); color: #60a5fa; }
+        .beast-rarity.epic { background: rgba(168, 85, 247, 0.3); color: #c084fc; }
+        .beast-rarity.legendary {
+            background: linear-gradient(135deg, #fcd34d, #f59e0b);
+            color: #000;
+        }
+        .beast-type { font-size: 10px; color: #a78bfa; }
+        .beast-stats-mini {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .beast-stat { font-size: 9px; color: #888; }
+        .beast-stat span { color: #c4b5fd; font-weight: 700; }
+        .beast-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .beast-toggle:hover {
+            background: rgba(139, 92, 246, 0.3);
+            transform: scale(1.1);
+        }
+        .beast-toggle.expanded { background: rgba(139, 92, 246, 0.4); }
+
+        /* Expanded state */
+        .beast-expanded {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .beast-section.open .beast-expanded {
+            max-height: 300px;
+            padding: 0 12px 12px;
+        }
+        .beast-divider {
+            height: 1px;
+            background: rgba(139, 92, 246, 0.2);
+            margin-bottom: 12px;
+        }
+        .beast-full-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .beast-stat-box {
+            background: rgba(0,0,0,0.2);
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .beast-stat-box .val { font-size: 16px; font-weight: 800; color: #c4b5fd; }
+        .beast-stat-box .lbl { font-size: 8px; color: #888; text-transform: uppercase; }
+        .beast-xp-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .beast-xp-label { font-size: 10px; color: #a78bfa; font-weight: 600; }
+        .beast-xp-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .beast-xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #a855f7, #f472b6);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .beast-xp-text { font-size: 10px; color: #888; }
+        .beast-actions { display: flex; gap: 8px; }
+        .beast-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            background: rgba(168, 85, 247, 0.1);
+            color: #c4b5fd;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+        .beast-btn:hover {
+            background: rgba(168, 85, 247, 0.2);
+            transform: translateY(-2px);
+        }
+        .beast-btn.primary {
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            border: none;
+            color: #fff;
+        }
+        .beast-btn.primary:hover { box-shadow: 0 4px 16px rgba(168, 85, 247, 0.4); }
+
+        /* Header title - responsive */
+        .header-title {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 900;
+            cursor: pointer;
+            background: linear-gradient(90deg, #22d3ee, #8b5cf6, #f472b6, #22d3ee);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 3s ease infinite;
+            white-space: nowrap;
+            letter-spacing: -0.5px;
+        }
+        @media (max-width: 480px) {
+            .header-title { font-size: 16px; }
+            .title-hub { display: none; }
+        }
+        @media (max-width: 360px) {
+            .header-title { font-size: 14px; }
+        }
+
+        /* Mobile responsiveness for profile */
+        @media (max-width: 480px) {
+            .profile-top-area {
+                gap: 10px;
+            }
+            .profile-avatar-lg {
+                width: 80px;
+                height: 80px;
+                font-size: 40px;
+                border-width: 3px;
+            }
+            .profile-username {
+                font-size: 16px;
+            }
+            .profile-level-badge {
+                font-size: 9px;
+                padding: 2px 6px;
+            }
+            .profile-title {
+                font-size: 10px;
+            }
+            .profile-actions-col {
+                gap: 4px;
+            }
+            .action-icon-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+            .profile-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .beast-full-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .beast-actions {
+                flex-wrap: wrap;
+            }
+            .beast-btn {
+                flex: 1 1 45%;
+            }
+        }
     </style>
 <link rel="stylesheet" href="assets/style/design-tokens.css">
 <link rel="stylesheet" href="assets/style/theme.css">
 <script src="assets/icons/index.js" defer></script>
 </head>
 <body>
+<script>
+// Profile card functions (defined early for onclick handlers)
+window.toggleBeastCard = function(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.classList.toggle('open');
+        const toggleBtn = section.querySelector('.beast-toggle');
+        if (toggleBtn) toggleBtn.classList.toggle('expanded');
+    }
+};
+window.openBeastCollection = function() { if(window.showToast) showToast('Beast Collection coming soon!', 'info'); };
+window.openTankLeaderboard = function() { if(window.showToast) showToast('Tank Leaderboard coming soon!', 'info'); };
+window.openPvPArena = function() { if(window.showToast) showToast('PvP Arena coming soon!', 'info'); };
+window.viewBeastDetails = function() { if(window.showToast) showToast('Beast details coming soon!', 'info'); };
+window.openBeastLineup = function() { if(window.showToast) showToast('Beast Lineup coming soon!', 'info'); };
+window.startBeastBattle = function() { if(window.showToast) showToast('Beast battles coming soon!', 'info'); };
+</script>
 
 <!-- HOME VIEW -->
 <div class="view active" id="homeView">
@@ -4022,16 +4496,12 @@
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
     <div class="home-header" style="position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(180deg,rgba(10,15,30,0.98) 0%,rgba(15,20,35,0.95) 100%);border-bottom:1px solid rgba(99,102,241,0.3);backdrop-filter:blur(12px)">
         <!-- LEFT: Title (MUCH BIGGER) -->
-        <h1 onclick="window.location.reload()" style="margin:0;font-size:28px;font-weight:900;cursor:pointer;background:linear-gradient(90deg,#22d3ee,#8b5cf6,#f472b6,#22d3ee);background-size:200% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradientFlow 3s ease infinite;white-space:nowrap;letter-spacing:-0.5px">
-            AuthenticaDetector Hub
+        <h1 class="header-title" onclick="window.location.reload()">
+            <span class="title-full">AuthenticaDetector</span><span class="title-hub"> Hub</span>
         </h1>
-        <!-- RIGHT: Gift + Coins + Settings + Profile -->
+        <!-- RIGHT: Gift + Settings + Profile -->
         <div style="display:flex;align-items:center;gap:8px">
             <button onclick="claimDailyBonus()" title="Daily Bonus" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(251,191,36,0.5);background:linear-gradient(135deg,rgba(251,191,36,0.2),rgba(245,158,11,0.1));cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center">🎁</button>
-            <div style="display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#fcd34d 0%,#f59e0b 100%);padding:8px 14px;border-radius:20px;font-weight:800;font-size:15px;color:#1a1a2e;box-shadow:0 3px 12px rgba(251,191,36,0.4)">
-                <img src="assets/icons/currency-coin.svg" alt="coins" style="width:22px;height:22px">
-                <span id="headerCoinCount">0</span>
-            </div>
             <button onclick="openSettings()" title="Settings" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(100,116,139,0.4);background:rgba(100,116,139,0.15);cursor:pointer;display:flex;align-items:center;justify-content:center">
                 <img src="assets/icons/ui-settings.svg" alt="Settings" style="width:22px;height:22px">
             </button>
@@ -4041,110 +4511,125 @@
         </div>
     </div>
 
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <!-- CURRENCY BAR - Coins, Keys, Gems (Sticky below header)                  -->
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <div class="currency-bar">
+        <div class="currency-item coins">
+            <span class="currency-icon">🪙</span>
+            <span class="currency-value" id="headerCoinCount">0</span>
+        </div>
+        <div class="currency-item keys">
+            <span class="currency-icon">🔑</span>
+            <span class="currency-value" id="headerKeyCount">0</span>
+        </div>
+        <div class="currency-item gems">
+            <span class="currency-icon">💎</span>
+            <span class="currency-value" id="headerGemCount">0</span>
+        </div>
+    </div>
+
     <!-- SCROLLABLE CONTENT -->
     <div class="home-content" style="padding:16px 16px 100px;overflow-y:auto">
 
         <!-- ═══════════════════════════════════════════════════════════════ -->
-        <!-- PROFILE CARD - HUGE Avatar LEFT, Stats RIGHT, Social FAR RIGHT -->
+        <!-- PROFILE CARD - New compact design with collapsible beast        -->
         <!-- ═══════════════════════════════════════════════════════════════ -->
-        <div style="display:flex;gap:12px;margin-bottom:20px;background:linear-gradient(135deg,rgba(99,102,241,0.12) 0%,rgba(139,92,246,0.08) 100%);border-radius:20px;padding:16px;border:1px solid rgba(99,102,241,0.2)">
-            <!-- LEFT: MASSIVE Avatar (HALF THE BOX!) + Name/Level/XP + Character Creation -->
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;min-width:240px;max-width:50%">
-                <div id="homeAvatarDisplay" onclick="openAvatarBuilder()" style="width:240px;height:240px;border-radius:50%;background:linear-gradient(135deg,#1e1b4b 0%,#312e81 100%);border:8px solid #6366f1;display:flex;align-items:center;justify-content:center;font-size:140px;cursor:pointer;box-shadow:0 16px 60px rgba(99,102,241,0.8);transition:transform 0.2s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform=''">
+        <div class="profile-section" style="margin-bottom:16px;background:linear-gradient(135deg,rgba(99,102,241,0.12) 0%,rgba(139,92,246,0.08) 100%);border-radius:20px;border:1px solid rgba(99,102,241,0.2)">
+
+            <!-- Top Area: Avatar + Info + Actions -->
+            <div class="profile-top-area">
+                <div class="profile-avatar-lg" id="homeAvatarDisplay" onclick="openAvatarBuilder()">
                     <span id="homeAvatarEmoji">🧑‍🚀</span>
                 </div>
-                <!-- Name & Title -->
-                <div style="text-align:center;margin-top:10px">
-                    <div style="font-size:18px;font-weight:900;color:#fff" id="homeUserName">Explorer</div>
-                    <div style="font-size:11px;color:#a78bfa;font-weight:600" id="homeUserTitle">Newcomer</div>
-                </div>
-                <!-- Level & XP directly under avatar -->
-                <div style="display:flex;gap:8px;margin-top:8px">
-                    <div style="background:rgba(252,211,77,0.2);padding:4px 10px;border-radius:8px;border:1px solid rgba(252,211,77,0.3);text-align:center">
-                        <div style="font-size:16px;font-weight:900;color:#fcd34d" id="homeAvatarLevel">1</div>
-                        <div style="font-size:8px;color:#a3a3a3;text-transform:uppercase">LVL</div>
+                <div class="profile-middle-col">
+                    <div class="profile-name-row">
+                        <span class="profile-username" id="homeUserName">Explorer</span>
+                        <span class="profile-level-badge">LV <span id="homeAvatarLevel">1</span></span>
                     </div>
-                    <div style="background:rgba(34,211,238,0.2);padding:4px 10px;border-radius:8px;border:1px solid rgba(34,211,238,0.3);text-align:center">
-                        <div style="font-size:16px;font-weight:900;color:#22d3ee" id="homeAvatarXP">0</div>
-                        <div style="font-size:8px;color:#a3a3a3;text-transform:uppercase">XP</div>
+                    <div class="profile-title" id="homeUserTitle">Newcomer</div>
+                    <div class="profile-xp-row">
+                        <div class="profile-xp-bar-container">
+                            <div class="profile-xp-bar-fill" id="homeXpBarFill" style="width: 0%"></div>
+                        </div>
+                        <span class="profile-xp-text"><span id="homeAvatarXP">0</span>/<span id="homeXpRequired">100</span></span>
                     </div>
                 </div>
-                <!-- Character Creation Button -->
-                <button onclick="openAvatarBuilder()" style="margin-top:10px;width:100%;background:linear-gradient(135deg,rgba(139,92,246,0.3),rgba(99,102,241,0.2));border:1px solid rgba(139,92,246,0.4);color:#c4b5fd;padding:8px 12px;border-radius:10px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px">
-                    ✨ CUSTOMIZE
-                </button>
-            </div>
-            <!-- CENTER: Stats Grid - Bigger boxes with icons -->
-            <div style="flex:1;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;align-content:start">
-                <div style="background:rgba(167,139,250,0.15);padding:12px;border-radius:12px;border:1px solid rgba(167,139,250,0.3);display:flex;align-items:center;gap:10px">
-                    <img src="assets/icons/trophy.svg" alt="" style="width:32px;height:32px;opacity:0.8">
-                    <div>
-                        <div style="font-size:20px;font-weight:900;color:#a78bfa" id="homeRankNum">#--</div>
-                        <div style="font-size:9px;color:#a3a3a3;text-transform:uppercase">Global Rank</div>
-                    </div>
-                </div>
-                <div style="background:rgba(16,185,129,0.15);padding:12px;border-radius:12px;border:1px solid rgba(16,185,129,0.3);display:flex;align-items:center;gap:10px">
-                    <img src="assets/icons/beasts.svg" alt="" style="width:32px;height:32px;opacity:0.8">
-                    <div>
-                        <div style="font-size:20px;font-weight:900;color:#10b981" id="homeBeastCount">0</div>
-                        <div style="font-size:9px;color:#a3a3a3;text-transform:uppercase">Beasts</div>
-                    </div>
-                </div>
-                <div style="background:rgba(244,114,182,0.15);padding:12px;border-radius:12px;border:1px solid rgba(244,114,182,0.3);display:flex;align-items:center;gap:10px">
-                    <img src="assets/icons/star.svg" alt="" style="width:32px;height:32px;opacity:0.8">
-                    <div>
-                        <div style="font-size:16px;font-weight:900;color:#f472b6" id="homeStrongestBeast">--</div>
-                        <div style="font-size:9px;color:#a3a3a3;text-transform:uppercase">Top Beast</div>
-                    </div>
-                </div>
-                <div style="background:rgba(220,38,38,0.15);padding:12px;border-radius:12px;border:1px solid rgba(220,38,38,0.3);display:flex;align-items:center;gap:10px">
-                    <img src="assets/icons/ui-tank.svg" alt="" style="width:32px;height:32px;opacity:0.8">
-                    <div>
-                        <div style="font-size:20px;font-weight:900;color:#f87171" id="homeTankRank">#--</div>
-                        <div style="font-size:9px;color:#a3a3a3;text-transform:uppercase">Tank Rank</div>
-                    </div>
-                </div>
-                <div style="background:rgba(139,92,246,0.15);padding:12px;border-radius:12px;border:1px solid rgba(139,92,246,0.3);grid-column:span 2;display:flex;align-items:center;gap:10px">
-                    <img src="assets/icons/duels.svg" alt="" style="width:32px;height:32px;opacity:0.8">
-                    <div>
-                        <div style="font-size:20px;font-weight:900;color:#8b5cf6" id="homePvPRank">#--</div>
-                        <div style="font-size:9px;color:#a3a3a3;text-transform:uppercase">Beast Battle PvP Rank</div>
-                    </div>
+                <div class="profile-right-actions">
+                    <button class="profile-action-btn customize" onclick="openAvatarBuilder()" title="Customize Avatar">🎨</button>
+                    <button class="profile-action-btn shop" onclick="openShop()" title="Shop">🏪</button>
+                    <button class="profile-action-btn vera" onclick="openHelp()" title="VERA Assistant">🧚</button>
                 </div>
             </div>
-            <!-- RIGHT: Social Buttons (vertical - fill the space) -->
-            <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0;justify-content:space-between;height:100%">
-                <button onclick="openFriends()" style="flex:1;width:52px;min-height:52px;background:rgba(59,130,246,0.2);border:1px solid rgba(59,130,246,0.4);border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center" title="Friends">
-                    <img src="assets/icons/friends.svg" alt="Friends" style="width:28px;height:28px">
-                </button>
-                <button onclick="openSquads()" style="flex:1;width:52px;min-height:52px;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center" title="Squads">
-                    <img src="assets/icons/action-attack.svg" alt="Squads" style="width:28px;height:28px">
-                </button>
-                <button onclick="openTradingHub()" style="flex:1;width:52px;min-height:52px;background:rgba(34,197,94,0.2);border:1px solid rgba(34,197,94,0.4);border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center" title="Trade Room">
-                    <img src="assets/icons/currency-key.svg" alt="Trade" style="width:28px;height:28px">
-                </button>
-                <button onclick="openAvatarBuilder()" style="flex:1;width:52px;min-height:52px;background:rgba(244,114,182,0.2);border:1px solid rgba(244,114,182,0.4);border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center" title="Customize Avatar">
-                    <img src="assets/icons/special-fairy-dust.svg" alt="Avatar" style="width:28px;height:28px">
-                </button>
-            </div>
-        </div>
 
-        <!-- ═══════════════════════════════════════════════════════════════ -->
-        <!-- QUICK ACTIONS - Ranks, Shop, VERA (using custom SVG icons)     -->
-        <!-- ═══════════════════════════════════════════════════════════════ -->
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
-            <button onclick="openLeaderboard()" style="background:linear-gradient(135deg,rgba(251,191,36,0.25),rgba(245,158,11,0.15));border:2px solid rgba(251,191,36,0.4);border-radius:14px;padding:14px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all 0.2s">
-                <img src="assets/icons/trophy.svg" alt="Ranks" style="width:32px;height:32px">
-                <span style="font-size:11px;color:#fcd34d;font-weight:800">RANKS</span>
-            </button>
-            <button onclick="openShop()" style="background:linear-gradient(135deg,rgba(34,211,238,0.25),rgba(6,182,212,0.15));border:2px solid rgba(34,211,238,0.4);border-radius:14px;padding:14px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all 0.2s">
-                <img src="assets/icons/store.svg" alt="Shop" style="width:32px;height:32px">
-                <span style="font-size:11px;color:#22d3ee;font-weight:800">SHOP</span>
-            </button>
-            <button id="veraQuickBtn" onclick="openHelp()" style="background:linear-gradient(135deg,rgba(45,212,191,0.3),rgba(20,184,166,0.15));border:2px solid rgba(45,212,191,0.5);border-radius:14px;padding:14px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all 0.2s;position:relative" title="VERA - Your AI Assistant">
-                <object data="assets/icons/nav-vera.svg" type="image/svg+xml" style="width:36px;height:36px;pointer-events:none"></object>
-                <span style="font-size:11px;color:#2dd4bf;font-weight:800">VERA</span>
-            </button>
+            <!-- Stats Grid (4 columns, clickable) -->
+            <div class="profile-stats-grid">
+                <div class="profile-stat-card" onclick="openLeaderboard()">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value" style="color:#a78bfa" id="homeRankNum">#--</div>
+                    <div class="stat-label">Rank</div>
+                    <div class="tap-hint">tap</div>
+                </div>
+                <div class="profile-stat-card" onclick="openBeastCollection()">
+                    <div class="stat-icon">🐉</div>
+                    <div class="stat-value" style="color:#10b981" id="homeBeastCount">0</div>
+                    <div class="stat-label">Beasts</div>
+                    <div class="tap-hint">tap</div>
+                </div>
+                <div class="profile-stat-card" onclick="openTankLeaderboard()">
+                    <div class="stat-icon">🎖️</div>
+                    <div class="stat-value" style="color:#f87171" id="homeTankRank">#--</div>
+                    <div class="stat-label">Tank</div>
+                    <div class="tap-hint">tap</div>
+                </div>
+                <div class="profile-stat-card" onclick="openPvPArena()">
+                    <div class="stat-icon">⚔️</div>
+                    <div class="stat-value" style="color:#f472b6" id="homePvPRank">#--</div>
+                    <div class="stat-label">PvP</div>
+                    <div class="tap-hint">tap</div>
+                </div>
+            </div>
+
+            <!-- Favorite Beast Section (Collapsible) -->
+            <div class="profile-section-label">Favorite Beast</div>
+            <div class="beast-section" id="favoriteBeastSection">
+                <div class="beast-collapsed" onclick="toggleBeastCard('favoriteBeastSection')">
+                    <div class="beast-avatar" id="favBeastAvatar">🐲</div>
+                    <div class="beast-info">
+                        <div class="beast-header">
+                            <span class="beast-name" id="favBeastName">No Beast</span>
+                            <span class="beast-level" id="favBeastLevel">LV --</span>
+                            <span class="beast-rarity common" id="favBeastRarity">--</span>
+                        </div>
+                        <div class="beast-type" id="favBeastType">Capture your first beast!</div>
+                        <div class="beast-stats-mini">
+                            <span class="beast-stat">ATK <span id="favBeastATK">--</span></span>
+                            <span class="beast-stat">DEF <span id="favBeastDEF">--</span></span>
+                            <span class="beast-stat">SPD <span id="favBeastSPD">--</span></span>
+                        </div>
+                    </div>
+                    <div class="beast-toggle" id="beastToggleBtn">👁️</div>
+                </div>
+                <div class="beast-expanded">
+                    <div class="beast-divider"></div>
+                    <div class="beast-full-stats">
+                        <div class="beast-stat-box"><div class="val" id="favBeastATKFull">--</div><div class="lbl">Attack</div></div>
+                        <div class="beast-stat-box"><div class="val" id="favBeastDEFFull">--</div><div class="lbl">Defense</div></div>
+                        <div class="beast-stat-box"><div class="val" id="favBeastSPDFull">--</div><div class="lbl">Speed</div></div>
+                        <div class="beast-stat-box"><div class="val" id="favBeastTotal">--</div><div class="lbl">Total</div></div>
+                    </div>
+                    <div class="beast-xp-section">
+                        <span class="beast-xp-label">Beast XP</span>
+                        <div class="beast-xp-bar"><div class="beast-xp-fill" id="favBeastXpFill" style="width:0%"></div></div>
+                        <span class="beast-xp-text" id="favBeastXpText">0 / 100</span>
+                    </div>
+                    <div class="beast-actions">
+                        <button class="beast-btn" onclick="viewBeastDetails()">👁️ View</button>
+                        <button class="beast-btn" onclick="openBeastLineup()">📋 Lineup</button>
+                        <button class="beast-btn primary" onclick="startBeastBattle()">⚔️ Battle</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -5140,7 +5625,7 @@
 
 <link rel="stylesheet" href="PROFESSIONAL_UI_OVERHAUL.css">
 <link rel="stylesheet" href="ai-cosmetics-gacha.css">
-<link rel="stylesheet" href="vera-controller.css?v=3.3.0">
+<link rel="stylesheet" href="vera-controller.css?v=3.4.0">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script src="tank-shooter-enhanced.js"></script>
@@ -6106,6 +6591,122 @@ function updateGating() {
     }
 }
 
+// ==================== PROFILE CARD FUNCTIONS ====================
+// Toggle the collapsible beast card section
+window.toggleBeastCard = function(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.classList.toggle('open');
+        const toggleBtn = section.querySelector('.beast-toggle');
+        if (toggleBtn) {
+            toggleBtn.classList.toggle('expanded');
+        }
+    }
+};
+
+// Open beast collection view
+window.openBeastCollection = function() {
+    showToast('Beast Collection coming soon! Capture beasts in Veilbreakers!', 'info');
+};
+
+// Open tank leaderboard
+window.openTankLeaderboard = function() {
+    // Try to open the tank view if it exists, otherwise show toast
+    if (typeof showView === 'function') {
+        showView('tankView');
+    } else {
+        showToast('Tank Leaderboard coming soon!', 'info');
+    }
+};
+
+// Open PvP Arena
+window.openPvPArena = function() {
+    showToast('PvP Arena coming soon in Veilbreakers!', 'info');
+};
+
+// View beast details
+window.viewBeastDetails = function() {
+    showToast('Beast details coming soon!', 'info');
+};
+
+// Open beast lineup editor
+window.openBeastLineup = function() {
+    showToast('Beast Lineup editor coming soon!', 'info');
+};
+
+// Start beast battle
+window.startBeastBattle = function() {
+    showToast('Beast battles coming soon in Veilbreakers!', 'info');
+};
+
+// Update favorite beast display (call this when user data loads)
+function updateFavoriteBeastDisplay(beast) {
+    if (!beast) {
+        // Default state - no beast
+        const safeSet = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+        safeSet('favBeastName', 'No Beast');
+        safeSet('favBeastLevel', 'LV --');
+        safeSet('favBeastType', 'Capture your first beast!');
+        safeSet('favBeastATK', '--');
+        safeSet('favBeastDEF', '--');
+        safeSet('favBeastSPD', '--');
+        safeSet('favBeastATKFull', '--');
+        safeSet('favBeastDEFFull', '--');
+        safeSet('favBeastSPDFull', '--');
+        safeSet('favBeastTotal', '--');
+        safeSet('favBeastXpText', '0 / 100');
+        const rarityEl = document.getElementById('favBeastRarity');
+        if (rarityEl) { rarityEl.textContent = '--'; rarityEl.className = 'beast-rarity common'; }
+        return;
+    }
+
+    // Update with beast data
+    const safeSet = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+    safeSet('favBeastName', beast.name || 'Unknown');
+    safeSet('favBeastLevel', `LV ${beast.level || 1}`);
+    safeSet('favBeastType', beast.type || 'Mystery Beast');
+    safeSet('favBeastATK', beast.atk || 0);
+    safeSet('favBeastDEF', beast.def || 0);
+    safeSet('favBeastSPD', beast.spd || 0);
+    safeSet('favBeastATKFull', beast.atk || 0);
+    safeSet('favBeastDEFFull', beast.def || 0);
+    safeSet('favBeastSPDFull', beast.spd || 0);
+    safeSet('favBeastTotal', (beast.atk || 0) + (beast.def || 0) + (beast.spd || 0));
+
+    const avatarEl = document.getElementById('favBeastAvatar');
+    if (avatarEl && beast.emoji) avatarEl.textContent = beast.emoji;
+
+    const rarityEl = document.getElementById('favBeastRarity');
+    if (rarityEl) {
+        rarityEl.textContent = (beast.rarity || 'common').toUpperCase();
+        rarityEl.className = `beast-rarity ${(beast.rarity || 'common').toLowerCase()}`;
+    }
+
+    // Update XP bar
+    const xpFill = document.getElementById('favBeastXpFill');
+    const xpText = document.getElementById('favBeastXpText');
+    if (xpFill && beast.xp !== undefined && beast.xpRequired) {
+        xpFill.style.width = `${Math.min((beast.xp / beast.xpRequired) * 100, 100)}%`;
+    }
+    if (xpText && beast.xp !== undefined && beast.xpRequired) {
+        xpText.textContent = `${beast.xp} / ${beast.xpRequired}`;
+    }
+}
+
+// Update profile XP bar (call when user stats load)
+function updateProfileXpBar(currentXp, requiredXp) {
+    const xpFill = document.getElementById('homeXpBarFill');
+    const xpCurrent = document.getElementById('homeAvatarXP');
+    const xpRequired = document.getElementById('homeXpRequired');
+
+    if (xpFill) {
+        const percentage = Math.min((currentXp / requiredXp) * 100, 100);
+        xpFill.style.width = `${percentage}%`;
+    }
+    if (xpCurrent) xpCurrent.textContent = currentXp;
+    if (xpRequired) xpRequired.textContent = requiredXp;
+}
+
 // ==================== LOGIN ====================
 window.openLogin = function(isSignup = false) {
     // Guard: If already logged in, go to profile instead
@@ -6745,7 +7346,7 @@ window.openView = function(viewId) {
             // Load data based on view (async, don't block)
             setTimeout(() => {
                 try {
-                    else if (viewId === 'outbreaksView') loadOutbreaksView();
+                    if (viewId === 'outbreaksView') loadOutbreaksView();
                     else if (viewId === 'squadsView') loadSquadsView();
                     else if (viewId === 'leaderboardView') loadLeaderboardView();
                     else if (viewId === 'shopView') loadShopView();
