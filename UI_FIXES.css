@@ -1849,5 +1849,102 @@ body.loading {
 }
 
 /* =============================================================================
+   ICON VISIBILITY OVERHAUL
+   Fixes: Icons too small and unclear at current sizes
+   ============================================================================= */
+
+/* Increase currency bar icon sizes */
+.currency-bar .currency-icon img,
+.currency-item .currency-icon img {
+    width: 24px !important;
+    height: 24px !important;
+    filter: drop-shadow(0 0 3px rgba(34, 211, 238, 0.5));
+}
+
+/* Increase header button icon sizes */
+.header-right .icon-btn img,
+.header-actions img,
+.user-btn img {
+    width: 26px !important;
+    height: 26px !important;
+}
+
+/* Profile action icons */
+.action-icon-btn img,
+.profile-actions-col img {
+    width: 28px !important;
+    height: 28px !important;
+}
+
+/* Stat card icons - make prominent */
+.stat-icon img,
+.profile-stat-card .stat-icon img {
+    width: 36px !important;
+    height: 36px !important;
+    filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.6));
+}
+
+/* Navigation icons */
+.nav-icon img,
+.quick-nav-icon img {
+    width: 32px !important;
+    height: 32px !important;
+}
+
+/* Game and feature icons */
+.feature-icon img,
+.game-icon img,
+.mode-icon img {
+    width: 40px !important;
+    height: 40px !important;
+}
+
+/* Ensure all small icons have minimum size */
+img[src*="assets/icons/"] {
+    min-width: 22px;
+    min-height: 22px;
+}
+
+/* Add glow to important icons */
+.currency-icon img,
+.stat-icon img,
+.nav-icon img {
+    filter: drop-shadow(0 0 3px rgba(34, 211, 238, 0.4));
+    transition: filter 0.2s ease;
+}
+
+.currency-icon img:hover,
+.stat-icon img:hover,
+.nav-icon img:hover {
+    filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.8));
+}
+
+/* Mobile icon sizing - slightly smaller but still visible */
+@media (max-width: 480px) {
+    .currency-bar .currency-icon img,
+    .currency-item .currency-icon img {
+        width: 22px !important;
+        height: 22px !important;
+    }
+
+    .header-right .icon-btn img,
+    .header-actions img {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    .stat-icon img {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+    .nav-icon img,
+    .quick-nav-icon img {
+        width: 28px !important;
+        height: 28px !important;
+    }
+}
+
+/* =============================================================================
    END OF UI FIXES & POLISH
    ============================================================================= */

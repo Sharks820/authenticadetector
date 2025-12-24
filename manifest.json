@@ -1,11 +1,11 @@
 {
-    "name": "AuthenticaDetector - AI Image Detection",
+    "name": "AuthenticaDetector Hub - Gaming Adventure",
     "short_name": "AuthenticaDetector",
-    "description": "Detect AI-generated images with 90%+ accuracy. Free and easy to use.",
+    "description": "Collect beasts, battle in tank shooter, earn coins and climb the leaderboards! Free gaming with VERA assistant.",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#0a0d14",
-    "theme_color": "#8b5cf6",
+    "theme_color": "#14b8a6",
     "orientation": "portrait-primary",
     "scope": "/",
     "id": "/",
@@ -23,20 +23,7 @@
             "purpose": "any maskable"
         }
     ],
-    "share_target": {
-        "action": "/share-target",
-        "method": "POST",
-        "enctype": "multipart/form-data",
-        "params": {
-            "files": [
-                {
-                    "name": "file",
-                    "accept": ["image/*"]
-                }
-            ]
-        }
-    },
-    "categories": ["utilities", "security", "photo"],
+    "categories": ["games", "entertainment"],
     "screenshots": [],
     "prefer_related_applications": false,
     "related_applications": []

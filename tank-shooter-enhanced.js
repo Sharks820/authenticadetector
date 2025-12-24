@@ -2,6 +2,102 @@
 // TANK SHOOTER - ENHANCED VERSION WITH IMPROVED GRAPHICS
 // ============================================================
 // Enhancements: Better graphics, visual effects, more bosses, improved controls
+// Updated: Now uses SVG sprites from Kenny-style asset pack
+
+// ==================== SPRITE SYSTEM ====================
+
+const spriteCache = {};
+const SPRITE_MAP = {
+    // Enemy type to SVG sprite ID mapping
+    'spam': 'enemy-spam',
+    'bot': 'enemy-bot',
+    'fakenews': 'enemy-fakenews',
+    'troll': 'enemy-troll',
+    'deepfake': 'enemy-deepfake',
+    'swarm': 'enemy-swarm',
+    'shielder': 'enemy-shielder',
+    'sniper': 'enemy-sniper',
+    'rusher': 'enemy-rusher',
+    'botnet': 'enemy-botnet',
+    'phantom': 'enemy-phantom',
+    'juggernaut': 'enemy-juggernaut',
+    // Powerups
+    'health': 'powerup-health',
+    'rapidfire': 'powerup-rapidfire',
+    'shield': 'powerup-shield',
+    'nuke': 'powerup-nuke',
+    'speedboost': 'powerup-speedboost',
+    'spreadshot': 'powerup-spreadshot',
+    // Special
+    'crown': 'boss-crown',
+    'player': 'player-tank'
+};
+
+// Pre-render SVG sprites to canvas for fast drawing
+async function loadSprites() {
+    const spriteSVG = document.querySelector('object[data*="tank-sprites.svg"]')?.contentDocument ||
+                      document.getElementById('tank-sprites-svg');
+
+    // If sprites aren't embedded, fetch them
+    if (!spriteSVG) {
+        try {
+            const response = await fetch('assets/game/sprites/tank-sprites.svg');
+            const svgText = await response.text();
+            const parser = new DOMParser();
+            const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+
+            // Cache each sprite symbol as an image
+            for (const [type, spriteId] of Object.entries(SPRITE_MAP)) {
+                const symbol = svgDoc.getElementById(spriteId);
+                if (symbol) {
+                    const viewBox = symbol.getAttribute('viewBox') || '0 0 40 40';
+                    const [, , w, h] = viewBox.split(' ').map(Number);
+
+                    // Create SVG wrapper
+                    const svgWrapper = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                    svgWrapper.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+                    svgWrapper.setAttribute('viewBox', viewBox);
+                    svgWrapper.setAttribute('width', w * 2);
+                    svgWrapper.setAttribute('height', h * 2);
+
+                    // Clone symbol contents
+                    Array.from(symbol.children).forEach(child => {
+                        svgWrapper.appendChild(child.cloneNode(true));
+                    });
+
+                    // Convert to image
+                    const svgString = new XMLSerializer().serializeToString(svgWrapper);
+                    const img = new Image();
+                    img.src = 'data:image/svg+xml;base64,' + btoa(svgString);
+
+                    await new Promise((resolve) => {
+                        img.onload = resolve;
+                        img.onerror = resolve; // Continue even if one fails
+                    });
+
+                    spriteCache[type] = img;
+                }
+            }
+            console.log('[Tank Shooter] Loaded', Object.keys(spriteCache).length, 'sprites');
+        } catch (err) {
+            console.warn('[Tank Shooter] Could not load sprites, using fallback:', err);
+        }
+    }
+}
+
+// Draw a cached sprite on canvas
+function drawSprite(ctx, type, x, y, size, angle = 0) {
+    const sprite = spriteCache[type];
+    if (sprite && sprite.complete) {
+        ctx.save();
+        ctx.translate(x, y);
+        if (angle) ctx.rotate(angle);
+        ctx.drawImage(sprite, -size/2, -size/2, size, size);
+        ctx.restore();
+        return true;
+    }
+    return false; // Fallback needed
+}
 
 // ==================== GAME STATE ====================
 
@@ -1138,24 +1234,62 @@ class Enemy {
             ctx.restore();
         }
 
-        // Boss crown effect
+        // Boss crown effect - use sprite or fallback
         if (this.isBoss) {
-            ctx.save();
-            ctx.translate(this.x, this.y - this.radius - 10);
-            ctx.fillStyle = '#ffd700';
-            ctx.font = 'bold 20px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('👑', 0, 0);
-            ctx.restore();
+            if (!drawSprite(ctx, 'crown', this.x, this.y - this.radius - 15, 30)) {
+                // Fallback to canvas drawing
+                ctx.save();
+                ctx.translate(this.x, this.y - this.radius - 10);
+                ctx.fillStyle = '#ffd700';
+                ctx.beginPath();
+                ctx.moveTo(-12, 8);
+                ctx.lineTo(-8, -2);
+                ctx.lineTo(-4, 4);
+                ctx.lineTo(0, -8);
+                ctx.lineTo(4, 4);
+                ctx.lineTo(8, -2);
+                ctx.lineTo(12, 8);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
         }
 
-        // Enemy icon - larger for bosses
-        const iconSize = this.isBoss ? this.radius * 1.2 : this.radius;
-        ctx.font = `${iconSize}px sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(this.icon, this.x, this.y);
+        // Enemy icon - use SVG sprite or fallback to canvas shape
+        const spriteSize = this.radius * (this.isBoss ? 2.4 : 2);
+        if (!drawSprite(ctx, this.type, this.x, this.y, spriteSize, this.angle)) {
+            // Fallback: draw a simple shape with enemy color
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.angle);
+
+            // Draw enemy as a stylized tank/robot shape
+            ctx.fillStyle = this.color;
+            ctx.strokeStyle = this.darkenColor(this.color, 30);
+            ctx.lineWidth = 2;
+
+            // Body
+            ctx.beginPath();
+            ctx.arc(0, 0, this.radius * 0.8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // "Eyes" or markings
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(-this.radius * 0.3, -this.radius * 0.2, this.radius * 0.15, 0, Math.PI * 2);
+            ctx.arc(this.radius * 0.3, -this.radius * 0.2, this.radius * 0.15, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Pupils
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(-this.radius * 0.3, -this.radius * 0.2, this.radius * 0.08, 0, Math.PI * 2);
+            ctx.arc(this.radius * 0.3, -this.radius * 0.2, this.radius * 0.08, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
 
         // Health bar - always show for bosses
         if (this.hp < this.maxHP || tankGame.powerUps.xRay.active || this.isBoss) {
@@ -1186,17 +1320,37 @@ class Enemy {
             }
         }
 
-        // Stun effect - enhanced
+        // Stun effect - enhanced (canvas stars instead of emoji)
         if (this.stunned) {
             const time = Date.now() / 100;
             for (let i = 0; i < 3; i++) {
                 const angle = time + (i * Math.PI * 2 / 3);
                 const starX = this.x + Math.cos(angle) * (this.radius + 10);
                 const starY = this.y + Math.sin(angle) * (this.radius + 10) - 10;
+
+                // Draw 5-point star
+                ctx.save();
+                ctx.translate(starX, starY);
                 ctx.fillStyle = '#ffee00';
-                ctx.font = 'bold 16px sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText('⭐', starX, starY);
+                ctx.strokeStyle = '#ffa500';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                for (let j = 0; j < 5; j++) {
+                    const outerAngle = (j * 2 * Math.PI / 5) - Math.PI / 2;
+                    const innerAngle = outerAngle + Math.PI / 5;
+                    const outerR = 8;
+                    const innerR = 4;
+                    if (j === 0) {
+                        ctx.moveTo(Math.cos(outerAngle) * outerR, Math.sin(outerAngle) * outerR);
+                    } else {
+                        ctx.lineTo(Math.cos(outerAngle) * outerR, Math.sin(outerAngle) * outerR);
+                    }
+                    ctx.lineTo(Math.cos(innerAngle) * innerR, Math.sin(innerAngle) * innerR);
+                }
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                ctx.restore();
             }
         }
     }
@@ -1433,8 +1587,11 @@ function createDamageNumber(x, y, damage) {
 
 // ==================== GAME LOGIC ====================
 
-function startTankShooter() {
+async function startTankShooter() {
     console.log('[TankShooter] Starting ENHANCED game...');
+
+    // Load SVG sprites for Kenny-style graphics
+    await loadSprites();
 
     // Load economy system
     loadTankEconomy();
