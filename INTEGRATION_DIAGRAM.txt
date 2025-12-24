@@ -1,0 +1,308 @@
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     FLAWLESS TANK GAME INTEGRATION                          │
+│                         File Structure Diagram                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+BEFORE (Original):
+═══════════════════════════════════════════════════════════════════════════════
+
+index.html
+│
+├── <head>
+│   ├── Phaser.js CDN ✓
+│   ├── Howler.js CDN ✓  (ADDED)
+│   └── Other dependencies
+│
+├── <body>
+│   ├── Game HTML structure ✓
+│   ├── Canvas element ✓
+│   └── Original game script (basic version)
+│
+└── </body>
+    </html>
+
+═══════════════════════════════════════════════════════════════════════════════
+
+AFTER (Enhanced):
+═══════════════════════════════════════════════════════════════════════════════
+
+index.html
+│
+├── <head>
+│   ├── Phaser.js CDN ✓
+│   ├── Howler.js CDN ✓  ← ADDED
+│   └── Other dependencies
+│
+├── <body>
+│   ├── Game HTML structure ✓
+│   ├── Canvas element ✓
+│   └── Original game script (basic version)
+│
+│   ┌─────────────────────────────────────────────────────────────────────┐
+│   │  NEW SCRIPTS (Add here, before </body>)                             │
+│   │                                                                      │
+│   │  <script src="flawless-tank-game.js"></script>                      │
+│   │  ↓ Core engine: Audio, particles, classes                           │
+│   │  │                                                                   │
+│   │  │  • GameAudio (procedural sounds)                                 │
+│   │  │  • ScreenShake (impact feedback)                                 │
+│   │  │  • EnhancedParticle (4 types)                                    │
+│   │  │  • FlashEffect (visual feedback)                                 │
+│   │  │  • TruthBomb (enhanced projectile)                               │
+│   │  │  • Bubble (enhanced enemy)                                       │
+│   │  │                                                                   │
+│   │  <script src="flawless-tank-game-main.js"></script>                 │
+│   │  ↓ Game loop & controls                                             │
+│   │  │                                                                   │
+│   │  │  • startTruthCannon() (replaces original)                        │
+│   │  │  • setupGameControls()                                           │
+│   │  │  • enhancedGameLoop() (60 FPS)                                   │
+│   │  │  • Pull-to-shoot mechanics                                       │
+│   │  │  • Combo system                                                  │
+│   │  │                                                                   │
+│   │  <script src="flawless-tank-game-drawing.js"></script>              │
+│   │  ↓ Graphics & collision                                             │
+│   │  │                                                                   │
+│   │  │  • drawCannon() (3D style)                                       │
+│   │  │  • drawTrajectory() (prediction)                                 │
+│   │  │  • checkCollisions() (enhanced)                                  │
+│   │  │  • handleGoodHit() (maximum juice)                               │
+│   │  │  • handleBadHit() (feedback)                                     │
+│   │  │  • createDamageNumber() (floating text)                          │
+│   │  │                                                                   │
+│   │  <script>                                                            │
+│   │    console.log('🎮 FLAWLESS TANK GAME LOADED 🎮');                  │
+│   │  </script>                                                           │
+│   └──────────────────────────────────────────────────────────────────────┘
+│
+└── </body>
+    </html>
+
+═══════════════════════════════════════════════════════════════════════════════
+
+FILE RELATIONSHIPS:
+═══════════════════════════════════════════════════════════════════════════════
+
+flawless-tank-game.js (Core Engine)
+    │
+    ├──> Provides: GameAudio, ScreenShake, EnhancedParticle,
+    │              FlashEffect, TruthBomb, Bubble, GAME_CONFIG
+    │
+    └──> Used by: flawless-tank-game-main.js, flawless-tank-game-drawing.js
+
+
+flawless-tank-game-main.js (Game Loop)
+    │
+    ├──> Depends on: flawless-tank-game.js
+    │
+    ├──> Provides: startTruthCannon(), enhancedGameLoop(),
+    │              setupGameControls(), updateParticles()
+    │
+    └──> Calls: flawless-tank-game-drawing.js functions
+
+
+flawless-tank-game-drawing.js (Graphics)
+    │
+    ├──> Depends on: flawless-tank-game.js, flawless-tank-game-main.js
+    │
+    ├──> Provides: drawCannon(), drawTrajectory(), checkCollisions(),
+    │              handleGoodHit(), handleBadHit(), updateGameUI()
+    │
+    └──> Called by: enhancedGameLoop()
+
+═══════════════════════════════════════════════════════════════════════════════
+
+EXECUTION FLOW:
+═══════════════════════════════════════════════════════════════════════════════
+
+1. User clicks "Start Tank Game" button
+   ↓
+2. startTruthCannon() called (from flawless-tank-game-main.js)
+   ↓
+3. Initialize GameAudio (from flawless-tank-game.js)
+   ↓
+4. Setup canvas with DPI scaling
+   ↓
+5. Reset gameState
+   ↓
+6. Setup controls (touch, mouse, keyboard)
+   ↓
+7. Start enhancedGameLoop()
+   │
+   ├──> Update bubbles
+   ├──> Update truthBomb
+   ├──> Update particles
+   ├──> Update flash effects
+   ├──> Check collisions
+   ├──> Update combo timer
+   │
+   ├──> Draw particles
+   ├──> Draw bubbles
+   ├──> Draw flash effects
+   ├──> Draw truthBomb
+   ├──> Draw cannon
+   ├──> Draw trajectory
+   ├──> Draw combo multiplier
+   └──> Draw damage numbers
+   │
+   └──> requestAnimationFrame() → Loop continues
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PARTICLE SYSTEM FLOW:
+═══════════════════════════════════════════════════════════════════════════════
+
+Hit Detection (checkCollisions)
+   ↓
+   Is it a FAKE? ──YES──> handleGoodHit()
+   │                      ↓
+   │                      Create explosion particles (20-45)
+   │                      Create spark particles (15)
+   │                      Create smoke particles (8)
+   │                      Create flash effect
+   │                      Create damage number
+   │                      Screen shake (8-18 pixels)
+   │                      Play sound
+   │                      Haptic vibration
+   │
+   └──NO──> handleBadHit()
+            ↓
+            Create green explosion particles (15)
+            Create flash effect
+            Create damage number (red)
+            Screen shake (12 pixels)
+            Play danger sound
+            Haptic vibration
+
+All particles:
+   ↓
+updateParticles() → Each frame:
+   - Update position (velocity + gravity)
+   - Update life (fade out)
+   - Remove dead particles
+   - Cap at MAX_PARTICLES (200)
+   ↓
+drawParticles() → Render all active particles
+
+═══════════════════════════════════════════════════════════════════════════════
+
+AUDIO SYSTEM FLOW:
+═══════════════════════════════════════════════════════════════════════════════
+
+GameAudio.init()
+   ↓
+Create AudioContext
+   ↓
+GameAudio.play('explosion')
+   ↓
+createOscillator()
+   ↓
+Apply envelope (ADSR)
+   ↓
+Apply filter
+   ↓
+Play for duration
+   ↓
+Auto-cleanup
+
+Sound Types:
+   • shoot      → Low boom (cannon fire)
+   • explosion  → Satisfying boom (enemy destroyed)
+   • hit        → Crisp ping (impact)
+   • powerup    → Ascending chime
+   • combo      → Exciting arpeggio
+   • danger     → Urgent beep (low health)
+   • gameover   → Descending trombone
+
+Toggle mute: Press 'M' key or call GameAudio.toggle()
+
+═══════════════════════════════════════════════════════════════════════════════
+
+SCREEN SHAKE SYSTEM:
+═══════════════════════════════════════════════════════════════════════════════
+
+Impact occurs
+   ↓
+ScreenShake.shake(intensity, duration)
+   intensity: 3-18 pixels
+   duration: 8-20 frames
+   ↓
+Each frame:
+   ScreenShake.update()
+   ├─> intensity *= 0.9 (decay)
+   └─> duration--
+   ↓
+ScreenShake.getOffset()
+   Returns: { x: random, y: random }
+   ↓
+ctx.translate(shake.x, shake.y)
+   ↓
+Draw everything with offset
+   ↓
+Smooth decay to 0
+
+═══════════════════════════════════════════════════════════════════════════════
+
+COMBO SYSTEM:
+═══════════════════════════════════════════════════════════════════════════════
+
+Hit FAKE enemy
+   ↓
+gameState.combo += 0.5 (max 5.0)
+gameState.lastComboTime = now
+   ↓
+Display combo multiplier (if > 1)
+   • Background pill
+   • "x2.5" text
+   • Timer bar (fills over 3 seconds)
+   ↓
+3 seconds pass without hit?
+   ↓
+Reset combo to 1.0
+
+Score calculation:
+   points = POINTS_PER_FAKE * combo
+   100 * 2.5 = 250 points
+
+═══════════════════════════════════════════════════════════════════════════════
+
+KENNY ASSET INTEGRATION (Optional):
+═══════════════════════════════════════════════════════════════════════════════
+
+Download Kenny.nl packs
+   ↓
+Extract to assets/kenny/
+   ↓
+Update GAME_CONFIG.ASSETS with file paths
+   ↓
+Create loadGameAssets() function
+   ↓
+Load all images/sounds
+   ↓
+Replace emoji rendering:
+   OLD: ctx.fillText('🎯', x, y)
+   NEW: ctx.drawImage(assetImages.TANK_BODY, x, y)
+   ↓
+Replace procedural sounds:
+   OLD: GameAudio.play() → Web Audio API
+   NEW: Howl.play() → Real audio files
+
+See TANK_GAME_ENHANCEMENTS.md for detailed integration guide
+
+═══════════════════════════════════════════════════════════════════════════════
+
+DEBUG MODE:
+═══════════════════════════════════════════════════════════════════════════════
+
+Add ?debug=1 to URL
+   ↓
+drawDebugInfo() enabled
+   ↓
+Shows overlay:
+   • FPS: 60
+   • Particles: 87
+   • Bubbles: 12
+   • Wave: 5
+   • Combo: x2.5
+
+═══════════════════════════════════════════════════════════════════════════════

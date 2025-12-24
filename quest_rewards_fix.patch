@@ -1,0 +1,106 @@
+--- index.html.original
++++ index.html.fixed
+@@ -12466,27 +12466,48 @@
+ // Populate quests popup with daily quests
+ function populateQuestsPopup() {
+     const body = document.getElementById('questsPopupBody');
+     if (!body) return;
+
+-    const questProgress = JSON.parse(localStorage.getItem('questProgress') || '{}');
++    // FIXED: Use the NEW userQuests system, not the old questProgress
++    const userQuests = getStorage('userQuests', null);
++    if (!userQuests || !userQuests.daily || !userQuests.daily.quests) {
++        body.innerHTML = '<p style="text-align:center;color:var(--text2)">No quests available</p>';
++        const badge = document.getElementById('questsBadge');
++        if (badge) {
++            badge.textContent = '0';
++            badge.style.display = 'none';
++        }
++        return;
++    }
++
+     const dailyQuests = QUEST_DEFINITIONS.daily || [];
+
+     let html = '';
+     let claimableCount = 0;
+
+-    dailyQuests.slice(0, 5).forEach(quest => {
+-        const progress = questProgress[quest.id] || { current: 0, claimed: false };
+-        const isComplete = progress.current >= quest.target;
+-        const isClaimable = isComplete && !progress.claimed;
++    // Show first 5 daily quests from the userQuests system
++    userQuests.daily.quests.slice(0, 5).forEach(quest => {
++        const def = dailyQuests.find(q => q.id === quest.id);
++        if (!def) return;
++
++        const progress = Math.min(quest.progress, def.target);
++        const isComplete = quest.completed;
++        const isClaimed = quest.claimed;
++        const isClaimable = isComplete && !isClaimed;
+
+         if (isClaimable) claimableCount++;
+
+         html += `
+             <div class="popup-quest-item ${isClaimable ? 'claimable' : ''}">
+-                <div class="popup-quest-icon">${quest.icon}</div>
++                <div class="popup-quest-icon">${def.icon}</div>
+                 <div class="popup-quest-info">
+-                    <div class="popup-quest-title">${quest.title}</div>
+-                    <div class="popup-quest-progress">${progress.current}/${quest.target} ${isComplete ? '(Complete!)' : ''}</div>
++                    <div class="popup-quest-title">${def.title}</div>
++                    <div class="popup-quest-progress">${progress}/${def.target} ${isComplete ? (isClaimed ? '(Claimed!)' : '(Complete!)') : ''}</div>
+                 </div>
+                 <div class="popup-quest-reward">
+                     <span>🪙</span>
+-                    <span>${quest.reward.coins}</span>
++                    <span>${def.reward.coins}</span>
+                 </div>
+             </div>
+         `;
+@@ -12503,13 +12524,24 @@
+
+ // Update quests badge on home screen
+ function updateQuestsBadge() {
+-    const questProgress = JSON.parse(localStorage.getItem('questProgress') || '{}');
++    // FIXED: Use the NEW userQuests system, not the old questProgress
++    const userQuests = getStorage('userQuests', null);
++    if (!userQuests || !userQuests.daily || !userQuests.daily.quests) {
++        const badge = document.getElementById('questsBadge');
++        if (badge) {
++            badge.textContent = '0';
++            badge.style.display = 'none';
++        }
++        return;
++    }
++
+     const dailyQuests = QUEST_DEFINITIONS.daily || [];
+
+     let claimableCount = 0;
+-    dailyQuests.forEach(quest => {
+-        const progress = questProgress[quest.id] || { current: 0, claimed: false };
+-        if (progress.current >= quest.target && !progress.claimed) {
++    userQuests.daily.quests.forEach(quest => {
++        const def = dailyQuests.find(q => q.id === quest.id);
++        if (def && quest.completed && !quest.claimed) {
+             claimableCount++;
+         }
+     });
+@@ -8202,6 +8234,12 @@
+     // Update displays
+     if (typeof updateAllCoinDisplays === 'function') {
+         updateAllCoinDisplays();
++    } else if (typeof updateCoinsDisplay === 'function') {
++        updateCoinsDisplay();
++    }
++
++    // Also try updating currency bar if it exists
++    const headerCoinCount = document.getElementById('headerCoinCount');
++    if (headerCoinCount) {
++        headerCoinCount.textContent = newCoins;
+     }
+
+-    // Also update the header currency bar directly
+-    const headerCoinCount = document.getElementById('headerCoinCount');
+-    if (headerCoinCount) headerCoinCount.textContent = newCoins;
+-
+     // Show celebration

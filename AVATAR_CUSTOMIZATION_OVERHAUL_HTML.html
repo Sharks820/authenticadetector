@@ -1,0 +1,507 @@
+<!-- ====================================
+     AVATAR CUSTOMIZATION SYSTEM - COMPLETE OVERHAUL
+     Replace the entire contents of avatarView > view-body-padded
+     ==================================== -->
+
+<!-- LARGE AVATAR PREVIEW with animated background -->
+<div class="avatar-preview-main">
+    <div class="avatar-preview-character" id="avatarPreviewCharacter">
+        <!-- Character layers will be rendered here -->
+        <div class="character-part char-back" id="previewBack"></div>
+        <div class="character-part char-hat" id="previewHat"></div>
+        <div class="character-part char-head" id="previewHead">🧑</div>
+        <div class="character-part char-glasses" id="previewGlasses"></div>
+        <div class="character-part char-torso" id="previewTorso">👕</div>
+        <div class="character-part char-left-arm" id="previewLeftArm"></div>
+        <div class="character-part char-right-arm" id="previewRightArm"></div>
+        <div class="character-part char-weapon" id="previewWeapon"></div>
+        <div class="character-part char-legs" id="previewLegs">👖</div>
+        <div class="character-part char-pet" id="previewPet"></div>
+    </div>
+</div>
+
+<!-- ====================================
+     EQUIPMENT SLOTS - Large, easy to tap/click
+     ==================================== -->
+<div class="designer-section-header">
+    <h3>Equipped Items</h3>
+    <span class="item-count" id="equippedCount">0/9</span>
+</div>
+
+<div class="equipment-slots-grid">
+    <!-- Head Slot -->
+    <div class="equipment-slot-card empty" data-slot="head" onclick="selectEquipmentSlot('head')">
+        <span class="equipment-slot-icon" id="slotHeadIcon">🎭</span>
+        <span class="equipment-slot-label">Head</span>
+        <span class="equipment-slot-checkmark">✓</span>
+    </div>
+
+    <!-- Hat Slot -->
+    <div class="equipment-slot-card empty" data-slot="hat" onclick="selectEquipmentSlot('hat')">
+        <span class="equipment-slot-icon" id="slotHatIcon">🎩</span>
+        <span class="equipment-slot-label">Hat</span>
+        <span class="equipment-slot-checkmark">✓</span>
+    </div>
+
+    <!-- Glasses Slot -->
+    <div class="equipment-slot-card empty" data-slot="glasses" onclick="selectEquipmentSlot('glasses')">
+        <span class="equipment-slot-icon" id="slotGlassesIcon">👓</span>
+        <span class="equipment-slot-label">Glasses</span>
+        <span class="equipment-slot-checkmark">✓</span>
+    </div>
+
+    <!-- Torso/Body Slot -->
+    <div class="equipment-slot-card empty" data-slot="torso" onclick="selectEquipmentSlot('torso')">
+        <span class="equipment-slot-icon" id="slotTorsoIcon">👕</span>
+        <span class="equipment-slot-label">Body</span>
+        <span class="equipment-slot-checkmark">✓</span>
+    </div>
+
+    <!-- Legs/Pants Slot -->
+    <div class="equipment-slot-card empty" data-slot="legs" onclick="selectEquipmentSlot('legs')">
+        <span class="equipment-slot-icon" id="slotLegsIcon">👖</span>
+        <span class="equipment-slot-label">Legs</span>
+        <span class="equipment-slot-checkmark">✓</span>
+    </div>
+
+    <!-- Weapon/Accessory Slot -->
+    <div class="equipment-slot-card empty" data-slot="weapon" onclick="selectEquipmentSlot('weapon')">
+        <span class="equipment-slot-icon" id="slotWeaponIcon">⚔️</span>
+        <span class="equipment-slot-label">Weapon</span>
+        <span class="equipment-slot-checkmark">✓</span>
+    </div>
+
+    <!-- Back Item Slot -->
+    <div class="equipment-slot-card empty" data-slot="back" onclick="selectEquipmentSlot('back')">
+        <span class="equipment-slot-icon" id="slotBackIcon">🦋</span>
+        <span class="equipment-slot-label">Back</span>
+        <span class="equipment-slot-checkmark">✓</span>
+    </div>
+
+    <!-- Pet Slot - BIGGER (spans 2 columns) -->
+    <div class="equipment-slot-card empty" data-slot="pet" onclick="selectEquipmentSlot('pet')">
+        <span class="equipment-slot-icon" id="slotPetIcon">🐾</span>
+        <span class="equipment-slot-label">Pet</span>
+        <span class="equipment-slot-checkmark">✓</span>
+    </div>
+</div>
+
+<!-- ====================================
+     MUTATIONS SYSTEM - Toggle extra limbs/wings/etc
+     ==================================== -->
+<div class="mutations-panel">
+    <div class="mutations-title">Special Mutations</div>
+
+    <!-- Extra Limbs Controls -->
+    <div class="mutations-grid">
+        <div class="mutation-control">
+            <span class="mutation-label">Extra Arms</span>
+            <div class="mutation-buttons">
+                <button class="mutation-btn" onclick="adjustMutation('arms', -1)">−</button>
+                <span class="mutation-count" id="mutationArmsCount">0</span>
+                <button class="mutation-btn" onclick="adjustMutation('arms', 1)">+</button>
+            </div>
+        </div>
+
+        <div class="mutation-control">
+            <span class="mutation-label">Extra Legs</span>
+            <div class="mutation-buttons">
+                <button class="mutation-btn" onclick="adjustMutation('legs', -1)">−</button>
+                <span class="mutation-count" id="mutationLegsCount">0</span>
+                <button class="mutation-btn" onclick="adjustMutation('legs', 1)">+</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Special Mutations Toggles -->
+    <div class="mutation-toggle-grid">
+        <button class="mutation-toggle" data-mutation="wings" onclick="toggleMutation('wings')">
+            <span class="mutation-toggle-icon">🦋</span>
+            <span>Wings</span>
+        </button>
+        <button class="mutation-toggle" data-mutation="tail" onclick="toggleMutation('tail')">
+            <span class="mutation-toggle-icon">🦎</span>
+            <span>Tail</span>
+        </button>
+        <button class="mutation-toggle" data-mutation="horns" onclick="toggleMutation('horns')">
+            <span class="mutation-toggle-icon">👹</span>
+            <span>Horns</span>
+        </button>
+        <button class="mutation-toggle" data-mutation="aura" onclick="toggleMutation('aura')">
+            <span class="mutation-toggle-icon">✨</span>
+            <span>Aura</span>
+        </button>
+    </div>
+</div>
+
+<!-- ====================================
+     COLOR/SKIN OPTIONS
+     ==================================== -->
+<div class="color-picker-section">
+    <div class="color-picker-title">Appearance Colors</div>
+
+    <div class="color-options-grid">
+        <!-- Skin Tone -->
+        <div class="color-option-group">
+            <div class="color-option-label">Skin Tone</div>
+            <div class="color-swatches">
+                <div class="color-swatch" data-color="skin-1" onclick="selectColor('skin', 'skin-1')"></div>
+                <div class="color-swatch" data-color="skin-2" onclick="selectColor('skin', 'skin-2')"></div>
+                <div class="color-swatch" data-color="skin-3" onclick="selectColor('skin', 'skin-3')"></div>
+                <div class="color-swatch" data-color="skin-4" onclick="selectColor('skin', 'skin-4')"></div>
+                <div class="color-swatch" data-color="skin-5" onclick="selectColor('skin', 'skin-5')"></div>
+                <div class="color-swatch selected" data-color="skin-6" onclick="selectColor('skin', 'skin-6')"></div>
+            </div>
+        </div>
+
+        <!-- Hair Color -->
+        <div class="color-option-group">
+            <div class="color-option-label">Hair Color</div>
+            <div class="color-swatches">
+                <div class="color-swatch selected" data-color="hair-black" onclick="selectColor('hair', 'hair-black')"></div>
+                <div class="color-swatch" data-color="hair-brown" onclick="selectColor('hair', 'hair-brown')"></div>
+                <div class="color-swatch" data-color="hair-blonde" onclick="selectColor('hair', 'hair-blonde')"></div>
+                <div class="color-swatch" data-color="hair-red" onclick="selectColor('hair', 'hair-red')"></div>
+                <div class="color-swatch" data-color="hair-blue" onclick="selectColor('hair', 'hair-blue')"></div>
+                <div class="color-swatch" data-color="hair-purple" onclick="selectColor('hair', 'hair-purple')"></div>
+                <div class="color-swatch" data-color="hair-green" onclick="selectColor('hair', 'hair-green')"></div>
+                <div class="color-swatch" data-color="hair-pink" onclick="selectColor('hair', 'hair-pink')"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====================================
+     INVENTORY SECTION - Scrollable grid with filters
+     ==================================== -->
+<div class="inventory-section">
+    <div class="inventory-header">
+        <h3 class="inventory-title">Your Items</h3>
+        <span class="inventory-count" id="inventoryItemCount">0 items</span>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="inventory-filter-tabs">
+        <button class="inventory-filter-tab active" data-filter="all" onclick="filterInventory('all')">All</button>
+        <button class="inventory-filter-tab" data-filter="head" onclick="filterInventory('head')">Heads</button>
+        <button class="inventory-filter-tab" data-filter="hat" onclick="filterInventory('hat')">Hats</button>
+        <button class="inventory-filter-tab" data-filter="glasses" onclick="filterInventory('glasses')">Glasses</button>
+        <button class="inventory-filter-tab" data-filter="torso" onclick="filterInventory('torso')">Bodies</button>
+        <button class="inventory-filter-tab" data-filter="legs" onclick="filterInventory('legs')">Legs</button>
+        <button class="inventory-filter-tab" data-filter="weapon" onclick="filterInventory('weapon')">Weapons</button>
+        <button class="inventory-filter-tab" data-filter="back" onclick="filterInventory('back')">Back</button>
+        <button class="inventory-filter-tab" data-filter="pet" onclick="filterInventory('pet')">Pets</button>
+    </div>
+
+    <!-- Inventory Grid -->
+    <div class="inventory-grid" id="inventoryGrid">
+        <!-- Items will be populated by JavaScript -->
+        <!-- Example item structure:
+        <div class="inventory-item-card rarity-epic equipped" data-item-id="item_001" onclick="equipItem('item_001')">
+            <span class="inventory-item-rarity-badge">EPIC</span>
+            <span class="inventory-item-icon">🎭</span>
+            <span class="inventory-item-name">Hero Mask</span>
+            <span class="inventory-item-equipped-badge">✓</span>
+        </div>
+        -->
+    </div>
+</div>
+
+<!-- ====================================
+     SAVE/APPLY BUTTONS - Sticky bottom bar
+     ==================================== -->
+<div class="avatar-actions">
+    <button class="avatar-action-btn avatar-reset-btn" onclick="resetAvatarCustomization()">
+        Reset
+    </button>
+    <button class="avatar-action-btn avatar-preview-btn" onclick="previewAvatarChanges()">
+        Preview
+    </button>
+    <button class="avatar-action-btn avatar-save-btn" onclick="saveAvatarCustomization()">
+        Save Look
+    </button>
+</div>
+
+<!-- ====================================
+     SHOP CTA - Visit shop for more items
+     ==================================== -->
+<div style="margin: 80px 20px 20px; text-align: center;">
+    <button onclick="openShop()" style="width: 100%; max-width: 400px; padding: 18px 24px; background: linear-gradient(135deg, #fcd34d, #f59e0b, #8b5cf6); border: 3px solid rgba(252,211,77,0.4); border-radius: 16px; color: white; cursor: pointer; transition: all 0.3s; font-size: 18px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 8px 32px rgba(252,211,77,0.4);">
+        <span style="font-size: 28px; margin-right: 12px;">🏪</span>
+        <span>Visit Shop for More Items</span>
+        <span style="font-size: 24px; margin-left: 12px;">→</span>
+    </button>
+</div>
+
+<!-- ====================================
+     JAVASCRIPT FUNCTIONS
+     Add these to your main JavaScript
+     ==================================== -->
+<script>
+// Avatar customization state
+const avatarCustomizationState = {
+    equipped: {
+        head: null,
+        hat: null,
+        glasses: null,
+        torso: null,
+        legs: null,
+        weapon: null,
+        back: null,
+        pet: null
+    },
+    mutations: {
+        arms: 0,
+        legs: 0,
+        wings: false,
+        tail: false,
+        horns: false,
+        aura: false
+    },
+    colors: {
+        skin: 'skin-6',
+        hair: 'hair-black'
+    },
+    inventory: []
+};
+
+// Initialize avatar customization
+function initAvatarCustomization() {
+    console.log('[Avatar] Initializing customization system');
+    loadAvatarState();
+    renderInventory();
+    updateEquipmentSlots();
+    updatePreview();
+}
+
+// Load saved state
+function loadAvatarState() {
+    try {
+        const saved = localStorage.getItem('avatar_customization_state');
+        if (saved) {
+            Object.assign(avatarCustomizationState, JSON.parse(saved));
+        }
+    } catch (e) {
+        console.error('[Avatar] Failed to load state:', e);
+    }
+}
+
+// Save state
+function saveAvatarState() {
+    try {
+        localStorage.setItem('avatar_customization_state', JSON.stringify(avatarCustomizationState));
+    } catch (e) {
+        console.error('[Avatar] Failed to save state:', e);
+    }
+}
+
+// Select equipment slot (tap/click to equip)
+function selectEquipmentSlot(slot) {
+    console.log('[Avatar] Selected slot:', slot);
+    // Filter inventory to show only items for this slot
+    filterInventory(slot);
+    // Scroll to inventory
+    document.querySelector('.inventory-grid').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Equip item
+function equipItem(itemId) {
+    const item = avatarCustomizationState.inventory.find(i => i.id === itemId);
+    if (!item) return;
+
+    // Equip the item
+    avatarCustomizationState.equipped[item.slot] = item;
+
+    // Update UI
+    updateEquipmentSlots();
+    updatePreview();
+    renderInventory();
+    saveAvatarState();
+
+    // Show toast
+    if (typeof toast === 'function') {
+        toast(`Equipped ${item.name}!`, 'success');
+    }
+}
+
+// Update equipment slots display
+function updateEquipmentSlots() {
+    let equippedCount = 0;
+
+    Object.keys(avatarCustomizationState.equipped).forEach(slot => {
+        const item = avatarCustomizationState.equipped[slot];
+        const slotCard = document.querySelector(`[data-slot="${slot}"]`);
+        const slotIcon = document.getElementById(`slot${slot.charAt(0).toUpperCase() + slot.slice(1)}Icon`);
+
+        if (item && slotCard && slotIcon) {
+            slotCard.classList.remove('empty');
+            slotCard.classList.add('filled', `rarity-${item.rarity || 'common'}`);
+            slotIcon.textContent = item.icon || '📦';
+            equippedCount++;
+        } else if (slotCard) {
+            slotCard.classList.add('empty');
+            slotCard.classList.remove('filled');
+        }
+    });
+
+    const countEl = document.getElementById('equippedCount');
+    if (countEl) countEl.textContent = `${equippedCount}/9`;
+}
+
+// Update avatar preview
+function updatePreview() {
+    // Update preview character with equipped items
+    Object.keys(avatarCustomizationState.equipped).forEach(slot => {
+        const item = avatarCustomizationState.equipped[slot];
+        const previewEl = document.getElementById(`preview${slot.charAt(0).toUpperCase() + slot.slice(1)}`);
+
+        if (previewEl && item) {
+            previewEl.textContent = item.icon || '';
+            previewEl.style.fontSize = slot === 'pet' ? '60px' : '40px';
+        }
+    });
+}
+
+// Adjust mutation (extra limbs)
+function adjustMutation(type, delta) {
+    const current = avatarCustomizationState.mutations[type] || 0;
+    const newValue = Math.max(0, Math.min(2, current + delta));
+    avatarCustomizationState.mutations[type] = newValue;
+
+    const countEl = document.getElementById(`mutation${type.charAt(0).toUpperCase() + type.slice(1)}Count`);
+    if (countEl) countEl.textContent = newValue;
+
+    updatePreview();
+    saveAvatarState();
+}
+
+// Toggle mutation (wings, tail, etc)
+function toggleMutation(type) {
+    avatarCustomizationState.mutations[type] = !avatarCustomizationState.mutations[type];
+
+    const toggleBtn = document.querySelector(`[data-mutation="${type}"]`);
+    if (toggleBtn) {
+        toggleBtn.classList.toggle('active', avatarCustomizationState.mutations[type]);
+    }
+
+    updatePreview();
+    saveAvatarState();
+}
+
+// Select color
+function selectColor(type, color) {
+    avatarCustomizationState.colors[type] = color;
+
+    // Update UI - remove all selected, add to clicked
+    document.querySelectorAll(`.color-swatch[data-color^="${type}-"]`).forEach(swatch => {
+        swatch.classList.remove('selected');
+    });
+    document.querySelector(`.color-swatch[data-color="${color}"]`)?.classList.add('selected');
+
+    updatePreview();
+    saveAvatarState();
+}
+
+// Filter inventory
+function filterInventory(category) {
+    // Update active tab
+    document.querySelectorAll('.inventory-filter-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.filter === category);
+    });
+
+    // Filter items
+    const items = document.querySelectorAll('.inventory-item-card');
+    items.forEach(item => {
+        const itemCategory = item.dataset.itemSlot;
+        const shouldShow = category === 'all' || itemCategory === category;
+        item.style.display = shouldShow ? 'flex' : 'none';
+    });
+}
+
+// Render inventory
+function renderInventory() {
+    const grid = document.getElementById('inventoryGrid');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+
+    avatarCustomizationState.inventory.forEach(item => {
+        const card = document.createElement('div');
+        card.className = `inventory-item-card rarity-${item.rarity || 'common'}`;
+        card.dataset.itemId = item.id;
+        card.dataset.itemSlot = item.slot;
+
+        const isEquipped = avatarCustomizationState.equipped[item.slot]?.id === item.id;
+        if (isEquipped) card.classList.add('equipped');
+
+        card.innerHTML = `
+            <span class="inventory-item-rarity-badge">${(item.rarity || 'common').toUpperCase()}</span>
+            <span class="inventory-item-icon">${item.icon || '📦'}</span>
+            <span class="inventory-item-name">${item.name}</span>
+            ${isEquipped ? '<span class="inventory-item-equipped-badge">✓</span>' : ''}
+        `;
+
+        card.onclick = () => equipItem(item.id);
+        grid.appendChild(card);
+    });
+
+    const countEl = document.getElementById('inventoryItemCount');
+    if (countEl) countEl.textContent = `${avatarCustomizationState.inventory.length} items`;
+}
+
+// Reset customization
+function resetAvatarCustomization() {
+    if (confirm('Reset all customizations? This cannot be undone.')) {
+        avatarCustomizationState.equipped = {
+            head: null,
+            hat: null,
+            glasses: null,
+            torso: null,
+            legs: null,
+            weapon: null,
+            back: null,
+            pet: null
+        };
+        avatarCustomizationState.mutations = {
+            arms: 0,
+            legs: 0,
+            wings: false,
+            tail: false,
+            horns: false,
+            aura: false
+        };
+
+        updateEquipmentSlots();
+        updatePreview();
+        saveAvatarState();
+
+        if (typeof toast === 'function') {
+            toast('Avatar reset to default', 'info');
+        }
+    }
+}
+
+// Preview changes
+function previewAvatarChanges() {
+    updatePreview();
+    document.querySelector('.avatar-preview-main')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    if (typeof toast === 'function') {
+        toast('Preview updated!', 'success');
+    }
+}
+
+// Save customization
+function saveAvatarCustomization() {
+    saveAvatarState();
+
+    // TODO: Save to database
+
+    if (typeof toast === 'function') {
+        toast('Avatar saved successfully!', 'success');
+    }
+}
+
+// Initialize when avatar view is opened
+window.addEventListener('avatarViewOpened', initAvatarCustomization);
+</script>

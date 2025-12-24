@@ -1,0 +1,247 @@
+============================================================
+LEADERBOARD & QUEST FIX - QUICK APPLICATION GUIDE
+============================================================
+
+Time Required: 5-10 minutes
+Difficulty: Easy (copy/paste)
+
+============================================================
+STEP 1: BACKUP YOUR WORK
+============================================================
+
+1. Make a copy of index.html:
+   - Right-click index.html
+   - Copy
+   - Paste as "index.html.backup"
+
+============================================================
+STEP 2: CSS REPLACEMENT
+============================================================
+
+1. Open: leaderboard-overhaul.css (in same folder)
+2. Select ALL (Ctrl+A)
+3. Copy (Ctrl+C)
+
+4. Open: index.html
+5. Find (Ctrl+F): /* LEADERBOARD - EPIC TIERS */
+6. Select from that line down to: .lb-tier{margin-left:6px}
+   (Should be around lines 1811-2008, approximately 200 lines)
+7. Delete selected text
+8. Paste (Ctrl+V) the new CSS
+
+9. Save (Ctrl+S)
+
+============================================================
+STEP 3: JAVASCRIPT - renderLeaderboard Function
+============================================================
+
+1. Still in index.html
+2. Find (Ctrl+F): function renderLeaderboard(leaderboard) {
+   (Around line 10525)
+
+3. Select the ENTIRE function (from "function renderLeaderboard" down to the closing "}")
+   - Should end around line 10632 with:
+     if (window.IconLibrary) {
+         window.IconLibrary.apply(container);
+     }
+   }
+
+4. Delete the selected function
+
+5. Open: LEADERBOARD_AND_QUESTS_FIX.md
+6. Find section: "Part 2: LEADERBOARD JAVASCRIPT"
+7. Copy the entire replacement function
+8. Paste in index.html where you deleted
+
+9. Save (Ctrl+S)
+
+============================================================
+STEP 4: JAVASCRIPT - Quest Button Fix
+============================================================
+
+1. Still in index.html
+2. Find (Ctrl+F): function renderQuestCard(quest, def, questType) {
+   (Around line 12578)
+
+3. Scroll down to find these lines (around 12592):
+   let buttonHtml = '';
+   if (isClaimed) {
+       buttonHtml = '<button class="quest-claim-btn" disabled>✓ Claimed</button>';
+   } else if (isCompleted) {
+       buttonHtml = `<button class="quest-claim-btn" onclick="claimQuestReward('${quest.id}', '${questType}')">Claim</button>`;
+   } else {
+       buttonHtml = `<button class="quest-claim-btn" disabled>In Progress</button>`;
+   }
+
+4. Replace ONLY that section with:
+   let buttonHtml = '';
+   if (isClaimed) {
+       buttonHtml = '<button class="quest-claim-btn" disabled>✓ Claimed</button>';
+   } else if (isClaimable) {
+       buttonHtml = `<button class="quest-claim-btn" onclick="claimQuestReward('${quest.id}', '${questType}')">Claim ${coinReward} Coins</button>`;
+   } else if (isCompleted && isClaimed) {
+       buttonHtml = '';
+   } else {
+       const progressPercent = Math.floor(percentage);
+       buttonHtml = `<button class="quest-claim-btn" disabled>${progressPercent}% Complete</button>`;
+   }
+
+5. Save (Ctrl+S)
+
+============================================================
+STEP 5: JAVASCRIPT - Quest Validation Fix
+============================================================
+
+1. Still in index.html
+2. Find (Ctrl+F): async function claimQuestReward(questId, questType) {
+   (Around line 12412)
+
+3. RIGHT AFTER the opening { add these validation checks:
+   (Insert AFTER "console.log('[Quests] Claiming reward for:', questId, questType);")
+
+   const userQuests = getStorage('userQuests', null);
+   if (!userQuests) {
+       console.error('[Quests] No userQuests found');
+       toast('Error: Quest data not found', 'error');
+       return;
+   }
+
+   const questList = userQuests[questType]?.quests;
+   if (!questList) {
+       console.error('[Quests] Invalid quest type:', questType);
+       toast('Error: Invalid quest type', 'error');
+       return;
+   }
+
+   const quest = questList.find(q => q.id === questId);
+   if (!quest) {
+       console.error('[Quests] Quest not found:', questId);
+       toast('Error: Quest not found', 'error');
+       return;
+   }
+
+   if (!quest.completed) {
+       console.warn('[Quests] Quest not completed yet:', questId);
+       toast('Quest not completed yet!', 'warning');
+       return;
+   }
+
+   if (quest.claimed) {
+       console.warn('[Quests] Reward already claimed:', questId);
+       toast('Reward already claimed!', 'warning');
+       return;
+   }
+
+4. Save (Ctrl+S)
+
+============================================================
+STEP 6: HTML - Leaderboard View Fix
+============================================================
+
+1. Still in index.html
+2. Find (Ctrl+F): <div class="podium" id="podium"></div>
+   (Around line 6371)
+
+3. Delete this line:
+   <div class="podium" id="podium"></div>
+
+4. Leave:
+   <div id="leaderboardContent"></div>
+   (Podium now renders via JavaScript inside this container)
+
+5. Save (Ctrl+S)
+
+============================================================
+STEP 7: TEST YOUR CHANGES
+============================================================
+
+1. Open your browser
+2. Navigate to your site
+3. Hard refresh (Ctrl+Shift+R or Cmd+Shift+R)
+
+Test Leaderboard:
+- [ ] Skeleton animation shows for 0.5s
+- [ ] Top 3 players visible with larger avatars
+- [ ] Gold medal has rotating border
+- [ ] Tier groups show with brackets
+- [ ] Hover effects work
+- [ ] Mobile view looks good
+
+Test Quests:
+- [ ] Incomplete quests show "X% Complete"
+- [ ] Completed quests show "Claim X Coins"
+- [ ] Claimed quests show "✓ Claimed"
+- [ ] Cannot double-claim
+- [ ] Toast warnings appear for invalid claims
+
+============================================================
+TROUBLESHOOTING
+============================================================
+
+Issue: Leaderboard looks broken
+Fix: Clear browser cache (Ctrl+Shift+Delete)
+     Hard refresh (Ctrl+Shift+R)
+
+Issue: JavaScript errors in console
+Fix: Check you copied ENTIRE functions
+     Make sure no extra { or } brackets
+     Check line numbers match
+
+Issue: Quests still broken
+Fix: Check the validation code was added
+     Check button logic was updated
+     Check isClaimable variable exists
+
+Issue: Top 3 not sticky
+Fix: Check CSS was fully replaced
+     Check .lb-top3-container exists
+
+============================================================
+ROLLBACK (If Something Goes Wrong)
+============================================================
+
+1. Close index.html (don't save)
+2. Delete broken index.html
+3. Rename index.html.backup to index.html
+4. Try again more carefully
+
+============================================================
+SUCCESS CHECKLIST
+============================================================
+
+After applying all fixes, you should have:
+
+CSS Changes:
+✅ 513 lines of new leaderboard CSS
+✅ Loading skeleton animation
+✅ Sticky top-3 container
+✅ Enhanced animations for gold/silver/bronze
+✅ Current user highlight styles
+✅ Tier-specific avatar borders
+✅ Mobile responsive styles
+
+JavaScript Changes:
+✅ renderLeaderboard() - ~140 lines
+✅ Loading skeleton with 500ms delay
+✅ Current user detection
+✅ Tier grouping logic
+✅ Enhanced podium rendering
+✅ Quest button logic fix - ~10 lines
+✅ Quest validation checks - ~30 lines
+
+HTML Changes:
+✅ Removed old podium div (1 line)
+
+Total Lines Modified: ~700 lines
+Total Time: 5-10 minutes
+
+============================================================
+NEED HELP?
+============================================================
+
+Reference files in this folder:
+- LEADERBOARD_AND_QUESTS_FIX.md - Full implementation details
+- LEADERBOARD_VISUAL_GUIDE.md - Visual design preview
+- leaderboard-overhaul.css - New CSS (copy this)
+
+============================================================

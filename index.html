@@ -6,12 +6,12 @@
     <meta name="theme-color" content="#0a0d14">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="VEILBREAKERS Hub">
-    <meta name="description" content="VEILBREAKERS - Capture beasts, battle waves, and compete in epic arenas!">
-    <meta property="og:title" content="VEILBREAKERS - AI Gaming Hub">
+    <meta name="apple-mobile-web-app-title" content="AuthenticaDetector">
+    <meta name="description" content="AuthenticaDetector - AI image detection with gaming elements">
+    <meta property="og:title" content="AuthenticaDetector - AI Detection Hub">
     <meta property="og:description" content="Collect beasts, battle in your tank, and climb the leaderboards!">
     <meta property="og:image" content="icon-512.png">
-    <title>VEILBREAKERS - AI Gaming Hub</title>
+    <title>AuthenticaDetector - AI Detection Hub</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon-192.png">
     <link rel="apple-touch-icon" href="icon-180.png">
@@ -6483,7 +6483,7 @@ window.showSkeletonLoader = function(container, count = 3, type = 'card') {
     <div class="home-header" style="position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(180deg,rgba(10,15,30,0.98) 0%,rgba(15,20,35,0.95) 100%);border-bottom:1px solid rgba(99,102,241,0.3);backdrop-filter:blur(12px)">
         <!-- LEFT: Title (MUCH BIGGER) + Cache Refresh on Click -->
         <h1 class="header-title" onclick="triggerCacheRefresh(event)" title="Click to refresh app (clears cache)">
-            <span class="title-full">VEILBREAKERS</span><span class="title-hub"> Hub</span>
+            <span class="title-full">AuthenticaDetector</span>
         </h1>
         <!-- RIGHT: Quests + Gift + Settings + Profile -->
         <div style="display:flex;align-items:center;gap:8px">
@@ -8491,7 +8491,7 @@ const SUPABASE_URL = 'https://vrvoyxxdlcpysthzjbeu.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZydm95eHhkbGNweXN0aHpqYmV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5ODcyMjUsImV4cCI6MjA4MTU2MzIyNX0.zwakHpqJY4moTqDyggoEx01CIo76gzFIgjtaPcamHkg';
 const APP_VERSION = '12.0.0';
 const DETECTOR_VERSION = '6.0.0';
-const APP_NAME = 'VEILBREAKERS';
+const APP_NAME = 'AuthenticaDetector';
 
 const rotatingBannerMessages = [
     { title: 'VEILBREAKERS PROTOCOL', detail: 'New zones soon: Neon Alley, Mirror Shrine, Bloom Gardens.' },
@@ -9225,6 +9225,8 @@ function showView(id) {
         }
     }
 }
+window.showView = showView; // Expose globally for button onclick handlers
+
 // Note: closeView is defined in the TruthHunters game section below
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 function round(v) {

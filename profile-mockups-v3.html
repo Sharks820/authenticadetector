@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Layout V3 - Option E+ with Favorite Beast</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0f1e 0%, #1a1f3e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #22d3ee, #8b5cf6, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 22px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #a3a3a3;
+            margin-bottom: 24px;
+            font-size: 11px;
+        }
+
+        .mockup-section {
+            max-width: 420px;
+            margin: 0 auto 40px;
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(15, 20, 35, 0.95);
+        }
+
+        .mockup-label {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            padding: 10px 14px;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        .mockup-label .desc {
+            font-size: 10px;
+            opacity: 0.85;
+            font-weight: 400;
+            margin-top: 3px;
+        }
+
+        /* ========================================= */
+        /* CURRENCY BAR                             */
+        /* ========================================= */
+        .currency-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px;
+            background: linear-gradient(135deg, rgba(0,0,0,0.5), rgba(20,20,40,0.7));
+            border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+        }
+
+        .currency-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .currency-item.coins {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.08));
+            border-color: rgba(251, 191, 36, 0.25);
+        }
+
+        .currency-item.keys {
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(6, 182, 212, 0.08));
+            border-color: rgba(34, 211, 238, 0.25);
+        }
+
+        .currency-item.gems {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(139, 92, 246, 0.08));
+            border-color: rgba(168, 85, 247, 0.25);
+        }
+
+        .currency-item .icon { font-size: 13px; }
+        .currency-value { font-weight: 700; font-size: 12px; }
+        .currency-item.coins .currency-value { color: #fcd34d; }
+        .currency-item.keys .currency-value { color: #22d3ee; }
+        .currency-item.gems .currency-value { color: #c084fc; }
+
+        .profile-section {
+            padding: 16px;
+        }
+
+        /* ========================================= */
+        /* OPTION E+ STYLES                         */
+        /* ========================================= */
+
+        /* Identity Row */
+        .identity-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .avatar {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            border: 4px solid #6366f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            box-shadow: 0 8px 28px rgba(99, 102, 241, 0.5);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            flex-shrink: 0;
+        }
+
+        .avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 36px rgba(99, 102, 241, 0.7);
+        }
+
+        .user-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .name-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 3px;
+        }
+
+        .username {
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .level-badge {
+            background: linear-gradient(135deg, #fcd34d, #f59e0b);
+            color: #000;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .title {
+            font-size: 11px;
+            color: #a78bfa;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .xp-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .xp-bar-container {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 6px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .xp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22d3ee, #8b5cf6);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        .xp-text {
+            font-size: 10px;
+            color: #a3a3a3;
+            white-space: nowrap;
+        }
+
+        /* Stats Grid - CLICKABLE */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 10px 6px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-card.clickable-hint::after {
+            content: '→';
+            position: absolute;
+            right: 4px;
+            top: 4px;
+            font-size: 8px;
+            opacity: 0.5;
+        }
+
+        .stat-card .stat-icon { font-size: 18px; margin-bottom: 4px; }
+        .stat-card .stat-value { font-size: 14px; font-weight: 800; }
+        .stat-card .stat-label { font-size: 8px; color: #a3a3a3; text-transform: uppercase; margin-top: 2px; }
+        .stat-card .tap-hint { font-size: 7px; color: #666; margin-top: 3px; }
+
+        /* ========================================= */
+        /* FAVORITE BEAST SECTION                   */
+        /* ========================================= */
+        .beast-section {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(168, 85, 247, 0.08));
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .beast-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 60%);
+            animation: beastGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes beastGlow {
+            0%, 100% { transform: translate(0, 0); opacity: 0.5; }
+            50% { transform: translate(10%, 10%); opacity: 1; }
+        }
+
+        .beast-section:hover {
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+        }
+
+        .beast-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2d1b4e 0%, #1a0f2e 100%);
+            border: 2px solid rgba(168, 85, 247, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
+        }
+
+        .beast-info {
+            flex: 1;
+            z-index: 1;
+        }
+
+        .beast-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 2px;
+        }
+
+        .beast-name {
+            font-size: 14px;
+            font-weight: 800;
+            color: #e9d5ff;
+        }
+
+        .beast-level {
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
+        .beast-rarity {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
+        .beast-rarity.legendary {
+            background: linear-gradient(135deg, #fcd34d, #f59e0b);
+            color: #000;
+        }
+
+        .beast-rarity.epic {
+            background: linear-gradient(135deg, #c084fc, #a855f7);
+            color: #fff;
+        }
+
+        .beast-rarity.rare {
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            color: #fff;
+        }
+
+        .beast-type {
+            font-size: 10px;
+            color: #a78bfa;
+        }
+
+        .beast-stats-mini {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .beast-stat {
+            font-size: 9px;
+            color: #888;
+        }
+
+        .beast-stat span {
+            color: #c4b5fd;
+            font-weight: 700;
+        }
+
+        .beast-action {
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .beast-action-icon {
+            font-size: 16px;
+        }
+
+        .beast-action-text {
+            font-size: 8px;
+            color: #888;
+        }
+
+        /* Section label */
+        .section-label {
+            font-size: 9px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Actions Row */
+        .actions-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .quick-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 11px;
+            border-radius: 10px;
+            border: 1px solid;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 11px;
+            transition: all 0.2s;
+        }
+
+        .quick-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .quick-btn .icon { font-size: 16px; }
+
+        .customize-btn {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(99, 102, 241, 0.15));
+            border-color: rgba(139, 92, 246, 0.4);
+            color: #c4b5fd;
+        }
+
+        .shop-btn {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(6, 182, 212, 0.1));
+            border-color: rgba(34, 211, 238, 0.4);
+            color: #22d3ee;
+        }
+
+        .vera-btn {
+            width: 44px;
+            background: linear-gradient(135deg, rgba(45, 212, 191, 0.2), rgba(20, 184, 166, 0.1));
+            border-color: rgba(45, 212, 191, 0.4);
+            color: #2dd4bf;
+        }
+
+        /* Size toggle */
+        .size-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .size-btn {
+            padding: 6px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            background: rgba(139, 92, 246, 0.1);
+            color: #c4b5fd;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .size-btn.active {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: #fff;
+        }
+
+        .mobile-frame {
+            max-width: 390px;
+            margin: 0 auto;
+        }
+
+        .notes {
+            background: rgba(0,0,0,0.3);
+            padding: 10px 14px;
+            font-size: 10px;
+            color: #a3a3a3;
+            line-height: 1.5;
+        }
+
+        .notes strong { color: #22d3ee; }
+
+        .divider {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 12px;
+        }
+
+        /* Variant styles */
+        .variant-label {
+            background: linear-gradient(135deg, #f472b6, #ec4899);
+            padding: 10px 14px;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        /* Beast variant 2 - Side by side with avatar */
+        .beast-inline {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .beast-mini {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2d1b4e, #1a0f2e);
+            border: 2px solid rgba(168, 85, 247, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .beast-mini:hover {
+            transform: scale(1.1);
+            border-color: rgba(168, 85, 247, 0.8);
+        }
+
+        .beast-mini-level {
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            color: #fff;
+            font-size: 8px;
+            font-weight: 700;
+            padding: 1px 4px;
+            border-radius: 4px;
+            border: 1px solid rgba(0,0,0,0.3);
+        }
+
+        /* Beast variant 3 - Card below stats */
+        .beast-card-full {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(168, 85, 247, 0.08));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .beast-card-full::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, transparent 70%);
+        }
+
+        .beast-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .beast-portrait {
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #2d1b4e, #1a0f2e);
+            border: 3px solid rgba(168, 85, 247, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+            position: relative;
+            z-index: 1;
+        }
+
+        .beast-details {
+            flex: 1;
+            z-index: 1;
+        }
+
+        .beast-title-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .beast-title-row .beast-name {
+            font-size: 16px;
+        }
+
+        .beast-subtitle {
+            font-size: 10px;
+            color: #a78bfa;
+            margin-bottom: 6px;
+        }
+
+        .beast-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .beast-xp-bar {
+            flex: 1;
+            height: 6px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .beast-xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #a855f7, #f472b6);
+            width: 65%;
+        }
+
+        .beast-xp-text {
+            font-size: 9px;
+            color: #888;
+        }
+
+        .beast-quick-stats {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .beast-quick-stat {
+            text-align: center;
+        }
+
+        .beast-quick-stat .val {
+            font-size: 14px;
+            font-weight: 800;
+            color: #c4b5fd;
+        }
+
+        .beast-quick-stat .lbl {
+            font-size: 8px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .beast-actions-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .beast-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            background: rgba(168, 85, 247, 0.1);
+            color: #c4b5fd;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .beast-btn:hover {
+            background: rgba(168, 85, 247, 0.2);
+        }
+
+        .beast-btn.primary {
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            border: none;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Option E+ with Favorite Beast</h1>
+    <p class="subtitle">Bigger avatar, clickable stats, badass pet companion</p>
+
+    <div class="size-toggle">
+        <button class="size-btn active" onclick="setWidth(390)">Mobile</button>
+        <button class="size-btn" onclick="setWidth(500)">Tablet</button>
+        <button class="size-btn" onclick="setWidth(700)">Desktop</button>
+    </div>
+
+    <!-- VARIANT 1: Beast as separate card section -->
+    <div class="mockup-section mobile-frame">
+        <div class="mockup-label">
+            VARIANT 1: Beast Card Below
+            <div class="desc">Dedicated beast showcase section</div>
+        </div>
+        <div class="currency-bar">
+            <div class="currency-item coins"><span class="icon">🪙</span><span class="currency-value">1,234</span></div>
+            <div class="currency-item keys"><span class="icon">🔑</span><span class="currency-value">5</span></div>
+            <div class="currency-item gems"><span class="icon">💎</span><span class="currency-value">0</span></div>
+        </div>
+        <div class="profile-section">
+            <!-- Identity -->
+            <div class="identity-row">
+                <div class="avatar" title="Click to customize">🧑‍🚀</div>
+                <div class="user-info">
+                    <div class="name-row">
+                        <span class="username">Explorer</span>
+                        <span class="level-badge">LV 12</span>
+                    </div>
+                    <div class="title">Truth Seeker</div>
+                    <div class="xp-row">
+                        <div class="xp-bar-container">
+                            <div class="xp-bar-fill" style="width: 65%"></div>
+                        </div>
+                        <span class="xp-text">650/1000</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats - Clickable -->
+            <div class="stats-grid">
+                <div class="stat-card" onclick="alert('Opens Leaderboard')" title="Tap to view leaderboard">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value" style="color:#a78bfa">#42</div>
+                    <div class="stat-label">Rank</div>
+                    <div class="tap-hint">tap to view</div>
+                </div>
+                <div class="stat-card" onclick="alert('Opens Beast Collection')" title="Tap to view beasts">
+                    <div class="stat-icon">🐉</div>
+                    <div class="stat-value" style="color:#10b981">7</div>
+                    <div class="stat-label">Beasts</div>
+                    <div class="tap-hint">tap to view</div>
+                </div>
+                <div class="stat-card" onclick="alert('Opens Tank Leaderboard')">
+                    <div class="stat-icon">🎖️</div>
+                    <div class="stat-value" style="color:#f87171">#18</div>
+                    <div class="stat-label">Tank</div>
+                    <div class="tap-hint">tap to view</div>
+                </div>
+                <div class="stat-card" onclick="alert('Opens PvP Arena')">
+                    <div class="stat-icon">⚔️</div>
+                    <div class="stat-value" style="color:#f472b6">#--</div>
+                    <div class="stat-label">PvP</div>
+                    <div class="tap-hint">tap to view</div>
+                </div>
+            </div>
+
+            <!-- Favorite Beast Section -->
+            <div class="section-label">Favorite Beast</div>
+            <div class="beast-section" onclick="alert('Opens Beast Details')">
+                <div class="beast-avatar">🐲</div>
+                <div class="beast-info">
+                    <div class="beast-header">
+                        <span class="beast-name">Voidscale</span>
+                        <span class="beast-level">LV 24</span>
+                        <span class="beast-rarity legendary">LEGENDARY</span>
+                    </div>
+                    <div class="beast-type">Shadow Dragon</div>
+                    <div class="beast-stats-mini">
+                        <span class="beast-stat">ATK <span>847</span></span>
+                        <span class="beast-stat">DEF <span>623</span></span>
+                        <span class="beast-stat">SPD <span>412</span></span>
+                    </div>
+                </div>
+                <div class="beast-action">
+                    <span class="beast-action-icon">👁️</span>
+                    <span class="beast-action-text">View</span>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions-row">
+                <button class="quick-btn customize-btn"><span class="icon">🎨</span> Customize Avatar</button>
+                <button class="quick-btn shop-btn"><span class="icon">🏪</span> Shop</button>
+                <button class="quick-btn vera-btn"><span class="icon">🧚</span></button>
+            </div>
+        </div>
+        <div class="notes">
+            <strong>Beast section:</strong> Dedicated card with level, rarity, stats<br>
+            <strong>Clickable stats:</strong> Rank → Leaderboard, Beasts → Collection
+        </div>
+    </div>
+
+    <!-- VARIANT 2: Beast next to avatar -->
+    <div class="mockup-section mobile-frame">
+        <div class="variant-label">
+            VARIANT 2: Beast Next to Avatar
+            <div class="desc">Compact - beast as companion beside you</div>
+        </div>
+        <div class="currency-bar">
+            <div class="currency-item coins"><span class="icon">🪙</span><span class="currency-value">1,234</span></div>
+            <div class="currency-item keys"><span class="icon">🔑</span><span class="currency-value">5</span></div>
+            <div class="currency-item gems"><span class="icon">💎</span><span class="currency-value">0</span></div>
+        </div>
+        <div class="profile-section">
+            <!-- Identity with beast inline -->
+            <div class="identity-row">
+                <div class="beast-inline">
+                    <div class="avatar" title="Click to customize">🧑‍🚀</div>
+                    <div class="beast-mini" title="Your favorite beast - Voidscale LV 24">
+                        🐲
+                        <span class="beast-mini-level">24</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="name-row">
+                        <span class="username">Explorer</span>
+                        <span class="level-badge">LV 12</span>
+                    </div>
+                    <div class="title">Truth Seeker</div>
+                    <div class="xp-row">
+                        <div class="xp-bar-container">
+                            <div class="xp-bar-fill" style="width: 65%"></div>
+                        </div>
+                        <span class="xp-text">650/1000</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card" onclick="alert('Opens Leaderboard')">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value" style="color:#a78bfa">#42</div>
+                    <div class="stat-label">Rank</div>
+                    <div class="tap-hint">tap to view</div>
+                </div>
+                <div class="stat-card" onclick="alert('Opens Beast Collection')">
+                    <div class="stat-icon">🐉</div>
+                    <div class="stat-value" style="color:#10b981">7</div>
+                    <div class="stat-label">Beasts</div>
+                    <div class="tap-hint">tap to view</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎖️</div>
+                    <div class="stat-value" style="color:#f87171">#18</div>
+                    <div class="stat-label">Tank</div>
+                    <div class="tap-hint">tap to view</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚔️</div>
+                    <div class="stat-value" style="color:#f472b6">#--</div>
+                    <div class="stat-label">PvP</div>
+                    <div class="tap-hint">tap to view</div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions-row">
+                <button class="quick-btn customize-btn"><span class="icon">🎨</span> Customize Avatar</button>
+                <button class="quick-btn shop-btn"><span class="icon">🏪</span> Shop</button>
+                <button class="quick-btn vera-btn"><span class="icon">🧚</span></button>
+            </div>
+        </div>
+        <div class="notes">
+            <strong>Beast placement:</strong> Small icon next to avatar with level badge<br>
+            <strong>Saves space:</strong> More compact, beast is visually "with" you
+        </div>
+    </div>
+
+    <!-- VARIANT 3: Full beast card with actions -->
+    <div class="mockup-section mobile-frame">
+        <div class="mockup-label">
+            VARIANT 3: Full Beast Showcase
+            <div class="desc">Prominent beast card with quick actions</div>
+        </div>
+        <div class="currency-bar">
+            <div class="currency-item coins"><span class="icon">🪙</span><span class="currency-value">1,234</span></div>
+            <div class="currency-item keys"><span class="icon">🔑</span><span class="currency-value">5</span></div>
+            <div class="currency-item gems"><span class="icon">💎</span><span class="currency-value">0</span></div>
+        </div>
+        <div class="profile-section">
+            <!-- Identity -->
+            <div class="identity-row">
+                <div class="avatar">🧑‍🚀</div>
+                <div class="user-info">
+                    <div class="name-row">
+                        <span class="username">Explorer</span>
+                        <span class="level-badge">LV 12</span>
+                    </div>
+                    <div class="title">Truth Seeker</div>
+                    <div class="xp-row">
+                        <div class="xp-bar-container">
+                            <div class="xp-bar-fill" style="width: 65%"></div>
+                        </div>
+                        <span class="xp-text">650/1000</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats row - compact -->
+            <div class="stats-grid" style="margin-bottom: 12px;">
+                <div class="stat-card" onclick="alert('Opens Leaderboard')">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value" style="color:#a78bfa">#42</div>
+                    <div class="stat-label">Rank</div>
+                </div>
+                <div class="stat-card" onclick="alert('Opens Beast Collection')">
+                    <div class="stat-icon">🐉</div>
+                    <div class="stat-value" style="color:#10b981">7</div>
+                    <div class="stat-label">Beasts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎖️</div>
+                    <div class="stat-value" style="color:#f87171">#18</div>
+                    <div class="stat-label">Tank</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚔️</div>
+                    <div class="stat-value" style="color:#f472b6">#--</div>
+                    <div class="stat-label">PvP</div>
+                </div>
+            </div>
+
+            <!-- Full Beast Card -->
+            <div class="beast-card-full">
+                <div class="beast-card-header">
+                    <div class="beast-portrait">🐲</div>
+                    <div class="beast-details">
+                        <div class="beast-title-row">
+                            <span class="beast-name">Voidscale</span>
+                            <span class="beast-rarity legendary">LEGENDARY</span>
+                        </div>
+                        <div class="beast-subtitle">Shadow Dragon • Your Favorite</div>
+                        <div class="beast-bar-row">
+                            <span style="font-size:10px;color:#c4b5fd;font-weight:700">LV 24</span>
+                            <div class="beast-xp-bar">
+                                <div class="beast-xp-fill"></div>
+                            </div>
+                            <span class="beast-xp-text">65%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="beast-quick-stats">
+                    <div class="beast-quick-stat"><div class="val">847</div><div class="lbl">Attack</div></div>
+                    <div class="beast-quick-stat"><div class="val">623</div><div class="lbl">Defense</div></div>
+                    <div class="beast-quick-stat"><div class="val">412</div><div class="lbl">Speed</div></div>
+                    <div class="beast-quick-stat"><div class="val">15</div><div class="lbl">Wins</div></div>
+                </div>
+                <div class="beast-actions-row">
+                    <button class="beast-btn">👁️ View</button>
+                    <button class="beast-btn">📋 Lineup</button>
+                    <button class="beast-btn primary">⚔️ Battle</button>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions-row">
+                <button class="quick-btn customize-btn"><span class="icon">🎨</span> Customize</button>
+                <button class="quick-btn shop-btn"><span class="icon">🏪</span> Shop</button>
+                <button class="quick-btn vera-btn"><span class="icon">🧚</span></button>
+            </div>
+        </div>
+        <div class="notes">
+            <strong>Beast showcase:</strong> Full card with XP bar, stats, quick actions<br>
+            <strong>Best for:</strong> Users who want beast front-and-center
+        </div>
+    </div>
+
+    <script>
+        function setWidth(px) {
+            document.querySelectorAll('.mobile-frame').forEach(el => {
+                el.style.maxWidth = px + 'px';
+            });
+            document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

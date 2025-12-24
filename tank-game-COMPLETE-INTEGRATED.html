@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Enhanced Tank Game - Mobile/Web Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        #gameContainer {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #gameHeader {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            opacity: 0.7;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 900;
+            color: #22d3ee;
+        }
+
+        #gameCanvas {
+            flex: 1;
+            display: block;
+            background: #0a0e27;
+        }
+
+        #mobileControls {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        #joystickZone {
+            position: absolute;
+            bottom: 80px;
+            left: 20px;
+            width: 120px;
+            height: 120px;
+            pointer-events: all;
+        }
+
+        #fireBtn {
+            position: absolute;
+            bottom: 100px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            min-width: 44px;
+            min-height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff4478, #ff6b9d);
+            border: 4px solid rgba(255, 255, 255, 0.9);
+            font-size: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: all;
+            box-shadow: 0 8px 24px rgba(255, 68, 120, 0.5);
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s ease;
+        }
+
+        #fireBtn:active {
+            transform: scale(0.9);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="gameHeader">
+            <div class="stat">
+                <div class="stat-label">Wave</div>
+                <div class="stat-value" id="waveText">1</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Score</div>
+                <div class="stat-value" id="scoreText">0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Health</div>
+                <div class="stat-value" id="healthText">100%</div>
+            </div>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+        <div id="mobileControls" style="display:none">
+            <div id="joystickZone"></div>
+            <div id="fireBtn">🔥</div>
+        </div>
+    </div>
+
+    <script src="tank-game-enhanced-controls.js"></script>
+    <script>
+        // Simple tank game demo with all enhanced controls
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const gameState = {
+            running: true,
+            wave: 1,
+            score: 0,
+            health: 100,
+            tankX: 0,
+            tankY: 0,
+            enemies: [],
+            projectiles: [],
+            // Enhanced controls (will be merged)
+            keys: {},
+            mouseX: 0,
+            mouseY: 0,
+            cannonAngle: -Math.PI / 2,
+            isMobile: ('ontouchstart' in window || navigator.maxTouchPoints > 0),
+            canFire: true,
+            fireRate: 300,
+            lastFireTime: 0,
+            lastTime: Date.now()
+        };
+
+        function resizeCanvas() {
+            const header = document.getElementById('gameHeader');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight - header.offsetHeight;
+            gameState.tankX = canvas.width / 2;
+            gameState.tankY = canvas.height - 60;
+        }
+
+        function drawTank() {
+            const x = gameState.tankX;
+            const y = gameState.tankY;
+
+            // Tank body
+            ctx.fillStyle = '#2c3e50';
+            ctx.beginPath();
+            ctx.arc(x, y, 25, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Tank barrel (points at mouse or movement direction)
+            ctx.strokeStyle = '#34495e';
+            ctx.lineWidth = 8;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            const angle = gameState.cannonAngle;
+            ctx.lineTo(x + Math.cos(angle) * 35, y + Math.sin(angle) * 35);
+            ctx.stroke();
+
+            // Tank glow
+            const gradient = ctx.createRadialGradient(x, y, 0, x, y, 35);
+            gradient.addColorStop(0, 'rgba(26, 188, 156, 0.3)');
+            gradient.addColorStop(1, 'rgba(26, 188, 156, 0)');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(x, y, 35, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function drawEnemy(enemy) {
+            ctx.fillStyle = enemy.isFake ? '#ff4478' : '#44ff78';
+            ctx.beginPath();
+            ctx.arc(enemy.x, enemy.y, 20, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillText(enemy.isFake ? '🤖' : '📷', enemy.x - 10, enemy.y + 5);
+        }
+
+        function drawProjectile(proj) {
+            ctx.fillStyle = '#22d3ee';
+            ctx.beginPath();
+            ctx.arc(proj.x, proj.y, 8, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function updateEnemies() {
+            gameState.enemies.forEach(enemy => {
+                enemy.y += 1 + gameState.wave * 0.1;
+                if (enemy.y > canvas.height) {
+                    enemy.active = false;
+                    if (enemy.isFake) gameState.health -= 10;
+                }
+            });
+
+            gameState.enemies = gameState.enemies.filter(e => e.active);
+
+            // Spawn new enemies
+            if (Math.random() < 0.02) {
+                gameState.enemies.push({
+                    x: Math.random() * canvas.width,
+                    y: -20,
+                    isFake: Math.random() < 0.7,
+                    active: true
+                });
+            }
+        }
+
+        function updateProjectiles() {
+            gameState.projectiles.forEach(proj => {
+                proj.x += proj.vx;
+                proj.y += proj.vy;
+                if (proj.x < 0 || proj.x > canvas.width || proj.y < 0 || proj.y > canvas.height) {
+                    proj.active = false;
+                }
+            });
+
+            gameState.projectiles = gameState.projectiles.filter(p => p.active);
+        }
+
+        function checkCollisions() {
+            gameState.projectiles.forEach(proj => {
+                if (!proj.active) return;
+                gameState.enemies.forEach(enemy => {
+                    if (!enemy.active) return;
+                    const dx = proj.x - enemy.x;
+                    const dy = proj.y - enemy.y;
+                    if (dx * dx + dy * dy < 400) { // 20^2
+                        proj.active = false;
+                        enemy.active = false;
+                        if (enemy.isFake) {
+                            gameState.score += 100;
+                        } else {
+                            gameState.health -= 20;
+                        }
+                    }
+                });
+            });
+        }
+
+        function updateUI() {
+            document.getElementById('waveText').textContent = gameState.wave;
+            document.getElementById('scoreText').textContent = gameState.score;
+            document.getElementById('healthText').textContent = gameState.health + '%';
+        }
+
+        function gameLoop() {
+            if (!gameState.running) return;
+
+            const now = Date.now();
+            const delta = now - gameState.lastTime;
+            gameState.lastTime = now;
+
+            // Clear
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Update (enhanced controls will move tank)
+            if (typeof window.updateEnhancedGameLoop === 'function') {
+                window.updateEnhancedGameLoop(canvas);
+            }
+
+            updateEnemies();
+            updateProjectiles();
+            checkCollisions();
+
+            // Draw
+            drawTank();
+            gameState.enemies.forEach(drawEnemy);
+            gameState.projectiles.forEach(drawProjectile);
+
+            // UI
+            updateUI();
+
+            // Check game over
+            if (gameState.health <= 0) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'white';
+                ctx.font = '48px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2);
+                ctx.font = '24px sans-serif';
+                ctx.fillText('Final Score: ' + gameState.score, canvas.width / 2, canvas.height / 2 + 40);
+                return;
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Custom fireProjectile for this demo
+        window.fireProjectile = function() {
+            if (!gameState.canFire) return;
+
+            const now = Date.now();
+            if (now - gameState.lastFireTime < gameState.fireRate) return;
+
+            gameState.lastFireTime = now;
+
+            const power = 10;
+            const angle = gameState.cannonAngle;
+
+            gameState.projectiles.push({
+                x: gameState.tankX,
+                y: gameState.tankY,
+                vx: Math.cos(angle) * power,
+                vy: Math.sin(angle) * power,
+                active: true
+            });
+
+            if (navigator.vibrate) navigator.vibrate(30);
+        };
+
+        // Override updateTankMovement for this demo
+        window.updateTankMovement = function(canvas) {
+            let moveX = 0;
+            let moveY = 0;
+
+            if (gameState.keys['w'] || gameState.keys['arrowup']) moveY -= 1;
+            if (gameState.keys['s'] || gameState.keys['arrowdown']) moveY += 1;
+            if (gameState.keys['a'] || gameState.keys['arrowleft']) moveX -= 1;
+            if (gameState.keys['d'] || gameState.keys['arrowright']) moveX += 1;
+
+            if (moveX !== 0 && moveY !== 0) {
+                const len = Math.sqrt(moveX * moveX + moveY * moveY);
+                moveX /= len;
+                moveY /= len;
+            }
+
+            const speed = 4;
+            gameState.tankX += moveX * speed;
+            gameState.tankY += moveY * speed;
+
+            const margin = 30;
+            gameState.tankX = Math.max(margin, Math.min(canvas.width - margin, gameState.tankX));
+            gameState.tankY = Math.max(margin, Math.min(canvas.height - margin, gameState.tankY));
+        };
+
+        // Make gameState global for enhanced controls
+        window.gameState = gameState;
+
+        // Initialize
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 100));
+
+        // Initialize enhanced controls
+        if (typeof window.initEnhancedControls === 'function') {
+            window.initEnhancedControls();
+        }
+
+        // Start game
+        gameLoop();
+    </script>
+</body>
+</html>

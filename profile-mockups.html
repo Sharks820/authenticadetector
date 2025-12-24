@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Layout Mockups - AuthenticaDetector</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0f1e 0%, #1a1f3e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #22d3ee, #8b5cf6, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #a3a3a3;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .mockup-section {
+            max-width: 500px;
+            margin: 0 auto 40px;
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(15, 20, 35, 0.9);
+        }
+
+        .mockup-label {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            padding: 12px 20px;
+            font-weight: 800;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mockup-label span {
+            font-size: 12px;
+            opacity: 0.8;
+            font-weight: 400;
+        }
+
+        .mockup-content {
+            padding: 16px;
+        }
+
+        /* ========================================= */
+        /* CURRENCY BAR (Same for all options)      */
+        /* ========================================= */
+        .currency-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(20,20,40,0.6));
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            overflow-x: auto;
+        }
+
+        .currency-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+        }
+
+        .currency-item.coins {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.1));
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+
+        .currency-item.keys {
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(6, 182, 212, 0.1));
+            border-color: rgba(34, 211, 238, 0.3);
+        }
+
+        .currency-item.gems {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(139, 92, 246, 0.1));
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+
+        .currency-item img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .currency-value {
+            font-weight: 800;
+            font-size: 14px;
+        }
+
+        .currency-item.coins .currency-value { color: #fcd34d; }
+        .currency-item.keys .currency-value { color: #22d3ee; }
+        .currency-item.gems .currency-value { color: #c084fc; }
+
+        /* ========================================= */
+        /* OPTION A: Compact Centered               */
+        /* ========================================= */
+        .option-a .profile-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+        }
+
+        .option-a .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            border: 4px solid #6366f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.5);
+        }
+
+        .option-a .user-info {
+            margin-bottom: 4px;
+        }
+
+        .option-a .username {
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .option-a .title {
+            font-size: 11px;
+            color: #a78bfa;
+            font-weight: 600;
+        }
+
+        .option-a .level-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .level-badge {
+            background: rgba(252, 211, 77, 0.2);
+            padding: 4px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(252, 211, 77, 0.3);
+        }
+
+        .level-badge.xp {
+            background: rgba(34, 211, 238, 0.2);
+            border-color: rgba(34, 211, 238, 0.3);
+        }
+
+        .level-badge .value {
+            font-size: 16px;
+            font-weight: 900;
+            color: #fcd34d;
+        }
+
+        .level-badge.xp .value {
+            color: #22d3ee;
+        }
+
+        .level-badge .label {
+            font-size: 8px;
+            color: #a3a3a3;
+            text-transform: uppercase;
+        }
+
+        .option-a .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            width: 100%;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-card .stat-value {
+            font-size: 16px;
+            font-weight: 900;
+            color: #a78bfa;
+        }
+
+        .stat-card .stat-label {
+            font-size: 8px;
+            color: #a3a3a3;
+            text-transform: uppercase;
+        }
+
+        .stat-card.beasts .stat-value { color: #10b981; }
+        .stat-card.tank .stat-value { color: #f87171; }
+        .stat-card.pvp .stat-value { color: #f472b6; }
+        .stat-card.top .stat-value { color: #fcd34d; }
+
+        .option-a .social-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .customize-btn {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(99, 102, 241, 0.2));
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            color: #c4b5fd;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* ========================================= */
+        /* OPTION B: Two Column (Avatar Left)       */
+        /* ========================================= */
+        .option-b .profile-card {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 16px;
+            align-items: start;
+        }
+
+        .option-b .left-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .option-b .avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            border: 4px solid #6366f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+        }
+
+        .option-b .level-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .option-b .level-badge {
+            padding: 3px 8px;
+        }
+
+        .option-b .level-badge .value {
+            font-size: 14px;
+        }
+
+        .option-b .right-col {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-b .username {
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .option-b .title {
+            font-size: 11px;
+            color: #a78bfa;
+            font-weight: 600;
+            margin-top: -6px;
+        }
+
+        .option-b .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+
+        .option-b .stat-card {
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .option-b .stat-card .stat-icon {
+            font-size: 18px;
+        }
+
+        .option-b .stat-card .stat-info {
+            text-align: left;
+        }
+
+        .option-b .stat-card .stat-value {
+            font-size: 14px;
+        }
+
+        .option-b .bottom-row {
+            grid-column: span 2;
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .option-b .customize-btn {
+            flex: 1;
+        }
+
+        .option-b .social-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .option-b .social-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+        }
+
+        /* ========================================= */
+        /* OPTION C: Horizontal Hero Banner         */
+        /* ========================================= */
+        .option-c .profile-card {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-c .hero-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1));
+            border-radius: 16px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .option-c .avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            border: 3px solid #6366f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            flex-shrink: 0;
+        }
+
+        .option-c .user-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .option-c .username {
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .option-c .title {
+            font-size: 10px;
+            color: #a78bfa;
+            font-weight: 600;
+        }
+
+        .option-c .level-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .option-c .level-badge {
+            padding: 2px 8px;
+        }
+
+        .option-c .level-badge .value {
+            font-size: 12px;
+        }
+
+        .option-c .hero-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .option-c .customize-btn {
+            padding: 8px 16px;
+            font-size: 10px;
+        }
+
+        .option-c .stats-row {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .option-c .stat-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .option-c .stat-pill .stat-icon {
+            font-size: 16px;
+        }
+
+        .option-c .stat-pill .stat-value {
+            font-weight: 800;
+            font-size: 13px;
+            color: #a78bfa;
+        }
+
+        .option-c .stat-pill .stat-label {
+            font-size: 9px;
+            color: #a3a3a3;
+        }
+
+        .option-c .social-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        /* ========================================= */
+        /* OPTION D: Card Stack (Modern Mobile)     */
+        /* ========================================= */
+        .option-d .profile-card {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-d .identity-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.08));
+            border-radius: 16px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .option-d .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            border: 3px solid #6366f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            flex-shrink: 0;
+        }
+
+        .option-d .user-info {
+            flex: 1;
+        }
+
+        .option-d .username {
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .option-d .title {
+            font-size: 10px;
+            color: #a78bfa;
+            font-weight: 600;
+        }
+
+        .option-d .level-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .option-d .level-badge {
+            padding: 2px 8px;
+        }
+
+        .option-d .level-badge .value {
+            font-size: 12px;
+        }
+
+        .option-d .customize-btn {
+            padding: 8px 12px;
+            font-size: 10px;
+            white-space: nowrap;
+        }
+
+        .option-d .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+
+        .option-d .stat-card {
+            padding: 10px 6px;
+            text-align: center;
+        }
+
+        .option-d .stat-card .stat-icon {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .option-d .stat-card .stat-value {
+            font-size: 14px;
+        }
+
+        .option-d .social-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .option-d .social-btn {
+            flex: 1;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #a3a3a3;
+        }
+
+        .option-d .social-btn .icon {
+            font-size: 16px;
+        }
+
+        /* ========================================= */
+        /* Quick Actions (Same for all)             */
+        /* ========================================= */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .quick-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 12px 8px;
+            border-radius: 12px;
+            border: 2px solid;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .quick-btn.ranks {
+            border-color: rgba(251, 191, 36, 0.4);
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.08));
+        }
+
+        .quick-btn.shop {
+            border-color: rgba(34, 211, 238, 0.4);
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(6, 182, 212, 0.08));
+        }
+
+        .quick-btn.vera {
+            border-color: rgba(45, 212, 191, 0.4);
+            background: linear-gradient(135deg, rgba(45, 212, 191, 0.15), rgba(20, 184, 166, 0.08));
+        }
+
+        .quick-btn .icon {
+            font-size: 24px;
+        }
+
+        .quick-btn .label {
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .quick-btn.ranks .label { color: #fcd34d; }
+        .quick-btn.shop .label { color: #22d3ee; }
+        .quick-btn.vera .label { color: #2dd4bf; }
+
+        /* Mobile indicator */
+        .mobile-frame {
+            max-width: 390px;
+            margin: 0 auto;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            overflow: hidden;
+        }
+
+        .size-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .size-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            background: rgba(139, 92, 246, 0.1);
+            color: #c4b5fd;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .size-btn.active {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Profile Card Layout Options</h1>
+    <p class="subtitle">Viewing at mobile width (390px) - Click to compare</p>
+
+    <div class="size-toggle">
+        <button class="size-btn active" onclick="setWidth(390)">Mobile (390px)</button>
+        <button class="size-btn" onclick="setWidth(500)">Tablet (500px)</button>
+        <button class="size-btn" onclick="setWidth(700)">Desktop (700px)</button>
+    </div>
+
+    <!-- OPTION A: Compact Centered -->
+    <div class="mockup-section mobile-frame option-a">
+        <div class="mockup-label">
+            OPTION A: Compact Centered
+            <span>Avatar focused, everything centered</span>
+        </div>
+        <div class="currency-bar">
+            <div class="currency-item coins">
+                <span>🪙</span>
+                <span class="currency-value">1,234</span>
+            </div>
+            <div class="currency-item keys">
+                <span>🔑</span>
+                <span class="currency-value">5</span>
+            </div>
+            <div class="currency-item gems">
+                <span>💎</span>
+                <span class="currency-value">0</span>
+            </div>
+        </div>
+        <div class="mockup-content">
+            <div class="profile-card">
+                <div class="avatar">🧑‍🚀</div>
+                <div class="user-info">
+                    <div class="username">Explorer</div>
+                    <div class="title">Newcomer</div>
+                </div>
+                <div class="level-row">
+                    <div class="level-badge">
+                        <div class="value">1</div>
+                        <div class="label">LVL</div>
+                    </div>
+                    <div class="level-badge xp">
+                        <div class="value">0</div>
+                        <div class="label">XP</div>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">#--</div>
+                        <div class="stat-label">Rank</div>
+                    </div>
+                    <div class="stat-card beasts">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Beasts</div>
+                    </div>
+                    <div class="stat-card tank">
+                        <div class="stat-value">#--</div>
+                        <div class="stat-label">Tank</div>
+                    </div>
+                    <div class="stat-card top">
+                        <div class="stat-value">--</div>
+                        <div class="stat-label">Top Beast</div>
+                    </div>
+                    <div class="stat-card pvp">
+                        <div class="stat-value">#--</div>
+                        <div class="stat-label">PvP</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Scans</div>
+                    </div>
+                </div>
+                <button class="customize-btn">✨ CUSTOMIZE</button>
+                <div class="social-row">
+                    <button class="social-btn">👥</button>
+                    <button class="social-btn">⚔️</button>
+                    <button class="social-btn">🔄</button>
+                    <button class="social-btn">🎨</button>
+                </div>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-btn ranks"><span class="icon">🏆</span><span class="label">RANKS</span></button>
+                <button class="quick-btn shop"><span class="icon">🏪</span><span class="label">SHOP</span></button>
+                <button class="quick-btn vera"><span class="icon">🧚</span><span class="label">VERA</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPTION B: Two Column -->
+    <div class="mockup-section mobile-frame option-b">
+        <div class="mockup-label">
+            OPTION B: Two Column
+            <span>Avatar left, stats right</span>
+        </div>
+        <div class="currency-bar">
+            <div class="currency-item coins">
+                <span>🪙</span>
+                <span class="currency-value">1,234</span>
+            </div>
+            <div class="currency-item keys">
+                <span>🔑</span>
+                <span class="currency-value">5</span>
+            </div>
+            <div class="currency-item gems">
+                <span>💎</span>
+                <span class="currency-value">0</span>
+            </div>
+        </div>
+        <div class="mockup-content">
+            <div class="profile-card">
+                <div class="left-col">
+                    <div class="avatar">🧑‍🚀</div>
+                    <div class="level-row">
+                        <div class="level-badge">
+                            <div class="value">1</div>
+                            <div class="label">LVL</div>
+                        </div>
+                        <div class="level-badge xp">
+                            <div class="value">0</div>
+                            <div class="label">XP</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-col">
+                    <div class="username">Explorer</div>
+                    <div class="title">Newcomer</div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-icon">🏆</span>
+                            <div class="stat-info">
+                                <div class="stat-value">#--</div>
+                                <div class="stat-label">Rank</div>
+                            </div>
+                        </div>
+                        <div class="stat-card beasts">
+                            <span class="stat-icon">🐉</span>
+                            <div class="stat-info">
+                                <div class="stat-value">0</div>
+                                <div class="stat-label">Beasts</div>
+                            </div>
+                        </div>
+                        <div class="stat-card tank">
+                            <span class="stat-icon">🎖️</span>
+                            <div class="stat-info">
+                                <div class="stat-value">#--</div>
+                                <div class="stat-label">Tank</div>
+                            </div>
+                        </div>
+                        <div class="stat-card pvp">
+                            <span class="stat-icon">⚔️</span>
+                            <div class="stat-info">
+                                <div class="stat-value">#--</div>
+                                <div class="stat-label">PvP</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-row">
+                    <button class="customize-btn">✨ CUSTOMIZE</button>
+                    <div class="social-row">
+                        <button class="social-btn">👥</button>
+                        <button class="social-btn">⚔️</button>
+                        <button class="social-btn">🔄</button>
+                    </div>
+                </div>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-btn ranks"><span class="icon">🏆</span><span class="label">RANKS</span></button>
+                <button class="quick-btn shop"><span class="icon">🏪</span><span class="label">SHOP</span></button>
+                <button class="quick-btn vera"><span class="icon">🧚</span><span class="label">VERA</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPTION C: Horizontal Hero -->
+    <div class="mockup-section mobile-frame option-c">
+        <div class="mockup-label">
+            OPTION C: Horizontal Hero
+            <span>Compact banner, scrollable stats</span>
+        </div>
+        <div class="currency-bar">
+            <div class="currency-item coins">
+                <span>🪙</span>
+                <span class="currency-value">1,234</span>
+            </div>
+            <div class="currency-item keys">
+                <span>🔑</span>
+                <span class="currency-value">5</span>
+            </div>
+            <div class="currency-item gems">
+                <span>💎</span>
+                <span class="currency-value">0</span>
+            </div>
+        </div>
+        <div class="mockup-content">
+            <div class="profile-card">
+                <div class="hero-row">
+                    <div class="avatar">🧑‍🚀</div>
+                    <div class="user-details">
+                        <div class="username">Explorer</div>
+                        <div class="title">Newcomer</div>
+                        <div class="level-row">
+                            <div class="level-badge">
+                                <div class="value">1</div>
+                                <div class="label">LVL</div>
+                            </div>
+                            <div class="level-badge xp">
+                                <div class="value">0</div>
+                                <div class="label">XP</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero-actions">
+                        <button class="customize-btn">✨ CUSTOMIZE</button>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-pill">
+                        <span class="stat-icon">🏆</span>
+                        <div>
+                            <div class="stat-value">#--</div>
+                            <div class="stat-label">Rank</div>
+                        </div>
+                    </div>
+                    <div class="stat-pill">
+                        <span class="stat-icon">🐉</span>
+                        <div>
+                            <div class="stat-value" style="color:#10b981">0</div>
+                            <div class="stat-label">Beasts</div>
+                        </div>
+                    </div>
+                    <div class="stat-pill">
+                        <span class="stat-icon">🎖️</span>
+                        <div>
+                            <div class="stat-value" style="color:#f87171">#--</div>
+                            <div class="stat-label">Tank</div>
+                        </div>
+                    </div>
+                    <div class="stat-pill">
+                        <span class="stat-icon">⚔️</span>
+                        <div>
+                            <div class="stat-value" style="color:#f472b6">#--</div>
+                            <div class="stat-label">PvP</div>
+                        </div>
+                    </div>
+                    <div class="stat-pill">
+                        <span class="stat-icon">⭐</span>
+                        <div>
+                            <div class="stat-value" style="color:#fcd34d">--</div>
+                            <div class="stat-label">Top</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="social-row">
+                    <button class="social-btn">👥</button>
+                    <button class="social-btn">⚔️</button>
+                    <button class="social-btn">🔄</button>
+                    <button class="social-btn">🎨</button>
+                </div>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-btn ranks"><span class="icon">🏆</span><span class="label">RANKS</span></button>
+                <button class="quick-btn shop"><span class="icon">🏪</span><span class="label">SHOP</span></button>
+                <button class="quick-btn vera"><span class="icon">🧚</span><span class="label">VERA</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPTION D: Card Stack -->
+    <div class="mockup-section mobile-frame option-d">
+        <div class="mockup-label">
+            OPTION D: Card Stack
+            <span>Modern mobile, everything in rows</span>
+        </div>
+        <div class="currency-bar">
+            <div class="currency-item coins">
+                <span>🪙</span>
+                <span class="currency-value">1,234</span>
+            </div>
+            <div class="currency-item keys">
+                <span>🔑</span>
+                <span class="currency-value">5</span>
+            </div>
+            <div class="currency-item gems">
+                <span>💎</span>
+                <span class="currency-value">0</span>
+            </div>
+        </div>
+        <div class="mockup-content">
+            <div class="profile-card">
+                <div class="identity-card">
+                    <div class="avatar">🧑‍🚀</div>
+                    <div class="user-info">
+                        <div class="username">Explorer</div>
+                        <div class="title">Newcomer</div>
+                        <div class="level-row">
+                            <div class="level-badge">
+                                <div class="value">1</div>
+                                <div class="label">LVL</div>
+                            </div>
+                            <div class="level-badge xp">
+                                <div class="value">0</div>
+                                <div class="label">XP</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="customize-btn">✨ CUSTOMIZE</button>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-value">#--</div>
+                        <div class="stat-label">Rank</div>
+                    </div>
+                    <div class="stat-card beasts">
+                        <div class="stat-icon">🐉</div>
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Beasts</div>
+                    </div>
+                    <div class="stat-card tank">
+                        <div class="stat-icon">🎖️</div>
+                        <div class="stat-value">#--</div>
+                        <div class="stat-label">Tank</div>
+                    </div>
+                    <div class="stat-card pvp">
+                        <div class="stat-icon">⚔️</div>
+                        <div class="stat-value">#--</div>
+                        <div class="stat-label">PvP</div>
+                    </div>
+                    <div class="stat-card top">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-value">--</div>
+                        <div class="stat-label">Top</div>
+                    </div>
+                </div>
+                <div class="social-row">
+                    <button class="social-btn"><span class="icon">👥</span> Friends</button>
+                    <button class="social-btn"><span class="icon">⚔️</span> Squads</button>
+                    <button class="social-btn"><span class="icon">🔄</span> Trade</button>
+                </div>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-btn ranks"><span class="icon">🏆</span><span class="label">RANKS</span></button>
+                <button class="quick-btn shop"><span class="icon">🏪</span><span class="label">SHOP</span></button>
+                <button class="quick-btn vera"><span class="icon">🧚</span><span class="label">VERA</span></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setWidth(px) {
+            document.querySelectorAll('.mobile-frame').forEach(el => {
+                el.style.maxWidth = px + 'px';
+            });
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

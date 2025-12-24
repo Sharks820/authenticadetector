@@ -1,0 +1,168 @@
+::1 - - [23/Dec/2025 01:18:06] "GET /index.html HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/style/design-tokens.css HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/style/theme.css HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /phaser-character-creator.css HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/quest.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/rewards.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/ui-settings.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/profile.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/currency-coin.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /PROFESSIONAL_UI_OVERHAUL.css HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /ai-cosmetics-gacha.css HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /vera-controller.css?v=4.0.0 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /UI_FIXES.css?v=2.0.0 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /avatar-system-unity.css HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /tank-shooter-enhanced.js HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /tank-game-enhancements.js HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /avatar-cosmetics-system.js HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /ai-cosmetics-gacha.js HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /avatar-system-unity.js HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/index.js HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /phaser-character-creator.js HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/currency-key.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/currency-crystal.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/camera.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/shop.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/nav-vera.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/trophy.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/beasts.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/action-attack.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/ui-tank.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/search.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/inventory.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/star.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/arena.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/ranking.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/capture.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/evolution.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/fusion.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/play.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/tank.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/map.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/energy.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/boss.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/training.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/sparkles.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/wand.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/stats.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/game/sprites/tank.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/game/bestiary/common_1.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/game/bestiary/uncommon_2.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/game/bestiary/rare_2.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/game/bestiary/legendary_1.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /vera-controller.js?v=4.0.0 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /vera-gsap.js?v=1.1.0 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /vera-rive.js?v=1.0.0 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/back.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/home.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/trophy.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/currency-coin.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/badges.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/quests.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/profile.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/tank.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/corruption.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/inventory.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/shop.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/sparkles.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/shield.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/stats.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/wand.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/star.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/search.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/beasts.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/lootbox.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/friends.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/warning.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/refresh.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/crosshair.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/play.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:06] "GET /assets/icons/history.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:07] "GET /sw.js HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:07] "GET /assets/vera/v2/vera_fairy/vera_fairy_body.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:07] "GET /assets/vera/v2/vera_fairy/vera_fairy_head.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:07] "GET /assets/vera/v2/vera_fairy/vera_fairy_mouth.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:07] "GET /assets/vera/v2/vera_fairy/vera_fairy_eyes.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:07] "GET /assets/vera/v2/vera_fairy/vera_fairy_hair.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:07] "GET /assets/vera/v2/vera_fairy/vera_fairy_wing_left.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:07] "GET /assets/vera/v2/vera_fairy/vera_fairy_wing_right.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:07] "GET /assets/icons/scan.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:07] "GET /assets/icons/verify.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:07] "GET / HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:07] "GET /manifest.json HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:07] "GET /icon-192.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:07] "GET /icon-512.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:07] "GET /index.html HTTP/1.1" 304 -
+::1 - - [23/Dec/2025 01:18:08] code 404, message File not found
+::1 - - [23/Dec/2025 01:18:08] "HEAD /assets/vera/vera_fairy.riv HTTP/1.1" 404 -
+::1 - - [23/Dec/2025 01:18:09] "GET /sw.js HTTP/1.1" 304 -
+::1 - - [23/Dec/2025 01:18:37] "GET /assets/vera/v2/vera_partial/vera_partial_body.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:37] "GET /assets/vera/v2/vera_partial/vera_partial_tail.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:37] "GET /assets/vera/v2/vera_partial/vera_partial_head.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:37] "GET /assets/vera/v2/vera_partial/vera_partial_hair.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:37] "GET /assets/vera/v2/vera_partial/vera_partial_eyes.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:37] "GET /assets/vera/v2/vera_partial/vera_partial_mouth.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:37] "GET /assets/vera/v2/vera_partial/vera_partial_wing_left.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:18:37] "GET /assets/vera/v2/vera_partial/vera_partial_wing_right.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:07] "GET /assets/vera/v2/vera_takeover/vera_takeover_body.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:07] "GET /assets/vera/v2/vera_takeover/vera_takeover_tail.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:07] "GET /assets/vera/v2/vera_takeover/vera_takeover_head.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:07] "GET /assets/vera/v2/vera_takeover/vera_takeover_mouth.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:07] "GET /assets/vera/v2/vera_takeover/vera_takeover_eyes.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:07] "GET /assets/vera/v2/vera_takeover/vera_takeover_hair.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:07] "GET /assets/vera/v2/vera_takeover/vera_takeover_wing_left.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:07] "GET /assets/vera/v2/vera_takeover/vera_takeover_wing_right.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:07] "GET /assets/vera/vera_hybrid_face_pop.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:07] "GET /sw.js HTTP/1.1" 304 -
+::1 - - [23/Dec/2025 01:19:37] "GET /assets/vera/v2/vera_monster/vera_monster_tail.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:37] "GET /assets/vera/v2/vera_monster/vera_monster_body.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:37] "GET /assets/vera/v2/vera_monster/vera_monster_head.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:37] "GET /assets/vera/v2/vera_monster/vera_monster_mouth.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:37] "GET /assets/vera/v2/vera_monster/vera_monster_hair.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:37] "GET /assets/vera/v2/vera_monster/vera_monster_eyes.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:37] "GET /assets/vera/v2/vera_monster/vera_monster_wing_left.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:37] "GET /assets/vera/v2/vera_monster/vera_monster_wing_right.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:19:37] "GET /assets/vera/vera_hybrid_face_pop_EXTREME.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:20:07] "GET /sw.js HTTP/1.1" 304 -
+::1 - - [23/Dec/2025 01:20:31] "GET /assets/icons/info.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:20:31] "GET /assets/icons/heart.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:20:31] "GET /assets/icons/boss.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:20:31] "GET /assets/icons/settings.svg?v1.1 HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/character/shadow.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/character/base.png HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:20:32] code 404, message File not found
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/character/parts/shadow_default.png HTTP/1.1" 404 -
+::1 - - [23/Dec/2025 01:20:32] code 404, message File not found
+::1 - - [23/Dec/2025 01:20:32] code 404, message File not found
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/character/parts/back_default.png HTTP/1.1" 404 -
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/character/parts/torso_default.png HTTP/1.1" 404 -
+::1 - - [23/Dec/2025 01:20:32] code 404, message File not found
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/character/parts/legs_default.png HTTP/1.1" 404 -
+::1 - - [23/Dec/2025 01:20:32] code 404, message File not found
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/character/parts/leftArm_default.png HTTP/1.1" 404 -
+::1 - - [23/Dec/2025 01:20:32] code 404, message File not found
+::1 - - [23/Dec/2025 01:20:32] code 404, message File not found
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/character/parts/rightArm_default.png HTTP/1.1" 404 -
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/character/parts/head_default.png HTTP/1.1" 404 -
+::1 - - [23/Dec/2025 01:20:32] code 404, message File not found
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/character/parts/hat_default.png HTTP/1.1" 404 -
+::1 - - [23/Dec/2025 01:20:32] code 404, message File not found
+::1 - - [23/Dec/2025 01:20:32] code 404, message File not found
+::1 - - [23/Dec/2025 01:20:32] code 404, message File not found
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/character/parts/pet_default.png HTTP/1.1" 404 -
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/character/parts/weapon_default.png HTTP/1.1" 404 -
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/character/parts/glasses_default.png HTTP/1.1" 404 -
+::1 - - [23/Dec/2025 01:20:32] code 404, message File not found
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/character/parts/effect_default.png HTTP/1.1" 404 -
+::1 - - [23/Dec/2025 01:20:32] code 404, message File not found
+::1 - - [23/Dec/2025 01:20:32] code 404, message File not found
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/game/fx/sparkle.png HTTP/1.1" 404 -
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/game/fx/glow.png HTTP/1.1" 404 -
+::1 - - [23/Dec/2025 01:20:32] code 404, message File not found
+::1 - - [23/Dec/2025 01:20:32] "GET /assets/game/fx/magic.png HTTP/1.1" 404 -
+::1 - - [23/Dec/2025 01:20:33] "GET /assets/vera/vera_fairy.svg HTTP/1.1" 200 -
+::1 - - [23/Dec/2025 01:21:07] "GET /sw.js HTTP/1.1" 304 -
+::1 - - [23/Dec/2025 01:22:07] "GET /sw.js HTTP/1.1" 304 -
+::1 - - [23/Dec/2025 01:23:07] "GET /sw.js HTTP/1.1" 304 -
+::1 - - [23/Dec/2025 01:24:07] "GET /sw.js HTTP/1.1" 304 -
+::1 - - [23/Dec/2025 01:25:07] "GET /sw.js HTTP/1.1" 304 -
