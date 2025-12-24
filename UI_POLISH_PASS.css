@@ -702,17 +702,20 @@
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
     z-index: 10000 !important;
-    display: flex !important;
+    display: none !important; /* HIDDEN by default */
     align-items: center !important;
     justify-content: center !important;
     padding: 20px !important;
     opacity: 0 !important;
+    pointer-events: none !important; /* Don't block clicks when hidden */
     transition: opacity 0.3s ease !important;
 }
 
 .modal-overlay.show,
 .modal-overlay.active {
+    display: flex !important;
     opacity: 1 !important;
+    pointer-events: auto !important; /* Allow clicks when visible */
 }
 
 .modal {
